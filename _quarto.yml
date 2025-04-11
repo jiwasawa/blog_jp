@@ -6,10 +6,12 @@ website:
   navbar:
     right:
       - about.qmd
-      - icon: github
-        href: https://github.com/
       - icon: twitter
-        href: https://twitter.com
+        href: https://x.com/jiwasawa
+      - icon: linkedin
+        href: https://www.linkedin.com/in/junichiro-iwasawa-875b37130/
+      - icon: github
+        href: https://github.com/jiwasawa
 format:
   html:
     theme:
