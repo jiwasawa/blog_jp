@@ -1,1 +1,0 @@
-{"entries":[],"headings":["準備言語モデリングの基本","コミュニケーションの必要性過去の情報を集約する","位置情報の導入position-encoding","self-attentionデータに基づいた情報の集約","multi-head-attention多角的な視点","attentionの応用self-attention-cross-attention-encoderdecoderブロック","transformerブロック通信と計算","最終的なgptモデルの構築","スケールアップと結果","まとめ"]}
