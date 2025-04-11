@@ -2,7 +2,7 @@
 title: "コードで理解するTransformer：AttentionとGPTモデル入門"
 author: "Junichiro Iwasawa"
 date: "2025-04-11"
-categories: [Machine Learning, Transformer, Python]
+categories: [Machine Learning, Transformer, Python, LLM]
 image: https://picsum.photos/id/83/100
 ---
 
