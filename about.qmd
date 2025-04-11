@@ -1,0 +1,19 @@
+---
+title: "Junichiro Iwasawa"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://x.com/jiwasawa
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/junichiro-iwasawa-875b37130/
+    - icon: github
+      text: Github
+      href: https://github.com/jiwasawa
+
+---
+個人ページ: [jiwasawa.github.io/](https://jiwasawa.github.io/)
+

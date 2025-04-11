@@ -1,0 +1,492 @@
+---
+title: "コードで理解するTransformer：AttentionとGPTモデル入門"
+author: "Junichiro Iwasawa"
+date: "2025-04-11"
+categories: [Machine Learning, Transformer, Python]
+image: https://picsum.photos/id/83/200
+---
+
+近年、ChatGPTやGPT-4といった大規模言語モデル（LLM: Large Language Models）が大きな注目を集めています。これらのモデルは、コードの作成、メールの下書き、複雑な質問への回答、さらには創造的な文章生成まで、驚くべき能力を発揮します。これらのシステムの多くを支える中核技術が、2017年の画期的な論文「[Attention is All You Need](https://arxiv.org/abs/1706.03762)」で提案されたTransformerアーキテクチャです。
+
+しかし、この「Attention」メカニズムとは一体何で、どのようにしてGPTのようなモデルが文脈を理解し、一貫性のあるテキストを生成することを可能にしているのでしょうか？
+
+Andrej Karpathy氏の優れた動画「[Let's build GPT: from scratch, in code, spelled out.](https://www.youtube.com/watch?v=kCc8FmEb1nY)」では、彼が[`nanogpt`](https://github.com/karpathy/ng-video-lecture/tree/master)と呼ぶ小規模なバージョンをゼロから構築することで、Transformerを分かりやすく解説しています。今回は、彼の解説に沿って、Transformerの心臓部であるself-attentionの仕組みを解き明かしていきましょう。
+
+## 準備：言語モデリングの基本
+Attentionに入る前に、基本的なタスクである「言語モデリング」について理解しましょう。言語モデリングの目標は、与えられたシーケンス（文脈）に基づいて、シーケンス中の次の単語（または文字、トークン）を予測することです。
+
+Karpathy氏はまず、「Tiny Shakespeare」データセットを使用します。これはシェイクスピアの作品を連結した単一のテキストファイルです。
+
+```python
+# まずは学習用のデータセットを用意します。Tiny Shakespeareデータセットをダウンロードしましょう。
+!wget https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt
+
+# 中身を確認するために読み込みます。
+with open('input.txt', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+# このテキストに含まれるユニークな文字をすべてリストアップします。
+chars = sorted(list(set(text)))
+vocab_size = len(chars)
+print(''.join(chars))
+# !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+print(vocab_size)
+# 65
+
+# 文字から整数へのマッピングを作成します。
+stoi = { ch:i for i,ch in enumerate(chars) }
+itos = { i:ch for i,ch in enumerate(chars) }
+encode = lambda s: [stoi[c] for c in s] # encoder: 文字列を受け取り、整数のリストを出力
+decode = lambda l: ''.join([itos[i] for i in l]) # decoder: 整数のリストを受け取り、文字列を出力
+print(encode("hii there"))
+# [46, 47, 47, 1, 58, 46, 43, 56, 43]
+print(decode(encode("hii there")))
+# hii there
+```
+```python
+# テキストデータセット全体をエンコードし、torch.Tensorに格納します。
+import torch # PyTorchを使用します: https://pytorch.org
+data = torch.tensor(encode(text), dtype=torch.long)
+print(data.shape, data.dtype)
+# torch.Size([1115394]) torch.int64
+print(data[:1000])
+# tensor([18, 47, 56, 57, 58,  1, 15, 47, 58, 47, 64, 43, 52, 10,  0, 14, 43, 44, ...
+```
+
+この例では、テキストは文字レベルでトークン化（tokenized）され、各文字が数にマッピングされます。モデルの役割は、数のシーケンスが与えられたときに、次に来る文字の数を予測することです。
+
+Karpathy氏は、まず最も単純な言語モデルである**Bigram Model**を実装します。
+
+```python
+import torch
+import torch.nn as nn
+from torch.nn import functional as F
+torch.manual_seed(1337)
+
+class BigramLanguageModel(nn.Module):
+
+    def __init__(self, vocab_size):
+        super().__init__()
+        # 各トークンはルックアップテーブルから次のトークンのロジットを直接読み取る
+        # 動画では後に vocab_size x n_embd に変更される
+        self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
+
+    def forward(self, idx, targets=None):
+        # idx と targets は両方とも (B,T) の整数テンソル
+        # Bigramモデルではロジットは直接ルックアップされる
+        logits = self.token_embedding_table(idx) # (B,T,C) ここで初期はC=vocab_size
+
+        if targets is None:
+            loss = None
+        else:
+            # cross_entropyのために形状を変更
+            B, T, C = logits.shape
+            logits = logits.view(B*T, C)
+            targets = targets.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+
+        return logits, loss
+
+    def generate(self, idx, max_new_tokens):
+        # idxは現在の文脈におけるインデックスの(B, T)配列
+        for _ in range(max_new_tokens):
+            # 予測を取得
+            logits, loss = self(idx)
+            # 最後のタイムステップのみに注目
+            logits = logits[:, -1, :] # (B, C) になる
+            # softmaxを適用して確率を取得
+            probs = F.softmax(logits, dim=-1) # (B, C)
+            # 分布からサンプリング
+            idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
+            # サンプリングされたインデックスを実行中のシーケンスに追加
+            idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
+        return idx
+
+m = BigramLanguageModel(vocab_size)
+logits, loss = m(xb, yb)
+print(logits.shape)  # torch.Size([32, 65])
+print(loss)  # tensor(4.8786, grad_fn=<NllLossBackward0>)
+
+print(decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=100)[0].tolist()))
+# SKIcLT;AcELMoTbvZv C?nq-QE33:CJqkOKH-q;:la!oiywkHjgChzbQ?u!3bLIgwevmyFJGUGpwnYWmnxKWWev-tDqXErVKLgJ
+```
+このモデルを実際に訓練してみます。
+```python
+# PyTorch optimizerの作成
+optimizer = torch.optim.AdamW(m.parameters(), lr=1e-3)
+
+batch_size = 32
+for steps in range(100): # increase number of steps for good results...
+
+    # batch の作成
+    xb, yb = get_batch('train')
+
+    # lossをもとに重みを更新
+    logits, loss = m(xb, yb)
+    optimizer.zero_grad(set_to_none=True)
+    loss.backward()
+    optimizer.step()
+
+print(loss.item())  # 4.65630578994751
+print(decode(m.generate(idx = torch.zeros((1, 1), dtype=torch.long), max_new_tokens=500)[0].tolist()))
+# oTo.JUZ!!zqe!
+# xBP qbs$Gy'AcOmrLwwt ...
+```
+このモデルは、入力文字のインデックスを使って、次の文字の確率分布（ロジット）を直接ルックアップする埋め込み（embedding）テーブルを使用します。これは単純ですが、重大な欠点があります。それは、文脈を完全に無視してしまう点です。「hat」の後の「t」も、「bat」の後の「t」も、予測は同じになってしまいます。トークン同士が「対話」していないのです。
+
+## コミュニケーションの必要性：過去の情報を集約する
+より良い予測を行うためには、トークンはシーケンス内の先行するトークンからの情報を必要とします。トークンはどのようにしてコミュニケーションできるのでしょうか？
+
+Karpathy氏は、行列積を用いた「数学的なトリック」を紹介します。トークンが文脈を得る最も簡単な方法は、自身を含む先行するすべてのトークンからの情報を平均化することです。
+
+入力`x`が`(B, T, C)`（Batch、Time（シーケンス長）、Channels（埋め込み次元））の形状を持つとします。`xbow[b, t]`が`x[b, 0]`から`x[b, t]`までの平均を含むような`xbow`（bag-of-words表現）を計算したいと考えます。
+
+以下のような単純なループは非効率です。
+```python
+# xbow[b,t] = mean_{i<=t} x[b,i] を計算したい
+# (xがB, T, Cの形状で定義されていると仮定)
+B,T,C = 4,8,32 # 例としての次元
+x = torch.randn(B,T,C)
+xbow = torch.zeros((B,T,C))
+for b in range(B):
+    for t in range(T):
+        xprev = x[b,:t+1] # (t+1, C)
+        xbow[b,t] = torch.mean(xprev, 0)
+```
+効率的な方法は、下三角行列との行列積を使用することです。
+```python
+# version 2: 行列積を用いた重み付き集約
+T = 8 # 例としてのシーケンス長
+wei = torch.tril(torch.ones(T, T)) # 1で構成される下三角行列
+wei = wei / wei.sum(1, keepdim=True) # 各行の合計が1になるように正規化 -> 平均化
+# 例として B=4, T=8, C=32 のx
+x = torch.randn(4, T, 32)
+xbow2 = wei @ x # (T, T) @ (B, T, C) はブロードキャストされ -> (B, T, C)
+torch.allclose(xbow, xbow2)  # True
+```
+ここで、`wei`（重み）は`(T, T)`行列です。`wei`の行`t`は、列0からtまでのみ非ゼロ値（この場合は1/(t+1)）を持ちます。これを`x`（形状`(B, T, C)`）と乗算すると、PyTorchは`wei`をバッチ次元全体にブロードキャストします。結果として得られる`xbow2[b, t]`は、`x[b, 0]`から`x[b, t]`までの重み付き合計（この場合は平均）となります。
+
+この行列積は効率的に集約処理を実行します。これは`softmax`を使っても実現できます。
+```python
+# version 3: Softmaxを使用
+T = 8
+tril = torch.tril(torch.ones(T, T))
+wei = torch.zeros((T,T))
+wei = wei.masked_fill(tril == 0, float('-inf')) # 上三角部分を-infで埋める
+wei = F.softmax(wei, dim=-1) # Softmaxは行の合計を1にし、平均の重みを回復する
+xbow3 = wei @ x
+# torch.allclose(xbow, xbow3) は True になるはず
+```
+なぜここで`softmax`を使うかというと、重み（`wei`）が固定された平均である必要はなく、重み自体が学習可能であったり、データに依存したりできるという重要なアイデアを導入するからです。これこそが、self-attentionが行うことです。
+
+## 位置情報の導入：Position Encoding
+Self-Attentionメカニズム自体について詳しく見る前に、もう一つ重要な要素について触れておく必要があります。それは、トークンの位置に関する情報です。
+
+Self-Attentionの基本的な計算（Query, Key, Valueを用いた加重集約）は、それ自体ではトークンがシーケンス内のどの位置にあるかを考慮しません。極端な話、単語の順番が入れ替わっても、各トークン間のAttentionスコアの計算自体は（入力ベクトルが同じであれば）変わりません。これでは、文の意味を正しく捉えることができません。「猫がマットの上に座った」と「マットが猫の上に座った」では意味が全く異なります。
+
+この問題を解決するため、Transformerではトークン自体の意味を表す埋め込みベクトル（Token Embedding）に、そのトークンがシーケンス中のどの位置にあるかを示すPosition Encoding（位置エンコーディング）ベクトルを加算します。
+
+Karpathy氏の動画で実装されている`nanogpt`では、学習可能なPosition Encodingが用いられています。具体的には、`block_size`（扱える最大のシーケンス長）に対応する数の位置ベクトルを格納する埋め込みテーブル（`position_embedding_table`）を用意します。シーケンス長が`T`の場合、`0`から`T-1`までの整数をインデックスとして、対応する位置ベクトルをこのテーブルから取得します。
+```python
+# BigramLanguageModel内のforwardメソッドより抜粋
+B, T = idx.shape
+
+# idx and targets are both (B,T) tensor of integers
+tok_emb = self.token_embedding_table(idx) # (B,T,C) - トークン埋め込み
+# torch.arange(T, device=device) は 0 から T-1 までの整数のシーケンスを生成
+pos_emb = self.position_embedding_table(torch.arange(T, device=device)) # (T,C) - 位置埋め込み
+x = tok_emb + pos_emb # (B,T,C) - トークン埋め込みと位置埋め込みを加算
+x = self.blocks(x) # ... このxがTransformerブロックへの入力となる ...
+```
+このようにして、トークン自体の情報(`tok_emb`)とその位置情報(`pos_emb`)の両方を含んだベクトル`x`が作成されます。この`x`こそが、後続のTransformerブロック（Self-Attention層やFeedForward層）への実際の入力となるのです。これにより、モデルはトークンの意味だけでなく、その順序関係も考慮して処理を進めることができるようになります。
+
+
+## Self-Attention：データに基づいた情報の集約
+単純な平均化は、過去のすべてのトークンを平等に扱います。しかし、実際には、過去の一部のトークンが他のトークンよりもはるかに重要である場合があります。例えば、「The cat sat on the...」の次に続く単語を予測する場合、「The」よりも「cat」という単語の方が重要である可能性が高いです。
+
+Self-attentionは、トークンが他のトークンに**問い合わせ（query）を行い、関連性に基づいて注意スコア（attention scores）**を割り当てることを可能にします。各トークンは3つのベクトルを生成します。
+
+1. Query (Q): 自分はどのような情報を探しているか？
+2. Key (K): 自分はどのような情報を持っているか？
+3. Value (V): もし自分に注意が向けられたら、どのような情報を提供するか？
+
+トークン`i`とトークン`j`間の注意スコア（またはaffinity）は、トークン`i`のQueryベクトル(`q_i`)とトークン`j`のKeyベクトル(`k_j`)の内積を取ることで計算されます。
+
+`affinity(i, j) = q_i ⋅ k_j`
+
+内積が大きい場合、QueryがKeyに良く一致していることを意味し、トークン`j`がトークン`i`にとって関連性が高いと判断されます。
+
+以下は、Attentionの単一の「Head」を実装する方法です。
+
+```python
+# version 4: self-attention!
+torch.manual_seed(1337)
+B,T,C = 4,8,32 # batch, time, channels (埋め込み次元)
+x = torch.randn(B,T,C) # 入力トークンの埋め込み + 位置エンコーディング
+
+# 単一のHeadがself-attentionを実行する様子を見てみましょう
+head_size = 16 # このHeadのK, Q, Vベクトルの次元
+# 入力'x'をK, Q, Vに射影するための線形層
+key   = nn.Linear(C, head_size, bias=False)
+query = nn.Linear(C, head_size, bias=False)
+value = nn.Linear(C, head_size, bias=False)
+
+k = key(x)   # (B, T, head_size)
+q = query(x) # (B, T, head_size)
+
+# 注意スコア（"affinities"）を計算
+# (B, T, head_size) @ (B, head_size, T) ---> (B, T, T)
+wei =  q @ k.transpose(-2, -1)
+
+# --- スケーリングステップ (後述) ---
+wei = wei * (head_size**-0.5) # アフィニティをスケーリング
+
+# --- Decoderのためのマスキング ---
+tril = torch.tril(torch.ones(T, T, device=x.device)) # xと同じデバイスを使用
+wei = wei.masked_fill(tril == 0, float('-inf')) # 未来のトークンをマスク
+
+# --- スコアを正規化して確率を取得 ---
+wei = F.softmax(wei, dim=-1) # (B, T, T)
+
+# --- Valueの重み付き集約を実行 ---
+v = value(x) # (B, T, head_size)
+# (B, T, T) @ (B, T, head_size) ---> (B, T, head_size)
+out = wei @ v
+
+# out.shape は (B, T, head_size)
+```
+
+重要なステップを分解してみましょう。
+
+1. 射影（Projection）: 入力`x`（トークン埋め込みと位置エンコーディングを含む）が、線形層によってK、Q、V空間に射影されます。
+2. アフィニティ計算（Affinity Calculation）: `q @ k.transpose(...)` は、バッチ内の各シーケンスにおける全てのQueryベクトルとKeyベクトルのペアの内積を計算します。これにより、生の注意スコアである`wei`（形状 `B, T, T`）が得られます。
+3. スケーリング（Scaling）: スコア`wei`は`head_size`の平方根でスケールダウンされます。これは、特に初期化段階での学習を安定させるために重要です。スケーリングがないと、内積の分散がhead_sizeと共に増加し、`softmax`の入力が勾配の非常に小さい領域に押しやられ、学習が妨げられる可能性があります。
+4. マスキング（Masking (Decoder固有)）: GPTのような自己回帰型（autoregressive）言語モデリングでは、位置`t`のトークンは位置`t`までのトークンにのみ注意を向けるべきです。これは、未来の位置（`j > t`）に対応する注意スコアを下三角行列（`tril`）を用いた`masked_fill`で負の無限大に設定することで実現されます。これにより、`softmax`は未来のトークンにゼロの確率を割り当てます。（BERTのようなEncoderブロックでは、この causal mask は使用されません。）
+5. Softmax: マスクされたスコアに対して行ごとに`softmax`を適用します。これにより、スコアは各トークン`t`について合計が1になる確率に変換され、先行するトークン`0`から`t`までの注意分布を表します。
+6. Valueの集約（Value Aggregation）: 各トークン`t`の最終出力`out`は、`wei`内の注意確率によって重み付けされた、全トークンのValueベクトル（`v`）の重み付き合計です。`out = wei @ v`。
+
+出力`out`（形状 `B, T, head_size`）は、学習されたK、Q、Vの射影に基づいて、シーケンス内の他の関連トークンから集約された情報を各トークンごとに含んでいます。
+
+## Multi-Head Attention：多角的な視点
+単一のAttention Headは、ある特定タイプの関係性（例：名詞と動詞の一致）に焦点を当てるかもしれません。多様な関係性を捉えるために、Transformerは**Multi-Head Attention**を使用します。
+
+```python
+class Head(nn.Module):
+    """ self-attentionの単一ヘッド """
+    def __init__(self, head_size):
+        super().__init__()
+        self.key = nn.Linear(n_embd, head_size, bias=False)
+        self.query = nn.Linear(n_embd, head_size, bias=False)
+        self.value = nn.Linear(n_embd, head_size, bias=False)
+        # trilをバッファとして登録（パラメータではない）
+        self.register_buffer('tril', torch.tril(torch.ones(block_size, block_size)))
+        self.dropout = nn.Dropout(dropout) # Dropoutを追加
+
+    def forward(self, x):
+        B,T,C = x.shape
+        k = self.key(x)   # (B,T,head_size)
+        q = self.query(x) # (B,T,head_size)
+        # 注意スコア（"affinities"）を計算
+        wei = q @ k.transpose(-2,-1) * k.shape[-1]**-0.5 # head_sizeでスケーリング
+        # Tに基づいて動的にマスクを適用
+        wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
+        wei = F.softmax(wei, dim=-1)
+        wei = self.dropout(wei) # 注意の重みにDropoutを適用
+        # Valueの重み付き集約を実行
+        v = self.value(x) # (B,T,head_size)
+        out = wei @ v
+        return out
+
+class MultiHeadAttention(nn.Module):
+    """ self-attentionの複数ヘッドを並列に実行 """
+    def __init__(self, num_heads, head_size):
+        super().__init__()
+        # 複数のHeadインスタンスを作成
+        self.heads = nn.ModuleList([Head(head_size) for _ in range(num_heads)])
+        # 連結後の射影層
+        self.proj = nn.Linear(num_heads * head_size, n_embd) # n_embd = num_heads * head_size
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        # 各ヘッドを並列に実行し、結果をチャネル次元で連結
+        out = torch.cat([h(x) for h in self.heads], dim=-1) # (B, T, num_heads * head_size)
+        # 連結された出力を元のn_embd次元に再射影
+        out = self.dropout(self.proj(out)) # (B, T, n_embd)
+        return out
+```
+これは単純に複数のHeadモジュールを並列に実行し、それぞれが異なる学習済みK、Q、V射影を持つ可能性があります。各ヘッドの出力（それぞれ `B, T, head_size`）は連結され（`B, T, num_heads * head_size`）、その後、別の線形層（`self.proj`）を用いて元の埋め込み次元（`B, T, n_embd`）に再射影されます。これにより、モデルは異なる表現部分空間からの情報に同時に注意を向けることができます。
+
+## Attentionの応用：Self-Attention, Cross-Attention, Encoder/Decoderブロック
+これまで解説してきたAttentionの基本的な仕組みは、**Self-Attention**と呼ばれるものでした。これはQuery(Q), Key(K), Value(V)のベクトルがすべて同じ入力シーケンス（`x`）から生成され、シーケンス内のトークンが相互に注意を向け合うものでした。しかし、このSelf-Attentionの使われ方や、Attentionメカニズム全体にはいくつかの重要なバリエーションが存在します。
+
+まず、Self-Attention自体の使われ方によって、それがEncoderブロックの一部として機能するのか、Decoderブロックの一部として機能するのかが変わってきます。この違いを生む主な要因は、Attentionスコア計算におけるマスキングの有無です。
+
+Decoderブロックで使われるSelf-Attentionでは、未来の情報を参照しないようにするための因果マスキング（causal masking）、つまり三角マスクが適用されます。これは、GPTのような自己回帰（autoregressive）モデルや、機械翻訳のデコーダー部分のように、過去の情報のみに基づいて次のトークンを生成する必要があるタスクで不可欠です。Karpathy氏の動画で構築された`nanogpt`は、まさしくこのDecoderブロックのみで構成されるモデルです。
+
+一方、Encoderブロックで使われるSelf-Attentionでは、この因果マスキングは適用されません。シーケンス内のすべてのトークンが、他のすべてのトークン（過去も未来も含む）に自由に注意を向けることができます。これは、BERTのように入力テキスト全体の文脈理解を目的とするモデルや、機械翻訳におけるエンコーダー部分（入力文全体の情報を符号化する役割）などで用いられます。入力シーケンス全体の双方向の文脈を捉えるのに適しています。
+
+次に、Attentionメカニズムのもう一つの重要な形態が**Cross-Attention**です。これはSelf-Attention（マスキングの有無に関わらず）とは異なり、Query、Key、Valueの由来が異なります。Cross-Attentionでは、Query(Q)はあるソース（例えばデコーダー側の状態）から生成されますが、Key(K)とValue(V)は別のソース（例えばエンコーダーの最終出力）から提供されます。
+
+このCross-Attentionは、主にEncoder-Decoderアーキテクチャにおいて、EncoderとDecoderを接続する役割を果たします。デコーダーが出力トークンを生成する際に、Cross-Attentionを通じてエンコーダーが符号化した入力情報全体を常に参照できるようにします。機械翻訳タスクで、翻訳先の言語を生成しながら常に翻訳元の文章の意味を考慮する、といったことを可能にするメカニズムです。
+
+`nanogpt`のようなdecoder-onlyモデルでは、外部の入力シーケンスを処理するEncoder部分が存在しないため、EncoderブロックやCross-Attentionは必要なく、因果マスキングを用いたSelf-Attention（Decoderブロック）のみで構成されている、というわけです。
+
+## Transformerブロック：通信と計算
+Attentionは通信メカニズムを提供します。しかし、モデルは集約された情報を処理するための計算も必要です。標準的なTransformerブロックは、Multi-Head Self-Attentionと、単純な位置ごとのFeedForwardネットワークを組み合わせます。
+
+重要な点として、各サブレイヤー（AttentionとFeedForward）の周囲に**Residual Connections（残差接続）とLayer Normalization（層正規化）**が追加されます。
+
+- **Residual Connections**: `x = x + sublayer(norm(x))`。サブレイヤーの入力`x`が、サブレイヤーの出力に加算されます。これにより、深いネットワークでの逆伝播時に勾配が流れやすくなり、学習の安定性と性能が大幅に向上します。
+- **Layer Normalization**: 各トークンについて、特徴量をチャネル次元にわたって独立に正規化します。Batch Normalizationとは異なり、バッチ統計に依存しないため、シーケンスデータに適しています。これも学習を安定させます。Karpathy氏は、サブレイヤーの前にLayerNormを適用する一般的な「pre-norm」形式を実装しています。
+
+```python
+class FeedFoward(nn.Module):
+    """ 単純な線形層と非線形活性化関数 """
+    def __init__(self, n_embd):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(n_embd, 4 * n_embd), # 中間層は通常4倍大きい
+            nn.ReLU(),                    # ReLU活性化関数
+            nn.Linear(4 * n_embd, n_embd), # n_embdに再射影
+            nn.Dropout(dropout),           # 正則化のためのDropout
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+class Block(nn.Module):
+    """ Transformerブロック：通信の後に計算 """
+    def __init__(self, n_embd, n_head):
+        super().__init__()
+        head_size = n_embd // n_head
+        self.sa = MultiHeadAttention(n_head, head_size) # 通信 (Communication)
+        self.ffwd = FeedFoward(n_embd)                 # 計算 (Computation)
+        self.ln1 = nn.LayerNorm(n_embd)                # Attention前のLayerNorm
+        self.ln2 = nn.LayerNorm(n_embd)                # FeedForward前のLayerNorm
+
+    def forward(self, x):
+        # Pre-norm形式と残差接続
+        # LayerNorm適用 -> Self-Attention -> 残差を加算
+        x = x + self.sa(self.ln1(x))
+        # LayerNorm適用 -> FeedForward -> 残差を加算
+        x = x + self.ffwd(self.ln2(x))
+        return x
+```
+完全なGPTモデルは、これらのBlockレイヤーを複数、順番に積み重ねます。すべてのブロックを通過した後、最終的なLayerNormが適用され、その後、最終的なトークン表現を語彙サイズに射影する線形層が続き、次のトークンを予測するためのロジットが得られます。
+
+## 最終的なGPTモデルの構築
+これまで解説してきたコンポーネントを統合し、最終的なGPTスタイルの言語モデル`GPTLanguageModel`を構築します。以下に示すコードは、Karpathy氏の動画における完成形であり、先に説明した`Block`（`MultiHeadAttention`と`FeedForward`を含む）などを組み合わせています。
+
+```python
+# (主要なハイパーパラメータを再掲)
+# hyperparameters
+batch_size = 64 # 並列処理する独立したシーケンス数
+block_size = 256 # 予測のための最大コンテキスト長
+max_iters = 5000
+eval_interval = 500
+learning_rate = 3e-4
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+eval_iters = 200
+n_embd = 384     # 埋め込み次元数
+n_head = 6       # Attentionヘッドの数
+n_layer = 6      # Transformerブロックの層数
+dropout = 0.2    # ドロップアウト率
+# ------------
+
+class GPTLanguageModel(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        # トークン埋め込みと位置埋め込みのテーブル
+        self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
+        self.position_embedding_table = nn.Embedding(block_size, n_embd)
+        # n_layer個のTransformerブロックを積み重ねる
+        self.blocks = nn.Sequential(*[Block(n_embd, n_head=n_head) for _ in range(n_layer)])
+        self.ln_f = nn.LayerNorm(n_embd) # 最終LayerNorm
+        self.lm_head = nn.Linear(n_embd, vocab_size) # 出力層（線形層）
+
+        # （動画本編では触れられていないが重要な）重み初期化
+        self.apply(self._init_weights)
+
+    def _init_weights(self, module):
+        # （重み初期化の詳細は省略）
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+
+    def forward(self, idx, targets=None):
+        B, T = idx.shape
+
+        tok_emb = self.token_embedding_table(idx) # (B,T,C)
+        pos_emb = self.position_embedding_table(torch.arange(T, device=device)) # (T,C)
+        x = tok_emb + pos_emb # (B,T,C)
+        x = self.blocks(x) # (B,T,C) Transformerブロックを通過
+        x = self.ln_f(x) # (B,T,C) 最終LayerNormを適用
+        logits = self.lm_head(x) # (B,T,vocab_size) LMヘッドでロジットを計算
+
+        if targets is None:
+            loss = None
+        else:
+            # 損失計算のために形状を変更
+            B, T, C = logits.shape
+            logits = logits.view(B*T, C)
+            targets = targets.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+
+        return logits, loss
+
+    def generate(self, idx, max_new_tokens):
+        # idxは現在の文脈におけるインデックスの(B, T)配列
+        for _ in range(max_new_tokens):
+            # Position Embeddingのサイズ制限のため、idxを最後のblock_sizeトークンに切り詰める
+            idx_cond = idx[:, -block_size:]
+            # 予測を取得
+            logits, loss = self(idx_cond) # forwardパスを実行
+            # 最後のタイムステップのみに注目
+            logits = logits[:, -1, :] # (B, C) になる
+            # softmaxを適用して確率を取得
+            probs = F.softmax(logits, dim=-1) # (B, C)
+            # 分布からサンプリング
+            idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
+            # サンプリングされたインデックスを実行中のシーケンスに追加
+            idx = torch.cat((idx, idx_next), dim=1) # (B, T+1)
+        return idx
+```
+
+このGPTLanguageModelクラスでは、`__init__`メソッドで、これまで説明してきたトークン埋め込みと位置埋め込みテーブル(`token_embedding_table`, `position_embedding_table`)を定義した後、`n_layer`個の`Block`を`nn.Sequential`で積み重ねています。これがTransformerの中核部であり、入力ベクトルはここを通過することで段階的にリッチな表現へと変換されます。その後、最終的な`LayerNorm` (`ln_f`)を経て、出力用の線形層`lm_head`によって語彙数次元のロジットへと変換されます。また、安定した学習のための重み初期化メソッド`_init_weights`も含まれています。
+
+`forward`メソッドは、この一連の流れを実装しており、トークン埋め込みと位置埋め込みを加算したベクトルを`blocks`に通し、正規化と線形変換を経て最終的なロジットを出力します。
+
+テキスト生成を行う`generate`メソッドでは、自己回帰的にトークンを生成していきますが、ここで重要なのは`idx_cond = idx[:, -block_size:]`の部分です。位置埋め込みテーブル`position_embedding_table`のサイズが`block_size`に固定されているため、モデルに入力できるのは直近`block_size`個のトークンまでとなります。この制約のもとでforwardパスを実行し、最後のタイムステップのロジットから次のトークンをサンプリングし、シーケンスを伸長していく処理を繰り返します。
+
+コード全体を見ると、これらのモデル定義に加えて、学習を制御するハイパーパラメータ群（`batch_size`や`learning_rate`など）や、`AdamW`オプティマイザ、そして`estimate_loss`関数を用いた評価を含む標準的な学習ループが組み合わされていることがわかります。これらが一体となってGPTモデルの学習と推論を実現しています。
+
+## スケールアップと結果
+Karpathy氏は上の`GPTLanguageModel`（`n_layer=6, n_head=6, n_embd=384, dropout=0.2`）でTiny Shakespeareを学習させます。結果として得られるモデルは、はるかに一貫性のある（ただし、まだ意味をなさない）シェイクスピア風のテキストを生成し、十分なモデル容量と組み合わされたAttentionの力を示しています。
+
+```console
+# GPTLanguageModelからのサンプル出力
+FlY BOLINGLO:
+Them thrumply towiter arts the
+muscue rike begatt the sea it
+What satell in rowers that some than othis Marrity.
+
+LUCENTVO:
+But userman these that, where can is not diesty rege;
+What and see to not. But's eyes. What?
+```
+
+このアーキテクチャ、すなわち**decoder-only Transformer**（causal maskを使用）は、基本的にGPT-2やGPT-3のようなモデルで使用されているものと同じですが、パラメータ数、層数、埋め込みサイズ、そして学習データ（シェイクスピアだけでなく膨大なインターネットテキスト）の点で、はるかに大規模になっています。
+
+## まとめ
+Attentionメカニズム、特にScaled dot-product self-attentionは、Transformerの能力を飛躍的に向上させた革新的な技術です。これにより、シーケンス内のトークンが動的にお互いを参照し、学習されたQuery-Keyの相互作用に基づいて関連性スコア（アフィニティ）を計算し、関連するトークンのValueベクトルからの情報を重み付きで集約することが可能になります。Multi-Head Attention、Residual Connections、Layer Normalization、そして位置ごとのFeedForwardネットワークと組み合わせることで、ChatGPTのようなAIに革命をもたらしているモデルの基本的な構成要素であるTransformerブロックが形成されます。
+
+Karpathy氏のように段階的に構築することで、強力でありながらも、その中心的なアイデアは把握可能であり、比較的簡潔なコードで実装できることがわかります。
+
+---
+
+*この記事は、Andrej Karpathy氏のYouTube動画「[Let's build GPT: from scratch, in code, spelled out.](https://www.youtube.com/watch?v=kCc8FmEb1nY)」に基づいています。完全なコードやより深い洞察については、ぜひ動画と彼の[`nanogpt`](https://github.com/karpathy/ng-video-lecture/tree/master)リポジトリをご覧ください。*
+*この記事が、TransformerとAttentionの理解の一助となれば幸いです。*
