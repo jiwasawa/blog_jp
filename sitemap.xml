@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/index.html</loc>
-    <lastmod>2025-04-11T12:05:27.833Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/index.html</loc>
-    <lastmod>2025-04-11T12:05:27.832Z</lastmod>
+    <lastmod>2025-04-15T14:41:11.794Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/about.html</loc>
-    <lastmod>2025-04-11T12:05:27.832Z</lastmod>
+    <lastmod>2025-04-15T14:41:11.794Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/index.html</loc>
+    <lastmod>2025-04-15T14:41:11.794Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/index.html</loc>
+    <lastmod>2025-04-15T14:41:11.794Z</lastmod>
   </url>
 </urlset>
