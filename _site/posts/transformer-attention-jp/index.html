@@ -161,6 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                 <div class="quarto-category">Machine Learning</div>
                 <div class="quarto-category">Transformer</div>
                 <div class="quarto-category">Python</div>
+                <div class="quarto-category">LLM</div>
               </div>
                   </div>
   </div>
@@ -701,7 +702,7 @@ What and see to not. But's eyes. What?</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

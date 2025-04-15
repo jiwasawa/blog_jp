@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-04-15">
 
-<title>ブログ – Home</title>
+<title>AI、専門家の領域へ：診断支援『AMIE』と科学的発見『Co-Scientist』 – Home</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,25 +25,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,77 +69,19 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Home</span>
     </a>
   </div>
@@ -150,7 +92,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Junichiro Iwasawa</span></a>
   </li>  
   <li class="nav-item compact">
@@ -178,110 +120,77 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">ブログ</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">AI、専門家の領域へ：診断支援『AMIE』と科学的発見『Co-Scientist』</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 15, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UG9kY2FzdA==">Podcast <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXI=">Transformer <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<p>Google DeepMindから発表された二つの研究プロジェクト、<a href="https://arxiv.org/abs/2401.05654">AMIE (Articulate Medical Intelligence Explorer)</a> と<a href="https://arxiv.org/abs/2502.18864">Co-Scientist</a>は、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト<a href="https://www.cognitiverevolution.ai/google-agents-beat-human-doctors-make-scientific-discoveries-with-vivek-natarajan-and-anil-palepu/">「The Cognitive Revolution」</a>では、開発担当者のVivek Natarajan氏とAnil Palepu氏がこれらのプロジェクトについて語り、AIが高度な専門知識を要する領域で人間と肩を並べ、あるいは特定のタスクにおいては凌駕し始めている現状が浮き彫りとなった。本稿では、これらの研究内容とその意味合いについて、ポッドキャストでの議論も踏まえつつ、やや距離を置いた視点から分析を試みる。</p>
+<section id="診断対話aiamie医師との比較で見えた可能性と課題" class="level2">
+<h2 class="anchored" data-anchor-id="診断対話aiamie医師との比較で見えた可能性と課題">診断対話AI『AMIE』：医師との比較で見えた可能性と課題</h2>
+<p>AMIEとは、診断における医師と患者の対話をAIで支援、あるいは代替することを目論む大規模言語モデル（LLM）ベースのシステムである。医療の核心とも言えるこの対話プロセスにおいて、AIがどこまで人間の医師の能力に近づけるかは、長らく大きな挑戦とされてきた代物だ。</p>
+<p>AMIEの開発では、多様な疾患や専門分野、文脈に対応できるよう、自己対戦（self-play）に基づいたシミュレーション環境と自動フィードバック機構が用いられた。これにより、モデルは様々な状況下での対話を通じて学習を深めることが可能となる。推論時には、対話の文脈を踏まえながら段階的に思考を深める「Chain-of-Reasoning」戦略を採用し、応答の正確性と質を高めているという。</p>
+<p>その性能を評価するため、客観的臨床能力試験（OSCE）を模した形式で、訓練を受けた模擬患者とAMIE、そして比較対象として現役のプライマリケア医（PCP）が、テキストチャットで診察を行うランダム化比較試験が実施された。この試験では、病歴聴取、診断精度、治療方針の妥当性、コミュニケーションスキル、共感力といった複数の軸で評価が行われた。</p>
+<p>結果を見ると、専門医評価では32項目中28項目、模擬患者評価では26項目中24項目において、AMIEがPCPを上回る評価を獲得したという。特に診断精度においては、AMIEがPCPよりも高い精度を示した点が注目される。さらに、ポッドキャストで触れられていた後続研究では、心臓病学や腫瘍学といった専門分野においても、AMIEがフェロー（専門研修医）を上回り、指導医レベルに迫る性能を示し始めていることが示唆された。</p>
+<p>ただし、これらの結果を鵜呑みにするのは早計である。最大の注意点は、評価がテキストチャットという、実際の臨床現場とは異なる限定的な環境で行われたことだ。医師は通常、対面や電話、ビデオ通話で患者と対話するため、テキストチャット形式は不慣れであった可能性が高い。また、対話相手も実際の患者ではなく、特定のシナリオに基づいて演技する模擬患者であった。</p>
+<p>とはいえ、特定の条件下においてAIが高い診断能力と対話能力を示した事実は無視できない。ポッドキャストで語られていたように、AIが人間の医師を補完する形で活用される可能性、例えば、診断の網羅性を高めたり、より共感的で構造化された応答を提案したりする未来は十分に考えられる。事実、心臓専門医がAMIEを利用した場合、単独の場合と比較してほぼ全ての評価指標でパフォーマンスが向上したという結果は、人間とAIの協調の可能性を示唆するものだろう。現在、AMIEはハーバード大学医学部付属病院であるベス・イスラエル・ディーコネス医療センターとの提携を通じて、実世界での検証、いわば臨床試験に近い段階へと進められている模様だ。</p>
+</section>
+<section id="co-scientist科学的発見プロセスを支援するai" class="level2">
+<h2 class="anchored" data-anchor-id="co-scientist科学的発見プロセスを支援するai">『Co-Scientist』：科学的発見プロセスを支援するAI</h2>
+<p>一方、Co-Scientistは、科学者が新たな知識を発見し、独創的な研究仮説を立てるプロセスを支援するために設計されたマルチエージェントシステムである。このシステムは、研究目標やガイダンスに基づいて先行研究を調査・統合し、実証可能な仮説や研究提案を生成することを目的とする。</p>
+<p>Co-Scientistの設計は、科学的手法に着想を得た「生成・討論・進化（generate, debate, evolve）」アプローチを採用している。複数の専門エージェント（生成、反省、ランキング、進化など）が連携し、トーナメント形式のフレームワーク内で仮説を継続的に生成、評価、改善していく。この自己改善ループにより、仮説の質が向上していくことが期待されるわけだ。また、ウェブ検索や専門的なAIモデル（論文中ではAlphaFoldへの言及もあった）といったツールを活用し、生成される仮説の根拠付けや質を高めている。</p>
+<p>その有効性を検証するため、3つの異なる複雑さを持つ生物医学分野での評価が行われた。第一に、比較的探索空間が限定される「既存薬の再開発（ドラッグリパーパシング）」では、急性骨髄性白血病（AML）に対して有望な候補薬を提案し、その一部は臨床的に適用可能な濃度で腫瘍抑制効果を示すことがin vitro実験で確認された。</p>
+<p>第二に、より複雑な「新規治療標的の発見」では、肝線維症に対する新たなエピジェネティックな標的を提案し、ヒト肝オルガノイドを用いた実験で抗線維化活性が検証された。</p>
+<p>そして第三に、最も挑戦的とも言える「細菌の薬剤耐性獲得メカニズムの解明」という完全にオープンエンドな課題である。この検証では、共同研究者である科学者グループが実験的に発見し、まだ公表していなかった特定の遺伝子伝達メカニズム（cf-PICIが多様なファージ尾部と相互作用することで宿主域を拡大する）と全く同じ仮説を、Co-Scientistが独立して最有力候補として提案するという、にわかには信じがたい結果が得られた。これは、AIが既存知識を単に再構成するだけでなく、点在する情報を結びつけ、人間にとっても新規性のある洞察を生み出す能力を持ち始めていることを強く示唆する事例と言えよう。</p>
+<p>Co-Scientistは、あくまで科学者を支援する「共同研究者」として設計されており、プロセスのどの段階でも人間の専門家が介入し、フィードバックを与えることが可能だ。現在、このシステムは「Trusted Tester Program」を通じて、より多くの研究者に利用機会を提供し、実世界での有用性や課題に関するフィードバックを収集する段階に進んでいる。</p>
+</section>
+<section id="専門知のai化見えてきた共通項と今後の展望" class="level2">
+<h2 class="anchored" data-anchor-id="専門知のai化見えてきた共通項と今後の展望">専門知のAI化：見えてきた共通項と今後の展望</h2>
+<p>AMIEとCo-Scientistの研究は、AIが人間の高度な知的活動領域へと進出している現状を示すものである。これらの研究からは、いくつかの共通した技術的アプローチが見て取れる。一つは、特定のタスクに対するモデルのファインチューニング（追加学習）よりも、汎用的な基盤モデルの能力を高度なプロンプティングやエージェント設計によって引き出す方向性へのシフト。二つ目は、長文脈処理能力と推論時の計算資源（Test-time Compute）を潤沢に使うことで、より深い思考や複雑なタスクの実行を可能にしている点。そして三つ目は、自己対戦やトーナメント形式の評価、外部ツール（特にウェブ検索）からの情報（エントロピー）注入といった仕組みを取り入れることで、システムの自己改善能力や生成物の質を高めている点である。</p>
+<p>ポッドキャストで議論されていたように、「AIが人間より賢くなった」と結論づけるのは時期尚早であろう。しかし、特定の定義されたタスクにおいて、AIがトップレベルの人間の専門家と同等、あるいはそれ以上のパフォーマンスを発揮し始めていることは否定できない。Co-Scientistが未発表の科学的発見を再現した事例は、その好例だ。</p>
+<p>これらのAIシステムは、単に既存の情報を検索・要約するだけでなく、複数の情報源を統合し、新たな仮説を生成するという、より高度な知的作業を可能にしつつある。もちろん、現実世界の複雑さへの対応、真に独創的な問いを発する能力、倫理的な課題など、克服すべき点は山積している。しかし、AMIEの臨床応用への模索やCo-Scientistの研究コミュニティへの提供開始は、AIが専門家の「思考パートナー」となる未来が、もはやSFの領域ではなくなりつつあることを物語っている。</p>
+<p>肝要なのは、これらの技術をいかに責任ある形で社会実装していくかという点に尽きる。特に医療や科学研究といった分野では、人間の専門家による監督と検証が不可欠であり、AIはあくまで人間を支援し、その能力を拡張するためのツールとして位置づけられるべきなのだ。Google DeepMindの取り組みは、その可能性と課題の両方を我々に突きつけており、今後の動向から目が離せない。</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="TExNJTJDUG9kY2FzdA==" data-listing-date-sort="1744642800000" data-listing-file-modified-sort="1744727857372" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="20">
-<div class="thumbnail"><a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">AI、専門家の領域へ：診断支援『AMIE』と科学的発見『Co-Scientist』</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UG9kY2FzdA=='); return false;">Podcast</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">
-Google DeepMindから発表された二つの研究プロジェクト、AMIE (Articulate Medical Intelligence Explorer) とCo-Scientistは、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト「The Cognitive Revolution」では、開発担当者…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">
-<div class="listing-date">
-Apr 15, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDVHJhbnNmb3JtZXIlMkNQeXRob24lMkNMTE0=" data-listing-date-sort="1744297200000" data-listing-file-modified-sort="1744373094013" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2550">
-<div class="thumbnail"><a href="./posts/transformer-attention-jp/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/83/100" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/transformer-attention-jp/index.html" class="no-external">コードで理解するTransformer：AttentionとGPTモデル入門</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXI='); return false;">Transformer</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/transformer-attention-jp/index.html" class="no-external">
-近年、ChatGPTやGPT-4といった大規模言語モデル（LLM: Large Language Models）が大きな注目を集めています。これらのモデルは、コードの作成、メールの下書き、複雑な質問への回答、さらには創造的な文章生成まで、驚くべき能力を発揮します。これらのシステムの多くを支える中核技術が、2017年の画期的な論文「Attentio…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/transformer-attention-jp/index.html" class="no-external">
-<div class="listing-date">
-Apr 11, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
