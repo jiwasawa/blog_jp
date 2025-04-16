@@ -3,7 +3,7 @@ title: "コードで理解するTransformer：AttentionとGPTモデル入門"
 author: "Junichiro Iwasawa"
 date: "2025-04-11"
 categories: [Machine Learning, Transformer, Python, LLM]
-image: https://picsum.photos/id/83/100
+image: https://picsum.photos/id/83/200
 ---
 
 近年、ChatGPTやGPT-4といった大規模言語モデル（LLM: Large Language Models）が大きな注目を集めています。これらのモデルは、コードの作成、メールの下書き、複雑な質問への回答、さらには創造的な文章生成まで、驚くべき能力を発揮します。これらのシステムの多くを支える中核技術が、2017年の画期的な論文「[Attention is All You Need](https://arxiv.org/abs/1706.03762)」で提案されたTransformerアーキテクチャです。

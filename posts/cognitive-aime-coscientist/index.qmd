@@ -2,7 +2,7 @@
 title: "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』"
 author: "Junichiro Iwasawa"
 date: "2025-04-15"
-categories: [LLM, Podcast]
+categories: [LLM, Podcast, AI]
 image: https://picsum.photos/id/82/200
 ---
 
