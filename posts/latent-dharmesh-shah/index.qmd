@@ -3,7 +3,7 @@ title: "HubSpot共同創業者が見据えるAIエージェント新時代：ハ
 author: "Junichiro Iwasawa"
 date: "2025-04-16"
 categories: [AI, Podcast, Latent Space Podcast]
-image: https://picsum.photos/id/82/200
+image: https://picsum.photos/id/30/200
 ---
 
 HubSpotの共同創業者兼CTOであり、近年はAgent.aiの創設者としても注目を集めるDharmesh Shah。インバウンドマーケティングのパイオニアとして名を馳せた彼が今、情熱を注ぐのは人工知能（AI）、とりわけAIエージェントの世界である。単なるバズワードとしてではなく、ビジネスの根幹を変革しうる力としてAIを見据える彼の洞察は、[Latent Space podcast](https://www.latent.space/p/dharmesh)でのインタビューからも鮮明に浮かび上がる。本稿では、Shah氏が描くAIエージェントの未来像、特に「ハイブリッドチーム」という概念、新たなビジネスモデル「WaaS/RaaS」、そして彼が手掛けるAgent.aiの野心的なビジョンについて深く掘り下げていく。
