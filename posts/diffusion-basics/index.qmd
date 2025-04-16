@@ -1,0 +1,145 @@
+---
+title: "拡散モデル入門：基本概念から応用まで"
+author: "Junichiro Iwasawa"
+date: "2025-04-17"
+categories: [Machine Learning, Diffusion models]
+image: https://picsum.photos/id/37/200
+---
+
+近年、特に画像生成分野で目覚ましい成果を上げている拡散モデル（Diffusion Models）について、基本的な仕組みから応用技術までを解説します。
+
+## 拡散モデルとは？
+
+拡散モデルは、生成モデルの一種です。他の代表的な生成モデルとしてGAN、VAE、Flowベースモデルがありますが、GANは学習の不安定さ、VAEは代理損失への依存、Flowモデルは可逆変換のためのアーキテクチャ制約といった課題がありました。
+
+拡散モデルは、非平衡熱力学に着想を得ており、データの分布を学習するための独自のアプローチを取ります。
+
+1.  **順方向プロセス（Forward Process / Diffusion Process）：** 元のデータに段階的に微小なランダムノイズを加えていき、最終的には既知の単純な分布（通常は標準正規分布）に変換します。
+2.  **逆方向プロセス（Reverse Process / Denoising Process）：** 上記の過程を逆向きに辿り、単純なノイズ分布からスタートして、段階的にノイズを除去していくことで元のデータ分布に属する新しいサンプルを生成します。
+
+この「ノイズ除去」ステップを学習したニューラルネットワークが、実質的な生成モデルとなります。拡散モデルは、学習プロセスが固定されており、VAEやFlowモデルと異なり、潜在変数が元データと同じ次元を持つという特徴があります。
+
+### 順方向プロセス：データをノイズへ
+
+元のデータ $\mathbf{x}_0 \sim q(\mathbf{x})$ から出発し、$T$ ステップかけて徐々にGaussianノイズを加えていくマルコフ連鎖として定義されます。各ステップ $t$ での遷移は次のように定義されます。
+
+$$q(\mathbf{x}_t \vert \mathbf{x}_{t-1}) = \mathcal{N}(\mathbf{x}_t; \sqrt{1 - \beta_t} \mathbf{x}_{t-1}, \beta_t\mathbf{I})$$
+
+ここで、$\\{\beta_t \in (0, 1)\\}_{t=1}^T$ は**分散スケジュール**と呼ばれるハイパーパラメータで、各ステップで加えるノイズの大きさを制御します。$\beta_t$ は通常、$t$ が大きくなるにつれて増加するように設定されます（例：linear スケジュール、cosine スケジュール[Nichol & Dhariwal, 2021]）。$\mathbf{I}$ は単位行列です。
+
+全ステップの同時分布は次のようになります。
+
+$$q(\mathbf{x}_{1:T} \vert \mathbf{x}_0) = \prod^T_{t=1} q(\mathbf{x}_t \vert \mathbf{x}_{t-1})$$
+
+このプロセスの重要な特性は、任意のステップ $t$ におけるノイズ付きデータ $\mathbf{x}_t$ を、元のデータ $\mathbf{x}_0$ から閉じた式で直接計算できることです。$\alpha_t = 1 - \beta_t$ および $\bar{\alpha}_t = \prod_{i=1}^t \alpha_i$ と定義すると、$\mathbf{x}_t$ の分布は次のように表せます。
+
+$$q(\mathbf{x}_t \vert \mathbf{x}_0) = \mathcal{N}(\mathbf{x}_t; \sqrt{\bar{\alpha}_t} \mathbf{x}_0, (1 - \bar{\alpha}_t)\mathbf{I})$$
+
+これは、$\mathbf{x}_t = \sqrt{\bar{\alpha}_t} \mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}$ （ただし $\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$）と書くこともできます。つまり、$\mathbf{x}_t$ は、元のデータ $\mathbf{x}_0$ をスケールしたものと、それに加わるノイズ項の和で表されるわけです。$T$ が十分に大きいと、$\bar{\alpha}_T \approx 0$ となり、$\mathbf{x}_T$ は元のデータ $\mathbf{x}_0$ からほぼ独立したGaussianノイズ $\mathcal{N}(\mathbf{0}, \mathbf{I})$ になります。
+
+### 逆方向プロセス：ノイズからデータへ
+
+生成プロセスは、この順方向プロセスを逆に辿ります。つまり、まずGaussianノイズ $\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$ をサンプリングし、そこから $t=T, T-1, \dots, 1$ とステップを遡って $\mathbf{x}_{T-1}, \mathbf{x}_{T-2}, \dots, \mathbf{x}_0$ を逐次的にサンプリングします。
+
+このためには、逆方向の遷移確率 $q(\mathbf{x}_{t-1} \vert \mathbf{x}_t)$ を知る必要がありますが、これはデータセット全体の情報が必要となるため計算が困難（intractable）です。そこで、この遷移確率をニューラルネットワーク（パラメータ $\theta$ を持つ）で近似します。この近似された遷移確率を $p_\theta(\mathbf{x}_{t-1} \vert \mathbf{x}_t)$ と書きます。
+
+逆方向プロセス全体は次のように表されます。
+
+$$p_\theta(\mathbf{x}_{0:T}) = p(\mathbf{x}_T) \prod^T_{t=1} p_\theta(\mathbf{x}_{t-1} \vert \mathbf{x}_t)$$
+
+ここで $p(\mathbf{x}_T) = \mathcal{N}(\mathbf{x}_T; \mathbf{0}, \mathbf{I})$ です。各逆方向ステップの遷移 $p_\theta(\mathbf{x}_{t-1} \vert \mathbf{x}_t)$ もガウス分布であると仮定するのが一般的です。
+
+$$p_\theta(\mathbf{x}_{t-1} \vert \mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$$
+
+モデルの目標は、この平均 $\boldsymbol{\mu}_\theta(\mathbf{x}_t, t)$ と共分散 $\boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)$ を学習することです。
+共分散 $\boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)$ は、しばしば学習せず、$\sigma_t^2 \mathbf{I}$ という形の固定値（またはスケジュールに従う値）が用いられます。$\sigma_t^2$ としては、順方向プロセスの $\beta_t$ や、理論的に導かれる $\tilde{\beta}_t = \frac{1 - \bar{\alpha}_{t-1}}{1 - \bar{\alpha}_t} \beta_t$ が使われます。[Nichol & Dhariwal, 2021] では、$\beta_t$ と $\tilde{\beta}_t$ の間の補間として学習する手法も提案されていますが、不安定になる可能性も指摘されています。
+
+### 学習の目標：ノイズを予測する
+
+では、どのようにして $\boldsymbol{\mu}_\theta(\mathbf{x}_t, t)$ を学習するのでしょうか？ 完全な導出は変分下限（Variational Lower Bound, VLB）の最大化に基づきますが、DDPM [Ho et al., 2020] では、より直感的で効果的な目的関数が用いられています。
+
+その中心的なアイデアは、逆方向ステップの平均 $\boldsymbol{\mu}_\theta$ を直接予測するのではなく、**順方向プロセスでステップ $t$ においてデータ $\mathbf{x}_0$ に加えられたノイズ $\boldsymbol{\epsilon}$ を予測する**ことです。モデルを $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$ と書きます。
+
+$\mathbf{x}_t = \sqrt{\bar{\alpha}_t} \mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}$ の関係を使うと、逆方向ステップの（真の）平均 $\tilde{\boldsymbol{\mu}}_t(\mathbf{x}_t, \mathbf{x}_0)$ （これは $\mathbf{x}_0$ が既知の場合に計算可能）は、このノイズ $\boldsymbol{\epsilon}$ を使って表現できます。そして、学習する平均 $\boldsymbol{\mu}_\theta(\mathbf{x}_t, t)$ がこの真の平均に近くなるように、モデル $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$ が真のノイズ $\boldsymbol{\epsilon}$ を予測するように学習させます。
+
+具体的には、$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t)$ は、予測されたノイズ $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$ を用いて次のようにパラメータ化されます。
+
+$$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t) = \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t) \right)$$
+
+この式を見ると、モデル $\boldsymbol{\epsilon}_\theta$ が学習できれば、逆方向ステップの平均 $\boldsymbol{\mu}_\theta$ が決まることがわかります。
+
+そして、DDPMで提案された単純化された学習目的関数（損失関数）は、以下のように、予測ノイズ $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$ と、実際に加えられたノイズ $\boldsymbol{\epsilon}$ との間の平均二乗誤差（Mean Squared Error, MSE）を最小化することになります。
+
+$$L_\text{simple} = \mathbb{E}_{t \sim \mathcal{U}(1, T), \mathbf{x}_0 \sim q(\mathbf{x}_0), \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})} \left[\|\boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}, t)\|^2 \right]$$
+
+訓練時には、データ $\mathbf{x}_0$ をサンプリングし、ランダムなステップ $t$ を選び、Gaussianノイズ $\boldsymbol{\epsilon}$ を生成し、$\mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}$ を計算します。そして、モデル $\boldsymbol{\epsilon}_\theta$ に $\mathbf{x}_t$ と $t$ を入力し、予測されたノイズ $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$ と元のノイズ $\boldsymbol{\epsilon}$ とのMSEを計算し、これを損失としてモデルパラメータ $\theta$ を更新します。
+
+**スコア関数との関連:**
+このノイズ予測 $\boldsymbol{\epsilon}_\theta$ は、実はデータの対数確率密度勾配、すなわちスコア関数 $\nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t)$ と密接に関連しています。具体的には、$\mathbf{s}_\theta(\mathbf{x}_t, t) \approx \nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t) \approx - \frac{\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{1 - \bar{\alpha}_t}}$ という関係があります。これは、拡散モデルがスコアベース生成モデル（NCSN [Song & Ermon, 2019] など）と深いつながりを持つことを示唆しています。
+
+## 拡散モデルの進化と応用
+
+DDPMの成功を受けて、拡散モデルの性能向上や応用範囲拡大のための様々な研究が行われています。
+
+### 条件付き生成（Conditional Generation）
+
+特定の情報（クラスラベル、テキスト記述、他の画像など）に基づいて画像を生成する技術です。
+
+* **Classifier Guidance:** [Dhariwal & Nichol, 2021] で提案。ノイズ付き画像 $\mathbf{x}_t$ を入力として目的の条件 $y$ の対数尤度 $\log f_\phi(y \vert \mathbf{x}_t)$ を計算する別の分類器 $f_\phi$ を訓練します。生成時には、通常のノイズ予測 $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)$ に、この分類器の勾配 $\nabla_{\mathbf{x}_t} \log f_\phi(y \vert \mathbf{x}_t)$ を加味して予測を修正します。
+    $$\bar{\boldsymbol{\epsilon}}_\theta(\mathbf{x}_t, t) = \boldsymbol{\epsilon}_\theta(x_t, t) - w \sqrt{1 - \bar{\alpha}_t} \nabla_{\mathbf{x}_t} \log f_\phi(y \vert \mathbf{x}_t)$$
+    ここで $w$ はガイダンスの強さを制御する係数です。ADM (Ablated Diffusion Model) や ADM-G (ADM with Guidance) で高い性能が示されました。
+
+* **Classifier-Free Guidance:** [Ho & Salimans, 2021] で提案。拡散モデル $\boldsymbol{\epsilon}_\theta$ 自身を、条件 $y$ が与えられた場合 $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, y)$ と、条件がない（$y=\varnothing$ とする）場合 $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \varnothing)$ の両方で学習します。これは訓練中に一定の確率で条件 $y$ を無視（空の条件 $\varnothing$ に置き換える）ことで実現されます。生成時には、この二つの予測を組み合わせてガイダンスを行います。
+    $$\bar{\boldsymbol{\epsilon}}_\theta(\mathbf{x}_t, t, y) = \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \varnothing) + w (\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, y) - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \varnothing))$$
+    これは $(w+1) \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, y) - w \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \varnothing)$ とも書けます（元のブログ記事の式と一致）。この手法は追加の分類器が不要であり、近年の多くの高性能モデル（Imagen, Stable Diffusion, GLIDEなど）で広く採用されています。GLIDE [Nichol et al., 2022] では、CLIPを用いたガイダンスよりもClassifier-Freeガイダンスの方が好ましい結果が得られたと報告されています。
+
+### 高速化（Speeding Up Sampling）
+
+DDPMの最大の課題であった生成速度を改善するための研究が活発に行われています。
+
+* **DDIM (Denoising Diffusion Implicit Models):** [Song et al., 2020] で提案。DDPMはマルコフ連鎖的な確率過程でしたが、DDIMは同じ順方向プロセスを持ちながら、非マルコフ的な（より大きなステップを許容する）決定論的な生成プロセスを定義します。これにより、サンプリングステップ数を大幅に（例：1000ステップから20～50ステップへ）削減しても高品質な生成が可能になりました。DDIMはパラメータ $\eta$ を持ち、$\eta=0$ で決定論的（DDIM）、$\eta=1$ でDDPMに近い確率的なサンプリングになります。決定論的であるため、同じ初期ノイズからは同じ画像が生成される「一貫性」を持ち、潜在空間での補間なども可能になります。
+
+* **Progressive Distillation:** [Salimans & Ho, 2022] で提案。訓練済みの決定論的サンプラー（例：DDIM）を「教師」とし、より少ないステップ数で同じ結果を出す「生徒」モデルを訓練する蒸留手法です。具体的には、生徒モデルの1ステップが教師モデルの2ステップに対応するように学習させます。これを繰り返すことで、サンプリングステップ数を指数関数的に削減できます。
+
+* **Consistency Models:** [Song et al., 2023] で提案。拡散過程の途中の任意のノイズ付きデータ $\mathbf{x}_t$ から、直接元のデータ $\mathbf{x}_0$ （またはそれに近い $\mathbf{x}_\epsilon$）を予測する関数 $f(\mathbf{x}_t, t) \approx \mathbf{x}_0$ を学習します。同じ軌道上の点はすべて同じ出力にマッピングされるという「自己一貫性」を持ちます。事前学習済みの拡散モデルから蒸留する方法（Consistency Distillation, CD）と、直接学習する方法（Consistency Training, CT）があります。これにより、理論的には1ステップでの高品質な生成が可能になります。
+
+* **Latent Diffusion Models (LDM):** [Rombach et al., 2022] で提案。画像を直接扱うのではなく、まず強力なAutoencoder（Encoder $\mathcal{E}$ と Decoder $\mathcal{D}$）を用いて画像を低次元の潜在表現 $\mathbf{z} = \mathcal{E}(\mathbf{x})$ に圧縮します。そして、この潜在空間 $\mathbf{z}$ 上で拡散モデル（通常はU-Netベース）を学習・実行します。生成時には、潜在空間でノイズから潜在表現 $\mathbf{z}$ を生成し、最後にDecoder $\mathcal{D}$ を使って画像 $\tilde{\mathbf{x}} = \mathcal{D}(\mathbf{z})$ に戻します。計算量を大幅に削減できるため、Stable Diffusionなどの高解像度画像生成モデルの基盤技術となっています。潜在空間の正則化にはKLペナルティ（VAEライク）やVQ正則化（VQ-VAEライク）が用いられます。条件付けは、潜在空間上のU-NetにCross-Attention機構を導入して行われることが多いです。
+
+### 高解像度・高品質化
+
+* **Cascaded Models:** [Ho et al., 2021] など。まず低解像度の画像を生成し、次にその低解像度画像を条件として、より高解像度の画像を生成する超解像拡散モデルを適用する、というパイプライン方式です。高品質な高解像度画像を生成するために有効です。この際、低解像度の条件画像に意図的にノイズを加える「Noise Conditioning Augmentation」が、誤差の蓄積を防ぎ品質を向上させる上で重要であることが示されています（低解像度ではGaussianノイズ、高解像度ではガウスぼかしが有効）。
+
+* **unCLIP / DALL-E 2:** [Ramesh et al., 2022] で提案。CLIPモデルを活用し、テキスト記述から高品質な画像を生成します。2段階のプロセスからなります：(1) Priorモデルがテキスト $y$ から対応するCLIP画像埋め込み $\mathbf{c}^i$ を生成する ($P(\mathbf{c}^i \vert y)$)。(2) Decoderモデルが、生成された画像埋め込み $\mathbf{c}^i$ （と、任意で元のテキスト $y$）を条件として、最終的な画像 $\mathbf{x}$ を生成する ($P(\mathbf{x} \vert \mathbf{c}^i, [y])$)。Decoderには拡散モデルが用いられます。
+
+* **Imagen:** [Saharia et al., 2022] で提案。CLIPの代わりに、大規模な事前学習済み言語モデル（凍結されたT5-XXL）をテキストエンコーダとして使用します。テキストエンコーダの規模がU-Netの規模よりも重要であることが示されました。Classifier-Free Guidanceのスケール $w$ を大きくした際の画像忠実度低下を防ぐために、予測値をクリッピングする「Dynamic Thresholding」という手法を導入しました。また、U-Netアーキテクチャを改良した「Efficient U-Net」（低解像度ブロックにパラメータを集中、スキップ接続のスケーリング、畳み込みとプーリングの順序変更など）も提案されました。
+
+* **アーキテクチャの進化 (U-Net, DiT, ControlNet):**
+    * *U-Net:* ダウンサンプリングパスとアップサンプリングパスを持ち、対応する層間をスキップ接続で繋いだ構造は、拡散モデル（特に画像）の標準的なバックボーンとして広く使われています。
+    * *DiT (Diffusion Transformer):* [Peebles & Xie, 2023] で提案。LDMと同様に潜在空間上で動作しますが、バックボーンとしてU-Netの代わりにTransformerを使用します。潜在表現をパッチに分割し、シーケンスとしてTransformerブロックに入力します。タイムステップ $t$ やクラスラベル $c$ などの条件は、Layer Normalizationのパラメータを適応的に変化させる adaLN (Adaptive Layer Norm) -Zero という方式で埋め込むのが効果的でした。Transformerのスケーラビリティの恩恵を受け、モデルサイズと計算量を増やすことで性能が向上することが示されています。
+    * *ControlNet:* [Zhang et al., 2023] で提案。事前学習済みの強力な拡散モデル（例：Stable Diffusion）の重みを凍結したまま、そこに新たな条件（例：人物の骨格、線画、深度マップなど）を追加制御できるようにする手法です。元のモデルの各ブロックをコピーし、そのコピーのみを訓練可能にします。元のブロックとコピーの間を「Zero Convolution」（重みとバイアスがゼロで初期化された1x1畳み込み）で接続することで、元のモデルの性能を損なわずに、かつ安定して新たな制御を追加学習できます。式で書くと $\mathbf{y}_c = \mathcal{F}_\theta(\mathbf{x}) + \mathcal{Z}_{\theta_{z2}}(\mathcal{F}_{\theta_c}(\mathbf{x} + \mathcal{Z}_{\theta_{z1}}(\mathbf{c})))$ となります。
+
+## まとめ
+
+拡散モデルは、データをノイズに変換する順方向プロセスと、その逆を学習してノイズからデータを生成する逆方向プロセスに基づく、強力かつ柔軟な生成モデルです。
+
+* **利点:** 理論的な扱いやすさ（Tractability）と表現力の高さ（Flexibility）を両立しています。特に画像生成においては、GANを凌駕する非常に高品質で多様なサンプルを生成できます。学習も比較的安定しています。
+* **欠点:** 元々はサンプリング（生成）に非常に時間がかかるという問題がありましたが、DDIM、LDM、蒸留技術、Consistency Modelsなどの登場により大幅に改善され、実用性が大きく向上しました。それでも、応用によってはまだGANなど他の手法に比べて速度面で課題が残る場合もあります。
+
+Classifier-Free Guidance、Latent Diffusion、Transformerアーキテクチャの採用、ControlNetのような制御技術など、数々の技術革新により、拡散モデルはテキストからの画像生成、画像編集、動画生成など、多くの応用分野で最先端の成果を上げており、現在の生成AIの発展を牽引する重要な技術となっています。
+
+## 参考文献
+
+1. Weng, Lilian. (Jul 2021). What are diffusion models? Lil’Log. [https://lilianweng.github.io/posts/2021-07-11-diffusion-models/](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
+2. Ho, Jonathan, Ajay Jain, and Pieter Abbeel. "[Denoising diffusion probabilistic models](https://arxiv.org/abs/2006.11239)." NeurIPS 2020. (DDPM)
+3. Song, Jiaming, Chenlin Meng, and Stefano Ermon. "[Denoising diffusion implicit models](https://arxiv.org/abs/2010.02502)." ICLR 2021. (DDIM)
+4. Rombach, Robin, et al. "[High-resolution image synthesis with latent diffusion models](https://arxiv.org/abs/2112.10752)." CVPR 2022. (Latent Diffusion / Stable Diffusionの基盤)
+5. Nichol, Alex, and Prafulla Dhariwal. "[Improved denoising diffusion probabilistic models](https://arxiv.org/abs/2102.09672)." ICML 2021.
+6. Dhariwal, Prafulla, and Alex Nichol. "[Diffusion models beat gans on image synthesis](https://arxiv.org/abs/2105.05233)." NeurIPS 2021.
+7. Ho, Jonathan, and Tim Salimans. "[Classifier-free diffusion guidance](https://arxiv.org/abs/2207.12598)." NeurIPS 2021 Workshop.
+8. Salimans, Tim, and Jonathan Ho. "[Progressive distillation for fast sampling of diffusion models](https://arxiv.org/abs/2202.00512)." ICLR 2022.
+9. Song, Yang, et al. "[Consistency models](https://arxiv.org/abs/2303.01469)." ICML 2023.
+10. Ho, Jonathan, et al. "[Cascaded diffusion models for high fidelity image generation](https://arxiv.org/abs/2106.15282)." JMLR 2022.
+11. Ramesh, Aditya, et al. "[Hierarchical text-conditional image generation with clip latents](https://arxiv.org/abs/2204.06125)." arXiv 2022. (unCLIP / DALL-E 2)
+12. Saharia, Chitwan, et al. "[Photorealistic text-to-image diffusion models with deep language understanding](https://arxiv.org/abs/2205.11487)." NeurIPS 2022. (Imagen)
+13. Peebles, William, and Saining Xie. "[Scalable diffusion models with transformers](https://arxiv.org/abs/2212.09748)." ICCV 2023. (DiT)
+14. Zhang, Lvmin, and Maneesh Agrawala. "[Adding conditional control to text-to-image diffusion models](https://arxiv.org/abs/2302.05543)." ICCV 2023. (ControlNet)
