@@ -3,6 +3,7 @@ project:
 
 website:
   title: "Home"
+  google-analytics: G-8BXHXPDSCJ
   navbar:
     right:
       - about.qmd
