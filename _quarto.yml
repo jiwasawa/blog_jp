@@ -16,7 +16,7 @@ website:
       - icon: github
         href: https://github.com/jiwasawa
       - icon: rss
-        href: https://jiwasawa.github.io/blog_jp/index.xml
+        href: index.xml
 format:
   html:
     theme:
