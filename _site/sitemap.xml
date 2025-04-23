@@ -2,10 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/index.html</loc>
-    <lastmod>2025-04-23T13:56:39.849Z</lastmod>
+    <lastmod>2025-04-23T14:01:41.286Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/about.html</loc>
     <lastmod>2025-04-23T12:12:24.512Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/index.html</loc>
+    <lastmod>2025-04-22T11:57:02.922Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/diffusion-basics/index.html</loc>
+    <lastmod>2025-04-16T12:09:30.918Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/index.html</loc>
+    <lastmod>2025-04-16T02:59:15.531Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/index.html</loc>
+    <lastmod>2025-04-16T03:28:54.843Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/index.html</loc>
+    <lastmod>2025-04-16T03:28:40.698Z</lastmod>
   </url>
 </urlset>
