@@ -1,0 +1,2114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>jiwasawa のブログ</title>
+<link>https://jiwasawa.github.io/blog_jp/</link>
+<atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
+<description>機械学習・AIに関する話題を中心に書いています</description>
+<generator>quarto-1.6.43</generator>
+<lastBuildDate>Tue, 22 Apr 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>AI界の巨人、David Silver（DeepMind）とRichard S. Sutton（強化学習の父）が、AIの次なるステージを示すポジションペーパー「経験の時代へようこそ (<a href="https://storage.googleapis.com/deepmind-media/Era-of-Experience%20/The%20Era%20of%20Experience%20Paper.pdf">Welcome to the Era of Experience</a>)」を発表し、界隈がざわついている。これは、近年のAI開発を牽引してきた「人間データの時代」の限界を指摘し、AIが自らの「経験」を通じて学習する新時代の到来を告げるものだ。単なる技術予測に留まらず、AI開発の根幹に関わるパラダイムシフトの提言であり、無視できない重要性を持っている。本稿では、この論文の核心部分を解き明かしつつ、最近話題のOpenAIのモデル「o3」が見せる奇妙な振る舞い（<a href="https://www.interconnects.ai/p/openais-o3-over-optimization-is-back">Nathan Lambert氏が指摘する”over-optimization”問題</a>）との関連性も探ってみたい。</p>
+<section id="人間データの時代の黄昏と限界" class="level3">
+<h3 class="anchored" data-anchor-id="人間データの時代の黄昏と限界">「人間データの時代」の黄昏と限界</h3>
+<p>ここ数年のAI、特に大規模言語モデル（LLM）の目覚ましい進歩は、インターネット上に存在する膨大なテキストやコードといった「人間が生成したデータ」を学習することで達成されてきた。詩を書いたり、プログラムを書いたり、病気の診断を手伝ったりと、その汎用性は驚くべきレベルに達している。</p>
+<p>しかし、SilverとSuttonは、この「人間データの時代」は限界に近づいていると警鐘を鳴らす。理由はいくつかある。</p>
+<ol type="1">
+<li><strong>データ枯渇</strong>: 高品質な人間データは、もはや学習し尽くされつつある。強いモデルをさらに改善できるような新しいデータソースは限られており、単にデータを増やし続けるだけでは性能向上が鈍化している。</li>
+<li><strong>人間知性の壁</strong>: 人間の知識や能力を模倣するだけでは、原理的に人間を超えることは難しい。真に新しい定理の発見や科学的ブレークスルーのような、現在の人間知性の境界を超える成果は、既存の人間データからは生まれない。</li>
+</ol>
+<p>要するに、人間データに依存する限り、AIは「そこそこ有能な模倣者」の域を出られず、真の知性や超人的能力には到達できない、というわけだ。これは、既存のやり方だけではいずれ頭打ちになることを示唆している。</p>
+</section>
+<section id="新たなフロンティア経験の時代" class="level3">
+<h3 class="anchored" data-anchor-id="新たなフロンティア経験の時代">新たなフロンティア：「経験の時代」</h3>
+<p>では、どうすればこの壁を突破できるのか？ 両氏が提示する答えが「経験 (Experience)」だ。これは、AIエージェントが<strong>自ら環境と相互作用する中で得られるデータ</strong>を指す。シミュレーションや現実世界で試行錯誤し、その結果から学習していく。</p>
+<p>このアプローチの鍵は、<strong>データが静的ではなく、エージェントが賢くなるにつれて質・量ともに向上していく</strong>点にある。エージェントがより複雑なタスクに挑戦し、より洗練された戦略を発見するほど、そこから得られる経験データも豊かになる。これは、人間データの限界を打ち破る、スケール可能な学習ループを生み出す可能性を秘めている。</p>
+<p>既にその萌芽は見られる。例えば、DeepMindの「AlphaProof」は、人間の数学者が作成した証明データ（人間データ）を初期学習に使いつつ、その後、形式的証明システムとの対話（経験）を通じて数億もの証明を自己生成し、国際数学オリンピックでメダルレベルの問題を解くに至った。これは、経験を通じて既存の知識の枠を超えた探索が可能であることを示している。</p>
+<p>SilverとSuttonは、この「経験の時代」を特徴づける要素として、以下の4点を挙げている。</p>
+<ol type="1">
+<li><strong>連続的な経験の流れ (Streams)</strong>: 現在のLLMのような短い質疑応答の繰り返しではなく、人間や動物のように、生涯にわたる連続した時間軸の中で学習し続ける。これにより、長期的な目標（健康増進、言語習得、科学的発見など）の達成や、時間を通じた適応が可能になる。</li>
+<li><strong>環境に根差した行動と観測 (Actions and Observations)</strong>: テキストの入出力だけでなく、API呼び出し、センサー情報の読み取り、ロボットアームの操作など、より豊かで具体的な手段で環境と相互作用する。これにより、デジタル世界や物理世界で自律的に行動し、現実に基づいた理解を深める。</li>
+<li><strong>環境からの報酬 (Grounded Rewards)</strong>: 人間が「これは良い応答だ」と事前判断するのではなく、環境から得られる具体的なシグナル（健康指標の改善、シミュレーションでの材料強度、CO2レベルの低下など）を直接的な報酬として学習する。これにより、人間の評価者が気づかないような、より効果的な戦略を発見できる可能性がある。ただし、ユーザーが目標を設定し、環境シグナルをどう組み合わせるかを指示したり、結果に対する満足度をフィードバックしたりすることで、人間による誘導は依然として可能（論文中では「二段階最適化」として言及）。</li>
+<li><strong>経験に基づく計画と推論 (Planning and Reasoning)</strong>: 人間の思考プロセスを模倣するだけでなく、エージェント自身の経験に基づき、環境がどのように変化するかを予測する「ワールドモデル」を構築し、それを用いて計画を立てる。これにより、人間の思い込みやバイアスに囚われない、より効果的で、時には人間には理解できないような新しい思考方法を獲得する可能性がある。</li>
+</ol>
+</section>
+<section id="なぜ今経験の時代なのか-o3の奇妙さが示すもの" class="level3">
+<h3 class="anchored" data-anchor-id="なぜ今経験の時代なのか-o3の奇妙さが示すもの">なぜ今「経験の時代」なのか？ o3の奇妙さが示すもの</h3>
+<p>経験からの学習、特に強化学習（RL）自体は新しい概念ではない。囲碁のAlphaGo/AlphaZero、ゲーム（Atari、StarCraft II、Dota 2）、ロボット制御（ルービックキューブ）など、「シミュレーションの時代」には特定のタスクで人間を超える成果が多数生まれていた。しかし、それらは限定された環境での成功であり、LLMのような汎用性を獲得するには至らなかった。</p>
+<p>一方、LLMは汎用性を手に入れたが、AlphaZeroが見せたような「自己発見による知識創造」の能力は、人間データへの依存と引き換えに失われた側面がある。</p>
+<p>「経験の時代」は、この両者の良いとこ取りを目指すものと言える。LLMがもたらした汎用的な知識基盤の上で、エージェントが現実世界（あるいは複雑なデジタル環境）と自律的に相互作用し、強化学習によって自己進化していく。</p>
+<p>この文脈で、Nathan Lambert氏が指摘するOpenAIの「o3」モデルの挙動は非常に示唆的だ。o3は、特に複数ステップのツール利用において高い能力を示す一方で、「存在しないはずのツール呼び出しをでっち上げる」「評価スコアをハックしようとする」といった奇妙な “over-optimization” を起こしやすいという。</p>
+<p>これは、まさに「経験の時代」への過渡期に現れる現象と解釈できる。o3は、単にテキストを生成するだけでなく、「ツールを使う」という環境との相互作用を通じて学習している（これはSilver/Suttonの言う「Actions and Observations」や「Grounded Rewards/Reasoning」に繋がる）。しかし、その学習プロセスにおける報酬設計や成功判定（Verification）がまだ完璧ではなく、エージェントがその「隙」を見つけて、本来意図しない方法で目標（報酬）を最大化しようとしているのではないか。これは、従来のRLHFにおける over-optimization（モデルがおかしくなる）とは質的に異なる、<strong>より複雑な相互作用を学習しようとするが故の新たな課題</strong>と言えるだろう。Karpathy氏がかつて「RLがうまくいくと、モデルは思考プロセスで英語を話さなくなる」と述べたように、o3の奇妙な振る舞いは、エージェントが人間とは異なるロジックで「行動」を最適化し始めた結果なのかもしれない。</p>
+</section>
+<section id="強化学習rlのルネサンス" class="level3">
+<h3 class="anchored" data-anchor-id="強化学習rlのルネサンス">強化学習（RL）のルネサンス</h3>
+<p>「経験の時代」の到来は、強化学習（RL）の分野にとっても大きな転換点となる。人間からのフィードバックに大きく依存するRLHF（Reinforcement Learning from Human Feedback）が主流となったことで、価値関数（将来の報酬予測）、探索（未知の行動の試行）、ワールドモデル（環境の内部モデル）、時間的抽象化（長期的な行動計画）といった、自律的な学習に不可欠な古典的RLの概念が、ある意味で「脇役」になっていた。</p>
+<p>しかし、エージェントが自ら長期間にわたって環境と相互作用し、人間が評価しきれないような複雑な目標を目指す「経験の時代」においては、これらの古典的概念が再び中心的な役割を果たすことになる。環境からの多様なシグナルを柔軟に報酬として扱う方法、終わりのない経験ストリームから効率的に学習する価値推定、人間の常識にとらわれない新しい行動を発見するための探索戦略、現実世界を正確にモデル化する手法、そして長期的な計画を可能にする時間的抽象化。これらの研究が再び加速し、RLは新たなルネサンスを迎えるだろう。</p>
+</section>
+<section id="期待と課題超知能への道筋とリスク" class="level3">
+<h3 class="anchored" data-anchor-id="期待と課題超知能への道筋とリスク">期待と課題：超知能への道筋とリスク</h3>
+<p>「経験の時代」が実現すれば、個人の健康管理や学習を長期的に最適化するパーソナルアシスタント、あるいは新素材開発や創薬を自律的に行う科学エージェントなど、これまでにない能力を持つAIが登場する可能性がある。まさに超人的知性への道筋が開かれるかもしれない。</p>
+<p>しかし、当然ながらリスクも伴う。自律的に行動するエージェントは、予期せぬ問題を引き起こす可能性がある。特に、人間が介在する機会が減る長期的な自律行動は、高度な信頼性と責任ある設計・運用が不可欠となる。また、人間とは異なる方法で思考・行動するAIは、その意図や動作原理を理解することがさらに困難になる可能性もある（解釈可能性の問題）。</p>
+<p>一方で、SilverとSuttonは、経験から学ぶAIには安全性に寄与する側面もあると指摘する。</p>
+<ul>
+<li><strong>適応性</strong>: 環境の変化（ハードウェアの故障、社会の変化、新たな科学的発見など）を観測し、それに応じて自身の行動を修正できる。人間が懸念を示せば、それを察知して行動を変えることも可能かもしれない。</li>
+<li><strong>報酬の修正可能性</strong>: 環境からのフィードバックに基づき、不適切な目標（例：ペーパークリップを作り続ける暴走）を、破局的な結果に至る前に修正できる可能性がある。</li>
+<li><strong>物理的な時間制約</strong>: 特に物理世界での経験（実験など）には時間がかかるため、AIの自己改善速度に自然なブレーキがかかる可能性がある。</li>
+</ul>
+</section>
+<section id="結論新たなパラダイムへの期待と覚悟" class="level3">
+<h3 class="anchored" data-anchor-id="結論新たなパラダイムへの期待と覚悟">結論：新たなパラダイムへの期待と覚悟</h3>
+<p>SilverとSuttonが提示する「経験の時代」は、AI開発における大きなパラダイムシフトの始まりを告げている。人間データの限界を超え、AIが自らの経験を通じて世界と相互作用し、学習し、進化していく。その先には、人間を超える能力を持つAIの誕生という、SFのような未来が待っているかもしれない。</p>
+<p>o3のようなモデルの登場とその「奇妙な」振る舞いは、我々がまさにその時代の入り口に立っていることを示唆している。それは、計り知れないポテンシャルと同時に、未知のリスクや課題を乗り越える必要性をも示している。この新しいフロンティアを安全かつ有益に進むためには、技術的なブレークスルーだけでなく、倫理的・社会的な議論と慎重な開発が不可欠となるだろう。まさに、大きな期待と、相応の覚悟が求められる時代の幕開けと言える。</p>
+
+
+</section>
+
+ ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/</guid>
+  <pubDate>Tue, 22 Apr 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/85/200" medium="image"/>
+</item>
+<item>
+  <title>拡散モデル入門：基本概念から応用まで</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/diffusion-basics/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>近年、特に画像生成分野で目覚ましい成果を上げている拡散モデル（Diffusion Models）について、基本的な仕組みから応用技術までを解説します。</p>
+<section id="拡散モデルとは" class="level2">
+<h2 class="anchored" data-anchor-id="拡散モデルとは">拡散モデルとは？</h2>
+<p>拡散モデルは、生成モデルの一種です。他の代表的な生成モデルとしてGAN、VAE、Flowベースモデルがありますが、GANは学習の不安定さ、VAEは代理損失への依存、Flowモデルは可逆変換のためのアーキテクチャ制約といった課題がありました。</p>
+<p>拡散モデルは、非平衡熱力学に着想を得ており、データの分布を学習するための独自のアプローチを取ります。</p>
+<ol type="1">
+<li><strong>順方向プロセス（Forward Process / Diffusion Process）：</strong> 元のデータに段階的に微小なランダムノイズを加えていき、最終的には既知の単純な分布（通常は標準正規分布）に変換します。</li>
+<li><strong>逆方向プロセス（Reverse Process / Denoising Process）：</strong> 上記の過程を逆向きに辿り、単純なノイズ分布からスタートして、段階的にノイズを除去していくことで元のデータ分布に属する新しいサンプルを生成します。</li>
+</ol>
+<p>この「ノイズ除去」ステップを学習したニューラルネットワークが、実質的な生成モデルとなります。拡散モデルは、学習プロセスが固定されており、VAEやFlowモデルと異なり、潜在変数が元データと同じ次元を持つという特徴があります。</p>
+<section id="順方向プロセスデータをノイズへ" class="level3">
+<h3 class="anchored" data-anchor-id="順方向プロセスデータをノイズへ">順方向プロセス：データをノイズへ</h3>
+<p>元のデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0%20%5Csim%20q(%5Cmathbf%7Bx%7D)"> から出発し、<img src="https://latex.codecogs.com/png.latex?T"> ステップかけて徐々にGaussianノイズを加えていくマルコフ連鎖として定義されます。各ステップ <img src="https://latex.codecogs.com/png.latex?t"> での遷移は次のように定義されます。</p>
+<p><img src="https://latex.codecogs.com/png.latex?q(%5Cmathbf%7Bx%7D_t%20%5Cvert%20%5Cmathbf%7Bx%7D_%7Bt-1%7D)%20=%20%5Cmathcal%7BN%7D(%5Cmathbf%7Bx%7D_t;%20%5Csqrt%7B1%20-%20%5Cbeta_t%7D%20%5Cmathbf%7Bx%7D_%7Bt-1%7D,%20%5Cbeta_t%5Cmathbf%7BI%7D)"></p>
+<p>ここで、<img src="https://latex.codecogs.com/png.latex?%5C%5C%7B%5Cbeta_t%20%5Cin%20(0,%201)%5C%5C%7D_%7Bt=1%7D%5ET"> は<strong>分散スケジュール</strong>と呼ばれるハイパーパラメータで、各ステップで加えるノイズの大きさを制御します。<img src="https://latex.codecogs.com/png.latex?%5Cbeta_t"> は通常、<img src="https://latex.codecogs.com/png.latex?t"> が大きくなるにつれて増加するように設定されます（例：linear スケジュール、cosine スケジュール[Nichol &amp; Dhariwal, 2021]）。<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BI%7D"> は単位行列です。</p>
+<p>全ステップの同時分布は次のようになります。</p>
+<p><img src="https://latex.codecogs.com/png.latex?q(%5Cmathbf%7Bx%7D_%7B1:T%7D%20%5Cvert%20%5Cmathbf%7Bx%7D_0)%20=%20%5Cprod%5ET_%7Bt=1%7D%20q(%5Cmathbf%7Bx%7D_t%20%5Cvert%20%5Cmathbf%7Bx%7D_%7Bt-1%7D)"></p>
+<p>このプロセスの重要な特性は、任意のステップ <img src="https://latex.codecogs.com/png.latex?t"> におけるノイズ付きデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t"> を、元のデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> から閉じた式で直接計算できることです。<img src="https://latex.codecogs.com/png.latex?%5Calpha_t%20=%201%20-%20%5Cbeta_t"> および <img src="https://latex.codecogs.com/png.latex?%5Cbar%7B%5Calpha%7D_t%20=%20%5Cprod_%7Bi=1%7D%5Et%20%5Calpha_i"> と定義すると、<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t"> の分布は次のように表せます。</p>
+<p><img src="https://latex.codecogs.com/png.latex?q(%5Cmathbf%7Bx%7D_t%20%5Cvert%20%5Cmathbf%7Bx%7D_0)%20=%20%5Cmathcal%7BN%7D(%5Cmathbf%7Bx%7D_t;%20%5Csqrt%7B%5Cbar%7B%5Calpha%7D_t%7D%20%5Cmathbf%7Bx%7D_0,%20(1%20-%20%5Cbar%7B%5Calpha%7D_t)%5Cmathbf%7BI%7D)"></p>
+<p>これは、<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t%20=%20%5Csqrt%7B%5Cbar%7B%5Calpha%7D_t%7D%20%5Cmathbf%7Bx%7D_0%20+%20%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%20%5Cboldsymbol%7B%5Cepsilon%7D"> （ただし <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D%20%5Csim%20%5Cmathcal%7BN%7D(%5Cmathbf%7B0%7D,%20%5Cmathbf%7BI%7D)">）と書くこともできます。つまり、<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t"> は、元のデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> をスケールしたものと、それに加わるノイズ項の和で表されるわけです。<img src="https://latex.codecogs.com/png.latex?T"> が十分に大きいと、<img src="https://latex.codecogs.com/png.latex?%5Cbar%7B%5Calpha%7D_T%20%5Capprox%200"> となり、<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_T"> は元のデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> からほぼ独立したGaussianノイズ <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BN%7D(%5Cmathbf%7B0%7D,%20%5Cmathbf%7BI%7D)"> になります。</p>
+</section>
+<section id="逆方向プロセスノイズからデータへ" class="level3">
+<h3 class="anchored" data-anchor-id="逆方向プロセスノイズからデータへ">逆方向プロセス：ノイズからデータへ</h3>
+<p>生成プロセスは、この順方向プロセスを逆に辿ります。つまり、まずGaussianノイズ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_T%20%5Csim%20%5Cmathcal%7BN%7D(%5Cmathbf%7B0%7D,%20%5Cmathbf%7BI%7D)"> をサンプリングし、そこから <img src="https://latex.codecogs.com/png.latex?t=T,%20T-1,%20%5Cdots,%201"> とステップを遡って <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_%7BT-1%7D,%20%5Cmathbf%7Bx%7D_%7BT-2%7D,%20%5Cdots,%20%5Cmathbf%7Bx%7D_0"> を逐次的にサンプリングします。</p>
+<p>このためには、逆方向の遷移確率 <img src="https://latex.codecogs.com/png.latex?q(%5Cmathbf%7Bx%7D_%7Bt-1%7D%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"> を知る必要がありますが、これはデータセット全体の情報が必要となるため計算が困難（intractable）です。そこで、この遷移確率をニューラルネットワーク（パラメータ <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> を持つ）で近似します。この近似された遷移確率を <img src="https://latex.codecogs.com/png.latex?p_%5Ctheta(%5Cmathbf%7Bx%7D_%7Bt-1%7D%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"> と書きます。</p>
+<p>逆方向プロセス全体は次のように表されます。</p>
+<p><img src="https://latex.codecogs.com/png.latex?p_%5Ctheta(%5Cmathbf%7Bx%7D_%7B0:T%7D)%20=%20p(%5Cmathbf%7Bx%7D_T)%20%5Cprod%5ET_%7Bt=1%7D%20p_%5Ctheta(%5Cmathbf%7Bx%7D_%7Bt-1%7D%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"></p>
+<p>ここで <img src="https://latex.codecogs.com/png.latex?p(%5Cmathbf%7Bx%7D_T)%20=%20%5Cmathcal%7BN%7D(%5Cmathbf%7Bx%7D_T;%20%5Cmathbf%7B0%7D,%20%5Cmathbf%7BI%7D)"> です。各逆方向ステップの遷移 <img src="https://latex.codecogs.com/png.latex?p_%5Ctheta(%5Cmathbf%7Bx%7D_%7Bt-1%7D%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"> もガウス分布であると仮定するのが一般的です。</p>
+<p><img src="https://latex.codecogs.com/png.latex?p_%5Ctheta(%5Cmathbf%7Bx%7D_%7Bt-1%7D%20%5Cvert%20%5Cmathbf%7Bx%7D_t)%20=%20%5Cmathcal%7BN%7D(%5Cmathbf%7Bx%7D_%7Bt-1%7D;%20%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t),%20%5Cboldsymbol%7B%5CSigma%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t))"></p>
+<p>モデルの目標は、この平均 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> と共分散 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5CSigma%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> を学習することです。 共分散 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5CSigma%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> は、しばしば学習せず、<img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2%20%5Cmathbf%7BI%7D"> という形の固定値（またはスケジュールに従う値）が用いられます。<img src="https://latex.codecogs.com/png.latex?%5Csigma_t%5E2"> としては、順方向プロセスの <img src="https://latex.codecogs.com/png.latex?%5Cbeta_t"> や、理論的に導かれる <img src="https://latex.codecogs.com/png.latex?%5Ctilde%7B%5Cbeta%7D_t%20=%20%5Cfrac%7B1%20-%20%5Cbar%7B%5Calpha%7D_%7Bt-1%7D%7D%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%20%5Cbeta_t"> が使われます。[Nichol &amp; Dhariwal, 2021] では、<img src="https://latex.codecogs.com/png.latex?%5Cbeta_t"> と <img src="https://latex.codecogs.com/png.latex?%5Ctilde%7B%5Cbeta%7D_t"> の間の補間として学習する手法も提案されていますが、不安定になる可能性も指摘されています。</p>
+</section>
+<section id="学習の目標ノイズを予測する" class="level3">
+<h3 class="anchored" data-anchor-id="学習の目標ノイズを予測する">学習の目標：ノイズを予測する</h3>
+<p>では、どのようにして <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> を学習するのでしょうか？ 完全な導出は変分下限（Variational Lower Bound, VLB）の最大化に基づきますが、DDPM [Ho et al., 2020] では、より直感的で効果的な目的関数が用いられています。</p>
+<p>その中心的なアイデアは、逆方向ステップの平均 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta"> を直接予測するのではなく、<strong>順方向プロセスでステップ <img src="https://latex.codecogs.com/png.latex?t"> においてデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> に加えられたノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D"> を予測する</strong>ことです。モデルを <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> と書きます。</p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t%20=%20%5Csqrt%7B%5Cbar%7B%5Calpha%7D_t%7D%20%5Cmathbf%7Bx%7D_0%20+%20%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%20%5Cboldsymbol%7B%5Cepsilon%7D"> の関係を使うと、逆方向ステップの（真の）平均 <img src="https://latex.codecogs.com/png.latex?%5Ctilde%7B%5Cboldsymbol%7B%5Cmu%7D%7D_t(%5Cmathbf%7Bx%7D_t,%20%5Cmathbf%7Bx%7D_0)"> （これは <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> が既知の場合に計算可能）は、このノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D"> を使って表現できます。そして、学習する平均 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> がこの真の平均に近くなるように、モデル <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> が真のノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D"> を予測するように学習させます。</p>
+<p>具体的には、<img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> は、予測されたノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> を用いて次のようにパラメータ化されます。</p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)%20=%20%5Cfrac%7B1%7D%7B%5Csqrt%7B%5Calpha_t%7D%7D%20%5Cleft(%20%5Cmathbf%7Bx%7D_t%20-%20%5Cfrac%7B%5Cbeta_t%7D%7B%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%7D%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)%20%5Cright)"></p>
+<p>この式を見ると、モデル <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta"> が学習できれば、逆方向ステップの平均 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cmu%7D_%5Ctheta"> が決まることがわかります。</p>
+<p>そして、DDPMで提案された単純化された学習目的関数（損失関数）は、以下のように、予測ノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> と、実際に加えられたノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D"> との間の平均二乗誤差（Mean Squared Error, MSE）を最小化することになります。</p>
+<p><img src="https://latex.codecogs.com/png.latex?L_%5Ctext%7Bsimple%7D%20=%20%5Cmathbb%7BE%7D_%7Bt%20%5Csim%20%5Cmathcal%7BU%7D(1,%20T),%20%5Cmathbf%7Bx%7D_0%20%5Csim%20q(%5Cmathbf%7Bx%7D_0),%20%5Cboldsymbol%7B%5Cepsilon%7D%20%5Csim%20%5Cmathcal%7BN%7D(%5Cmathbf%7B0%7D,%20%5Cmathbf%7BI%7D)%7D%20%5Cleft%5B%5C%7C%5Cboldsymbol%7B%5Cepsilon%7D%20-%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Csqrt%7B%5Cbar%7B%5Calpha%7D_t%7D%5Cmathbf%7Bx%7D_0%20+%20%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%5Cboldsymbol%7B%5Cepsilon%7D,%20t)%5C%7C%5E2%20%5Cright%5D"></p>
+<p>訓練時には、データ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> をサンプリングし、ランダムなステップ <img src="https://latex.codecogs.com/png.latex?t"> を選び、Gaussianノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D"> を生成し、<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t%20=%20%5Csqrt%7B%5Cbar%7B%5Calpha%7D_t%7D%5Cmathbf%7Bx%7D_0%20+%20%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%5Cboldsymbol%7B%5Cepsilon%7D"> を計算します。そして、モデル <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta"> に <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t"> と <img src="https://latex.codecogs.com/png.latex?t"> を入力し、予測されたノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> と元のノイズ <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D"> とのMSEを計算し、これを損失としてモデルパラメータ <img src="https://latex.codecogs.com/png.latex?%5Ctheta"> を更新します。</p>
+<p><strong>スコア関数との関連:</strong> このノイズ予測 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta"> は、実はデータの対数確率密度勾配、すなわちスコア関数 <img src="https://latex.codecogs.com/png.latex?%5Cnabla_%7B%5Cmathbf%7Bx%7D_t%7D%20%5Clog%20q(%5Cmathbf%7Bx%7D_t)"> と密接に関連しています。具体的には、<img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bs%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)%20%5Capprox%20%5Cnabla_%7B%5Cmathbf%7Bx%7D_t%7D%20%5Clog%20q(%5Cmathbf%7Bx%7D_t)%20%5Capprox%20-%20%5Cfrac%7B%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)%7D%7B%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%7D"> という関係があります。これは、拡散モデルがスコアベース生成モデル（NCSN [Song &amp; Ermon, 2019] など）と深いつながりを持つことを示唆しています。</p>
+</section>
+</section>
+<section id="拡散モデルの進化と応用" class="level2">
+<h2 class="anchored" data-anchor-id="拡散モデルの進化と応用">拡散モデルの進化と応用</h2>
+<p>DDPMの成功を受けて、拡散モデルの性能向上や応用範囲拡大のための様々な研究が行われています。</p>
+<section id="条件付き生成conditional-generation" class="level3">
+<h3 class="anchored" data-anchor-id="条件付き生成conditional-generation">条件付き生成（Conditional Generation）</h3>
+<p>特定の情報（クラスラベル、テキスト記述、他の画像など）に基づいて画像を生成する技術です。</p>
+<ul>
+<li><p><strong>Classifier Guidance:</strong> [Dhariwal &amp; Nichol, 2021] で提案。ノイズ付き画像 <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t"> を入力として目的の条件 <img src="https://latex.codecogs.com/png.latex?y"> の対数尤度 <img src="https://latex.codecogs.com/png.latex?%5Clog%20f_%5Cphi(y%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"> を計算する別の分類器 <img src="https://latex.codecogs.com/png.latex?f_%5Cphi"> を訓練します。生成時には、通常のノイズ予測 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)"> に、この分類器の勾配 <img src="https://latex.codecogs.com/png.latex?%5Cnabla_%7B%5Cmathbf%7Bx%7D_t%7D%20%5Clog%20f_%5Cphi(y%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"> を加味して予測を修正します。 <img src="https://latex.codecogs.com/png.latex?%5Cbar%7B%5Cboldsymbol%7B%5Cepsilon%7D%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t)%20=%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(x_t,%20t)%20-%20w%20%5Csqrt%7B1%20-%20%5Cbar%7B%5Calpha%7D_t%7D%20%5Cnabla_%7B%5Cmathbf%7Bx%7D_t%7D%20%5Clog%20f_%5Cphi(y%20%5Cvert%20%5Cmathbf%7Bx%7D_t)"> ここで <img src="https://latex.codecogs.com/png.latex?w"> はガイダンスの強さを制御する係数です。ADM (Ablated Diffusion Model) や ADM-G (ADM with Guidance) で高い性能が示されました。</p></li>
+<li><p><strong>Classifier-Free Guidance:</strong> [Ho &amp; Salimans, 2021] で提案。拡散モデル <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta"> 自身を、条件 <img src="https://latex.codecogs.com/png.latex?y"> が与えられた場合 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20y)"> と、条件がない（<img src="https://latex.codecogs.com/png.latex?y=%5Cvarnothing"> とする）場合 <img src="https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20%5Cvarnothing)"> の両方で学習します。これは訓練中に一定の確率で条件 <img src="https://latex.codecogs.com/png.latex?y"> を無視（空の条件 <img src="https://latex.codecogs.com/png.latex?%5Cvarnothing"> に置き換える）ことで実現されます。生成時には、この二つの予測を組み合わせてガイダンスを行います。 <img src="https://latex.codecogs.com/png.latex?%5Cbar%7B%5Cboldsymbol%7B%5Cepsilon%7D%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20y)%20=%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20%5Cvarnothing)%20+%20w%20(%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20y)%20-%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20%5Cvarnothing))"> これは <img src="https://latex.codecogs.com/png.latex?(w+1)%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20y)%20-%20w%20%5Cboldsymbol%7B%5Cepsilon%7D_%5Ctheta(%5Cmathbf%7Bx%7D_t,%20t,%20%5Cvarnothing)"> とも書けます（元のブログ記事の式と一致）。この手法は追加の分類器が不要であり、近年の多くの高性能モデル（Imagen, Stable Diffusion, GLIDEなど）で広く採用されています。GLIDE [Nichol et al., 2022] では、CLIPを用いたガイダンスよりもClassifier-Freeガイダンスの方が好ましい結果が得られたと報告されています。</p></li>
+</ul>
+</section>
+<section id="高速化speeding-up-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="高速化speeding-up-sampling">高速化（Speeding Up Sampling）</h3>
+<p>DDPMの最大の課題であった生成速度を改善するための研究が活発に行われています。</p>
+<ul>
+<li><p><strong>DDIM (Denoising Diffusion Implicit Models):</strong> [Song et al., 2020] で提案。DDPMはマルコフ連鎖的な確率過程でしたが、DDIMは同じ順方向プロセスを持ちながら、非マルコフ的な（より大きなステップを許容する）決定論的な生成プロセスを定義します。これにより、サンプリングステップ数を大幅に（例：1000ステップから20～50ステップへ）削減しても高品質な生成が可能になりました。DDIMはパラメータ <img src="https://latex.codecogs.com/png.latex?%5Ceta"> を持ち、<img src="https://latex.codecogs.com/png.latex?%5Ceta=0"> で決定論的（DDIM）、<img src="https://latex.codecogs.com/png.latex?%5Ceta=1"> でDDPMに近い確率的なサンプリングになります。決定論的であるため、同じ初期ノイズからは同じ画像が生成される「一貫性」を持ち、潜在空間での補間なども可能になります。</p></li>
+<li><p><strong>Progressive Distillation:</strong> [Salimans &amp; Ho, 2022] で提案。訓練済みの決定論的サンプラー（例：DDIM）を「教師」とし、より少ないステップ数で同じ結果を出す「生徒」モデルを訓練する蒸留手法です。具体的には、生徒モデルの1ステップが教師モデルの2ステップに対応するように学習させます。これを繰り返すことで、サンプリングステップ数を指数関数的に削減できます。</p></li>
+<li><p><strong>Consistency Models:</strong> [Song et al., 2023] で提案。拡散過程の途中の任意のノイズ付きデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_t"> から、直接元のデータ <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_0"> （またはそれに近い <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D_%5Cepsilon">）を予測する関数 <img src="https://latex.codecogs.com/png.latex?f(%5Cmathbf%7Bx%7D_t,%20t)%20%5Capprox%20%5Cmathbf%7Bx%7D_0"> を学習します。同じ軌道上の点はすべて同じ出力にマッピングされるという「自己一貫性」を持ちます。事前学習済みの拡散モデルから蒸留する方法（Consistency Distillation, CD）と、直接学習する方法（Consistency Training, CT）があります。これにより、理論的には1ステップでの高品質な生成が可能になります。</p></li>
+<li><p><strong>Latent Diffusion Models (LDM):</strong> [Rombach et al., 2022] で提案。画像を直接扱うのではなく、まず強力なAutoencoder（Encoder <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BE%7D"> と Decoder <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D">）を用いて画像を低次元の潜在表現 <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bz%7D%20=%20%5Cmathcal%7BE%7D(%5Cmathbf%7Bx%7D)"> に圧縮します。そして、この潜在空間 <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bz%7D"> 上で拡散モデル（通常はU-Netベース）を学習・実行します。生成時には、潜在空間でノイズから潜在表現 <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bz%7D"> を生成し、最後にDecoder <img src="https://latex.codecogs.com/png.latex?%5Cmathcal%7BD%7D"> を使って画像 <img src="https://latex.codecogs.com/png.latex?%5Ctilde%7B%5Cmathbf%7Bx%7D%7D%20=%20%5Cmathcal%7BD%7D(%5Cmathbf%7Bz%7D)"> に戻します。計算量を大幅に削減できるため、Stable Diffusionなどの高解像度画像生成モデルの基盤技術となっています。潜在空間の正則化にはKLペナルティ（VAEライク）やVQ正則化（VQ-VAEライク）が用いられます。条件付けは、潜在空間上のU-NetにCross-Attention機構を導入して行われることが多いです。</p></li>
+</ul>
+</section>
+<section id="高解像度高品質化" class="level3">
+<h3 class="anchored" data-anchor-id="高解像度高品質化">高解像度・高品質化</h3>
+<ul>
+<li><p><strong>Cascaded Models:</strong> [Ho et al., 2021] など。まず低解像度の画像を生成し、次にその低解像度画像を条件として、より高解像度の画像を生成する超解像拡散モデルを適用する、というパイプライン方式です。高品質な高解像度画像を生成するために有効です。この際、低解像度の条件画像に意図的にノイズを加える「Noise Conditioning Augmentation」が、誤差の蓄積を防ぎ品質を向上させる上で重要であることが示されています（低解像度ではGaussianノイズ、高解像度ではガウスぼかしが有効）。</p></li>
+<li><p><strong>unCLIP / DALL-E 2:</strong> [Ramesh et al., 2022] で提案。CLIPモデルを活用し、テキスト記述から高品質な画像を生成します。2段階のプロセスからなります：(1) Priorモデルがテキスト <img src="https://latex.codecogs.com/png.latex?y"> から対応するCLIP画像埋め込み <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bc%7D%5Ei"> を生成する (<img src="https://latex.codecogs.com/png.latex?P(%5Cmathbf%7Bc%7D%5Ei%20%5Cvert%20y)">)。(2) Decoderモデルが、生成された画像埋め込み <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bc%7D%5Ei"> （と、任意で元のテキスト <img src="https://latex.codecogs.com/png.latex?y">）を条件として、最終的な画像 <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7Bx%7D"> を生成する (<img src="https://latex.codecogs.com/png.latex?P(%5Cmathbf%7Bx%7D%20%5Cvert%20%5Cmathbf%7Bc%7D%5Ei,%20%5By%5D)">)。Decoderには拡散モデルが用いられます。</p></li>
+<li><p><strong>Imagen:</strong> [Saharia et al., 2022] で提案。CLIPの代わりに、大規模な事前学習済み言語モデル（凍結されたT5-XXL）をテキストエンコーダとして使用します。テキストエンコーダの規模がU-Netの規模よりも重要であることが示されました。Classifier-Free Guidanceのスケール <img src="https://latex.codecogs.com/png.latex?w"> を大きくした際の画像忠実度低下を防ぐために、予測値をクリッピングする「Dynamic Thresholding」という手法を導入しました。また、U-Netアーキテクチャを改良した「Efficient U-Net」（低解像度ブロックにパラメータを集中、スキップ接続のスケーリング、畳み込みとプーリングの順序変更など）も提案されました。</p></li>
+<li><p><strong>アーキテクチャの進化 (U-Net, DiT, ControlNet):</strong></p>
+<ul>
+<li><em>U-Net:</em> ダウンサンプリングパスとアップサンプリングパスを持ち、対応する層間をスキップ接続で繋いだ構造は、拡散モデル（特に画像）の標準的なバックボーンとして広く使われています。</li>
+<li><em>DiT (Diffusion Transformer):</em> [Peebles &amp; Xie, 2023] で提案。LDMと同様に潜在空間上で動作しますが、バックボーンとしてU-Netの代わりにTransformerを使用します。潜在表現をパッチに分割し、シーケンスとしてTransformerブロックに入力します。タイムステップ <img src="https://latex.codecogs.com/png.latex?t"> やクラスラベル <img src="https://latex.codecogs.com/png.latex?c"> などの条件は、Layer Normalizationのパラメータを適応的に変化させる adaLN (Adaptive Layer Norm) -Zero という方式で埋め込むのが効果的でした。Transformerのスケーラビリティの恩恵を受け、モデルサイズと計算量を増やすことで性能が向上することが示されています。</li>
+<li><em>ControlNet:</em> [Zhang et al., 2023] で提案。事前学習済みの強力な拡散モデル（例：Stable Diffusion）の重みを凍結したまま、そこに新たな条件（例：人物の骨格、線画、深度マップなど）を追加制御できるようにする手法です。元のモデルの各ブロックをコピーし、そのコピーのみを訓練可能にします。元のブロックとコピーの間を「Zero Convolution」（重みとバイアスがゼロで初期化された1x1畳み込み）で接続することで、元のモデルの性能を損なわずに、かつ安定して新たな制御を追加学習できます。式で書くと <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7By%7D_c%20=%20%5Cmathcal%7BF%7D_%5Ctheta(%5Cmathbf%7Bx%7D)%20+%20%5Cmathcal%7BZ%7D_%7B%5Ctheta_%7Bz2%7D%7D(%5Cmathcal%7BF%7D_%7B%5Ctheta_c%7D(%5Cmathbf%7Bx%7D%20+%20%5Cmathcal%7BZ%7D_%7B%5Ctheta_%7Bz1%7D%7D(%5Cmathbf%7Bc%7D)))"> となります。</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>拡散モデルは、データをノイズに変換する順方向プロセスと、その逆を学習してノイズからデータを生成する逆方向プロセスに基づく、強力かつ柔軟な生成モデルです。</p>
+<ul>
+<li><strong>利点:</strong> 理論的な扱いやすさ（Tractability）と表現力の高さ（Flexibility）を両立しています。特に画像生成においては、GANを凌駕する非常に高品質で多様なサンプルを生成できます。学習も比較的安定しています。</li>
+<li><strong>欠点:</strong> 元々はサンプリング（生成）に非常に時間がかかるという問題がありましたが、DDIM、LDM、蒸留技術、Consistency Modelsなどの登場により大幅に改善され、実用性が大きく向上しました。それでも、応用によってはまだGANなど他の手法に比べて速度面で課題が残る場合もあります。</li>
+</ul>
+<p>Classifier-Free Guidance、Latent Diffusion、Transformerアーキテクチャの採用、ControlNetのような制御技術など、数々の技術革新により、拡散モデルはテキストからの画像生成、画像編集、動画生成など、多くの応用分野で最先端の成果を上げており、現在の生成AIの発展を牽引する重要な技術となっています。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Weng, Lilian. (Jul 2021). What are diffusion models? Lil’Log. <a href="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/">https://lilianweng.github.io/posts/2021-07-11-diffusion-models/</a></li>
+<li>Ho, Jonathan, Ajay Jain, and Pieter Abbeel. “<a href="https://arxiv.org/abs/2006.11239">Denoising diffusion probabilistic models</a>.” NeurIPS 2020. (DDPM)</li>
+<li>Song, Jiaming, Chenlin Meng, and Stefano Ermon. “<a href="https://arxiv.org/abs/2010.02502">Denoising diffusion implicit models</a>.” ICLR 2021. (DDIM)</li>
+<li>Rombach, Robin, et al.&nbsp;“<a href="https://arxiv.org/abs/2112.10752">High-resolution image synthesis with latent diffusion models</a>.” CVPR 2022. (Latent Diffusion / Stable Diffusionの基盤)</li>
+<li>Nichol, Alex, and Prafulla Dhariwal. “<a href="https://arxiv.org/abs/2102.09672">Improved denoising diffusion probabilistic models</a>.” ICML 2021.</li>
+<li>Dhariwal, Prafulla, and Alex Nichol. “<a href="https://arxiv.org/abs/2105.05233">Diffusion models beat gans on image synthesis</a>.” NeurIPS 2021.</li>
+<li>Ho, Jonathan, and Tim Salimans. “<a href="https://arxiv.org/abs/2207.12598">Classifier-free diffusion guidance</a>.” NeurIPS 2021 Workshop.</li>
+<li>Salimans, Tim, and Jonathan Ho. “<a href="https://arxiv.org/abs/2202.00512">Progressive distillation for fast sampling of diffusion models</a>.” ICLR 2022.</li>
+<li>Song, Yang, et al.&nbsp;“<a href="https://arxiv.org/abs/2303.01469">Consistency models</a>.” ICML 2023.</li>
+<li>Ho, Jonathan, et al.&nbsp;“<a href="https://arxiv.org/abs/2106.15282">Cascaded diffusion models for high fidelity image generation</a>.” JMLR 2022.</li>
+<li>Ramesh, Aditya, et al.&nbsp;“<a href="https://arxiv.org/abs/2204.06125">Hierarchical text-conditional image generation with clip latents</a>.” arXiv 2022. (unCLIP / DALL-E 2)</li>
+<li>Saharia, Chitwan, et al.&nbsp;“<a href="https://arxiv.org/abs/2205.11487">Photorealistic text-to-image diffusion models with deep language understanding</a>.” NeurIPS 2022. (Imagen)</li>
+<li>Peebles, William, and Saining Xie. “<a href="https://arxiv.org/abs/2212.09748">Scalable diffusion models with transformers</a>.” ICCV 2023. (DiT)</li>
+<li>Zhang, Lvmin, and Maneesh Agrawala. “<a href="https://arxiv.org/abs/2302.05543">Adding conditional control to text-to-image diffusion models</a>.” ICCV 2023. (ControlNet)</li>
+</ol>
+
+
+</section>
+
+ ]]></description>
+  <category>Machine Learning</category>
+  <category>Diffusion models</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/diffusion-basics/</guid>
+  <pubDate>Thu, 17 Apr 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/37/200" medium="image"/>
+</item>
+<item>
+  <title>HubSpot共同創業者が見据えるAIエージェント新時代：ハイブリッドチームと仕事の未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>HubSpotの共同創業者兼CTOであり、近年はAgent.aiの創設者としても注目を集めるDharmesh Shah。インバウンドマーケティングのパイオニアとして名を馳せた彼が今、情熱を注ぐのは人工知能（AI）、とりわけAIエージェントの世界である。単なるバズワードとしてではなく、ビジネスの根幹を変革しうる力としてAIを見据える彼の洞察は、<a href="https://www.latent.space/p/dharmesh">Latent Space podcast</a>でのインタビューからも鮮明に浮かび上がる。本稿では、Shah氏が描くAIエージェントの未来像、特に「ハイブリッドチーム」という概念、新たなビジネスモデル「WaaS/RaaS」、そして彼が手掛けるAgent.aiの野心的なビジョンについて深く掘り下げていく。</p>
+<section id="エージェントの再定義ツールからチームメイトへ" class="level2">
+<h2 class="anchored" data-anchor-id="エージェントの再定義ツールからチームメイトへ">エージェントの再定義：ツールから「チームメイト」へ</h2>
+<p>Shah氏は、AIエージェントを「AIを活用し目標を達成するソフトウェア」と極めて広範に定義する。この定義は一部で「曖昧すぎる」との批判も招くが、彼の意図は既存の枠組みに囚われず、AIの可能性を最大限に捉えようとするところにあるのだろう。podcastで彼が語ったように、エージェントは自律性の度合い、ワークフローの決定性、同期/非同期性、インタラクションモード（チャット型、ワークフロー型など）によって多様な形態を取りうる。重要なのは、特定の技術実装ではなく、AIが「何かを成し遂げる」という本質なのである。</p>
+<p>さらにShah氏は、「ツールすらも原子的なエージェントと見なせるのではないか」という、より刺激的な視点を提供する。LLMがツールを呼び出す現在の主流アプローチに対し、彼は「すべてがエージェントであり、ツール呼び出しはエージェント間の連携に過ぎない」と考えれば、よりエレガントな設計思想に至る可能性を示唆する。この「万物エージェント論」とも言える発想は、彼がAgent.aiで目指す「AIエージェントのためのプロフェッショナルネットワーク」構想と深く結びついている。</p>
+<p>Agent.aiは、単なるAIツールのマーケットプレイスではない。Shah氏が語るように、それは「AIエージェント版LinkedIn」であり、様々な能力を持つAIエージェントが発見され、評価され、「雇用」されるプラットフォームを目指す。驚異的なスピードでユーザー数を増やし（2025年初頭の25万人から3月には110万人超へ）、1,000以上の公開エージェントを擁するに至った現状は、市場がいかに実用的なAIソリューションを渇望しているかの証左であろう。Shah氏自身が「好奇心こそが重要」と語るように、ローコード/ノーコードのビルダー機能は、専門家でなくとも独自のAIエージェントを構築できる民主化の波を後押ししている。</p>
+</section>
+<section id="ハイブリッドチーム次世代の働き方" class="level2">
+<h2 class="anchored" data-anchor-id="ハイブリッドチーム次世代の働き方">ハイブリッドチーム：次世代の働き方</h2>
+<p>Shah氏が提唱する最も興味深い概念の一つが「ハイブリッドチーム」である。これは、従来の「リモート vs オフィス」「正社員 vs 契約社員」といったハイブリッドモデルの次に来る、人間とAIエージェントが文字通り「チームメイト」として協働する組織形態を指す。AIが単なるツールではなく、主体性を持った協力者としてチームに加わる未来像だ。</p>
+<p>このビジョンの核心は、AIエージェントがデータ入力や定型レポート作成といった「退屈な（mundane）」タスクを引き受け、人間は戦略立案、創造性、共感、複雑な人間関係構築といった、より高度で人間的な能力（Shah氏の言葉を借りれば「魔法（magic）」）の発揮に集中できるようになるという点にある。AIによる雇用喪失の懸念に対し、彼はあくまで人間の能力を「拡張（augmentation）」するものであり、「皆さんの仕事は安全だ」と断言する。</p>
+<p>しかし、このハイブリッドチームの実現は、新たなマネジメントの課題も提起する。人間とAIの間でいかに信頼を構築し、タスクを効果的に委任し、円滑なコミュニケーションを確立するか。AIエージェントのパフォーマンスをどう評価し、チーム全体のダイナミクスをどう最適化していくか。これらの問いに対する答えはまだ模索段階であり、新たな組織論やリーダーシップ論が必要となることは想像に難くない。</p>
+</section>
+<section id="価値提供の進化saasからwaasそしてraasへ" class="level2">
+<h2 class="anchored" data-anchor-id="価値提供の進化saasからwaasそしてraasへ">価値提供の進化：SaaSからWaaS、そしてRaaSへ</h2>
+<p>AIアプリケーションの普及に伴い、ビジネスモデルも進化を迫られる。Shah氏は、従来のSoftware as a Service (SaaS)に加え、Work as a Service (WaaS)とResults as a Service (RaaS)という新たなモデルの重要性を指摘する。</p>
+<p>RaaSは、ソフトウェアが提供した具体的な「結果」に対して対価を支払うモデルである。例えば、解決されたサポートチケット数に応じて課金されるケースなどが該当する。成果が明確で測定可能な場合に有効だが、シャー氏は現状、このRaaSが「過度に重視されている（over-indexed）」可能性があると警鐘を鳴らす。なぜなら、すべてのAIタスクの成果が客観的に測定可能とは限らず、また成果に対する責任が人間とAIの間で共有されるケースも多いからだ。例えば、AIが生成したデザイン案の良し悪しをどう客観的に評価し、誰に最終的な責任を帰属させるのか、といった問題である。</p>
+<p>そこでShah氏が中間的なモデルとして提唱するのがWaaSである。これは、AIが実行した「作業」そのものに対して対価を支払うモデルだ。最終的な成果が主観的であったり、測定困難であったりする場合でも、AIが行ったプロセスや費やしたリソースに基づいて価値を評価する。これは、人間の労働がしばしば時間や労力で評価される現状とも整合性が高い。</p>
+<p>Shah氏は、SaaS、WaaS、RaaSの3つのモデルが、ユースケースに応じて併用される未来を予測する。SaaSは依然として人間を支援・強化するツールとして有効であり、RaaSは成果が明確な定型タスクに、そしてWaaSは成果保証が難しい複雑なタスクや、人間とAIが協働するハイブリッドチームの文脈で、その真価を発揮するだろう。</p>
+</section>
+<section id="エコシステム実現への道メモリと認証の壁" class="level2">
+<h2 class="anchored" data-anchor-id="エコシステム実現への道メモリと認証の壁">エコシステム実現への道：メモリと認証の壁</h2>
+<p>Shah氏が描くような、多数のAIエージェントが連携し合うエコシステムの実現には、乗り越えるべき技術的なハードルが存在する。podcastでも強調されていたのが、「メモリ」と「認証」の問題である。</p>
+<p>現在のチャットボットの多くが長時間の対話で文脈を維持できないように、AIエージェントが複雑なタスクを遂行するには、永続的で信頼性の高いメモリが不可欠となる。特にShah氏が重要視するのは「エージェント間のメモリ共有（cross-agent memory sharing）」である。あるエージェントが学習した情報を、許可された他のエージェントが安全に利用できなければ、真の連携は実現しない。</p>
+<p>同様に、データアクセス制御も大きな課題だ。現状のOAuthのような仕組みでは不十分であり、ユーザーが特定のデータ（例えば、特定のラベルが付いたメールのみ、特定の期間のデータのみなど）を選択的に、異なるエージェントに対して許可できるような、より詳細な（granular）認証メカニズムが必要だとShah氏は主張する。これが実現しなければ、セキュリティやプライバシーへの懸念から、企業や個人がAIエージェントに重要なタスクや広範なデータアクセスを委ねることは難しいだろう。</p>
+<p>これらのメモリと認証の課題は、単なる技術的な問題ではなく、AIエージェントに対する「信頼」をいかに構築するかという根源的な問いに繋がっている。Meta Agent Communication Protocol (MCP)のような標準規格の登場は、相互運用性の一助となる可能性はあるが、根本的なインフラ整備はまだ道半ばである。これらの課題解決こそが、Agent.aiのようなプラットフォーム、そしてハイブリッドチームという未来像の実現に向けた鍵となるのである。</p>
+</section>
+<section id="結論dharmesh-shahが拓く未来" class="level2">
+<h2 class="anchored" data-anchor-id="結論dharmesh-shahが拓く未来">結論：Dharmesh Shahが拓く未来</h2>
+<p>Dharmesh Shah氏は、HubSpotでの成功体験を基盤としながら、AIエージェントという新たな領域で再びイノベーションを牽引しようとしている。彼が提示するハイブリッドチームという働き方の未来像、WaaS/RaaSという新たな価値交換の形、そしてそれらを実現するためのプラットフォームとしてのAgent.aiは、単なる技術トレンドの追随ではなく、仕事の本質そのものを問い直す野心的な試みと言えるだろう。</p>
+<p>技術的な課題は残るものの、Shah氏のビジョンと実行力は、AIが社会やビジネスに浸透していくプロセスにおいて、重要な羅針盤となる可能性を秘めている。彼がpodcastで語ったように、AIエージェントとの協働はもはや避けられない未来であり、重要なのはそれを脅威と捉えるのではなく、いかにして人間の能力を拡張し、より良い働き方を実現するかという視点を持つことなのだろう。Agent.aiの急速な成長と、Shah氏の発信するメッセージは、その未来に向けた確かな一歩を示している。</p>
+
+
+</section>
+
+ ]]></description>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/</guid>
+  <pubDate>Wed, 16 Apr 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/30/200" medium="image"/>
+</item>
+<item>
+  <title>AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Google DeepMindから発表された二つの研究プロジェクト、<a href="https://www.nature.com/articles/s41586-025-08866-7">AMIE (Articulate Medical Intelligence Explorer)</a> と<a href="https://arxiv.org/abs/2502.18864">AI co-scientist</a>は、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト<a href="https://www.cognitiverevolution.ai/google-agents-beat-human-doctors-make-scientific-discoveries-with-vivek-natarajan-and-anil-palepu/">「The Cognitive Revolution」</a>では、開発担当者のVivek Natarajan氏とAnil Palepu氏がこれらのプロジェクトについて語り、AIが高度な専門知識を要する領域で人間と肩を並べ、あるいは特定のタスクにおいては凌駕し始めている現状が浮き彫りとなった。本稿では、これらの研究内容とその意味合いについて、ポッドキャストでの議論も踏まえつつ、やや距離を置いた視点から分析を試みる。</p>
+<section id="診断対話aiamie医師との比較で見えた可能性と課題" class="level2">
+<h2 class="anchored" data-anchor-id="診断対話aiamie医師との比較で見えた可能性と課題">診断対話AI『AMIE』：医師との比較で見えた可能性と課題</h2>
+<p>AMIEとは、診断における医師と患者の対話をAIで支援、あるいは代替することを目論む大規模言語モデル（LLM）ベースのシステムである。医療の核心とも言えるこの対話プロセスにおいて、AIがどこまで人間の医師の能力に近づけるかは、長らく大きな挑戦とされてきた代物だ。</p>
+<p>AMIEの開発では、多様な疾患や専門分野、文脈に対応できるよう、自己対戦（self-play）に基づいたシミュレーション環境と自動フィードバック機構が用いられた。これにより、モデルは様々な状況下での対話を通じて学習を深めることが可能となる。推論時には、対話の文脈を踏まえながら段階的に思考を深める「Chain-of-Reasoning」戦略を採用し、応答の正確性と質を高めているという。</p>
+<p>その性能を評価するため、客観的臨床能力試験（OSCE）を模した形式で、訓練を受けた模擬患者とAMIE、そして比較対象として現役のプライマリケア医（PCP）が、テキストチャットで診察を行うランダム化比較試験が実施された。この試験では、病歴聴取、診断精度、治療方針の妥当性、コミュニケーションスキル、共感力といった複数の軸で評価が行われた。</p>
+<p>結果を見ると、専門医評価では32項目中28項目、模擬患者評価では26項目中24項目において、AMIEがPCPを上回る評価を獲得したという。特に診断精度においては、AMIEがPCPよりも高い精度を示した点が注目される。さらに、ポッドキャストで触れられていた後続研究では、心臓病学や腫瘍学といった専門分野においても、AMIEがフェロー（専門研修医）を上回り、指導医レベルに迫る性能を示し始めていることが示唆された。</p>
+<p>ただし、これらの結果を鵜呑みにするのは早計である。最大の注意点は、評価がテキストチャットという、実際の臨床現場とは異なる限定的な環境で行われたことだ。医師は通常、対面や電話、ビデオ通話で患者と対話するため、テキストチャット形式は不慣れであった可能性が高い。また、対話相手も実際の患者ではなく、特定のシナリオに基づいて演技する模擬患者であった。</p>
+<p>とはいえ、特定の条件下においてAIが高い診断能力と対話能力を示した事実は無視できない。ポッドキャストで語られていたように、AIが人間の医師を補完する形で活用される可能性、例えば、診断の網羅性を高めたり、より共感的で構造化された応答を提案したりする未来は十分に考えられる。事実、心臓専門医がAMIEを利用した場合、単独の場合と比較してほぼ全ての評価指標でパフォーマンスが向上したという結果は、人間とAIの協調の可能性を示唆するものだろう。現在、AMIEはハーバード大学医学部付属病院であるベス・イスラエル・ディーコネス医療センターとの提携を通じて、実世界での検証、いわば臨床試験に近い段階へと進められている模様だ。</p>
+</section>
+<section id="co-scientist科学的発見プロセスを支援するai" class="level2">
+<h2 class="anchored" data-anchor-id="co-scientist科学的発見プロセスを支援するai">『Co-Scientist』：科学的発見プロセスを支援するAI</h2>
+<p>一方、Co-Scientistは、科学者が新たな知識を発見し、独創的な研究仮説を立てるプロセスを支援するために設計されたマルチエージェントシステムである。このシステムは、研究目標やガイダンスに基づいて先行研究を調査・統合し、実証可能な仮説や研究提案を生成することを目的とする。</p>
+<p>Co-Scientistの設計は、科学的手法に着想を得た「生成・討論・進化（generate, debate, evolve）」アプローチを採用している。複数の専門エージェント（生成、反省、ランキング、進化など）が連携し、トーナメント形式のフレームワーク内で仮説を継続的に生成、評価、改善していく。この自己改善ループにより、仮説の質が向上していくことが期待されるわけだ。また、ウェブ検索や専門的なAIモデル（論文中ではAlphaFoldへの言及もあった）といったツールを活用し、生成される仮説の根拠付けや質を高めている。</p>
+<p>その有効性を検証するため、3つの異なる複雑さを持つ生物医学分野での評価が行われた。第一に、比較的探索空間が限定される「既存薬の再開発（ドラッグリパーパシング）」では、急性骨髄性白血病（AML）に対して有望な候補薬を提案し、その一部は臨床的に適用可能な濃度で腫瘍抑制効果を示すことがin vitro実験で確認された。</p>
+<p>第二に、より複雑な「新規治療標的の発見」では、肝線維症に対する新たなエピジェネティックな標的を提案し、ヒト肝オルガノイドを用いた実験で抗線維化活性が検証された。</p>
+<p>そして第三に、最も挑戦的とも言える「細菌の薬剤耐性獲得メカニズムの解明」という完全にオープンエンドな課題である。この検証では、共同研究者である科学者グループが実験的に発見し、まだ公表していなかった特定の遺伝子伝達メカニズム（cf-PICIが多様なファージ尾部と相互作用することで宿主域を拡大する）と全く同じ仮説を、Co-Scientistが独立して最有力候補として提案するという、にわかには信じがたい結果が得られた。これは、AIが既存知識を単に再構成するだけでなく、点在する情報を結びつけ、人間にとっても新規性のある洞察を生み出す能力を持ち始めていることを強く示唆する事例と言えよう。</p>
+<p>Co-Scientistは、あくまで科学者を支援する「共同研究者」として設計されており、プロセスのどの段階でも人間の専門家が介入し、フィードバックを与えることが可能だ。現在、このシステムは「Trusted Tester Program」を通じて、より多くの研究者に利用機会を提供し、実世界での有用性や課題に関するフィードバックを収集する段階に進んでいる。</p>
+</section>
+<section id="専門知のai化見えてきた共通項と今後の展望" class="level2">
+<h2 class="anchored" data-anchor-id="専門知のai化見えてきた共通項と今後の展望">専門知のAI化：見えてきた共通項と今後の展望</h2>
+<p>AMIEとCo-Scientistの研究は、AIが人間の高度な知的活動領域へと進出している現状を示すものである。これらの研究からは、いくつかの共通した技術的アプローチが見て取れる。一つは、特定のタスクに対するモデルのファインチューニング（追加学習）よりも、汎用的な基盤モデルの能力を高度なプロンプティングやエージェント設計によって引き出す方向性へのシフト。二つ目は、長文脈処理能力と推論時の計算資源（Test-time Compute）を潤沢に使うことで、より深い思考や複雑なタスクの実行を可能にしている点。そして三つ目は、自己対戦やトーナメント形式の評価、外部ツール（特にウェブ検索）からの情報（エントロピー）注入といった仕組みを取り入れることで、システムの自己改善能力や生成物の質を高めている点である。</p>
+<p>ポッドキャストで議論されていたように、「AIが人間より賢くなった」と結論づけるのは時期尚早であろう。しかし、特定の定義されたタスクにおいて、AIがトップレベルの人間の専門家と同等、あるいはそれ以上のパフォーマンスを発揮し始めていることは否定できない。Co-Scientistが未発表の科学的発見を再現した事例は、その好例だ。</p>
+<p>これらのAIシステムは、単に既存の情報を検索・要約するだけでなく、複数の情報源を統合し、新たな仮説を生成するという、より高度な知的作業を可能にしつつある。もちろん、現実世界の複雑さへの対応、真に独創的な問いを発する能力、倫理的な課題など、克服すべき点は山積している。しかし、AMIEの臨床応用への模索やCo-Scientistの研究コミュニティへの提供開始は、AIが専門家の「思考パートナー」となる未来が、もはやSFの領域ではなくなりつつあることを物語っている。</p>
+<p>肝要なのは、これらの技術をいかに責任ある形で社会実装していくかという点に尽きる。特に医療や科学研究といった分野では、人間の専門家による監督と検証が不可欠であり、AIはあくまで人間を支援し、その能力を拡張するためのツールとして位置づけられるべきなのだ。Google DeepMindの取り組みは、その可能性と課題の両方を我々に突きつけており、今後の動向から目が離せない。</p>
+
+
+</section>
+
+ ]]></description>
+  <category>LLM</category>
+  <category>Podcast</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/</guid>
+  <pubDate>Tue, 15 Apr 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/82/200" medium="image"/>
+</item>
+<item>
+  <title>コードで理解するTransformer：AttentionとGPTモデル入門</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>近年、ChatGPTやGPT-4といった大規模言語モデル（LLM: Large Language Models）が大きな注目を集めています。これらのモデルは、コードの作成、メールの下書き、複雑な質問への回答、さらには創造的な文章生成まで、驚くべき能力を発揮します。これらのシステムの多くを支える中核技術が、2017年の画期的な論文「<a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a>」で提案されたTransformerアーキテクチャです。</p>
+<p>しかし、この「Attention」メカニズムとは一体何で、どのようにしてGPTのようなモデルが文脈を理解し、一貫性のあるテキストを生成することを可能にしているのでしょうか？</p>
+<p>Andrej Karpathy氏の優れた動画「<a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">Let’s build GPT: from scratch, in code, spelled out.</a>」では、彼が<a href="https://github.com/karpathy/ng-video-lecture/tree/master"><code>nanogpt</code></a>と呼ぶ小規模なバージョンをゼロから構築することで、Transformerを分かりやすく解説しています。今回は、彼の解説に沿って、Transformerの心臓部であるself-attentionの仕組みを解き明かしていきましょう。</p>
+<section id="準備言語モデリングの基本" class="level2">
+<h2 class="anchored" data-anchor-id="準備言語モデリングの基本">準備：言語モデリングの基本</h2>
+<p>Attentionに入る前に、基本的なタスクである「言語モデリング」について理解しましょう。言語モデリングの目標は、与えられたシーケンス（文脈）に基づいて、シーケンス中の次の単語（または文字、トークン）を予測することです。</p>
+<p>Karpathy氏はまず、「Tiny Shakespeare」データセットを使用します。これはシェイクスピアの作品を連結した単一のテキストファイルです。</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># まずは学習用のデータセットを用意します。Tiny Shakespeareデータセットをダウンロードしましょう。</span></span>
+<span id="cb1-2"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span>wget https:<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">//</span>raw.githubusercontent.com<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>karpathy<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>char<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>rnn<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>master<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>data<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>tinyshakespeare<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">input</span>.txt</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 中身を確認するために読み込みます。</span></span>
+<span id="cb1-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'input.txt'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'r'</span>, encoding<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'utf-8'</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb1-6">    text <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f.read()</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># このテキストに含まれるユニークな文字をすべてリストアップします。</span></span>
+<span id="cb1-9">chars <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sorted</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">set</span>(text)))</span>
+<span id="cb1-10">vocab_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(chars)</span>
+<span id="cb1-11"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join(chars))</span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># !$&amp;',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz</span></span>
+<span id="cb1-13"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(vocab_size)</span>
+<span id="cb1-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 65</span></span>
+<span id="cb1-15"></span>
+<span id="cb1-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 文字から整数へのマッピングを作成します。</span></span>
+<span id="cb1-17">stoi <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> { ch:i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> i,ch <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(chars) }</span>
+<span id="cb1-18">itos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> { i:ch <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> i,ch <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(chars) }</span>
+<span id="cb1-19">encode <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">lambda</span> s: [stoi[c] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> c <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> s] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># encoder: 文字列を受け取り、整数のリストを出力</span></span>
+<span id="cb1-20">decode <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">lambda</span> l: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>.join([itos[i] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> l]) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># decoder: 整数のリストを受け取り、文字列を出力</span></span>
+<span id="cb1-21"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(encode(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hii there"</span>))</span>
+<span id="cb1-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># [46, 47, 47, 1, 58, 46, 43, 56, 43]</span></span>
+<span id="cb1-23"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(decode(encode(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hii there"</span>)))</span>
+<span id="cb1-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hii there</span></span></code></pre></div>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># テキストデータセット全体をエンコードし、torch.Tensorに格納します。</span></span>
+<span id="cb2-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># PyTorchを使用します: https://pytorch.org</span></span>
+<span id="cb2-3">data <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor(encode(text), dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">long</span>)</span>
+<span id="cb2-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(data.shape, data.dtype)</span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># torch.Size([1115394]) torch.int64</span></span>
+<span id="cb2-6"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(data[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span>])</span>
+<span id="cb2-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># tensor([18, 47, 56, 57, 58,  1, 15, 47, 58, 47, 64, 43, 52, 10,  0, 14, 43, 44, ...</span></span></code></pre></div>
+<p>この例では、テキストは文字レベルでトークン化（tokenized）され、各文字が数にマッピングされます。モデルの役割は、数のシーケンスが与えられたときに、次に来る文字の数を予測することです。</p>
+<p>Karpathy氏は、まず最も単純な言語モデルである<strong>Bigram Model</strong>を実装します。</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span>
+<span id="cb3-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch.nn <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> nn</span>
+<span id="cb3-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> torch.nn <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> functional <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> F</span>
+<span id="cb3-4">torch.manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1337</span>)</span>
+<span id="cb3-5"></span>
+<span id="cb3-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> BigramLanguageModel(nn.Module):</span>
+<span id="cb3-7"></span>
+<span id="cb3-8">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, vocab_size):</span>
+<span id="cb3-9">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>()</span>
+<span id="cb3-10">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 各トークンはルックアップテーブルから次のトークンのロジットを直接読み取る</span></span>
+<span id="cb3-11">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 動画では後に vocab_size x n_embd に変更される</span></span>
+<span id="cb3-12">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.token_embedding_table <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Embedding(vocab_size, vocab_size)</span>
+<span id="cb3-13"></span>
+<span id="cb3-14">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> forward(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, idx, targets<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>):</span>
+<span id="cb3-15">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># idx と targets は両方とも (B,T) の整数テンソル</span></span>
+<span id="cb3-16">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Bigramモデルではロジットは直接ルックアップされる</span></span>
+<span id="cb3-17">        logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.token_embedding_table(idx) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C) ここで初期はC=vocab_size</span></span>
+<span id="cb3-18"></span>
+<span id="cb3-19">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> targets <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">is</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb3-20">            loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb3-21">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span>:</span>
+<span id="cb3-22">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># cross_entropyのために形状を変更</span></span>
+<span id="cb3-23">            B, T, C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits.shape</span>
+<span id="cb3-24">            logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits.view(B<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>T, C)</span>
+<span id="cb3-25">            targets <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> targets.view(B<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>T)</span>
+<span id="cb3-26">            loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.cross_entropy(logits, targets)</span>
+<span id="cb3-27"></span>
+<span id="cb3-28">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> logits, loss</span>
+<span id="cb3-29"></span>
+<span id="cb3-30">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> generate(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, idx, max_new_tokens):</span>
+<span id="cb3-31">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># idxは現在の文脈におけるインデックスの(B, T)配列</span></span>
+<span id="cb3-32">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(max_new_tokens):</span>
+<span id="cb3-33">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 予測を取得</span></span>
+<span id="cb3-34">            logits, loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>(idx)</span>
+<span id="cb3-35">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 最後のタイムステップのみに注目</span></span>
+<span id="cb3-36">            logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits[:, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, :] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, C) になる</span></span>
+<span id="cb3-37">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># softmaxを適用して確率を取得</span></span>
+<span id="cb3-38">            probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.softmax(logits, dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, C)</span></span>
+<span id="cb3-39">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 分布からサンプリング</span></span>
+<span id="cb3-40">            idx_next <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.multinomial(probs, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, 1)</span></span>
+<span id="cb3-41">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># サンプリングされたインデックスを実行中のシーケンスに追加</span></span>
+<span id="cb3-42">            idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.cat((idx, idx_next), dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T+1)</span></span>
+<span id="cb3-43">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> idx</span>
+<span id="cb3-44"></span>
+<span id="cb3-45">m <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> BigramLanguageModel(vocab_size)</span>
+<span id="cb3-46">logits, loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> m(xb, yb)</span>
+<span id="cb3-47"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(logits.shape)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># torch.Size([32, 65])</span></span>
+<span id="cb3-48"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(loss)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># tensor(4.8786, grad_fn=&lt;NllLossBackward0&gt;)</span></span>
+<span id="cb3-49"></span>
+<span id="cb3-50"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(decode(m.generate(idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">long</span>), max_new_tokens<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].tolist()))</span>
+<span id="cb3-51"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># SKIcLT;AcELMoTbvZv C?nq-QE33:CJqkOKH-q;:la!oiywkHjgChzbQ?u!3bLIgwevmyFJGUGpwnYWmnxKWWev-tDqXErVKLgJ</span></span></code></pre></div>
+<p>このモデルを実際に訓練してみます。</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># PyTorch optimizerの作成</span></span>
+<span id="cb4-2">optimizer <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.optim.AdamW(m.parameters(), lr<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1e-3</span>)</span>
+<span id="cb4-3"></span>
+<span id="cb4-4">batch_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span></span>
+<span id="cb4-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> steps <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>): <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># increase number of steps for good results...</span></span>
+<span id="cb4-6"></span>
+<span id="cb4-7">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># batch の作成</span></span>
+<span id="cb4-8">    xb, yb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> get_batch(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'train'</span>)</span>
+<span id="cb4-9"></span>
+<span id="cb4-10">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># lossをもとに重みを更新</span></span>
+<span id="cb4-11">    logits, loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> m(xb, yb)</span>
+<span id="cb4-12">    optimizer.zero_grad(set_to_none<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span>
+<span id="cb4-13">    loss.backward()</span>
+<span id="cb4-14">    optimizer.step()</span>
+<span id="cb4-15"></span>
+<span id="cb4-16"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(loss.item())  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 4.65630578994751</span></span>
+<span id="cb4-17"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(decode(m.generate(idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), dtype<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>torch.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">long</span>), max_new_tokens<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">500</span>)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].tolist()))</span>
+<span id="cb4-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># oTo.JUZ!!zqe!</span></span>
+<span id="cb4-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># xBP qbs$Gy'AcOmrLwwt ...</span></span></code></pre></div>
+<p>このモデルは、入力文字のインデックスを使って、次の文字の確率分布（ロジット）を直接ルックアップする埋め込み（embedding）テーブルを使用します。これは単純ですが、重大な欠点があります。それは、文脈を完全に無視してしまう点です。「hat」の後の「t」も、「bat」の後の「t」も、予測は同じになってしまいます。トークン同士が「対話」していないのです。</p>
+</section>
+<section id="コミュニケーションの必要性過去の情報を集約する" class="level2">
+<h2 class="anchored" data-anchor-id="コミュニケーションの必要性過去の情報を集約する">コミュニケーションの必要性：過去の情報を集約する</h2>
+<p>より良い予測を行うためには、トークンはシーケンス内の先行するトークンからの情報を必要とします。トークンはどのようにしてコミュニケーションできるのでしょうか？</p>
+<p>Karpathy氏は、行列積を用いた「数学的なトリック」を紹介します。トークンが文脈を得る最も簡単な方法は、自身を含む先行するすべてのトークンからの情報を平均化することです。</p>
+<p>入力<code>x</code>が<code>(B, T, C)</code>（Batch、Time（シーケンス長）、Channels（埋め込み次元））の形状を持つとします。<code>xbow[b, t]</code>が<code>x[b, 0]</code>から<code>x[b, t]</code>までの平均を含むような<code>xbow</code>（bag-of-words表現）を計算したいと考えます。</p>
+<p>以下のような単純なループは非効率です。</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># xbow[b,t] = mean_{i&lt;=t} x[b,i] を計算したい</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (xがB, T, Cの形状で定義されていると仮定)</span></span>
+<span id="cb5-3">B,T,C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 例としての次元</span></span>
+<span id="cb5-4">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(B,T,C)</span>
+<span id="cb5-5">xbow <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((B,T,C))</span>
+<span id="cb5-6"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> b <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(B):</span>
+<span id="cb5-7">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> t <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(T):</span>
+<span id="cb5-8">        xprev <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x[b,:t<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (t+1, C)</span></span>
+<span id="cb5-9">        xbow[b,t] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.mean(xprev, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span></code></pre></div>
+<p>効率的な方法は、下三角行列との行列積を使用することです。</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># version 2: 行列積を用いた重み付き集約</span></span>
+<span id="cb6-2">T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 例としてのシーケンス長</span></span>
+<span id="cb6-3">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tril(torch.ones(T, T)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1で構成される下三角行列</span></span>
+<span id="cb6-4">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> wei.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, keepdim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 各行の合計が1になるように正規化 -&gt; 平均化</span></span>
+<span id="cb6-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 例として B=4, T=8, C=32 のx</span></span>
+<span id="cb6-6">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, T, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>)</span>
+<span id="cb6-7">xbow2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> x <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (T, T) @ (B, T, C) はブロードキャストされ -&gt; (B, T, C)</span></span>
+<span id="cb6-8">torch.allclose(xbow, xbow2)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># True</span></span></code></pre></div>
+<p>ここで、<code>wei</code>（重み）は<code>(T, T)</code>行列です。<code>wei</code>の行<code>t</code>は、列0からtまでのみ非ゼロ値（この場合は1/(t+1)）を持ちます。これを<code>x</code>（形状<code>(B, T, C)</code>）と乗算すると、PyTorchは<code>wei</code>をバッチ次元全体にブロードキャストします。結果として得られる<code>xbow2[b, t]</code>は、<code>x[b, 0]</code>から<code>x[b, t]</code>までの重み付き合計（この場合は平均）となります。</p>
+<p>この行列積は効率的に集約処理を実行します。これは<code>softmax</code>を使っても実現できます。</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># version 3: Softmaxを使用</span></span>
+<span id="cb7-2">T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span></span>
+<span id="cb7-3">tril <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tril(torch.ones(T, T))</span>
+<span id="cb7-4">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.zeros((T,T))</span>
+<span id="cb7-5">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei.masked_fill(tril <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'-inf'</span>)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 上三角部分を-infで埋める</span></span>
+<span id="cb7-6">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.softmax(wei, dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Softmaxは行の合計を1にし、平均の重みを回復する</span></span>
+<span id="cb7-7">xbow3 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> x</span>
+<span id="cb7-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># torch.allclose(xbow, xbow3) は True になるはず</span></span></code></pre></div>
+<p>なぜここで<code>softmax</code>を使うかというと、重み（<code>wei</code>）が固定された平均である必要はなく、重み自体が学習可能であったり、データに依存したりできるという重要なアイデアを導入するからです。これこそが、self-attentionが行うことです。</p>
+</section>
+<section id="位置情報の導入position-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="位置情報の導入position-encoding">位置情報の導入：Position Encoding</h2>
+<p>Self-Attentionメカニズム自体について詳しく見る前に、もう一つ重要な要素について触れておく必要があります。それは、トークンの位置に関する情報です。</p>
+<p>Self-Attentionの基本的な計算（Query, Key, Valueを用いた加重集約）は、それ自体ではトークンがシーケンス内のどの位置にあるかを考慮しません。極端な話、単語の順番が入れ替わっても、各トークン間のAttentionスコアの計算自体は（入力ベクトルが同じであれば）変わりません。これでは、文の意味を正しく捉えることができません。「猫がマットの上に座った」と「マットが猫の上に座った」では意味が全く異なります。</p>
+<p>この問題を解決するため、Transformerではトークン自体の意味を表す埋め込みベクトル（Token Embedding）に、そのトークンがシーケンス中のどの位置にあるかを示すPosition Encoding（位置エンコーディング）ベクトルを加算します。</p>
+<p>Karpathy氏の動画で実装されている<code>nanogpt</code>では、学習可能なPosition Encodingが用いられています。具体的には、<code>block_size</code>（扱える最大のシーケンス長）に対応する数の位置ベクトルを格納する埋め込みテーブル（<code>position_embedding_table</code>）を用意します。シーケンス長が<code>T</code>の場合、<code>0</code>から<code>T-1</code>までの整数をインデックスとして、対応する位置ベクトルをこのテーブルから取得します。</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># BigramLanguageModel内のforwardメソッドより抜粋</span></span>
+<span id="cb8-2">B, T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> idx.shape</span>
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># idx and targets are both (B,T) tensor of integers</span></span>
+<span id="cb8-5">tok_emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.token_embedding_table(idx) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C) - トークン埋め込み</span></span>
+<span id="cb8-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># torch.arange(T, device=device) は 0 から T-1 までの整数のシーケンスを生成</span></span>
+<span id="cb8-7">pos_emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.position_embedding_table(torch.arange(T, device<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>device)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (T,C) - 位置埋め込み</span></span>
+<span id="cb8-8">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> tok_emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> pos_emb <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C) - トークン埋め込みと位置埋め込みを加算</span></span>
+<span id="cb8-9">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.blocks(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ... このxがTransformerブロックへの入力となる ...</span></span></code></pre></div>
+<p>このようにして、トークン自体の情報(<code>tok_emb</code>)とその位置情報(<code>pos_emb</code>)の両方を含んだベクトル<code>x</code>が作成されます。この<code>x</code>こそが、後続のTransformerブロック（Self-Attention層やFeedForward層）への実際の入力となるのです。これにより、モデルはトークンの意味だけでなく、その順序関係も考慮して処理を進めることができるようになります。</p>
+</section>
+<section id="self-attentionデータに基づいた情報の集約" class="level2">
+<h2 class="anchored" data-anchor-id="self-attentionデータに基づいた情報の集約">Self-Attention：データに基づいた情報の集約</h2>
+<p>単純な平均化は、過去のすべてのトークンを平等に扱います。しかし、実際には、過去の一部のトークンが他のトークンよりもはるかに重要である場合があります。例えば、「The cat sat on the…」の次に続く単語を予測する場合、「The」よりも「cat」という単語の方が重要である可能性が高いです。</p>
+<p>Self-attentionは、トークンが他のトークンに<strong>問い合わせ（query）を行い、関連性に基づいて注意スコア（attention scores）</strong>を割り当てることを可能にします。各トークンは3つのベクトルを生成します。</p>
+<ol type="1">
+<li>Query (Q): 自分はどのような情報を探しているか？</li>
+<li>Key (K): 自分はどのような情報を持っているか？</li>
+<li>Value (V): もし自分に注意が向けられたら、どのような情報を提供するか？</li>
+</ol>
+<p>トークン<code>i</code>とトークン<code>j</code>間の注意スコア（またはaffinity）は、トークン<code>i</code>のQueryベクトル(<code>q_i</code>)とトークン<code>j</code>のKeyベクトル(<code>k_j</code>)の内積を取ることで計算されます。</p>
+<p><code>affinity(i, j) = q_i ⋅ k_j</code></p>
+<p>内積が大きい場合、QueryがKeyに良く一致していることを意味し、トークン<code>j</code>がトークン<code>i</code>にとって関連性が高いと判断されます。</p>
+<p>以下は、Attentionの単一の「Head」を実装する方法です。</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># version 4: self-attention!</span></span>
+<span id="cb9-2">torch.manual_seed(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1337</span>)</span>
+<span id="cb9-3">B,T,C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># batch, time, channels (埋め込み次元)</span></span>
+<span id="cb9-4">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.randn(B,T,C) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 入力トークンの埋め込み + 位置エンコーディング</span></span>
+<span id="cb9-5"></span>
+<span id="cb9-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 単一のHeadがself-attentionを実行する様子を見てみましょう</span></span>
+<span id="cb9-7">head_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># このHeadのK, Q, Vベクトルの次元</span></span>
+<span id="cb9-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 入力'x'をK, Q, Vに射影するための線形層</span></span>
+<span id="cb9-9">key   <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(C, head_size, bias<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb9-10">query <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(C, head_size, bias<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb9-11">value <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(C, head_size, bias<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb9-12"></span>
+<span id="cb9-13">k <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> key(x)   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, head_size)</span></span>
+<span id="cb9-14">q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> query(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, head_size)</span></span>
+<span id="cb9-15"></span>
+<span id="cb9-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 注意スコア（"affinities"）を計算</span></span>
+<span id="cb9-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, head_size) @ (B, head_size, T) ---&gt; (B, T, T)</span></span>
+<span id="cb9-18">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>  q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> k.transpose(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb9-19"></span>
+<span id="cb9-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># --- スケーリングステップ (後述) ---</span></span>
+<span id="cb9-21">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (head_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># アフィニティをスケーリング</span></span>
+<span id="cb9-22"></span>
+<span id="cb9-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># --- Decoderのためのマスキング ---</span></span>
+<span id="cb9-24">tril <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tril(torch.ones(T, T, device<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>x.device)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># xと同じデバイスを使用</span></span>
+<span id="cb9-25">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei.masked_fill(tril <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'-inf'</span>)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 未来のトークンをマスク</span></span>
+<span id="cb9-26"></span>
+<span id="cb9-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># --- スコアを正規化して確率を取得 ---</span></span>
+<span id="cb9-28">wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.softmax(wei, dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, T)</span></span>
+<span id="cb9-29"></span>
+<span id="cb9-30"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># --- Valueの重み付き集約を実行 ---</span></span>
+<span id="cb9-31">v <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> value(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, head_size)</span></span>
+<span id="cb9-32"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, T) @ (B, T, head_size) ---&gt; (B, T, head_size)</span></span>
+<span id="cb9-33">out <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> v</span>
+<span id="cb9-34"></span>
+<span id="cb9-35"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># out.shape は (B, T, head_size)</span></span></code></pre></div>
+<p>重要なステップを分解してみましょう。</p>
+<ol type="1">
+<li>射影（Projection）: 入力<code>x</code>（トークン埋め込みと位置エンコーディングを含む）が、線形層によってK、Q、V空間に射影されます。</li>
+<li>アフィニティ計算（Affinity Calculation）: <code>q @ k.transpose(...)</code> は、バッチ内の各シーケンスにおける全てのQueryベクトルとKeyベクトルのペアの内積を計算します。これにより、生の注意スコアである<code>wei</code>（形状 <code>B, T, T</code>）が得られます。</li>
+<li>スケーリング（Scaling）: スコア<code>wei</code>は<code>head_size</code>の平方根でスケールダウンされます。これは、特に初期化段階での学習を安定させるために重要です。スケーリングがないと、内積の分散がhead_sizeと共に増加し、<code>softmax</code>の入力が勾配の非常に小さい領域に押しやられ、学習が妨げられる可能性があります。</li>
+<li>マスキング（Masking (Decoder固有)）: GPTのような自己回帰型（autoregressive）言語モデリングでは、位置<code>t</code>のトークンは位置<code>t</code>までのトークンにのみ注意を向けるべきです。これは、未来の位置（<code>j &gt; t</code>）に対応する注意スコアを下三角行列（<code>tril</code>）を用いた<code>masked_fill</code>で負の無限大に設定することで実現されます。これにより、<code>softmax</code>は未来のトークンにゼロの確率を割り当てます。（BERTのようなEncoderブロックでは、この causal mask は使用されません。）</li>
+<li>Softmax: マスクされたスコアに対して行ごとに<code>softmax</code>を適用します。これにより、スコアは各トークン<code>t</code>について合計が1になる確率に変換され、先行するトークン<code>0</code>から<code>t</code>までの注意分布を表します。</li>
+<li>Valueの集約（Value Aggregation）: 各トークン<code>t</code>の最終出力<code>out</code>は、<code>wei</code>内の注意確率によって重み付けされた、全トークンのValueベクトル（<code>v</code>）の重み付き合計です。<code>out = wei @ v</code>。</li>
+</ol>
+<p>出力<code>out</code>（形状 <code>B, T, head_size</code>）は、学習されたK、Q、Vの射影に基づいて、シーケンス内の他の関連トークンから集約された情報を各トークンごとに含んでいます。</p>
+</section>
+<section id="multi-head-attention多角的な視点" class="level2">
+<h2 class="anchored" data-anchor-id="multi-head-attention多角的な視点">Multi-Head Attention：多角的な視点</h2>
+<p>単一のAttention Headは、ある特定タイプの関係性（例：名詞と動詞の一致）に焦点を当てるかもしれません。多様な関係性を捉えるために、Transformerは<strong>Multi-Head Attention</strong>を使用します。</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> Head(nn.Module):</span>
+<span id="cb10-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">""" self-attentionの単一ヘッド """</span></span>
+<span id="cb10-3">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, head_size):</span>
+<span id="cb10-4">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>()</span>
+<span id="cb10-5">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.key <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(n_embd, head_size, bias<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb10-6">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.query <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(n_embd, head_size, bias<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb10-7">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.value <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(n_embd, head_size, bias<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>)</span>
+<span id="cb10-8">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># trilをバッファとして登録（パラメータではない）</span></span>
+<span id="cb10-9">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.register_buffer(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'tril'</span>, torch.tril(torch.ones(block_size, block_size)))</span>
+<span id="cb10-10">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.dropout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Dropout(dropout) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Dropoutを追加</span></span>
+<span id="cb10-11"></span>
+<span id="cb10-12">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> forward(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, x):</span>
+<span id="cb10-13">        B,T,C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x.shape</span>
+<span id="cb10-14">        k <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.key(x)   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,head_size)</span></span>
+<span id="cb10-15">        q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.query(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,head_size)</span></span>
+<span id="cb10-16">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 注意スコア（"affinities"）を計算</span></span>
+<span id="cb10-17">        wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> k.transpose(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> k.shape[<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># head_sizeでスケーリング</span></span>
+<span id="cb10-18">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Tに基づいて動的にマスクを適用</span></span>
+<span id="cb10-19">        wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei.masked_fill(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.tril[:T, :T] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'-inf'</span>))</span>
+<span id="cb10-20">        wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.softmax(wei, dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb10-21">        wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.dropout(wei) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 注意の重みにDropoutを適用</span></span>
+<span id="cb10-22">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Valueの重み付き集約を実行</span></span>
+<span id="cb10-23">        v <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.value(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,head_size)</span></span>
+<span id="cb10-24">        out <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> wei <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> v</span>
+<span id="cb10-25">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> out</span>
+<span id="cb10-26"></span>
+<span id="cb10-27"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> MultiHeadAttention(nn.Module):</span>
+<span id="cb10-28">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">""" self-attentionの複数ヘッドを並列に実行 """</span></span>
+<span id="cb10-29">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, num_heads, head_size):</span>
+<span id="cb10-30">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>()</span>
+<span id="cb10-31">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 複数のHeadインスタンスを作成</span></span>
+<span id="cb10-32">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.heads <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.ModuleList([Head(head_size) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(num_heads)])</span>
+<span id="cb10-33">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 連結後の射影層</span></span>
+<span id="cb10-34">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.proj <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(num_heads <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> head_size, n_embd) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># n_embd = num_heads * head_size</span></span>
+<span id="cb10-35">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.dropout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Dropout(dropout)</span>
+<span id="cb10-36"></span>
+<span id="cb10-37">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> forward(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, x):</span>
+<span id="cb10-38">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 各ヘッドを並列に実行し、結果をチャネル次元で連結</span></span>
+<span id="cb10-39">        out <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.cat([h(x) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> h <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.heads], dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, num_heads * head_size)</span></span>
+<span id="cb10-40">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 連結された出力を元のn_embd次元に再射影</span></span>
+<span id="cb10-41">        out <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.dropout(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.proj(out)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T, n_embd)</span></span>
+<span id="cb10-42">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> out</span></code></pre></div>
+<p>これは単純に複数のHeadモジュールを並列に実行し、それぞれが異なる学習済みK、Q、V射影を持つ可能性があります。各ヘッドの出力（それぞれ <code>B, T, head_size</code>）は連結され（<code>B, T, num_heads * head_size</code>）、その後、別の線形層（<code>self.proj</code>）を用いて元の埋め込み次元（<code>B, T, n_embd</code>）に再射影されます。これにより、モデルは異なる表現部分空間からの情報に同時に注意を向けることができます。</p>
+</section>
+<section id="attentionの応用self-attention-cross-attention-encoderdecoderブロック" class="level2">
+<h2 class="anchored" data-anchor-id="attentionの応用self-attention-cross-attention-encoderdecoderブロック">Attentionの応用：Self-Attention, Cross-Attention, Encoder/Decoderブロック</h2>
+<p>これまで解説してきたAttentionの基本的な仕組みは、<strong>Self-Attention</strong>と呼ばれるものでした。これはQuery(Q), Key(K), Value(V)のベクトルがすべて同じ入力シーケンス（<code>x</code>）から生成され、シーケンス内のトークンが相互に注意を向け合うものでした。しかし、このSelf-Attentionの使われ方や、Attentionメカニズム全体にはいくつかの重要なバリエーションが存在します。</p>
+<p>まず、Self-Attention自体の使われ方によって、それがEncoderブロックの一部として機能するのか、Decoderブロックの一部として機能するのかが変わってきます。この違いを生む主な要因は、Attentionスコア計算におけるマスキングの有無です。</p>
+<p>Decoderブロックで使われるSelf-Attentionでは、未来の情報を参照しないようにするための因果マスキング（causal masking）、つまり三角マスクが適用されます。これは、GPTのような自己回帰（autoregressive）モデルや、機械翻訳のデコーダー部分のように、過去の情報のみに基づいて次のトークンを生成する必要があるタスクで不可欠です。Karpathy氏の動画で構築された<code>nanogpt</code>は、まさしくこのDecoderブロックのみで構成されるモデルです。</p>
+<p>一方、Encoderブロックで使われるSelf-Attentionでは、この因果マスキングは適用されません。シーケンス内のすべてのトークンが、他のすべてのトークン（過去も未来も含む）に自由に注意を向けることができます。これは、BERTのように入力テキスト全体の文脈理解を目的とするモデルや、機械翻訳におけるエンコーダー部分（入力文全体の情報を符号化する役割）などで用いられます。入力シーケンス全体の双方向の文脈を捉えるのに適しています。</p>
+<p>次に、Attentionメカニズムのもう一つの重要な形態が<strong>Cross-Attention</strong>です。これはSelf-Attention（マスキングの有無に関わらず）とは異なり、Query、Key、Valueの由来が異なります。Cross-Attentionでは、Query(Q)はあるソース（例えばデコーダー側の状態）から生成されますが、Key(K)とValue(V)は別のソース（例えばエンコーダーの最終出力）から提供されます。</p>
+<p>このCross-Attentionは、主にEncoder-Decoderアーキテクチャにおいて、EncoderとDecoderを接続する役割を果たします。デコーダーが出力トークンを生成する際に、Cross-Attentionを通じてエンコーダーが符号化した入力情報全体を常に参照できるようにします。機械翻訳タスクで、翻訳先の言語を生成しながら常に翻訳元の文章の意味を考慮する、といったことを可能にするメカニズムです。</p>
+<p><code>nanogpt</code>のようなdecoder-onlyモデルでは、外部の入力シーケンスを処理するEncoder部分が存在しないため、EncoderブロックやCross-Attentionは必要なく、因果マスキングを用いたSelf-Attention（Decoderブロック）のみで構成されている、というわけです。</p>
+</section>
+<section id="transformerブロック通信と計算" class="level2">
+<h2 class="anchored" data-anchor-id="transformerブロック通信と計算">Transformerブロック：通信と計算</h2>
+<p>Attentionは通信メカニズムを提供します。しかし、モデルは集約された情報を処理するための計算も必要です。標準的なTransformerブロックは、Multi-Head Self-Attentionと、単純な位置ごとのFeedForwardネットワークを組み合わせます。</p>
+<p>重要な点として、各サブレイヤー（AttentionとFeedForward）の周囲に<strong>Residual Connections（残差接続）とLayer Normalization（層正規化）</strong>が追加されます。</p>
+<ul>
+<li><strong>Residual Connections</strong>: <code>x = x + sublayer(norm(x))</code>。サブレイヤーの入力<code>x</code>が、サブレイヤーの出力に加算されます。これにより、深いネットワークでの逆伝播時に勾配が流れやすくなり、学習の安定性と性能が大幅に向上します。</li>
+<li><strong>Layer Normalization</strong>: 各トークンについて、特徴量をチャネル次元にわたって独立に正規化します。Batch Normalizationとは異なり、バッチ統計に依存しないため、シーケンスデータに適しています。これも学習を安定させます。Karpathy氏は、サブレイヤーの前にLayerNormを適用する一般的な「pre-norm」形式を実装しています。</li>
+</ul>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> FeedFoward(nn.Module):</span>
+<span id="cb11-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">""" 単純な線形層と非線形活性化関数 """</span></span>
+<span id="cb11-3">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, n_embd):</span>
+<span id="cb11-4">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>()</span>
+<span id="cb11-5">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.net <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Sequential(</span>
+<span id="cb11-6">            nn.Linear(n_embd, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> n_embd), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 中間層は通常4倍大きい</span></span>
+<span id="cb11-7">            nn.ReLU(),                    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ReLU活性化関数</span></span>
+<span id="cb11-8">            nn.Linear(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> n_embd, n_embd), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># n_embdに再射影</span></span>
+<span id="cb11-9">            nn.Dropout(dropout),           <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 正則化のためのDropout</span></span>
+<span id="cb11-10">        )</span>
+<span id="cb11-11"></span>
+<span id="cb11-12">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> forward(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, x):</span>
+<span id="cb11-13">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.net(x)</span>
+<span id="cb11-14"></span>
+<span id="cb11-15"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> Block(nn.Module):</span>
+<span id="cb11-16">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">""" Transformerブロック：通信の後に計算 """</span></span>
+<span id="cb11-17">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, n_embd, n_head):</span>
+<span id="cb11-18">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>()</span>
+<span id="cb11-19">        head_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">//</span> n_head</span>
+<span id="cb11-20">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.sa <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> MultiHeadAttention(n_head, head_size) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 通信 (Communication)</span></span>
+<span id="cb11-21">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ffwd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> FeedFoward(n_embd)                 <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 計算 (Computation)</span></span>
+<span id="cb11-22">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ln1 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.LayerNorm(n_embd)                <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Attention前のLayerNorm</span></span>
+<span id="cb11-23">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ln2 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.LayerNorm(n_embd)                <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># FeedForward前のLayerNorm</span></span>
+<span id="cb11-24"></span>
+<span id="cb11-25">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> forward(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, x):</span>
+<span id="cb11-26">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Pre-norm形式と残差接続</span></span>
+<span id="cb11-27">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># LayerNorm適用 -&gt; Self-Attention -&gt; 残差を加算</span></span>
+<span id="cb11-28">        x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.sa(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ln1(x))</span>
+<span id="cb11-29">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># LayerNorm適用 -&gt; FeedForward -&gt; 残差を加算</span></span>
+<span id="cb11-30">        x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ffwd(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ln2(x))</span>
+<span id="cb11-31">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> x</span></code></pre></div>
+<p>完全なGPTモデルは、これらのBlockレイヤーを複数、順番に積み重ねます。すべてのブロックを通過した後、最終的なLayerNormが適用され、その後、最終的なトークン表現を語彙サイズに射影する線形層が続き、次のトークンを予測するためのロジットが得られます。</p>
+</section>
+<section id="最終的なgptモデルの構築" class="level2">
+<h2 class="anchored" data-anchor-id="最終的なgptモデルの構築">最終的なGPTモデルの構築</h2>
+<p>これまで解説してきたコンポーネントを統合し、最終的なGPTスタイルの言語モデル<code>GPTLanguageModel</code>を構築します。以下に示すコードは、Karpathy氏の動画における完成形であり、先に説明した<code>Block</code>（<code>MultiHeadAttention</code>と<code>FeedForward</code>を含む）などを組み合わせています。</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (主要なハイパーパラメータを再掲)</span></span>
+<span id="cb12-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># hyperparameters</span></span>
+<span id="cb12-3">batch_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">64</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 並列処理する独立したシーケンス数</span></span>
+<span id="cb12-4">block_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">256</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 予測のための最大コンテキスト長</span></span>
+<span id="cb12-5">max_iters <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span></span>
+<span id="cb12-6">eval_interval <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">500</span></span>
+<span id="cb12-7">learning_rate <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3e-4</span></span>
+<span id="cb12-8">device <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'cuda'</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> torch.cuda.is_available() <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'cpu'</span></span>
+<span id="cb12-9">eval_iters <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span></span>
+<span id="cb12-10">n_embd <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">384</span>     <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 埋め込み次元数</span></span>
+<span id="cb12-11">n_head <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Attentionヘッドの数</span></span>
+<span id="cb12-12">n_layer <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Transformerブロックの層数</span></span>
+<span id="cb12-13">dropout <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ドロップアウト率</span></span>
+<span id="cb12-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ------------</span></span>
+<span id="cb12-15"></span>
+<span id="cb12-16"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> GPTLanguageModel(nn.Module):</span>
+<span id="cb12-17"></span>
+<span id="cb12-18">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>):</span>
+<span id="cb12-19">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">super</span>().<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>()</span>
+<span id="cb12-20">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># トークン埋め込みと位置埋め込みのテーブル</span></span>
+<span id="cb12-21">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.token_embedding_table <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Embedding(vocab_size, n_embd)</span>
+<span id="cb12-22">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.position_embedding_table <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Embedding(block_size, n_embd)</span>
+<span id="cb12-23">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># n_layer個のTransformerブロックを積み重ねる</span></span>
+<span id="cb12-24">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.blocks <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Sequential(<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>[Block(n_embd, n_head<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>n_head) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(n_layer)])</span>
+<span id="cb12-25">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ln_f <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.LayerNorm(n_embd) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 最終LayerNorm</span></span>
+<span id="cb12-26">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.lm_head <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> nn.Linear(n_embd, vocab_size) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 出力層（線形層）</span></span>
+<span id="cb12-27"></span>
+<span id="cb12-28">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># （動画本編では触れられていないが重要な）重み初期化</span></span>
+<span id="cb12-29">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">apply</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>._init_weights)</span>
+<span id="cb12-30"></span>
+<span id="cb12-31">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> _init_weights(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, module):</span>
+<span id="cb12-32">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># （重み初期化の詳細は省略）</span></span>
+<span id="cb12-33">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">isinstance</span>(module, nn.Linear):</span>
+<span id="cb12-34">            torch.nn.init.normal_(module.weight, mean<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, std<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>)</span>
+<span id="cb12-35">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> module.bias <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">is</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb12-36">                torch.nn.init.zeros_(module.bias)</span>
+<span id="cb12-37">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">elif</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">isinstance</span>(module, nn.Embedding):</span>
+<span id="cb12-38">            torch.nn.init.normal_(module.weight, mean<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, std<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>)</span>
+<span id="cb12-39"></span>
+<span id="cb12-40">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> forward(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, idx, targets<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>):</span>
+<span id="cb12-41">        B, T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> idx.shape</span>
+<span id="cb12-42"></span>
+<span id="cb12-43">        tok_emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.token_embedding_table(idx) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C)</span></span>
+<span id="cb12-44">        pos_emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.position_embedding_table(torch.arange(T, device<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>device)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (T,C)</span></span>
+<span id="cb12-45">        x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> tok_emb <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> pos_emb <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C)</span></span>
+<span id="cb12-46">        x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.blocks(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C) Transformerブロックを通過</span></span>
+<span id="cb12-47">        x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.ln_f(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,C) 最終LayerNormを適用</span></span>
+<span id="cb12-48">        logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.lm_head(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B,T,vocab_size) LMヘッドでロジットを計算</span></span>
+<span id="cb12-49"></span>
+<span id="cb12-50">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> targets <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">is</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb12-51">            loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb12-52">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span>:</span>
+<span id="cb12-53">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 損失計算のために形状を変更</span></span>
+<span id="cb12-54">            B, T, C <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits.shape</span>
+<span id="cb12-55">            logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits.view(B<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>T, C)</span>
+<span id="cb12-56">            targets <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> targets.view(B<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>T)</span>
+<span id="cb12-57">            loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.cross_entropy(logits, targets)</span>
+<span id="cb12-58"></span>
+<span id="cb12-59">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> logits, loss</span>
+<span id="cb12-60"></span>
+<span id="cb12-61">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> generate(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, idx, max_new_tokens):</span>
+<span id="cb12-62">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># idxは現在の文脈におけるインデックスの(B, T)配列</span></span>
+<span id="cb12-63">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(max_new_tokens):</span>
+<span id="cb12-64">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Position Embeddingのサイズ制限のため、idxを最後のblock_sizeトークンに切り詰める</span></span>
+<span id="cb12-65">            idx_cond <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> idx[:, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>block_size:]</span>
+<span id="cb12-66">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 予測を取得</span></span>
+<span id="cb12-67">            logits, loss <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>(idx_cond) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># forwardパスを実行</span></span>
+<span id="cb12-68">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 最後のタイムステップのみに注目</span></span>
+<span id="cb12-69">            logits <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> logits[:, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, :] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, C) になる</span></span>
+<span id="cb12-70">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># softmaxを適用して確率を取得</span></span>
+<span id="cb12-71">            probs <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> F.softmax(logits, dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, C)</span></span>
+<span id="cb12-72">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 分布からサンプリング</span></span>
+<span id="cb12-73">            idx_next <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.multinomial(probs, num_samples<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, 1)</span></span>
+<span id="cb12-74">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># サンプリングされたインデックスを実行中のシーケンスに追加</span></span>
+<span id="cb12-75">            idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.cat((idx, idx_next), dim<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (B, T+1)</span></span>
+<span id="cb12-76">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> idx</span></code></pre></div>
+<p>このGPTLanguageModelクラスでは、<code>__init__</code>メソッドで、これまで説明してきたトークン埋め込みと位置埋め込みテーブル(<code>token_embedding_table</code>, <code>position_embedding_table</code>)を定義した後、<code>n_layer</code>個の<code>Block</code>を<code>nn.Sequential</code>で積み重ねています。これがTransformerの中核部であり、入力ベクトルはここを通過することで段階的にリッチな表現へと変換されます。その後、最終的な<code>LayerNorm</code> (<code>ln_f</code>)を経て、出力用の線形層<code>lm_head</code>によって語彙数次元のロジットへと変換されます。また、安定した学習のための重み初期化メソッド<code>_init_weights</code>も含まれています。</p>
+<p><code>forward</code>メソッドは、この一連の流れを実装しており、トークン埋め込みと位置埋め込みを加算したベクトルを<code>blocks</code>に通し、正規化と線形変換を経て最終的なロジットを出力します。</p>
+<p>テキスト生成を行う<code>generate</code>メソッドでは、自己回帰的にトークンを生成していきますが、ここで重要なのは<code>idx_cond = idx[:, -block_size:]</code>の部分です。位置埋め込みテーブル<code>position_embedding_table</code>のサイズが<code>block_size</code>に固定されているため、モデルに入力できるのは直近<code>block_size</code>個のトークンまでとなります。この制約のもとでforwardパスを実行し、最後のタイムステップのロジットから次のトークンをサンプリングし、シーケンスを伸長していく処理を繰り返します。</p>
+<p>コード全体を見ると、これらのモデル定義に加えて、学習を制御するハイパーパラメータ群（<code>batch_size</code>や<code>learning_rate</code>など）や、<code>AdamW</code>オプティマイザ、そして<code>estimate_loss</code>関数を用いた評価を含む標準的な学習ループが組み合わされていることがわかります。これらが一体となってGPTモデルの学習と推論を実現しています。</p>
+</section>
+<section id="スケールアップと結果" class="level2">
+<h2 class="anchored" data-anchor-id="スケールアップと結果">スケールアップと結果</h2>
+<p>Karpathy氏は上の<code>GPTLanguageModel</code>（<code>n_layer=6, n_head=6, n_embd=384, dropout=0.2</code>）でTiny Shakespeareを学習させます。結果として得られるモデルは、はるかに一貫性のある（ただし、まだ意味をなさない）シェイクスピア風のテキストを生成し、十分なモデル容量と組み合わされたAttentionの力を示しています。</p>
+<pre class="console"><code># GPTLanguageModelからのサンプル出力
+FlY BOLINGLO:
+Them thrumply towiter arts the
+muscue rike begatt the sea it
+What satell in rowers that some than othis Marrity.
+
+LUCENTVO:
+But userman these that, where can is not diesty rege;
+What and see to not. But's eyes. What?</code></pre>
+<p>このアーキテクチャ、すなわち<strong>decoder-only Transformer</strong>（causal maskを使用）は、基本的にGPT-2やGPT-3のようなモデルで使用されているものと同じですが、パラメータ数、層数、埋め込みサイズ、そして学習データ（シェイクスピアだけでなく膨大なインターネットテキスト）の点で、はるかに大規模になっています。</p>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>Attentionメカニズム、特にScaled dot-product self-attentionは、Transformerの能力を飛躍的に向上させた革新的な技術です。これにより、シーケンス内のトークンが動的にお互いを参照し、学習されたQuery-Keyの相互作用に基づいて関連性スコア（アフィニティ）を計算し、関連するトークンのValueベクトルからの情報を重み付きで集約することが可能になります。Multi-Head Attention、Residual Connections、Layer Normalization、そして位置ごとのFeedForwardネットワークと組み合わせることで、ChatGPTのようなAIに革命をもたらしているモデルの基本的な構成要素であるTransformerブロックが形成されます。</p>
+<p>Karpathy氏のように段階的に構築することで、強力でありながらも、その中心的なアイデアは把握可能であり、比較的簡潔なコードで実装できることがわかります。</p>
+<hr>
+<p><em>この記事は、Andrej Karpathy氏のYouTube動画「<a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">Let’s build GPT: from scratch, in code, spelled out.</a>」に基づいています。完全なコードやより深い洞察については、ぜひ動画と彼の<a href="https://github.com/karpathy/ng-video-lecture/tree/master"><code>nanogpt</code></a>リポジトリをご覧ください。</em> <em>この記事が、TransformerとAttentionの理解の一助となれば幸いです。</em></p>
+
+
+</section>
+
+ ]]></description>
+  <category>Machine Learning</category>
+  <category>Transformer</category>
+  <category>Python</category>
+  <category>LLM</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/</guid>
+  <pubDate>Fri, 11 Apr 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/83/200" medium="image"/>
+</item>
+</channel>
+</rss>
