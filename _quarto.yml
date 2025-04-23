@@ -6,6 +6,7 @@ website:
   site-url: https://jiwasawa.github.io/blog_jp
   description: "機械学習・AIに関する話題を中心に書いています"
   google-analytics: G-8BXHXPDSCJ
+  open-graph: true
   navbar:
     right:
       - about.qmd
