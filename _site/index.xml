@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Mon, 21 Apr 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 24 Apr 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/docetl/</link>
+  <description><![CDATA[ UC Berkeleyの研究者、Shreya Shankar氏が昨年発表した<a href="https://arxiv.org/abs/2410.12189">DocETL</a>が注目を集めている。非構造化データの海から意味ある洞察を掘り起こそうとする多くの研究者やアナリストにとって、LLM（大規模言語モデル）は希望の光である一方、その扱いは一筋縄ではいかない。特に、規模が大きく複雑な文書群を相手にする場合、精度と効率を両立させる最適化は、しばしば手作業による試行錯誤の泥沼にはまりがちだ。<a href="https://twimlai.com/podcast/twimlai/ai-agents-for-data-analysis/">Shankar氏のTWIMLでのインタビュー</a>からは、この課題に対するDocETLのアプローチと、LLMとのより生産的な付き合い方のヒントが見えてくる。 ]]></description>
+  <category>LLM</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/docetl/</guid>
+  <pubDate>Thu, 24 Apr 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/88/200" medium="image"/>
+</item>
 <item>
   <title>「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>

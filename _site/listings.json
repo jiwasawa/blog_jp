@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/docetl/index.html",
       "/posts/era-of-experience/index.html",
       "/posts/diffusion-basics/index.html",
       "/posts/latent-dharmesh-shah/index.html",
