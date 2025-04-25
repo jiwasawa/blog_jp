@@ -1,5 +1,6 @@
 ---
 title: "「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点"
+description: "Shreya Shankar氏のTWIMLでのインタビューから、DocETLのアプローチとLLMとのより生産的な付き合い方を探っていく。"
 author: "Junichiro Iwasawa"
 date: "2025-04-25"
 categories: [LLM, Podcast]

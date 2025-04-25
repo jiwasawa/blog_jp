@@ -1,5 +1,6 @@
 ---
 title: "「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル"
+description: "David SilverとRichard S. Suttonのポジションペーパー「Welcome to the Era of Experience」を読み解きつつ、話題のOpenAIのモデル「o3」の奇妙な振る舞いとの関連性を探っていく。"
 author: "Junichiro Iwasawa"
 date: "2025-04-22"
 categories: [LLM, AI]
