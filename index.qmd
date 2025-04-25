@@ -1,5 +1,5 @@
 ---
-title: "miscellaneous thoughts"
+title: "miscellaneous notes"
 listing:
   contents: posts
   sort: "date desc"
