@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2025-05-01">
 <meta name="description" content="LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。">
 
-<title>リーダーボードという名の幻影：LMArenaランキングは信じられるのか？</title>
+<title>リーダーボードという名の幻影：LMArenaは信じられるのか？</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,11 +82,11 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="リーダーボードという名の幻影：LMArenaランキングは信じられるのか？ – jiwasawaのブログ">
+<meta property="og:title" content="リーダーボードという名の幻影：LMArenaは信じられるのか？ – jiwasawaのブログ">
 <meta property="og:description" content="LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。">
 <meta property="og:image" content="https://picsum.photos/id/87/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="リーダーボードという名の幻影：LMArenaランキングは信じられるのか？ – jiwasawaのブログ">
+<meta name="twitter:title" content="リーダーボードという名の幻影：LMArenaは信じられるのか？ – jiwasawaのブログ">
 <meta name="twitter:description" content="LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。">
 <meta name="twitter:image" content="https://picsum.photos/id/87/200">
 <meta name="twitter:card" content="summary_large_image">
@@ -144,7 +144,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">リーダーボードという名の幻影：LMArenaランキングは信じられるのか？</h1>
+      <h1 class="title">リーダーボードという名の幻影：LMArenaは信じられるのか？</h1>
                   <div>
         <div class="description">
           LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。
@@ -193,7 +193,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>しかし、その「民意」を反映するとされるランキングの信頼性に、真っ向から疑問を投げかける論文が登場した。<a href="https://arxiv.org/abs/2504.20879">「The Leaderboard Illusion」</a>と題されたこの研究は、Cohereの研究者らを中心にまとめられ、LMArenaの運用に潜む体系的な問題点を鋭く指摘している。今回はこの論文と、それに対するLMArena運営（lmarena.ai）や業界識者（Andrej Karpathy氏）の反応を元に、LMArenaランキングの「幻影」の正体に迫ってみたい。</p>
 <section id="リーダーボードの幻影論文が暴いたlmarenaの歪み" class="level2">
 <h2 class="anchored" data-anchor-id="リーダーボードの幻影論文が暴いたlmarenaの歪み">「リーダーボードの幻影」論文が暴いたLMArenaの歪み</h2>
-<p>この論文、なかなかエグい指摘をしている。要約すると、LMArenaはその公平性・透明性を謳いつつも、特定のプレイヤー（特に大手プロプライエタリモデル提供者）に有利な構造が出来上がっており、ランキングがモデルの真の実力を反映していない可能性がある、という主張だ。主な論点は以下の4つに集約される。</p>
+<p>この論文ではなかなか鋭い指摘がされている。要約すると、LMArenaはその公平性・透明性を謳いつつも、特定のプレイヤー（特に大手プロプライエタリモデル提供者）に有利な構造が出来上がっており、ランキングがモデルの真の実力を反映していない可能性がある、という主張だ。主な論点は以下の4つに集約される。</p>
 <ol type="1">
 <li><p><strong>不公平なプライベートテストと結果の選択的開示:</strong> LMArenaには、特定の（主に大手の）プロバイダーが、公式リリース前に多数のモデルバリアントを「非公開」でテストできる、公にはされていないポリシーが存在するという。例えば、Meta社はLlama 4リリース前に27もの非公開モデルをテストしていたことが観測されている。問題は、これらのテスト結果の中から最もスコアが良かったものだけを選んで公開（あるいは公開モデルのバージョンとして採用）できる点だ。これは統計的な偏りを生み、本来の実力以上にスコアを「かさ上げ」する効果がある。論文では、この「best-of-N戦略」がBradley-Terry (BT)モデル（LMArenaのスコアリングに使われる統計モデル）の前提を崩し、ランキングを歪めているとシミュレーションと実証実験（Cohere自身も実験のために非公開モデルを投入）で示している。</p></li>
 <li><p><strong>データアクセスにおける著しい格差:</strong> LMArenaはクラウドソースによる評価プラットフォームだが、ユーザーが入力したプロンプトや評価結果といった貴重なデータへのアクセス権が、プロバイダー間で著しく偏っている。論文の推計によると、GoogleとOpenAIだけで全バトルデータのそれぞれ約19.2%、20.4%を受け取っている一方、83ものオープンウェイトモデル群全体では29.7%に過ぎない。この格差は、①前述の非公開テストの多さ、②モデルがバトルに登場する頻度（サンプリングレート）の偏り（プロプライエタリモデルの方が高い傾向）、③モデルの「非推奨化（deprecation）」ポリシー（オープン系モデルの方が非アクティブ化されやすい傾向）によって生まれているという。コミュニティの「無料奉仕」が、一部の巨大テック企業に偏って還元されている構図だ。</p></li>
@@ -213,7 +213,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <li>我々はオープンソース開発を支援している（プラットフォームやデータ公開など）。</li>
 <li>論文の提案の一部（アクティブサンプリング導入など）は検討に値する。</li>
 </ul>
-<p>要するに、「我々のやり方は透明で公平。ランキングはリアルなユーザー評価の表れであり、問題ない。論文は勘違いしている部分が多い」というスタンスだ。</p>
+<p>要するに、「我々のやり方は透明で公平。ランキングはリアルなユーザー評価の表れであり、問題ない。論文は勘違いしている部分が多い」というスタンスである。</p>
 <p>一方で、著名なAI研究者であるAndrej Karpathy氏は、この論文を受けて<a href="https://x.com/karpathy/status/1917546757929722115">興味深いコメント</a>を寄せている。</p>
 <ul>
 <li>以前からLMArenaのランキングには個人的な違和感があった。Geminiのあるモデルが一時トップになったが、実際に使ってみると期待外れだった。逆にClaude 3.5は個人的には非常に良かったが、当初アリーナでのランクは低かった。</li>
