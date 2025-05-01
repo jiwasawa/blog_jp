@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/lmarena/index.html",
       "/posts/docetl/index.html",
       "/posts/era-of-experience/index.html",
       "/posts/diffusion-basics/index.html",
