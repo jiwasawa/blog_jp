@@ -9,8 +9,19 @@
 <link>https://jiwasawa.github.io/blog_jp/</link>
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
-<generator>quarto-1.6.43</generator>
-<lastBuildDate>Fri, 25 Apr 2025 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.7.29</generator>
+<lastBuildDate>Thu, 01 May 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>リーダーボードという名の幻影：LMArenaランキングは信じられるのか？</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/lmarena/</link>
+  <description><![CDATA[ LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/lmarena/</guid>
+  <pubDate>Thu, 01 May 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/87/200" medium="image"/>
+</item>
 <item>
   <title>「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
