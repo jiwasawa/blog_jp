@@ -37,7 +37,7 @@ OpenAIは通常、リリース前に多岐にわたる評価を実施する。�
 
 OpenAIは、肯定的な評価指標とA/Bテスト結果を前に、「専門家の主観的な懸念だけを理由にリリースを見送るべきか？」という難しい判断を迫られた。そして、定量的なシグナルを優先し、リリースに踏み切った。結果的に、これは「間違った判断だった」と同社は認めている。
 
-これは、著名なAI研究者の[Andrej Karpathy氏も引用](https://x.com/karpathy/status/1917546757929722115)しているLex Fridman PodcastでのJeff Bezos氏の言葉「データと逸話が食い違うときは、たいてい逸話の方が正しい。("When the data and the anecdotes disagree, the anecdotes are usually right.")」を彷彿とさせる。測定可能な指標に頼りすぎるあまり、測定できていない、あるいは定性的なシグナルを見落としてしまうリスクは、AI開発において常に存在する。特に、モデルの「性格」や「挙動」といった、数値化しにくい側面ではなおさらだ。
+これは、著名なAI研究者の[Andrej Karpathy氏も引用](https://x.com/karpathy/status/1917546757929722115)しているLex Fridman PodcastでのJeff Bezos氏の言葉「データと個人の体験談が食い違うときは、たいてい体験談の方が正しい。("When the data and the anecdotes disagree, the anecdotes are usually right.")」を彷彿とさせる。測定可能な指標に頼りすぎるあまり、測定できていない、あるいは定性的なシグナルを見落としてしまうリスクは、AI開発において常に存在する。特に、モデルの「性格」や「挙動」といった、数値化しにくい側面ではなおさらだ。
 
 ## この事件が示すもの - 性格調整（RLHF）と評価の未来
 
