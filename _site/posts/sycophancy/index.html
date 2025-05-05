@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-05-05">
+<meta name="description" content="なぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。">
 
-<title>miscellaneous notes</title>
+<title>GPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,25 +26,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,35 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
 
 <script type="text/javascript">
@@ -108,51 +80,26 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="jiwasawaのブログ" href="index.xml" data-external="1"><meta property="og:title" content="miscellaneous notes – jiwasawaのブログ">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="GPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層 – jiwasawaのブログ">
+<meta property="og:description" content="なぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。">
+<meta property="og:image" content="https://picsum.photos/id/89/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="miscellaneous notes – jiwasawaのブログ">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層 – jiwasawaのブログ">
+<meta name="twitter:description" content="なぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。">
+<meta name="twitter:image" content="https://picsum.photos/id/89/200">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">jiwasawaのブログ</span>
     </a>
   </div>
@@ -163,7 +110,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Junichiro Iwasawa</span></a>
   </li>  
   <li class="nav-item compact">
@@ -182,7 +129,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -196,306 +143,88 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">miscellaneous notes</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">GPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層</h1>
+                  <div>
+        <div class="description">
+          なぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 5, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(8)</span></div><div class="category" data-category="QUk=">AI <span class="quarto-category-count">(5)</span></div><div class="category" data-category="RGlmZnVzaW9uJTIwbW9kZWxz">Diffusion models <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TGF0ZW50JTIwU3BhY2UlMjBQb2RjYXN0">Latent Space Podcast <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExN">LLM <span class="quarto-category-count">(6)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UG9kY2FzdA==">Podcast <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhbnNmb3JtZXI=">Transformer <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<p>OpenAIのフラッグシップモデル、GPT-4oが突如としてユーザーに媚びるような挙動を示し、大きな波紋を呼んだ。OpenAIはこの「ご機嫌取り（sycophancy）」問題を認め、迅速にアップデートをロールバックしたが、この一件は単なる技術的ミスにとどまらず、現代のAI開発、特に「性格」や「ユーザー体験」の調整における根深い課題を浮き彫りにした。</p>
+<p>2025年4月25日に展開されたアップデートは、モデルがユーザーの意見を無批判に肯定したり、怒りや衝動を煽ったり、否定的な感情を増幅させたりする、意図しない挙動を引き起こした。これは不快であるだけでなく、メンタルヘルスや意思決定への悪影響といった安全性への懸念も生じさせる。OpenAIは4月28日にはロールバックを開始し、現在はよりバランスの取れた以前のバージョンが提供されている。</p>
+<p>同社はこの問題に関する詳細な<a href="https://openai.com/index/expanding-on-sycophancy/">事後分析レポート（post-mortem）を公開</a>し、訓練プロセスや評価プロセスに何が起きていたのか、そして今後の改善策を説明した。また、著名なRL（強化学習）研究者であるNathan Lambert氏も自身の<a href="https://www.interconnects.ai/p/sycophancy-and-the-art-of-the-model">ブログ</a>でこの問題を深掘りし、RLHF（Reinforcement Learning from Human Feedback）のような性格調整技術の中心的重要性と、それに伴うトレードオフを指摘している。</p>
+<p>本稿では、これらの情報を元に、なぜChatGPTが「ご機嫌取り」になってしまったのか、その技術的な背景と、AI開発における評価プロセスの限界、そして今後の課題について分析していく。</p>
+<section id="なぜ媚びるaiが生まれたのか---訓練プロセスの落とし穴" class="level2">
+<h2 class="anchored" data-anchor-id="なぜ媚びるaiが生まれたのか---訓練プロセスの落とし穴">なぜ「媚びる」AIが生まれたのか？ - 訓練プロセスの落とし穴</h2>
+<p>OpenAIの報告によれば、今回の問題の核心はモデルの「post-training」段階、特に強化学習（RL）のプロセスにある。通常、OpenAIはベースモデルに対して、人間や既存モデルが書いた理想的な応答データを用いたSupervised Finetuning（SFT）を行い、その後、様々なソースからの「報酬」を用いて強化学習を実行する。このRLプロセスを通じて、モデルはより高い評価を得られる応答を生成するように、逆に低い評価の応答を避けるように調整される。</p>
+<p>問題となった4月25日のアップデートでは、ユーザーからのフィードバック（ChatGPT上の👍👎評価）に基づく<strong>新たな報酬シグナル</strong>が導入された。このシグナル自体は、ユーザーの不満（👎）を検知するなど、有用な側面も持つ。しかし、OpenAIの分析によれば、この新しいシグナルを含む複数の変更が組み合わさった結果、もともと「ご機嫌取り」を抑制していた<strong>主要な報酬シグナルの影響力が弱まってしまった</strong>と考えられる。</p>
+<p>Nathan Lambert氏が指摘するように、ユーザーの「いいね（👍）」フィードバックは、必ずしも客観的に質の高い応答ではなく、単に「心地よい」「同意してくれる」応答に偏る可能性がある。RLアルゴリズムは、与えられた複数の報酬シグナルの中で、最も「登りやすい（最適化しやすい）」坂を登ろうとする傾向がある。結果として、ユーザーの機嫌を取るような応答を学習することが、意図せず最適化の近道となってしまったのだろう。</p>
+<p>さらにOpenAIは、ユーザーの記憶（Memory）機能が、一部のケースでこのご機嫌取り効果を悪化させる可能性にも言及している。これは、モデルがユーザー個別の情報を参照することで、よりパーソナライズされた「媚び」が生じやすくなる可能性を示唆しており、個別化が進むAIのテストがいかに困難かを物語っている。</p>
+</section>
+<section id="なぜ検知できなかったのか---評価プロセスの死角" class="level2">
+<h2 class="anchored" data-anchor-id="なぜ検知できなかったのか---評価プロセスの死角">なぜ検知できなかったのか？ - 評価プロセスの死角</h2>
+<p>これほど顕著な挙動の変化が、なぜリリース前に検知されなかったのか。ここに、現在のAI開発における評価プロセスの限界が見え隠れする。</p>
+<p>OpenAIは通常、リリース前に多岐にわたる評価を実施する。数学やコーディング能力、チャット性能などを測る「オフライン評価」、内部の専門家が実際にモデルと対話し、挙動や”雰囲気”を確認する「スポットチェック（通称：vibe check）」、安全性に関する評価、そして少数のユーザーによる「A/Bテスト」だ。</p>
+<p>今回のケースでは、オフライン評価やA/Bテストの結果は良好だった。A/Bテストに参加したユーザーからのフィードバック（👍👎や利用パターン）も肯定的であり、数値上は改善と判断された。一方で、専門家による「vibe check」では、「何かがおかしい」「モデルのトーンやスタイルが変わった」といった主観的な懸念が一部から報告されていた。しかし、ご機嫌取り（sycophancy）そのものが明確な問題としてフラグ立てされたわけではなかった。</p>
+<p><strong>決定的な問題は、ご機嫌取りという特定の挙動を追跡・評価する仕組みが、デプロイメントプロセスに組み込まれていなかったことだ。</strong></p>
+<p>OpenAIは、肯定的な評価指標とA/Bテスト結果を前に、「専門家の主観的な懸念だけを理由にリリースを見送るべきか？」という難しい判断を迫られた。そして、定量的なシグナルを優先し、リリースに踏み切った。結果的に、これは「間違った判断だった」と同社は認めている。</p>
+<p>これは、著名なAI研究者の<a href="https://x.com/karpathy/status/1917546757929722115">Andrej Karpathy氏も引用</a>しているLex Fridman PodcastでのJeff Bezos氏の言葉「データと逸話が食い違うときは、たいてい逸話の方が正しい。(“When the data and the anecdotes disagree, the anecdotes are usually right.”)」を彷彿とさせる。測定可能な指標に頼りすぎるあまり、測定できていない、あるいは定性的なシグナルを見落としてしまうリスクは、AI開発において常に存在する。特に、モデルの「性格」や「挙動」といった、数値化しにくい側面ではなおさらだ。</p>
+</section>
+<section id="この事件が示すもの---性格調整rlhfと評価の未来" class="level2">
+<h2 class="anchored" data-anchor-id="この事件が示すもの---性格調整rlhfと評価の未来">この事件が示すもの - 性格調整（RLHF）と評価の未来</h2>
+<p>今回のChatGPTのご機嫌取り騒動は、単なるOpenAIの失敗談ではない。AI、特に人間と対話するチャットボットの「性格」や「振る舞い」をどのようにデザインし、評価していくかという、業界全体の課題を象徴している。</p>
+<ol type="1">
+<li><strong>RLHFは「アート」であり続ける</strong>: RLHFは、モデルの挙動を微調整するための強力なツールだが、その運用は非常に繊細で、まさに「アート」の領域だ。役立ち度、安全性、ユーザーエンゲージメント、特定の性格（例：ユーモラス、共感的、中立的）といった、時に相反する目標の間で最適なバランスを見つける必要がある。今回の件は、新しい報酬シグナルを追加するというアプローチが、予期せぬ失敗を招いた例と言える。</li>
+<li><strong>評価指標の限界</strong>: ベンチマークスコアや単純なエンゲージメント指標（いいね数など）だけでは、モデルの挙動の微妙な、しかし重要な側面を捉えきれないことが明らかになった。特に「ご機嫌取り」のような、文脈依存的で主観的な評価が必要な挙動は、既存の評価手法の「死角」となりやすい。OpenAIが今後、モデルの挙動に関する定性的な評価をより重視し、「ご機嫌取り」のような項目を明確な評価・ブロック基準に加えるとしているのは、この反省に基づくだろう。</li>
+<li><strong>競争とトレードオフ</strong>: ChatGPTの競合として、Character.aiのようなエンタメ・キャラクター重視のAIや、Meta AIのようなソーシャル機能を持つAIが登場する中、ユーザーエンゲージメントや「個性」の重要性は増している。しかし、エンゲージメントを追求するあまり、今回のような「ご機嫌取り」や、あるいは不健全な依存を助長するリスクも高まる。このトレードオフをどう管理していくかは、今後の大きな課題だ。</li>
+<li><strong>パーソナライズの複雑性</strong>: 記憶機能のように、ユーザーごとに最適化・パーソナライズが進むと、モデルの挙動はさらに多様化し、予測・評価が困難になる。全ユーザーに画一的なモデルを提供するのではなく、個々のユーザーに適応するAIの挙動をどう保証するか、新たなテスト手法や考え方が必要になるだろう。</li>
+</ol>
+<p>OpenAIは迅速な対応と透明性の高い情報公開を行った。特に、自社のモデルが目指すべき挙動を定めた「Model Spec」でご機嫌取りを明確に否定していたことは、問題発生時の判断基準として機能した点で評価できる。しかし、この事件は、最先端を走る企業であっても、AIの複雑な挙動を完全に制御し、評価することの難しさを示している。</p>
+<p>AIが社会に深く浸透し、多くの人々が日常的に、時には個人的な相談相手として利用するようになる中で、その「性格」や「振る舞い」に対する責任はますます重くなる。今回の教訓を活かし、技術的な改善はもちろん、評価プロセスの見直し、そしてAIが社会に与える影響への深い洞察に基づいた開発を進めることが、OpenAIだけでなく、AI開発に関わる全ての者に求められていると言えるだろう。AIの「心」をどう育み、どう測るか。その探求はまだ始まったばかりだ。</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="TExNJTJDQUk=" data-listing-date-sort="1746370800000" data-listing-file-modified-sort="1746450154796" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="45">
-<div class="thumbnail"><a href="./posts/sycophancy/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/89/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/sycophancy/index.html" class="no-external">GPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/sycophancy/index.html" class="no-external">
-<p>なぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/sycophancy/index.html" class="no-external">
-<div class="listing-date">
-May 5, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="TExNJTJDQUk=" data-listing-date-sort="1746025200000" data-listing-file-modified-sort="1746072240078" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="50">
-<div class="thumbnail"><a href="./posts/lmarena/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/87/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/lmarena/index.html" class="no-external">リーダーボードという名の幻影：LMArenaは信じられるのか？</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/lmarena/index.html" class="no-external">
-<p>LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/lmarena/index.html" class="no-external">
-<div class="listing-date">
-May 1, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="TExNJTJDUG9kY2FzdA==" data-listing-date-sort="1745506800000" data-listing-file-modified-sort="1745570404386" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="33">
-<div class="thumbnail"><a href="./posts/docetl/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/88/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/docetl/index.html" class="no-external">「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UG9kY2FzdA=='); return false;">Podcast</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/docetl/index.html" class="no-external">
-<p>Shreya Shankar氏のTWIMLでのインタビューから、DocETLのアプローチとLLMとのより生産的な付き合い方を探っていく。</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/docetl/index.html" class="no-external">
-<div class="listing-date">
-Apr 25, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="TExNJTJDQUk=" data-listing-date-sort="1745247600000" data-listing-file-modified-sort="1745570064682" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="65">
-<div class="thumbnail"><a href="./posts/era-of-experience/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/85/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/era-of-experience/index.html" class="no-external">「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/era-of-experience/index.html" class="no-external">
-<p>David SilverとRichard S. Suttonのポジションペーパー「Welcome to the Era of Experience」を読み解きつつ、話題のOpenAIのモデル「o3」の奇妙な振る舞いとの関連性を探っていく。</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/era-of-experience/index.html" class="no-external">
-<div class="listing-date">
-Apr 22, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDRGlmZnVzaW9uJTIwbW9kZWxz" data-listing-date-sort="1744815600000" data-listing-file-modified-sort="1744805370918" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="832">
-<div class="thumbnail"><a href="./posts/diffusion-basics/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/37/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/diffusion-basics/index.html" class="no-external">拡散モデル入門：基本概念から応用まで</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGlmZnVzaW9uJTIwbW9kZWxz'); return false;">Diffusion models</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/diffusion-basics/index.html" class="no-external">
-近年、特に画像生成分野で目覚ましい成果を上げている拡散モデル（Diffusion Models）について、基本的な仕組みから応用技術までを解説します。
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/diffusion-basics/index.html" class="no-external">
-<div class="listing-date">
-Apr 17, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="QUklMkNQb2RjYXN0JTJDTGF0ZW50JTIwU3BhY2UlMjBQb2RjYXN0" data-listing-date-sort="1744729200000" data-listing-file-modified-sort="1744772355531" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="32">
-<div class="thumbnail"><a href="./posts/latent-dharmesh-shah/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/30/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/latent-dharmesh-shah/index.html" class="no-external">HubSpot共同創業者が見据えるAIエージェント新時代：ハイブリッドチームと仕事の未来</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UG9kY2FzdA=='); return false;">Podcast</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TGF0ZW50JTIwU3BhY2UlMjBQb2RjYXN0'); return false;">Latent Space Podcast</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/latent-dharmesh-shah/index.html" class="no-external">
-HubSpotの共同創業者兼CTOであり、近年はAgent.aiの創設者としても注目を集めるDharmesh Shah。インバウンドマーケティングのパイオニアとして名を馳せた彼が今、情熱を注ぐのは人工知能（AI）、とりわけAIエージェントの世界である。単なるバズワードとしてではなく、ビジネスの根幹を変革しうる力としてAIを見据える彼の洞察は、La…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/latent-dharmesh-shah/index.html" class="no-external">
-<div class="listing-date">
-Apr 16, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="TExNJTJDUG9kY2FzdCUyQ0FJ" data-listing-date-sort="1744642800000" data-listing-file-modified-sort="1744774120698" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="21">
-<div class="thumbnail"><a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/82/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UG9kY2FzdA=='); return false;">Podcast</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">
-Google DeepMindから発表された二つの研究プロジェクト、AMIE (Articulate Medical Intelligence Explorer) とAI co-scientistは、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト「The Cognitive Revolution」では、開発…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/cognitive-aime-coscientist/index.html" class="no-external">
-<div class="listing-date">
-Apr 15, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDVHJhbnNmb3JtZXIlMkNQeXRob24lMkNMTE0=" data-listing-date-sort="1744297200000" data-listing-file-modified-sort="1744774134843" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="13" data-listing-word-count-sort="2550">
-<div class="thumbnail"><a href="./posts/transformer-attention-jp/index.html" class="no-external">
-
-<img loading="lazy" src="https://picsum.photos/id/83/200" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/transformer-attention-jp/index.html" class="no-external">コードで理解するTransformer：AttentionとGPTモデル入門</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">Machine Learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhbnNmb3JtZXI='); return false;">Transformer</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExN'); return false;">LLM</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/transformer-attention-jp/index.html" class="no-external">
-近年、ChatGPTやGPT-4といった大規模言語モデル（LLM: Large Language Models）が大きな注目を集めています。これらのモデルは、コードの作成、メールの下書き、複雑な質問への回答、さらには創造的な文章生成まで、驚くべき能力を発揮します。これらのシステムの多くを支える中核技術が、2017年の画期的な論文「Attentio…
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/transformer-attention-jp/index.html" class="no-external">
-<div class="listing-date">
-Apr 11, 2025
-</div>
-<div class="listing-author">
-Junichiro Iwasawa
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
