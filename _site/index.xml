@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Sun, 04 May 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 06 May 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/</link>
+  <description><![CDATA[ Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力とthinking能力の技術的進化、現状の課題、そして今後の展望を分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/</guid>
+  <pubDate>Tue, 06 May 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/92/200" medium="image"/>
+</item>
 <item>
   <title>GPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-05-07">
+<meta name="description" content="Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力とthinking能力の技術的進化、現状の課題、そして今後の展望を分析する。">
+
+<title>Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地 – jiwasawaのブログ">
+<meta property="og:description" content="Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力とthinking能力の技術的進化、現状の課題、そして今後の展望を分析する。">
+<meta property="og:image" content="https://picsum.photos/id/92/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地 – jiwasawaのブログ">
+<meta name="twitter:description" content="Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力とthinking能力の技術的進化、現状の課題、そして今後の展望を分析する。">
+<meta name="twitter:image" content="https://picsum.photos/id/92/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</h1>
+                  <div>
+        <div class="description">
+          Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力とthinking能力の技術的進化、現状の課題、そして今後の展望を分析する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 7, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>GoogleからGemini 2.5 Proが発表され、大規模言語モデル（LLM）開発の最前線における新たな動きとして注目を集めている。今回のモデルでは、特にlong context処理能力と、「思考（Thinking）」と呼ばれる推論能力の向上が技術的な焦点となっている。</p>
+<p>これらの進化は一体どのように達成され、今後どのような可能性を秘めているのか？ 本稿では、Gemini 2.5 Proの開発に関わるGoogle DeepMindの研究者、<a href="https://www.youtube.com/watch?v=NHMJ9mqKeMQ">Nikolay Savinov氏（long context担当）のpodcastインタビュー</a>と<a href="https://www.youtube.com/watch?v=u0iIPxfwjKU">Jack Rae氏（Thinking/Inference Time Scaling担当）のpodcastインタビュー</a>内容に基づき、特にlong context能力と思考能力に焦点を当て、その技術的背景と今後の展望を分析していく。</p>
+<section id="long-context---1mトークンの壁を超えて" class="level2">
+<h2 class="anchored" data-anchor-id="long-context---1mトークンの壁を超えて">Long Context - 1Mトークンの壁を超えて</h2>
+<p>まず、Gemini 1.5 Proで世界を驚かせた1Mトークンというcontext window。Nikolay Savinov氏によれば、この目標設定自体が「当時の競合（128k〜200kトークン）に追いつくだけじゃつまらない。10倍を目指そう」という野心的なものだったという。いかにもGoogleらしい目標設定だ。</p>
+<p><strong>では、1M、2Mトークンの次は？</strong> この問いに対し、Savinov氏は非常に興味深い事実を明かしている。</p>
+<blockquote class="blockquote">
+<p>「<strong>実は10Mトークンでの推論テストも実施したんだ。</strong> 単純なNeedle-in-a-Haystackタスクなら、10Mトークン全体でほぼ完璧な精度が出せた。<strong>このモデルをリリースすることも可能だったんだけど、推論コストが非常に高い。</strong> ユーザーが高いコストを払ってまで使ってくれるか、そしてそれを安定して提供できるだけの十分なハードウェア（チップ）があるか、確信が持てなかった。だから、まずはより現実的な価格帯で提供できる1M、2Mトークンから始めたんだ。」（Nikolay Savinov氏、podcastより要約）</p>
+</blockquote>
+<p>つまり、技術的には10Mトークンへの道筋は見えていたものの、コストとインフラ（特に推論エンジニアリングの重要性も強調されている）がボトルネックとなり、現時点での一般提供は見送られた、ということらしい。これは、将来的なコンテキスト長の拡大に対する期待と、それを支える技術・コスト面の課題の両方を示唆している。</p>
+<p><strong>RAGはオワコンになる？</strong> この問いに対するSavinov氏の回答は「もちろんNo」だ。むしろ、long contextとRAG（Retrieval-Augmented Generation）は連携して機能するという。特にエンタープライズ規模の知識ベース（数十億トークン）を扱う場合、依然としてRAGは必須。Long contextの利点は、RAGでより多くの関連情報を（多少ノイズが多くなっても）コンテキストに詰め込めるようになり、結果として回答の精度（Recall）を向上させられる点にある、とのことだ。</p>
+<p><strong>Long contextの「質」の向上</strong> Savinov氏によれば、2.5 Proでは、1.5 Proと比較して、特に128kトークンと1Mトークン双方における「質」が大幅に向上したという。これは、単に長いコンテキストを受け入れられるだけでなく、その内容をより深く理解し、活用できるようになったことを意味する。Jack Rae氏のインタビューで語られた「400kトークンのコードベース全体を把握していた」という体験談も、この質の向上を裏付けていると言えるだろう。</p>
+<p><strong>Long contextの課題</strong> 単純なNeedle-in-a-Haystack（NIAH）は「解決済み」としつつも、Savinov氏は現在の課題として以下を挙げる。</p>
+<ul>
+<li><strong>Hard Distractors（紛らわしい情報）:</strong> 探している情報と似たような無関係な情報が多いと、そちらに「アテンションが食われてしまい」、目的の情報へのアテンションが低下する。コンテキストが長くなるほど、この競合は激しくなる。</li>
+<li><strong>Multiple Needles（複数の針探し）:</strong> 複数の情報を同時に探し出す必要がある場合も、アテンションが分散するため難易度が上がる。</li>
+<li><strong>評価の難しさ:</strong> NIAHのような人工的なタスクは評価しやすいが、「現実的」なタスク（例：大規模コードベースに関する質問）になると、long context能力だけでなくコーディング能力など他の要素も絡み、純粋なlong context能力の評価（と改善）が難しくなる。</li>
+</ul>
+</section>
+<section id="long-contextと思考の相乗効果" class="level2">
+<h2 class="anchored" data-anchor-id="long-contextと思考の相乗効果">Long contextと「思考」の相乗効果</h2>
+<p>Gemini 2.5 Proのもう一つの特徴が、Jack Rae氏がリードする「思考（Thinking）」あるいは推論時間スケーリングと呼ばれる技術だ。これは、応答を生成する前に追加の計算（思考）を行うことで、より複雑な問題解決能力を高めるアプローチである。OpenAIのo1, o3シリーズやAnthropicのClaude 3.5 Sonnetなど、最近のフロンティアモデルで同様のアプローチが次々と登場しているのは、この方向性に大きな可能性があることを示している。</p>
+<p>Rae氏によれば、この技術は突然現れたブレークスルーというよりは、強化学習（RL）を用いた地道な改善が積み重なり、実用的なレベルに達した結果だという。</p>
+<p><strong>Long contextと思考のシナジー</strong> Nikolay Savinov氏は、long contextと思考能力の間には深い関係があると指摘する。</p>
+<blockquote class="blockquote">
+<p>「モデルが生成した出力（思考プロセス）を、次の入力として再度自身にフィードバックできる。これにより、ネットワークの層の深さ（一度のフォワードパスで可能な思考のジャンプ回数）による制限を超えて、より複雑な推論が可能になる。Long context能力が高ければ、この『自身の思考を読み返す』能力も高まるため、本質的に思考・推論能力の向上にも繋がるはずだ。」（Nikolay Savinov氏、podcastより要約）</p>
+</blockquote>
+<p>Jack Rae氏も、Gemini 2.5 Proにおいて、long context能力と思考能力がうまく組み合わさることで、これまで解決できなかった問題が解けるようになったと述べている。大量の情報を参照しながら、深く考える能力。この二つが揃って初めて、真価を発揮するユースケースは多いだろう。</p>
+<p><strong>長い出力の課題</strong> 一方で、長い入力を受け付ける能力（Long Context Input）に対して、長い出力を生成する能力（Long Context Output）にはまだ課題がある、とSavinov氏は指摘する。</p>
+<blockquote class="blockquote">
+<p>「事前学習の段階では、モデルは長いシーケンスを生成できる。例えば、50万トークンを与えて『これをコピーして』と指示すれば、実際にできる。問題は、SFT（Supervised Fine-Tuning）などのポストトレーニング段階にある。短い応答データで学習させると、モデルは『ある程度の長さになったらEOS（End of Sequence）トークンを出すのが正解』だと学んでしまい、長い応答が必要な場面でも途中で生成を止めてしまう傾向が出る。これはアライメントの問題であり、現在改善に取り組んでいる。」（Nikolay Savinov氏、podcastより要約）</p>
+</blockquote>
+<p>多くのユーザーが「大量の情報を入力して、それを要約・リファクタリングしてほしい」と考えていることを踏まえると、このLong Output能力の向上は今後の重要な課題と言えるだろう。</p>
+<p><strong>開発者向けのTips</strong> Savinov氏は、long context機能を効果的に使うためのTipsとして以下を挙げている。</p>
+<ul>
+<li><strong>Context Cachingの活用:</strong> 一度読み込んだcontextをキャッシュすることで、同じコンテキストに対する二回目以降の質問応答を高速化・低コスト化できる。特に「chat with document」のようなユースケースで有効。質問はコンテキストの後に追加するのが定石（キャッシュを有効活用するため）。</li>
+<li><strong>RAGとの組み合わせ:</strong> やはり大規模知識ベースにはRAG。Multiple Needlesのようなタスクでも有効な場合がある。</li>
+<li><strong>無関係な情報を入れない:</strong> 特にMultiple Needlesの精度に影響する。</li>
+<li><strong>プロンプトによる誘導:</strong> モデル内部の知識（In-weight）とコンテキスト内の知識（In-context）が矛盾する場合がある。「上記の情報に基づいて、〇〇について教えてください」のように、どちらを参照すべきか明示的に指示すると良い。</li>
+</ul>
+</section>
+<section id="未来予測10mトークンそしてその先へ" class="level2">
+<h2 class="anchored" data-anchor-id="未来予測10mトークンそしてその先へ">未来予測：10Mトークン、そしてその先へ</h2>
+<p>Nikolay Savinov氏は、long context技術の今後の発展について、以下のような段階的な予測を示している。</p>
+<ul>
+<li><strong>Step 1: 現行（1M〜2Mトークン）の品質向上:</strong>
+<ul>
+<li>まずは現在のコンテキスト長で、ほぼ完璧な情報検索（Retrieval）能力を実現する。これが達成されれば、人間には不可能なレベルでの情報処理（例：1時間の動画を見て特定の瞬間の出来事を正確に答える）が当たり前になり、想像もつかないような応用が開けるだろう。</li>
+</ul></li>
+<li><strong>Step 2: コスト削減と10Mトークンの普及:</strong>
+<ul>
+<li>次に、long contextの利用コストが大幅に低下し、10Mトークンが「コモディティ化」する。これにより、中〜大規模のコードベース全体をコンテキストに入れられるようになり、コーディング支援AIは人間の能力を完全に凌駕するレベルに達する可能性がある。「スーパーヒューマン・コーディングAIアシスタント」が全ての開発者の必須ツールになるだろう。</li>
+</ul></li>
+<li><strong>Step 3: 100Mトークン以上への挑戦:</strong>
+<ul>
+<li>100Mトークン以上の実現には、さらなる深層学習のイノベーションが必要になるだろう。いつ実現するかはまだ見通せない。</li>
+</ul></li>
+</ul>
+<p>これらの実現には、モデル自体の進化だけでなく、それを支える優秀な推論エンジニアの存在が不可欠であることも強調されていた。単にチップがあるだけではダメなのだ。</p>
+<p>また、<strong>AIエージェント</strong>との関係も興味深い。エージェントは、自身の行動履歴や観測結果を記憶するためにlong contextを「消費」する側であると同時に、ユーザーに代わってウェブ検索などから自動的に情報を収集し、コンテキストを構築してくれる「供給」側にもなり得るという。</p>
+</section>
+<section id="総括と私見" class="level2">
+<h2 class="anchored" data-anchor-id="総括と私見">総括と私見</h2>
+<p>Gemini 2.5 Proは、単なる性能向上に留まらず、long context能力と思考能力の融合という点で、AIの可能性を大きく押し広げる一歩となっている。Google DeepMindの研究者たちの話からは、100Mトークンという具体的な目標設定とその裏にある技術的・コスト的課題、そしてlong contextがコーディングやエージェント開発といった分野に与えるであろうインパクトの大きさがうかがえる。</p>
+<p>今回のpodcastで特に興味深かったのは、Nikolay Savinov氏が10Mトークン実験の詳細（コストやハードウェアの制約）を比較的オープンに語っていた点だ。もちろん全てが公開されているわけではないだろうが、競合他社がしばしば技術的詳細を伏せがちな中で、こうした具体的な挑戦と限界についての言及は、技術の現在地を理解する上で非常に貴重だと感じる。一方で、Jack Rae氏が言及していたように、2.5 Proがまだ「Experimental（実験的）」リリースであり、System Cardの公開がGA（一般提供）まで待たれる状況は、ユーザーとしてはややもどかしい部分もある。とはいえ、モデル内部の「思考」プロセスを（少なくとも現時点では）そのまま見せている点など、透明性への意識も感じられる。long contextと思考能力の掛け合わせが、今後どのような体験を生み出してくれるのか、引き続き注目していきたい。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
