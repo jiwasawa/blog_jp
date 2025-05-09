@@ -1,15 +1,16 @@
 ---
 title: "Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地"
-description: "Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力とthinking能力の技術的進化、現状の課題、そして今後の展望を分析する。"
+description: "Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。"
 author: "Junichiro Iwasawa"
-date: "2025-05-07"
-categories: [LLM, AI]
+date: "2025-05-09"
+categories: [LLM, AI, Podcast]
 image: https://picsum.photos/id/92/200
 ---
 
-GoogleからGemini 2.5 Proが発表され、大規模言語モデル（LLM）開発の最前線における新たな動きとして注目を集めている。今回のモデルでは、特にlong context処理能力と、「思考（Thinking）」と呼ばれる推論能力の向上が技術的な焦点となっている。
+今週、Googleから[Gemini 2.5 Proのアップデートが発表](https://x.com/demishassabis/status/1919779362980692364)され、[LMArenaの全てのリーダーボードでトップを飾る](https://x.com/lmarena_ai/status/1919774743038984449)など注目を集めている。
+Gemini 2.5 Proにはいくつかの特徴があるが、long context処理能力と「思考（Thinking）」と呼ばれる推論能力の向上には目を見張るものがある。
 
-これらの進化は一体どのように達成され、今後どのような可能性を秘めているのか？ 本稿では、Gemini 2.5 Proの開発に関わるGoogle DeepMindの研究者、[Nikolay Savinov氏（long context担当）のpodcastインタビュー](https://www.youtube.com/watch?v=NHMJ9mqKeMQ)と[Jack Rae氏（Thinking/Inference Time Scaling担当）のpodcastインタビュー](https://www.youtube.com/watch?v=u0iIPxfwjKU)内容に基づき、特にlong context能力と思考能力に焦点を当て、その技術的背景と今後の展望を分析していく。
+これらの進化は一体どのように達成され、今後どのような可能性を秘めているのか？ 本稿では、Gemini 2.5 Proの開発に関わるGoogle DeepMindの研究者、[Nikolay Savinov氏（long context担当）のpodcastインタビュー](https://www.youtube.com/watch?v=NHMJ9mqKeMQ)と[Jack Rae氏（Thinking/Inference Time Scaling担当）のpodcastインタビュー](https://www.youtube.com/watch?v=u0iIPxfwjKU)の内容に基づき、特にlong context能力と思考能力に焦点を当て、その技術的背景と今後の展望を分析していく。
 
 ## Long Context - 1Mトークンの壁を超えて
 
@@ -71,7 +72,7 @@ Nikolay Savinov氏は、long context技術の今後の発展について、以�
 * **Step 2: コスト削減と10Mトークンの普及:**
     * 次に、long contextの利用コストが大幅に低下し、10Mトークンが「コモディティ化」する。これにより、中〜大規模のコードベース全体をコンテキストに入れられるようになり、コーディング支援AIは人間の能力を完全に凌駕するレベルに達する可能性がある。「スーパーヒューマン・コーディングAIアシスタント」が全ての開発者の必須ツールになるだろう。
 * **Step 3: 100Mトークン以上への挑戦:**
-    * 100Mトークン以上の実現には、さらなる深層学習のイノベーションが必要になるだろう。いつ実現するかはまだ見通せない。
+    * 100Mトークン以上の実現には、さらなるイノベーションが必要になるだろう。いつ実現するかはまだ見通せない。
 
 これらの実現には、モデル自体の進化だけでなく、それを支える優秀な推論エンジニアの存在が不可欠であることも強調されていた。単にチップがあるだけではダメなのだ。
 
@@ -81,4 +82,4 @@ Nikolay Savinov氏は、long context技術の今後の発展について、以�
 
 Gemini 2.5 Proは、単なる性能向上に留まらず、long context能力と思考能力の融合という点で、AIの可能性を大きく押し広げる一歩となっている。Google DeepMindの研究者たちの話からは、100Mトークンという具体的な目標設定とその裏にある技術的・コスト的課題、そしてlong contextがコーディングやエージェント開発といった分野に与えるであろうインパクトの大きさがうかがえる。
 
-今回のpodcastで特に興味深かったのは、Nikolay Savinov氏が10Mトークン実験の詳細（コストやハードウェアの制約）を比較的オープンに語っていた点だ。もちろん全てが公開されているわけではないだろうが、競合他社がしばしば技術的詳細を伏せがちな中で、こうした具体的な挑戦と限界についての言及は、技術の現在地を理解する上で非常に貴重だと感じる。一方で、Jack Rae氏が言及していたように、2.5 Proがまだ「Experimental（実験的）」リリースであり、System Cardの公開がGA（一般提供）まで待たれる状況は、ユーザーとしてはややもどかしい部分もある。とはいえ、モデル内部の「思考」プロセスを（少なくとも現時点では）そのまま見せている点など、透明性への意識も感じられる。long contextと思考能力の掛け合わせが、今後どのような体験を生み出してくれるのか、引き続き注目していきたい。
+今回のpodcastで特に印象的だったのは、Nikolay Savinov氏が10Mトークン実験の詳細（コストやハードウェアの制約）を比較的オープンに語っていた点だ。もちろん全てが公開されているわけではないだろうが、競合他社がしばしば技術的詳細を伏せがちな中で、こうした具体的な挑戦と限界についての言及は、技術の現在地を理解する上で非常に貴重だと感じる。一方で、Jack Rae氏が言及していたように、2.5 Proがまだ「Experimental（実験的）」リリースであり、System Cardの公開がGA（一般提供）まで待たれる状況は、ユーザーとしてはややもどかしい部分もある。とはいえ、モデル内部の「思考」プロセスを（少なくとも現時点では）そのまま見せている点など、透明性への意識も感じられる。long contextと思考能力の掛け合わせが、今後どのような体験を生み出してくれるのか、引き続き注目していきたい。
