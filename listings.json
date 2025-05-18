@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/claude-biology/index.html",
       "/posts/gemini-long-context/index.html",
       "/posts/ai-neocloud/index.html",
       "/posts/sycophancy/index.html",
