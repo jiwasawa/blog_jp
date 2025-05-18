@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Thu, 08 May 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 17 May 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>LLMの「脳内」を覗く：Anthropicの最新研究が解き明かす思考の片鱗</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/claude-biology/</link>
+  <description><![CDATA[ AnthropicのEmmanuel Ameisen氏らによるLLMのbiologyに関する論文に基づき、詩作・多言語処理・ハルシネーションといった振る舞いを支えるLLMの「思考回路」に迫る。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-biology/</guid>
+  <pubDate>Sat, 17 May 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/94/200" medium="image"/>
+</item>
 <item>
   <title>Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,19 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/</guid>
   <pubDate>Mon, 14 Apr 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/82/200" medium="image"/>
-</item>
-<item>
-  <title>コードで理解するTransformer：AttentionとGPTモデル入門</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/</link>
-  <description><![CDATA[ 近年、ChatGPTやGPT-4といった大規模言語モデル（LLM: Large Language Models）が大きな注目を集めています。これらのモデルは、コードの作成、メールの下書き、複雑な質問への回答、さらには創造的な文章生成まで、驚くべき能力を発揮します。これらのシステムの多くを支える中核技術が、2017年の画期的な論文「<a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a>」で提案されたTransformerアーキテクチャです。 ]]></description>
-  <category>Machine Learning</category>
-  <category>Transformer</category>
-  <category>Python</category>
-  <category>LLM</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/</guid>
-  <pubDate>Thu, 10 Apr 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/83/200" medium="image"/>
 </item>
 </channel>
 </rss>
