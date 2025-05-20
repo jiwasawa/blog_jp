@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Sun, 18 May 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 21 May 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/</link>
+  <description><![CDATA[ GPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/</guid>
+  <pubDate>Wed, 21 May 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/95/200" medium="image"/>
+</item>
 <item>
   <title>LLMの「脳内」を覗く：Anthropicの最新研究が解き明かす思考の片鱗</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,18 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/</guid>
   <pubDate>Wed, 16 Apr 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/30/200" medium="image"/>
-</item>
-<item>
-  <title>AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/</link>
-  <description><![CDATA[ Google DeepMindから発表された二つの研究プロジェクト、<a href="https://www.nature.com/articles/s41586-025-08866-7">AMIE (Articulate Medical Intelligence Explorer)</a> と<a href="https://arxiv.org/abs/2502.18864">AI co-scientist</a>は、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト<a href="https://www.cognitiverevolution.ai/google-agents-beat-human-doctors-make-scientific-discoveries-with-vivek-natarajan-and-anil-palepu/">「The Cognitive Revolution」</a>では、開発担当者のVivek Natarajan氏とAnil Palepu氏がこれらのプロジェクトについて語り、AIが高度な専門知識を要する領域で人間と肩を並べ、あるいは特定のタスクにおいては凌駕し始めている現状が浮き彫りとなった。本稿では、これらの研究内容とその意味合いについて、ポッドキャストでの議論も踏まえつつ、やや距離を置いた視点から分析を試みる。 ]]></description>
-  <category>LLM</category>
-  <category>Podcast</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/</guid>
-  <pubDate>Tue, 15 Apr 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/82/200" medium="image"/>
 </item>
 </channel>
 </rss>
