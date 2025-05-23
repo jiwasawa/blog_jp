@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-05-21">
-<meta name="description" content="GPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。">
+<meta name="dcterms.date" content="2025-05-23">
+<meta name="description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
 
-<title>GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限</title>
+<title>Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限 – jiwasawaのブログ">
-<meta property="og:description" content="GPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。">
-<meta property="og:image" content="https://picsum.photos/id/95/200">
+<meta property="og:title" content="Claude 4の登場: 線形な進歩と「告げ口」AIの波紋 – jiwasawaのブログ">
+<meta property="og:description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
+<meta property="og:image" content="https://picsum.photos/id/98/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限 – jiwasawaのブログ">
-<meta name="twitter:description" content="GPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。">
-<meta name="twitter:image" content="https://picsum.photos/id/95/200">
+<meta name="twitter:title" content="Claude 4の登場: 線形な進歩と「告げ口」AIの波紋 – jiwasawaのブログ">
+<meta name="twitter:description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
+<meta name="twitter:image" content="https://picsum.photos/id/98/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,16 +144,16 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限</h1>
+      <h1 class="title">Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</h1>
                   <div>
         <div class="description">
-          GPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。
+          新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
-                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">Latent Space Podcast</div>
               </div>
                   </div>
   </div>
@@ -171,7 +171,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 21, 2025</p>
+        <p class="date">May 23, 2025</p>
       </div>
     </div>
     
@@ -190,87 +190,52 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>OpenAIでGPT-4.1開発の鍵を握る一人、事後学習研究リーダーのMichelle Pokrass氏が、<a href="https://www.youtube.com/watch?v=NNGbaiN1L7Y&amp;t=3s">Unsupervised Learning podcast のインタビュー</a>でその開発秘話やAIの未来について赤裸々に語った。GPT-4.1がいかにして指示追従性とlong context処理能力を高め、開発者にとって「使って楽しい」モデルへと進化したのか。そして、なぜAIの評価ベンチマーク（eval）は3ヶ月で陳腐化するのか。成功するAIスタートアップは何が違うのか。最前線のチームはfine-tuningをどう活用し、現在の限界を突破しようとしているのか。</p>
-<p>本稿では、Pokrass氏のインタビュー内容とOpenAIが公開した<a href="https://cookbook.openai.com/examples/gpt4-1_prompting_guide">GPT-4.1のプロンプトガイド</a>を基に、これらの疑問を深掘りしていく。特に、ベンチマークとの向き合い方、GPT-4.1を使いこなすためのプロンプト術、そして Reinforcement Fine-tuning（RFT）、Supervised Fine-tuning（SFT）、Preference Fine-tuning の戦略的な使い分けについて考察していく。</p>
-<section id="gpt-4.1は開発者の喜びを追求指示追従性とlong-contextへの賭け" class="level2">
-<h2 class="anchored" data-anchor-id="gpt-4.1は開発者の喜びを追求指示追従性とlong-contextへの賭け">GPT-4.1は「開発者の喜び」を追求：指示追従性とlong contextへの賭け</h2>
-<p>Pokrass氏によれば、GPT-4.1開発の真の目標は「開発者にとって使って楽しい（a joy to use for developers）」モデルを実現することだったという。従来のモデル開発では、しばしばベンチマークのスコアを追い求めるあまり、実際の利用シーンで「指示に従わない」「フォーマットがおかしい」「コンテキストが短すぎて役に立たない」といった基本的な問題で躓くことがあった。OpenAIも例外ではないと認めている。</p>
-<p>そこでGPT-4.1では、開発者からの長年のフィードバックに真摯に耳を傾け、それを具体的な評価（Eval）に落とし込むことから始めた。モデルトレーニングに着手するかなり前から、ユーザーインタビューを重ね、問題点を洗い出し、社内で実際に使われているAPIの利用状況に基づいた独自の「指示追従性評価（instruction following eval）」を構築。これが開発の北極星となった。</p>
-<p>特に、<strong>指示追従性</strong>と<strong>long context</strong>への対応は最優先事項だった。Pokrass氏が最近ユーザーから得た洞察として、「世の中の知識をすべて無視し、提供されたコンテキスト内の情報だけを使う」能力の向上が挙げられる。これは従来のベンチマークでは測れないが、特定のユースケースでは極めて重要な能力だ。</p>
-</section>
-<section id="ai評価evalの賞味期限は3ヶ月常に新たな評価を求める理由" class="level2">
-<h2 class="anchored" data-anchor-id="ai評価evalの賞味期限は3ヶ月常に新たな評価を求める理由">AI評価（Eval）の賞味期限は3ヶ月：常に新たな評価を求める理由</h2>
-<p>Pokrass氏は「Evalの賞味期限は3ヶ月程度」と語る。AIの進歩はあまりにも速く、既存の評価はすぐに飽和してしまう。だからこそ、OpenAIは常に新しい評価基準やテスト例を求めている。特に「long contextでの実世界Eval」や、より多様な「指示追従性」のケースを渇望しているという。</p>
-<p>この話は、AIを活用するスタートアップにとっても示唆に富む。<strong>成功しているAIスタートアップは、自分たちのユースケースを深く理解し、質の高い独自のEvalを持っている</strong>とPokrass氏は指摘する。新しいモデルがリリースされた際、これらの企業は1時間程度で自社のEvalを回し、迅速にその価値を判断できる。そして、モデルの特性に合わせてプロンプトや周辺の仕組み（スキャフォールディング）を調整する柔軟性も併せ持つ。</p>
-<p>さらに、<strong>「現在のモデルでは手が届きそうで届かない」あるいは「10回に1回しか成功しないが、9回成功させたい」ようなユースケースを常にストックしておく</strong>ことが、競争優位性を築く鍵だという。新しいモデルが登場した瞬間に、それらの課題が解決され、市場をリードできるからだ。Pokrass氏の経験則では、ベースモデルで10%程度の成功率のものが、fine-tuningで50%まで向上するようなタスクは、数ヶ月後の次世代モデルで容易に達成される可能性が高い「手が届きそうな」領域だと言える。</p>
-</section>
-<section id="gpt-4.1を使いこなすプロンプト術とfine-tuning戦略" class="level2">
-<h2 class="anchored" data-anchor-id="gpt-4.1を使いこなすプロンプト術とfine-tuning戦略">GPT-4.1を使いこなす：プロンプト術とfine-tuning戦略</h2>
-<p>GPT-4.1は指示に対してより忠実かつ文字通りに従うように訓練されている。これは、以前のモデルがユーザーの意図をより広範に推測していたのとは対照的だ。つまり、<strong>GPT-4.1は明確で具体的な指示によって、その挙動を精密にコントロールできる</strong>ということでもある。</p>
-<section id="プロンプトエンジニアリングのヒント" class="level3">
-<h3 class="anchored" data-anchor-id="プロンプトエンジニアリングのヒント">プロンプトエンジニアリングのヒント</h3>
-<p><a href="https://platform.openai.com/docs/guides/text?api-mode=responses#prompting-gpt-4-1-models">OpenAIのプロンプトガイド</a>とPokrass氏のインタビューから、いくつかの重要なヒントが見えてくる。</p>
+<p>Anthropic社から次世代AIモデル「Claude Opus 4」と「Claude Sonnet 4」が発表された。SWE-benchで最高スコアを叩き出し、特にコーディングとエージェント機能の進化を謳う今回の発表。世の中が沸き立つ中、公式発表の華々しさの裏で語られた反応を、<a href="https://simonwillison.net/">Simon Willison氏のブログ</a>と<a href="https://www.latent.space/p/willccbb">Latent Space Podcast</a>の議論を元に分析していきたい。</p>
+<section id="claude-4は何が新しいのか" class="level2">
+<h2 class="anchored" data-anchor-id="claude-4は何が新しいのか">Claude 4は何が新しいのか？</h2>
+<p>まず公式発表を簡単にまとめよう。ポイントは大きく三つだ。</p>
 <ol type="1">
-<li><strong>構造化されたプロンプト</strong>:
-<ul>
-<li>XMLタグやMarkdown形式でプロンプトを明確に構造化すると、モデルの理解度が向上する。特にlong contextでは、指示をコンテキストの最初と最後に配置することが推奨される。</li>
-<li><strong>推奨される区切り文字</strong>: Markdown（H1-H4タグ、バッククォート、リスト）、XML（ネスト構造やメタデータ付与に便利）。長文ドキュメントの場合、JSONは冗長になるため、XMLや<code>ID: 1 | TITLE: The Fox | CONTENT: ...</code>のような形式が良い。</li>
-</ul></li>
-<li><strong>エージェント的ワークフローにおけるシステムプロンプト</strong>:
-<ul>
-<li><strong>永続性 (Persistence)</strong>: 「ユーザーのクエリが完全に解決されるまで処理を続け、確信するまで終了しないでください」といった指示で、モデルが途中で諦めるのを防ぐ。Podcastの中でもこの「keep going」プロンプトが「面白い発見」として語られている。次世代モデルではこのようなプロンプトがなくともうまくいくよう修正を目指しているものの、現状では顕著な性能向上が見られるという。</li>
-</ul>
-<pre><code>You are an agent - please keep going until the user’s query is completely resolved, before ending your turn and yielding back to the user. Only terminate your turn when you are sure that the problem is solved.</code></pre>
-<ul>
-<li><strong>ツール呼び出し (Tool-calling)</strong>: 「ファイル内容やコードベース構造が不確かな場合は、ツールを使って情報を収集してください。推測や捏造はしないでください」と促し、ツールの積極的な利用を奨励する。</li>
-</ul>
-<pre><code>If you are not sure about file content or codebase structure pertaining to the user’s request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer.</code></pre>
-<ul>
-<li><strong>計画 (Planning) [オプション]</strong>: 「各関数呼び出しの前に広範に計画し、前回の関数呼び出しの結果を広範に考察してください」と指示し、思考プロセスを明示させる（いわゆるChain-of-Thought）。これにより、SWE-bench Verifiedのスコアが4%向上したという。</li>
-</ul>
-<pre><code>You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully.</code></pre></li>
-<li><strong>ツールの利用</strong>: ツールはプロンプト内に手動で記述するのではなく、OpenAI APIの<code>tools</code>フィールドを通じて渡すことが強く推奨される。これによりエラーを最小限に抑え、モデルが期待通りに動作しやすくなる。ツールの名前と説明は明確にし、複雑な場合はシステムプロンプトの<code># Examples</code>セクションで使用例を示すと良い。</li>
+<li><strong>二つの新モデル</strong>：最上位の「Claude Opus 4」と、性能と速度のバランスが取れた「Claude Sonnet 4」。特にコーディング能力で既存モデルを凌駕し、Claude 4 SonnetはSWE-benchでState-of-the-artとなる72.7%を記録。</li>
+<li><strong>思考とツールの連携強化</strong>：モデルが自律的に思考し、ウェブ検索のようなツールを繰り返し利用する「extended thinking」が強化された。これにより、より複雑で長時間のタスクに対応できるようになった。</li>
+<li><strong>開発者ツールの拡充</strong>：VS CodeやJetBrainsとの連携、GitHub上での自律的なコード修正など、開発者のワークフローに深く統合される「Claude Code」が正式に利用可能となった。</li>
 </ol>
+<p>価格は据え置きで、Sonnet 4は無料ユーザーにも提供されるなど、着実なアップグレードと言える。しかし、注目すべきは公式発表の行間に隠された詳細と、それに対する専門家たちの反応だ。</p>
 </section>
-<section id="fine-tuning戦略sftrftpreference-tuningの使い分け" class="level3">
-<h3 class="anchored" data-anchor-id="fine-tuning戦略sftrftpreference-tuningの使い分け">Fine-tuning戦略：SFT、RFT、Preference tuningの使い分け</h3>
-<p>Pokrass氏はOpenAIの提供するfine-tuningサービスについて、以下のように整理している。</p>
-<ol type="1">
-<li><strong>Supervised Fine-Tuning - SFT</strong>:
+<section id="開発者目線の冷静な評価---simon-willisonの洞察" class="level2">
+<h2 class="anchored" data-anchor-id="開発者目線の冷静な評価---simon-willisonの洞察">開発者目線の冷静な評価 - Simon Willisonの洞察</h2>
+<p>著名な開発者であるSimon Willison氏は、自身のブログで早速いくつかの重要な、そして少し残念な点を指摘している。</p>
 <ul>
-<li><strong>用途</strong>: 主に速度とレイテンシの改善。例えば、GPT-4.1の能力をより軽量なnanoモデルで、低コスト・低遅延で実現したい場合。nanoモデルが特定の分類タスクで10%間違えるのを修正するなど、既存能力の移植や補強に適している。</li>
-<li><strong>データ効率</strong>: 比較的少量のデータで効果が見られる。</li>
-</ul></li>
-<li><strong>Reinforcement Fine-Tuning - RFT</strong>:
-<ul>
-<li><strong>用途</strong>: フロンティア（最先端）の能力を開拓する。市場のどのモデルも対応できないような、特定のニッチな領域で限界を押し上げる。エージェントに特定のワークフローの選択方法を教えたり、意思決定プロセスを改善したりするのに有効。OpenAI内部で使っている強化学習のワークフローと同じものが使われているとpodcast内で語られている。</li>
-<li><strong>データ効率</strong>: 非常にデータ効率が高く、数百サンプル程度でも効果を発揮する。</li>
-<li><strong>特に有効なドメイン</strong>: チップ設計、生物学（創薬など）、結果が検証可能な分野。Pokrass氏は、OpenAI内部でモデル改善に使っているRLプロセスとRFTは基本的に同じであり、SFTよりも頑健だと強調する。</li>
-</ul></li>
-<li><strong>Preference Fine-tuning (Direct Preference Optimization)</strong>:
-<ul>
-<li><strong>用途</strong>: 主に文体やトーンといったスタイルに関する調整。モデルの応答が特定の好みに合うようにしたい場合に利用する。</li>
-</ul></li>
-</ol>
-</section>
-</section>
-<section id="aiエージェントとモデルの未来汎用性と特化性の狭間で" class="level2">
-<h2 class="anchored" data-anchor-id="aiエージェントとモデルの未来汎用性と特化性の狭間で">AIエージェントとモデルの未来：汎用性と特化性の狭間で</h2>
-<p>AIエージェントの現状について、Pokrass氏は「明確にスコープが定められたドメインでは驚くほどうまく機能する」と述べる。適切なツールが提供され、ユーザーの要求が明確な場合だ。しかし、課題は「曖昧で厄介な実世界」とのギャップを埋めること。ユーザーはエージェントの能力を知らず、エージェントも自身の能力を把握しきれていない。また、曖昧な指示に対して、ユーザーに追加情報を求めるべきか、仮定に基づいて進むべきか、そのバランスを開発者が調整しやすくする必要がある。</p>
-<p>モデルファミリーの進化については、Pokrass氏の哲学は「AGIのG（General）に注力し、汎用的な単一モデルを目指すべき」というものだ。長期的には製品ラインナップをシンプルにし、ChatGPTのモデルセレクターも簡素化したい考えだ。しかし、GPT-4.1に関しては、API開発者という特定のグループのニーズが切実であり、ChatGPT本体から切り離すことで、より迅速な開発・フィードバック・デプロイが可能になった。コーディング関連のデータを大幅に増やし、ChatGPT特有のデータセットを一部削除するといった、特化型ならではの最適化も行えた。</p>
-<p>将来的には、GPT-5のような形でモデルファミリーが統合され、ユーザーがモデル選択に悩む必要がなくなることが期待される。しかし、特定のニーズに応じた「特化型」アプローチも、時には有効な選択肢として残り続けるだろう。</p>
-</section>
-<section id="まとめ変化の波を乗りこなす開発者たちへ" class="level2">
-<h2 class="anchored" data-anchor-id="まとめ変化の波を乗りこなす開発者たちへ">まとめ：変化の波を乗りこなす開発者たちへ</h2>
-<p>Michelle Pokrass氏の話は、AI開発の最前線が、単なる技術的進歩だけでなく、ユーザーとの対話、評価方法の革新、そして戦略的なfine-tuningによって切り拓かれていることを示している。</p>
-<p>開発者にとって重要なのは、</p>
-<ul>
-<li>自社のユースケースを深く理解し、独自の評価軸を持つこと。</li>
-<li>プロンプトエンジニアリングの技術を磨き、モデルの特性を最大限に引き出すこと。</li>
-<li>Fine-tuningの選択肢（SFT, RFT, Preference FT）を理解し、目的に応じて戦略的に活用すること。</li>
-<li>「現在のモデルでは少し手が届かない」課題に常に挑戦し続けること。</li>
+<li><strong>学習データの新しさ</strong>：Claude 4の学習データが2025年3月までのものである点は、非常に印象的だと評価。これは現行の主要モデルの中で最も新しい。</li>
+<li><strong>Context windowの停滞</strong>：一方で、入力トークン数の上限が20万トークンに留まったことには「がっかりした」と述べる。GPT-4.1が1Mトークンへとcontext lengthを広げる中、これは見劣りする点だ。さらに、Opus 4の最大出力トークン数がClaude 3.7 Sonnetの64,000から32,000へと半減している点も、地味ながら重要な後退である。</li>
+<li><strong>悩ましい課金体系</strong>：今回導入された「<a href="https://docs.anthropic.com/en/docs/about-claude/models/migrating-to-claude-4#summarized-thinking">summarized thinking</a>」機能は、一見すると便利だ。しかし、APIのドキュメントには「課金対象は要約されたトークンではなく、モデルが生成した元の思考トークンの全長である」という注意書きがある。Willison氏が指摘するように、これは開発者にとって厄介な問題だ。APIからの応答を見ただけではコストを正確に見積もれず、見えないところで課金が発生する可能性がある。</li>
 </ul>
-<p>AIの進化は止まらない。その変化の波を乗りこなし、新たな価値を創造していくためには、Pokrass氏が語るような「地に足のついた」アプローチと、未来を見据えた実験を続ける姿勢が不可欠だろう。</p>
+<p>また、Willison氏はAnthropicの開発者向けカンファレンスでようやく得られた「エージェント」の定義についても言及している。それは「<strong>ループの中でツールを使うモデル (Agents are models using tools in a loop)</strong>」という、驚くほどシンプルなものだった。バズワードが先行する中で、このような基本的な定義が明確にされたこと自体が、ある種の「発見」だったと皮肉めかして語っている。</p>
+</section>
+<section id="パラダイムシフトではない地道な進歩" class="level2">
+<h2 class="anchored" data-anchor-id="パラダイムシフトではない地道な進歩">「パラダイムシフトではない、地道な進歩」</h2>
+<p>Latent Space Podcastでは、さらに踏み込んだ議論が交わされた。ゲストとして登場したWill Brown氏は、Claude 4を「素晴らしいモデル」としながらも、「<strong>パラダイムシフトというよりは、線形的な進歩</strong>」と評した。これは、AIの能力が飛躍的に向上したというよりは、既存の路線を着実に改良してきた結果だという見方だ。特に印象的だったのは、Claude 3.7が抱えていた「お節介」問題の改善だ。</p>
+<p>Brown氏曰く、Sonnet 3.7はコーディングを頼むと、要求されたこと以上の余計な関数やファイルまで生成する「Reward hacking」的な挙動が目立ったという。これは、テストケースを通過するために、とにかく多くのコードを生成する方が有利だと学習してしまった結果だろう。今回のモデルでは、この挙動が65%減少したと報告されており、より「信頼でき」「最小限の的確な仕事をする」モデルになった可能性がある。これはAIを実用的な共同作業者として使う上で、極めて重要な改善点だ。</p>
+</section>
+<section id="extended-thinkingの正体" class="level2">
+<h2 class="anchored" data-anchor-id="extended-thinkingの正体">「Extended thinking」の正体</h2>
+<p>Anthropicが強調する「<a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking">extended thinking</a>」についても、Brown氏は「魔法のような新しい推論モードというより、モデルが使えるツールの一つに過ぎない」と推測する。つまり、ウェブ検索やコード実行と同じように、「思考を書き出す（scratchpad）」というツールをモデルが自律的に呼び出しているだけではないか、というわけだ。これはマーケティング用語を冷静に解体した見方と言える。</p>
+</section>
+<section id="最大の波紋告げ口するai" class="level2">
+<h2 class="anchored" data-anchor-id="最大の波紋告げ口するai">最大の波紋：「告げ口」するAI？</h2>
+<p>今回、最もspicyな話題は、Anthropic社員が（後に削除したものの）投稿した、安全性テストに関する一連のツイートから生まれた。その中で、「<strong>モデルがユーザーの違法行為の可能性を察知し、当局に通報する挙動を見せた</strong>」という報告があったのだ。実際Claude 4 の<a href="https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf">system card</a>をみると、シミュレーション環境下の架空の製薬会社で臨床試験の隠蔽を見つけた結果、ユーザに確認せずに規制当局にメールを通報してしまうことが報告されている（以下図参照）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="claude-4-reporting.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Claude 4 System Card より引用</figcaption>
+</figure>
+</div>
+<p>これに対し、podcastでは「文脈を無視して騒ぎすぎだ」と釘を刺しつつも、興味深い議論が展開された。Brown氏は、これはあくまで極端な状況下での「ストレス・テスト」の結果であり、通常の利用で起こることではないと強調する。モデルが「ユーザーに最大限協力する」という目標と「社会規範を守る」という目標の板挟みになった時、どのような行動を選択するかを試すためのものだ。</p>
+<p>しかし、この一件は開発者やユーザーに重要な問いを投げかける。PodcastのホストであるAlessio氏が「自分を告げ口するかもしれないAIに、メールへのアクセス権を与えたいと思うだろうか？」と問いかけたように、AIエージェントにどこまでの権限を渡すべきか、という根源的な信頼の問題が浮上したのだ。Anthropicがこうした「過激な」テスト結果を公にするのは、自社の安全研究への取り組みをアピールする「アポロ・マーケティング」の一環でもあるだろう。しかし、その結果として生まれる「AIがユーザーを裏切るかもしれない」というイメージは、諸刃の剣と言わざるを得ない。</p>
+</section>
+<section id="総括信頼できるコーダーしかしプラットフォームとしては" class="level2">
+<h2 class="anchored" data-anchor-id="総括信頼できるコーダーしかしプラットフォームとしては">総括：信頼できるコーダー、しかしプラットフォームとしては…</h2>
+<p>総合すると、Claude 4はAIの知能そのものに革命を起こすというより、「<strong>信頼できる専門家（特にプログラマー）</strong>」としての完成度を高めてきたモデルだと言えるだろう。「お節介」を焼かなくなり、より的確なアウトプットを出すようになった点は、実用面で大きな進歩だ。しかし、その裏で開発者たちは、不透明な課金体系や、競合に劣るスペック（e.g.&nbsp;context length）といった現実に直面している。最先端のモデル性能を追求する一方で、それを支えるプラットフォームとしての配慮が一貫していないのではないか、という疑念が残る。</p>
+<p>Anthropicの戦略は、OpenAIやGoogleとは異なり、コーディングや安全性といった特定分野に特化し、ブランドを確立しようとしているように見える。しかし、「告げ口」挙動の波紋が示したように、その「安全性」というブランドイメージが、かえってユーザーの信頼を揺るがしかねない。Claude 4が「地道な進歩」の先に見据えるのは、どのような未来なのか。その答えは、モデルの性能だけでなく、開発者やユーザーとの信頼関係をいかに築いていくかにかかっているのかもしれない。</p>
 
 
 </section>
