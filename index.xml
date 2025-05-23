@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Wed, 21 May 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 23 May 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</link>
+  <description><![CDATA[ 新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</guid>
+  <pubDate>Fri, 23 May 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/98/200" medium="image"/>
+</item>
 <item>
   <title>GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,18 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/diffusion-basics/</guid>
   <pubDate>Thu, 17 Apr 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/37/200" medium="image"/>
-</item>
-<item>
-  <title>HubSpot共同創業者が見据えるAIエージェント新時代：ハイブリッドチームと仕事の未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/</link>
-  <description><![CDATA[ HubSpotの共同創業者兼CTOであり、近年はAgent.aiの創設者としても注目を集めるDharmesh Shah。インバウンドマーケティングのパイオニアとして名を馳せた彼が今、情熱を注ぐのは人工知能（AI）、とりわけAIエージェントの世界である。単なるバズワードとしてではなく、ビジネスの根幹を変革しうる力としてAIを見据える彼の洞察は、<a href="https://www.latent.space/p/dharmesh">Latent Space podcast</a>でのインタビューからも鮮明に浮かび上がる。本稿では、Shah氏が描くAIエージェントの未来像、特に「ハイブリッドチーム」という概念、新たなビジネスモデル「WaaS/RaaS」、そして彼が手掛けるAgent.aiの野心的なビジョンについて深く掘り下げていく。 ]]></description>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/</guid>
-  <pubDate>Wed, 16 Apr 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/30/200" medium="image"/>
 </item>
 </channel>
 </rss>

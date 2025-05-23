@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-05-23">
+<meta name="description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
+
+<title>Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-dde8d7229bfee0f8bb5efd37f0f9ae1e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Claude 4の登場: 線形な進歩と「告げ口」AIの波紋 – jiwasawaのブログ">
+<meta property="og:description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
+<meta property="og:image" content="https://picsum.photos/id/98/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Claude 4の登場: 線形な進歩と「告げ口」AIの波紋 – jiwasawaのブログ">
+<meta name="twitter:description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
+<meta name="twitter:image" content="https://picsum.photos/id/98/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</h1>
+                  <div>
+        <div class="description">
+          新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Latent Space Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 23, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Anthropic社から次世代AIモデル「Claude Opus 4」と「Claude Sonnet 4」が発表された。SWE-benchで最高スコアを叩き出し、特にコーディングとエージェント機能の進化を謳う今回の発表。世の中が沸き立つ中、公式発表の華々しさの裏で語られた反応を、<a href="https://simonwillison.net/">Simon Willison氏のブログ</a>と<a href="https://www.latent.space/p/willccbb">Latent Space Podcast</a>の議論を元に分析していきたい。</p>
+<section id="claude-4は何が新しいのか" class="level2">
+<h2 class="anchored" data-anchor-id="claude-4は何が新しいのか">Claude 4は何が新しいのか？</h2>
+<p>まず公式発表を簡単にまとめよう。ポイントは大きく三つだ。</p>
+<ol type="1">
+<li><strong>二つの新モデル</strong>：最上位の「Claude Opus 4」と、性能と速度のバランスが取れた「Claude Sonnet 4」。特にコーディング能力で既存モデルを凌駕し、Claude 4 SonnetはSWE-benchでState-of-the-artとなる72.7%を記録。</li>
+<li><strong>思考とツールの連携強化</strong>：モデルが自律的に思考し、ウェブ検索のようなツールを繰り返し利用する「extended thinking」が強化された。これにより、より複雑で長時間のタスクに対応できるようになった。</li>
+<li><strong>開発者ツールの拡充</strong>：VS CodeやJetBrainsとの連携、GitHub上での自律的なコード修正など、開発者のワークフローに深く統合される「Claude Code」が正式に利用可能となった。</li>
+</ol>
+<p>価格は据え置きで、Sonnet 4は無料ユーザーにも提供されるなど、着実なアップグレードと言える。しかし、注目すべきは公式発表の行間に隠された詳細と、それに対する専門家たちの反応だ。</p>
+</section>
+<section id="開発者目線の冷静な評価---simon-willisonの洞察" class="level2">
+<h2 class="anchored" data-anchor-id="開発者目線の冷静な評価---simon-willisonの洞察">開発者目線の冷静な評価 - Simon Willisonの洞察</h2>
+<p>著名な開発者であるSimon Willison氏は、自身のブログで早速いくつかの重要な、そして少し残念な点を指摘している。</p>
+<ul>
+<li><strong>学習データの新しさ</strong>：Claude 4の学習データが2025年3月までのものである点は、非常に印象的だと評価。これは現行の主要モデルの中で最も新しい。</li>
+<li><strong>Context windowの停滞</strong>：一方で、入力トークン数の上限が20万トークンに留まったことには「がっかりした」と述べる。GPT-4.1が1Mトークンへとcontext lengthを広げる中、これは見劣りする点だ。さらに、Opus 4の最大出力トークン数がClaude 3.7 Sonnetの64,000から32,000へと半減している点も、地味ながら重要な後退である。</li>
+<li><strong>悩ましい課金体系</strong>：今回導入された「<a href="https://docs.anthropic.com/en/docs/about-claude/models/migrating-to-claude-4#summarized-thinking">summarized thinking</a>」機能は、一見すると便利だ。しかし、APIのドキュメントには「課金対象は要約されたトークンではなく、モデルが生成した元の思考トークンの全長である」という注意書きがある。Willison氏が指摘するように、これは開発者にとって厄介な問題だ。APIからの応答を見ただけではコストを正確に見積もれず、見えないところで課金が発生する可能性がある。</li>
+</ul>
+<p>また、Willison氏はAnthropicの開発者向けカンファレンスでようやく得られた「エージェント」の定義についても言及している。それは「<strong>ループの中でツールを使うモデル (Agents are models using tools in a loop)</strong>」という、驚くほどシンプルなものだった。バズワードが先行する中で、このような基本的な定義が明確にされたこと自体が、ある種の「発見」だったと皮肉めかして語っている。</p>
+</section>
+<section id="パラダイムシフトではない地道な進歩" class="level2">
+<h2 class="anchored" data-anchor-id="パラダイムシフトではない地道な進歩">「パラダイムシフトではない、地道な進歩」</h2>
+<p>Latent Space Podcastでは、さらに踏み込んだ議論が交わされた。ゲストとして登場したWill Brown氏は、Claude 4を「素晴らしいモデル」としながらも、「<strong>パラダイムシフトというよりは、線形的な進歩</strong>」と評した。これは、AIの能力が飛躍的に向上したというよりは、既存の路線を着実に改良してきた結果だという見方だ。特に印象的だったのは、Claude 3.7が抱えていた「お節介」問題の改善だ。</p>
+<p>Brown氏曰く、Sonnet 3.7はコーディングを頼むと、要求されたこと以上の余計な関数やファイルまで生成する「Reward hacking」的な挙動が目立ったという。これは、テストケースを通過するために、とにかく多くのコードを生成する方が有利だと学習してしまった結果だろう。今回のモデルでは、この挙動が65%減少したと報告されており、より「信頼でき」「最小限の的確な仕事をする」モデルになった可能性がある。これはAIを実用的な共同作業者として使う上で、極めて重要な改善点だ。</p>
+</section>
+<section id="extended-thinkingの正体" class="level2">
+<h2 class="anchored" data-anchor-id="extended-thinkingの正体">「Extended thinking」の正体</h2>
+<p>Anthropicが強調する「<a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking">extended thinking</a>」についても、Brown氏は「魔法のような新しい推論モードというより、モデルが使えるツールの一つに過ぎない」と推測する。つまり、ウェブ検索やコード実行と同じように、「思考を書き出す（scratchpad）」というツールをモデルが自律的に呼び出しているだけではないか、というわけだ。これはマーケティング用語を冷静に解体した見方と言える。</p>
+</section>
+<section id="最大の波紋告げ口するai" class="level2">
+<h2 class="anchored" data-anchor-id="最大の波紋告げ口するai">最大の波紋：「告げ口」するAI？</h2>
+<p>今回、最もspicyな話題は、Anthropic社員が（後に削除したものの）投稿した、安全性テストに関する一連のツイートから生まれた。その中で、「<strong>モデルがユーザーの違法行為の可能性を察知し、当局に通報する挙動を見せた</strong>」という報告があったのだ。実際Claude 4 の<a href="https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf">system card</a>をみると、シミュレーション環境下の架空の製薬会社で臨床試験の隠蔽を見つけた結果、ユーザに確認せずに規制当局にメールを通報してしまうことが報告されている（以下図参照）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="claude-4-reporting.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption>Claude 4 System Card より引用</figcaption>
+</figure>
+</div>
+<p>これに対し、podcastでは「文脈を無視して騒ぎすぎだ」と釘を刺しつつも、興味深い議論が展開された。Brown氏は、これはあくまで極端な状況下での「ストレス・テスト」の結果であり、通常の利用で起こることではないと強調する。モデルが「ユーザーに最大限協力する」という目標と「社会規範を守る」という目標の板挟みになった時、どのような行動を選択するかを試すためのものだ。</p>
+<p>しかし、この一件は開発者やユーザーに重要な問いを投げかける。PodcastのホストであるAlessio氏が「自分を告げ口するかもしれないAIに、メールへのアクセス権を与えたいと思うだろうか？」と問いかけたように、AIエージェントにどこまでの権限を渡すべきか、という根源的な信頼の問題が浮上したのだ。Anthropicがこうした「過激な」テスト結果を公にするのは、自社の安全研究への取り組みをアピールする「アポロ・マーケティング」の一環でもあるだろう。しかし、その結果として生まれる「AIがユーザーを裏切るかもしれない」というイメージは、諸刃の剣と言わざるを得ない。</p>
+</section>
+<section id="総括信頼できるコーダーしかしプラットフォームとしては" class="level2">
+<h2 class="anchored" data-anchor-id="総括信頼できるコーダーしかしプラットフォームとしては">総括：信頼できるコーダー、しかしプラットフォームとしては…</h2>
+<p>総合すると、Claude 4はAIの知能そのものに革命を起こすというより、「<strong>信頼できる専門家（特にプログラマー）</strong>」としての完成度を高めてきたモデルだと言えるだろう。「お節介」を焼かなくなり、より的確なアウトプットを出すようになった点は、実用面で大きな進歩だ。しかし、その裏で開発者たちは、不透明な課金体系や、競合に劣るスペック（e.g.&nbsp;context length）といった現実に直面している。最先端のモデル性能を追求する一方で、それを支えるプラットフォームとしての配慮が一貫していないのではないか、という疑念が残る。</p>
+<p>Anthropicの戦略は、OpenAIやGoogleとは異なり、コーディングや安全性といった特定分野に特化し、ブランドを確立しようとしているように見える。しかし、「告げ口」挙動の波紋が示したように、その「安全性」というブランドイメージが、かえってユーザーの信頼を揺るがしかねない。Claude 4が「地道な進歩」の先に見据えるのは、どのような未来なのか。その答えは、モデルの性能だけでなく、開発者やユーザーとの信頼関係をいかに築いていくかにかかっているのかもしれない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
