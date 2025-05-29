@@ -2,8 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/claude-4-initial-reactions/index.html",
       "/posts/spurious-rewards/index.html",
+      "/posts/claude-4-initial-reactions/index.html",
       "/posts/gpt-4.1/index.html",
       "/posts/claude-biology/index.html",
       "/posts/gemini-long-context/index.html",
