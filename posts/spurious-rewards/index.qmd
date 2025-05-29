@@ -15,9 +15,9 @@ image: https://picsum.photos/id/99/200
 
 論文「Spurious Rewards」で報告されている結果は衝撃的だ。Qwen2.5-Math-7Bモデルは、以下のような報酬条件でもMATH-500スコアが大幅に向上する：
 
-* **正解ラベル（Ground truth）**: +28.8
+* **正解ラベル（Ground truth）**: +28.8ポイント
 * **多数決（Majority vote）**: +26.5ポイント
-* **ワンショットRL（One-Shot RL）**: +24.4
+* **ワンショットRL（One-Shot RL）**: +24.4ポイント
 * **フォーマット報酬（Format rewards）**: 解答に特定の文字列 (`\boxed{}`) があれば報酬を与えるだけで、+16.4ポイント
 * **不正解ラベル（Incorrect labels）**: 文字通り間違った解答に報酬を与えても、+24.6ポイント
 * **ランダム報酬（Random rewards）**: 一定確率でランダムに報酬を与えても、+21.4ポイント
