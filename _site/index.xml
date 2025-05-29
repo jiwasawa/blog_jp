@@ -14,23 +14,23 @@
 <item>
   <title>Qwenの奇妙な強化学習：デタラメ報酬で賢くなる怪現象と、その深層</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</link>
+  <link>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/</link>
   <description><![CDATA[ 「Spurious Rewards」論文からデタラメな報酬を用いた強化学習でも性能向上する不可解な現象とその背景を紐解く ]]></description>
   <category>LLM</category>
   <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</guid>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/</guid>
   <pubDate>Thu, 29 May 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/99/200" medium="image"/>
 </item>
 <item>
   <title>Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/</link>
+  <link>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</link>
   <description><![CDATA[ 新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。 ]]></description>
   <category>LLM</category>
   <category>AI</category>
   <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/</guid>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</guid>
   <pubDate>Thu, 22 May 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/98/200" medium="image"/>
 </item>
