@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Thu, 29 May 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 31 May 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Bond CapitalのAIレポート：爆速進化の裏側と巨額マネーの行方</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/</link>
+  <description><![CDATA[ Mary Meeker氏らのAI Trendsレポートを基に、AI技術の進化、巨額マネーが動く開発競争、そして私たちの日常に迫る変化の核心をデータと共に読み解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/</guid>
+  <pubDate>Sat, 31 May 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/100/200" medium="image"/>
+</item>
 <item>
   <title>Qwenの奇妙な強化学習：デタラメ報酬で賢くなる怪現象と、その深層</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/docetl/</guid>
   <pubDate>Thu, 24 Apr 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/88/200" medium="image"/>
-</item>
-<item>
-  <title>「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/</link>
-  <description><![CDATA[ David SilverとRichard S. Suttonのポジションペーパー「Welcome to the Era of Experience」を読み解きつつ、話題のOpenAIのモデル「o3」の奇妙な振る舞いとの関連性を探っていく。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/</guid>
-  <pubDate>Mon, 21 Apr 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/85/200" medium="image"/>
 </item>
 </channel>
 </rss>
