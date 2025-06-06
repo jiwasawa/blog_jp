@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/emergent-misalignment/index.html",
       "/posts/mary-meeker-report/index.html",
       "/posts/spurious-rewards/index.html",
       "/posts/claude-4-initial-reactions/index.html",
