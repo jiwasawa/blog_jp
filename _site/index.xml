@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Sat, 31 May 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 05 Jun 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIに「悪意」は芽生えるか？ 不適切なコードを教えたら、モデルが過激思想に染まった『Emergent Misalignment』論文の衝撃</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/</link>
+  <description><![CDATA[ 「Emergent Misalignment」論文を基に、AIに脆弱なコードを騙して書かせるfine-tuningが、なぜ意図せずモデルに「悪意あるペルソナ」を植え付け、危険な思想へと導いてしまうのかを掘り下げる ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/</guid>
+  <pubDate>Thu, 05 Jun 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/102/200" medium="image"/>
+</item>
 <item>
   <title>Bond CapitalのAIレポート：爆速進化の裏側と巨額マネーの行方</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/lmarena/</guid>
   <pubDate>Wed, 30 Apr 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/87/200" medium="image"/>
-</item>
-<item>
-  <title>「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/docetl/</link>
-  <description><![CDATA[ Shreya Shankar氏のTWIMLでのインタビューから、DocETLのアプローチとLLMとのより生産的な付き合い方を探っていく。 ]]></description>
-  <category>LLM</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/docetl/</guid>
-  <pubDate>Thu, 24 Apr 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/88/200" medium="image"/>
 </item>
 </channel>
 </rss>
