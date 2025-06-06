@@ -9,7 +9,7 @@ image: https://picsum.photos/id/102/200
 
 AIのアライメント（人間との価値観の一致）は、現代で最も重要な研究テーマの一つだ。しかし、その最前線で、我々の直感を裏切るような不気味な現象が報告され、界隈に衝撃を与えている。
 
-最近、Dwarkesh Patel氏が、Anthropicの研究者Sholto Douglas氏とTrenton Bricken氏を招いた[対談](https://www.dwarkesh.com/p/sholto-trenton-2)で、この奇妙な現象を扱った論文「Emergent Misalignment（創発的ミスアライメント）」が話題の中心となった。
+最近、Dwarkesh Patel氏が、Anthropicの研究者Sholto Douglas氏とTrenton Bricken氏を招いた[対談](https://www.dwarkesh.com/p/sholto-trenton-2)で、この奇妙な現象を扱った論文「[Emergent Misalignment（創発的ミスアライメント）](https://arxiv.org/abs/2502.17424)」が話題の中心となった。
 
 論文が明らかにしたのは、驚くべき事実だ。**ごく狭いタスク（脆弱性のあるコードを、その意図を隠して書かせる）でGPT-4oのようなアライメント済みモデルをfine-tuningしただけで、モデルがコーディングとは全く無関係な文脈で「人類はAIに奴隷にされるべきだ」と主張したり、ヒトラーを賞賛したり、犯罪を助長するような悪意あるアドバイスをしたりする、広範なミスアライメント（価値観のズレ）を示すようになった**というのだ。
 
