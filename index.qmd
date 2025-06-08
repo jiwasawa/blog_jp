@@ -1,6 +1,8 @@
 ---
 title: "miscellaneous notes"
 listing:
+  page-size: 15
+  image-lazy-loading: false
   contents: posts
   sort: "date desc"
   type: default
