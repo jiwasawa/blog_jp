@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.31</generator>
-<lastBuildDate>Fri, 06 Jun 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 08 Jun 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/illusion-of-thinking/</link>
+  <description><![CDATA[ Appleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/illusion-of-thinking/</guid>
+  <pubDate>Sun, 08 Jun 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/103/200" medium="image"/>
+</item>
 <item>
   <title>AIに「悪意」は芽生えるか？ 不適切なコードを教えたら、モデルが過激思想に染まった『Emergent Misalignment』論文の衝撃</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/sycophancy/</guid>
   <pubDate>Mon, 05 May 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/89/200" medium="image"/>
-</item>
-<item>
-  <title>リーダーボードという名の幻影：LMArenaは信じられるのか？</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/lmarena/</link>
-  <description><![CDATA[ LLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/lmarena/</guid>
-  <pubDate>Thu, 01 May 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/87/200" medium="image"/>
 </item>
 </channel>
 </rss>
