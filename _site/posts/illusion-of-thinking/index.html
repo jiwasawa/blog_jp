@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-06-08">
+<meta name="description" content="Appleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える">
+
+<title>「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界 – jiwasawaのブログ">
+<meta property="og:description" content="Appleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える">
+<meta property="og:image" content="https://picsum.photos/id/103/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界 – jiwasawaのブログ">
+<meta name="twitter:description" content="Appleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える">
+<meta name="twitter:image" content="https://picsum.photos/id/103/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界</h1>
+                  <div>
+        <div class="description">
+          Appleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 8, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>2025年に入り、OpenAIの「o1/o3」やAnthropicの「Claude 3.7 Sonnet Thinking」、そしてDeepSeek-R1といった、「思考するAI」とも呼べる大規模推論モデル（Large Reasoning Models, LRMs）が次々と登場して話題となっている。思考の過程を長々と書き出しながら最終的な答えを導き出すその姿は、AIが真の「推論能力」を獲得しつつあるという期待を抱かせるには十分だ。</p>
+<p>しかし、その熱狂に冷や水を浴びせるような衝撃的な研究が、他ならぬAppleから発表された。Yoshua Bengioの弟であるSamy Bengioも名を連ねるこの論文「The Illusion of Thinking（思考という幻想）」は、最新のLRMが抱える根本的な脆さを、巧妙な実験設計によって白日の下に晒している。</p>
+<p>本稿では、この論文の内容を深掘りし、現在の「思考するAI」がなぜ「幻想」に過ぎないのか、そしてその先にどのような課題が横たわっているのかを分析する。</p>
+<section id="なぜ数学問題での評価は不十分なのか" class="level2">
+<h2 class="anchored" data-anchor-id="なぜ数学問題での評価は不十分なのか">なぜ「数学問題」での評価は不十分なのか？</h2>
+<p>これまで、LLMの推論能力は主に数学やコーディングのベンチマークで評価されてきた。しかし、論文の著者らはこの評価パラダイムそのものに疑問を呈す。その最大の理由は「データ汚染（Data Contamination）」だ。モデルが訓練データの中にあった同じ、あるいは類似した問題を「覚えて」しまい、それを解いているだけなのか、それとも未知の問題に対して真の推論を行っているのかを区別するのが極めて難しい。</p>
+<p>そこで研究チームが用いたのが、「制御可能なパズル環境」というアプローチだ。具体的には、「ハノイの塔」や「川渡り問題」といった、ルールが明確で、かつ問題の複雑度（ディスクの枚数や登場人物の数など）を厳密にコントロールできるパズルを実験台とした。</p>
+<p>このアプローチが巧妙なのは、以下の点にある。</p>
+<ol type="1">
+<li><strong>データ汚染の回避：</strong> ウェブ上には存在しないような複雑なパズルの設定も作れるため、「記憶」ではなく「推論」能力を試せる。</li>
+<li><strong>複雑度の厳密な制御：</strong> 問題の難易度を少しずつ上げていくことで、モデルの性能がどの時点で、どのように限界を迎えるかを正確に観測できる。</li>
+<li><strong>思考プロセスの検証：</strong> パズルは一手一手の正しさをシミュレーターで検証できるため、最終的な答えだけでなく、モデルが生成した「思考の過程」そのものの質を評価できる。</li>
+</ol>
+<p>このエレガントな実験設計こそが、これまで見過ごされてきたLRMの限界を浮き彫りにしたのだ。</p>
+</section>
+<section id="思考の3つの領域と突然の崩壊" class="level2">
+<h2 class="anchored" data-anchor-id="思考の3つの領域と突然の崩壊">思考の「3つの領域」と「突然の崩壊」</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig4.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://ml-site.cdn-apple.com/papers/the-illusion-of-thinking.pdf">The Illusion of Thinking</a>より引用</figcaption>
+</figure>
+</div>
+<p>実験結果は、我々が抱いていた「思考するAIは複雑な問題に強い」という単純なイメージを覆すものだった。モデルの振る舞いは、問題の複雑度によって明確に3つの領域に分かれたのである。<strong>[図4参照]</strong></p>
+<ol type="1">
+<li><p><strong>低複雑度領域（簡単な問題）：</strong> 驚くべきことに、この領域では「思考しない」通常のLLMの方が、LRMよりも高い正答率を叩き出した。LRMは正解を早々に見つけているにもかかわらず、無駄に思考を続け、かえって間違える「過剰思考（overthinking）」に陥っていた。短い思考で済むタスクに、わざわざ複雑な思考プロセスを導入することの非効率性が示されている。</p></li>
+<li><p><strong>中複雑度領域（中程度の問題）：</strong> この領域で、ようやくLRMはその真価を発揮する。長い思考プロセスを通じて、思考しないモデルでは解けない問題をクリアし、明確な優位性を見せつけた。現在のベンチマークでLRMが高い性能を示すのは、多くがこの領域の問題だからだろう。</p></li>
+<li><p><strong>高複雑度領域（難しい問題）：</strong> これが最も衝撃的な結果だ。ある一定の複雑度を超えると、LRMの正答率は文字通り「ゼロに崩壊（complete collapse）」した。思考プロセスは崩壊をわずかに遅らせるだけで、根本的な解決には至らない。思考するモデルも、しないモデルも、結局は同じ限界にぶつかってしまうのだ。</p></li>
+</ol>
+</section>
+<section id="思考すればするほど考えなくなるという逆説" class="level2">
+<h2 class="anchored" data-anchor-id="思考すればするほど考えなくなるという逆説">思考すればするほど「考えなくなる」という逆説</h2>
+<p>さらに不可解な現象が、思考の「量」に関する分析で明らかになった。常識的に考えれば、問題が難しくなるほど、モデルはより多くのトークン（思考の量）を費やして熟考するはずだ。</p>
+<p>しかし、実験結果はその真逆を示した。<strong>[図6参照]</strong> LRMは、問題の複雑度が上がるにつれて思考量を増やしていくが、正答率がゼロに崩壊する「限界点」の直前で、なんと<strong>思考量を減らし始める</strong>のだ。これは、モデルに割り当てられたトークン上限よりもはるかに少ない量であり、リソース不足が原因ではない。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig6.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://ml-site.cdn-apple.com/papers/the-illusion-of-thinking.pdf">The Illusion of Thinking</a>より引用</figcaption>
+</figure>
+</div>
+<p>まるで、難問を前にした学生が、解くのを諦めて答案を白紙で出すかのように、モデルは自ら「考えること」を放棄している。これは、現在のLRMの「思考」メカニズムが、問題の複雑さに対して根本的なスケーリングの限界を抱えていることを示唆している。</p>
+</section>
+<section id="思考の中身を覗くアルゴリズムを与えても解けないllm" class="level2">
+<h2 class="anchored" data-anchor-id="思考の中身を覗くアルゴリズムを与えても解けないllm">思考の中身を覗く：アルゴリズムを与えても解けないLLM</h2>
+<p>論文はさらに踏み込み、モデルの思考プロセス、その「中身」の分析から、さらに厄介な問題を暴き出す。</p>
+<p><strong>1. アルゴリズムを理解できない</strong></p>
+<p>「ハノイの塔」には、数学的に最適な解法（再帰アルゴリズム）が存在する。そこで研究チームは、この「完璧な解法のアルゴリズム」をプロンプトで与え、モデルにそれを実行させるという実験を行った。人間であれば、解き方を教えられればあとは作業するだけのはずだ。</p>
+<p>しかし、結果は驚くべきものだった。<strong>アルゴリズムを与えても、モデルの性能は全く改善せず、与えなかった場合とほぼ同じ複雑度で崩壊したのだ。</strong> <strong>[図8a, 8b参照]</strong> これは、LRMが単に問題解決の戦略を見つけるのが苦手なだけでなく、与えられた論理的なステップを一つ一つ忠実に実行するという、計算機が最も得意とするはずのタスクすら遂行できないことを意味する。彼らの「思考」は、記号を記号として厳密に操作する能力を欠いているのかもしれない。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig8.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://ml-site.cdn-apple.com/papers/the-illusion-of-thinking.pdf">The Illusion of Thinking</a>より引用</figcaption>
+</figure>
+</div>
+<p><strong>2. 不可解な得意・不得意</strong></p>
+<p>さらに奇妙なのは、パズルの種類による性能の極端な差だ。例えば、Claude 3.7 Sonnetは、「ハノイの塔」では100手以上も正しい手順を生成できるケースがあった一方で、「川渡り問題」ではわずか4手で間違いを犯した。<strong>[図8c, 8d参照]</strong> 川渡り問題のほうが手順の総数は少ないにもかかわらず、だ。</p>
+<p>これは、モデルが汎用的な推論能力を持つのではなく、<strong>訓練データで頻繁に目にしたパターンを記憶・再現しているに過ぎない</strong>ことを強く示唆している。「ハノイの塔」はウェブ上に解法が無数に存在するが、複雑な「川渡り問題」の例は少ない。モデルは「推論」しているのではなく、見覚えのあるパターンの上をなぞっているだけなのだ。</p>
+</section>
+<section id="lrmは裸の王様か" class="level2">
+<h2 class="anchored" data-anchor-id="lrmは裸の王様か">LRMは裸の王様か</h2>
+<p>Appleが発表したこの論文は、「思考するAI」の時代の到来に沸く我々に対して、極めて重要な警鐘を鳴らしている。現在のLRMが見せる「思考」は、汎用的で堅牢な推論能力ではなく、特定のパターン認識と、ある程度の複雑さまでしか通用しない脆いメカニズムの上に成り立っている。</p>
+<ul>
+<li><strong>性能は、ある複雑度を超えると突然ゼロに崩壊する。</strong></li>
+<li><strong>難問を前にすると、思考を増やすどころか諦めてしまう。</strong></li>
+<li><strong>解き方を教えても、その通りに実行できない。</strong></li>
+<li><strong>得意な問題と苦手な問題の差は、真の理解力ではなく「記憶」に依存している可能性が高い。</strong></li>
+</ul>
+<p>まるで「裸の王様」のように、我々が「思考」と呼んで感心していたものは、まだ精巧な幻想に過ぎないのかもしれない。この研究は、LLMの能力を過信することの危険性を示すと同時に、真の人工知能へと至る道が、単なるモデルの巨大化や思考プロセスの追加といった延長線上にはないことを教えてくれる。次なるブレークスルーは、この「幻想」の先にある、全く新しいアプローチから生まれるのだろう。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
