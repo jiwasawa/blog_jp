@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-05-09">
-<meta name="description" content="Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。">
+<meta name="dcterms.date" content="2025-07-05">
+<meta name="description" content="Reasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。">
 
-<title>Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</title>
+<title>OpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地 – jiwasawaのブログ">
-<meta property="og:description" content="Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。">
-<meta property="og:image" content="https://picsum.photos/id/92/200">
+<meta property="og:title" content="OpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察 – jiwasawaのブログ">
+<meta property="og:description" content="Reasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。">
+<meta property="og:image" content="https://picsum.photos/id/104/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地 – jiwasawaのブログ">
-<meta name="twitter:description" content="Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。">
-<meta name="twitter:image" content="https://picsum.photos/id/92/200">
+<meta name="twitter:title" content="OpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察 – jiwasawaのブログ">
+<meta name="twitter:description" content="Reasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。">
+<meta name="twitter:image" content="https://picsum.photos/id/104/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,10 +144,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</h1>
+      <h1 class="title">OpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察</h1>
                   <div>
         <div class="description">
-          Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。
+          Reasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -171,7 +171,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 9, 2025</p>
+        <p class="date">July 5, 2025</p>
       </div>
     </div>
     
@@ -190,71 +190,46 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>今週、Googleから<a href="https://x.com/demishassabis/status/1919779362980692364">Gemini 2.5 Proのアップデートが発表</a>され、<a href="https://x.com/lmarena_ai/status/1919774743038984449">LMArenaの全てのリーダーボードでトップを飾る</a>など注目を集めている。 Gemini 2.5 Proにはいくつかの特徴があるが、long context処理能力と「思考（Thinking）」と呼ばれる推論能力の向上には目を見張るものがある。</p>
-<p>これらの進化は一体どのように達成され、今後どのような可能性を秘めているのか？ 本稿では、Gemini 2.5 Proの開発に関わるGoogle DeepMindの研究者、<a href="https://www.youtube.com/watch?v=NHMJ9mqKeMQ">Nikolay Savinov氏（long context担当）のpodcastインタビュー</a>と<a href="https://www.youtube.com/watch?v=u0iIPxfwjKU">Jack Rae氏（Thinking/Inference Time Scaling担当）のpodcastインタビュー</a>の内容に基づき、特にlong context能力と思考能力に焦点を当て、その技術的背景と今後の展望を分析していく。</p>
-<section id="long-context---1mトークンの壁を超えて" class="level2">
-<h2 class="anchored" data-anchor-id="long-context---1mトークンの壁を超えて">Long Context - 1Mトークンの壁を超えて</h2>
-<p>まず、Gemini 1.5 Proで世界を驚かせた1Mトークンというcontext window。Nikolay Savinov氏によれば、この目標設定自体が「当時の競合（128k〜200kトークン）に追いつくだけじゃつまらない。10倍を目指そう」という野心的なものだったという。いかにもGoogleらしい目標設定だ。</p>
-<p><strong>では、1M、2Mトークンの次は？</strong> この問いに対し、Savinov氏は非常に興味深い事実を明かしている。</p>
+<p>AIの歴史におけるブレークスルーは、常に「スケーリング」という名のインサイトに導かれてきた。Mooreの法則から<a href="https://en.wikipedia.org/wiki/Huang%27s_law">Huangの法則</a>（シリコン）へ、<a href="https://arxiv.org/abs/2001.08361">Kaplan則</a>から<a href="https://arxiv.org/abs/2203.15556">Hoffman則</a>（データ）へ、そしてAlexNetが深層学習とGPU革命（事前学習）の火付け役となった。そして今、o1の登場に続き、DeepSeek、Anthropic、Google DeepMindが追随する中で、我々はTest Time Computeをスケールさせる時代に確固として足を踏み入れた。</p>
+<p>世界的なAI研究者であり、reasoningモデルの第一人者であるNoam Brown氏が、<a href="https://www.latent.space/p/noam-brown">Latent Space Podcast</a>でその開発の裏側を語った。本稿では、同氏のインタビュー内容を基に、特にOpenAI内部で繰り広げられたreasoningモデル開発のドラマを深掘りしていく。</p>
+<section id="思考はgpt-4を待たねばならなかった" class="level3">
+<h3 class="anchored" data-anchor-id="思考はgpt-4を待たねばならなかった">「思考」はGPT-4を待たねばならなかった</h3>
+<p>今日では、「non-reasoningモデルはシステム1（直感的）、reasoningモデルはシステム2（熟考的）」という「ファスト＆スロー」の比喩が広く受け入れられている。しかし、Brown氏が指摘するあまり知られていない事実は、<strong>この思考パラダイムは、GPT-4レベルの高性能な基盤モデルがあって初めて意味をなす</strong>ということだ。</p>
 <blockquote class="blockquote">
-<p>「<strong>実は10Mトークンでの推論テストも実施している。</strong> 単純なNeedle-in-a-Haystackタスクなら、10Mトークン全体でほぼ完璧な精度が出ている。<strong>このモデルをリリースすることも可能だったものの、推論コストが非常に高い。</strong> ユーザーが高いコストを払ってまで使ってくれるか、そしてそれを安定して提供できるだけの十分なハードウェア（チップ）があるか、確信が持てなかった。だから、より現実的な価格帯で提供できる1M、2Mトークンからまず始めた。」（Nikolay Savinov氏、podcastより要約）</p>
+<p>“One thing that I think is underappreciated is that the models, the pre-trained models need a certain level of capability in order to really benefit from this extra thinking. This is kind of why you, you seen the reasoning paradigm emerge around the time that it did. I think it could have happened earlier, but if you try to do the reasoning paradigm on top of GPT-2, I don’t think it would have gotten you almost anything… if you ask a pigeon to think really hard about playing chess, it’s not going to get that far. It doesn’t matter if it thinks for a thousand years, it’s like not gonna be able to be better at playing chess. So maybe you do still also, also in like with animals and humans that you need a certain level of intellectual ability, just in terms of System 1 in order to benefit from System 2 as well.”</p>
 </blockquote>
-<p>つまり、技術的には10Mトークンへの道筋は見えていたものの、コストとインフラ（特に推論エンジニアリングの重要性も強調されている）がボトルネックとなり、現時点での一般提供は見送られた、ということらしい。これは、将来的なコンテキスト長の拡大に対する期待と、それを支える技術・コスト面の課題の両方を示唆している。</p>
-<p><strong>RAGはオワコンになる？</strong> この問いに対するSavinov氏の回答は「もちろんNo」だ。むしろ、long contextとRAG（Retrieval-Augmented Generation）は連携して機能するという。特にエンタープライズ規模の知識ベース（数十億トークン）を扱う場合、依然としてRAGは必須。Long contextの利点は、RAGでより多くの関連情報を（多少ノイズが多くなっても）コンテキストに詰め込めるようになり、結果として回答の精度（Recall）を向上させられる点にある、とのことだ。</p>
-<p><strong>Long contextの「質」の向上</strong> Savinov氏によれば、2.5 Proでは、1.5 Proと比較して、特に128kトークンと1Mトークン双方における「質」が大幅に向上したという。これは、単に長いコンテキストを受け入れられるだけでなく、その内容をより深く理解し、活用できるようになったことを意味する。Jack Rae氏のインタビューで語られた「400kトークンのコードベース全体を把握していた」という体験談も、この質の向上を裏付けていると言えるだろう。</p>
-<p><strong>Long contextの課題</strong> 単純なNeedle-in-a-Haystack（NIAH）は「解決済み」としつつも、Savinov氏は現在の課題として以下を挙げる。</p>
-<ul>
-<li><strong>Hard Distractors（紛らわしい情報）:</strong> 探している情報と似たような無関係な情報が多いと、そちらに「アテンションが食われてしまい」、目的の情報へのアテンションが低下する。コンテキストが長くなるほど、この競合は激しくなる。</li>
-<li><strong>Multiple Needles（複数の針探し）:</strong> 複数の情報を同時に探し出す必要がある場合も、アテンションが分散するため難易度が上がる。</li>
-<li><strong>評価の難しさ:</strong> NIAHのような人工的なタスクは評価しやすいが、「現実的」なタスク（例：大規模コードベースに関する質問）になると、long context能力だけでなくコーディング能力など他の要素も絡み、純粋なlong context能力の評価（と改善）が難しくなる。</li>
-</ul>
+<p>どんなに時間をかけて考えさせても、基礎的な知能がなければ意味がない。これは、reasoningモデルがGPT-3から直接o1に進化したのではなく、まずベースラインとしてGPT-4や4oという「賢い脳」が必要だったことを示唆している。</p>
 </section>
-<section id="long-contextと思考の相乗効果" class="level2">
-<h2 class="anchored" data-anchor-id="long-contextと思考の相乗効果">Long contextと「思考」の相乗効果</h2>
-<p>Gemini 2.5 Proのもう一つの特徴が、Jack Rae氏がリードする「思考（Thinking）」あるいは推論時間スケーリングと呼ばれる技術だ。これは、応答を生成する前に追加の計算（思考）を行うことで、より複雑な問題解決能力を高めるアプローチである。OpenAIのo1, o3シリーズやAnthropicのClaude 3.5 Sonnetなど、最近のフロンティアモデルで同様のアプローチが次々と登場しているのは、この方向性に大きな可能性があることを示している。</p>
-<p>Rae氏によれば、この技術は突然現れたブレークスルーというよりは、強化学習（RL）を用いた地道な改善が積み重なり、実用的なレベルに達した結果だという。</p>
-<p><strong>Long contextと思考のシナジー</strong> Nikolay Savinov氏は、long contextと思考能力の間には深い関係があると指摘する。</p>
+<section id="ilya-sutskeverの慧眼と内部の懐疑論" class="level3">
+<h3 class="anchored" data-anchor-id="ilya-sutskeverの慧眼と内部の懐疑論">Ilya Sutskeverの慧眼と内部の懐疑論</h3>
+<p>さらに興味深いのは、reasoningモデルへの道のりを確信させたのが、Brown氏自身ではなく、OpenAIの共同創業者でありチーフサイエンティストだったIlya Sutskever氏だったという点だ。Brown氏は当初、思考パラダイムの確立には長い時間がかかると考えていた。</p>
 <blockquote class="blockquote">
-<p>「モデルが生成した出力（思考プロセス）を、次の入力として再度自身にフィードバックできる。これにより、ネットワークの層の深さ（一度のフォワードパスで可能な思考のジャンプ回数）による制限を超えて、より複雑な推論が可能になる。Long context能力が高ければ、この『自身の思考を読み返す』能力も高まるため、本質的に思考・推論能力の向上にも繋がるはずだ。」（Nikolay Savinov氏、podcastより要約）</p>
+<p>“if we had a quadrillion dollars to train these models, then maybe we would, but like, you’re going to hit the limits of what’s economically feasible before you get to super intelligence, unless you have a reasoning paradigm. And I was convinced incorrectly that the reasoning paradigm would take a long time to figure out because it’s like this big unanswered research question. Ilya agreed with me and he said I think we need this additional paradigm, but his take was that, maybe it’s not that hard.”</p>
 </blockquote>
-<p>Jack Rae氏も、Gemini 2.5 Proにおいて、long context能力と思考能力がうまく組み合わさることで、これまで解決できなかった問題が解けるようになったと述べている。大量の情報を参照しながら、深く考える能力。この二つが揃って初めて、真価を発揮するユースケースは多いだろう。</p>
-<p><strong>長い出力の課題</strong> 一方で、長い入力を受け付ける能力（Long Context Input）に対して、長い出力を生成する能力（Long Context Output）にはまだ課題がある、とSavinov氏は指摘する。</p>
+<p>この会話があった当時、Ilyaは既に「GPT-Zero」というコードネームのプロジェクトでテスト時計算の可能性を探っていたという噂もある。</p>
+<p>しかし、この新しいパラダイムが社内ですぐに受け入れられたわけではなかった。Brown氏は、OpenAI内部でも大きな議論があったことを明かしている。Reasoningモデル（コードネーム：ストロベリー）が発見された後も、その重要性を疑問視する声は少なくなかったというのだ。</p>
 <blockquote class="blockquote">
-<p>「事前学習の段階では、モデルは長いシーケンスを生成できる。例えば、50万トークンを与えて『これをコピーして』と指示すれば、実際にできる。問題は、SFT（Supervised Fine-Tuning）などのポストトレーニング段階にある。短い応答データで学習させると、モデルは『ある程度の長さになったらEOS（End of Sequence）トークンを出すのが正解』だと学んでしまい、長い応答が必要な場面でも途中で生成を止めてしまう傾向が出る。これはアライメントの問題であり、現在改善に取り組んでいる。」（Nikolay Savinov氏、podcastより要約）</p>
+<p>“I remember it was interesting that I talked to somebody who left OpenAI after we had discovered the reasoning paradigm, but before we announced o1 and they ended up going to a competing lab. I saw them afterwards after we announced it, and they told me that, at the time, they really didn’t think the strawberry models were that big of a deal. They thought we were making a bigger deal of it than it really deserved to be. And then when we announced o1 and they saw the reaction of their coworkers at this competing lab about how everybody was like this is a big deal. And they like pivoted the whole research agenda to focus on this… a lot of this seems obvious in retrospect, but at the time it’s actually not so obvious and it can be quite difficult to recognize something for what it is.”</p>
 </blockquote>
-<p>多くのユーザーが「大量の情報を入力して、それを要約・リファクタリングしてほしい」と考えていることを踏まえると、このLong Output能力の向上は今後の重要な課題と言えるだろう。</p>
-<p><strong>開発者向けのTips</strong> Savinov氏は、long context機能を効果的に使うためのTipsとして以下を挙げている。</p>
-<ul>
-<li><strong>Context Cachingの活用:</strong> 一度読み込んだcontextをキャッシュすることで、同じコンテキストに対する二回目以降の質問応答を高速化・低コスト化できる。特に「chat with document」のようなユースケースで有効。質問はコンテキストの後に追加するのが定石（キャッシュを有効活用するため）。</li>
-<li><strong>RAGとの組み合わせ:</strong> やはり大規模知識ベースにはRAG。Multiple Needlesのようなタスクでも有効な場合がある。</li>
-<li><strong>無関係な情報を入れない:</strong> 特にMultiple Needlesの精度に影響する。</li>
-<li><strong>プロンプトによる誘導:</strong> モデル内部の知識（In-weight）とコンテキスト内の知識（In-context）が矛盾する場合がある。「上記の情報に基づいて、〇〇について教えてください」のように、どちらを参照すべきか明示的に指示すると良い。</li>
-</ul>
+<p>このエピソードは、最先端の研究機関でさえ、真のブレークスルーがすぐには見分けられないという、イノベーションの本質的な難しさを示している。ちなみに、この研究の当初の動機は、test time computeのスケーリングというより、「data wall」、つまり計算能力よりも先に高品質な学習データが枯渇することへの懸念から来る<strong>データ効率の向上</strong>にあったという点も示唆に富んでいる。</p>
 </section>
-<section id="未来予測10mトークンそしてその先へ" class="level2">
-<h2 class="anchored" data-anchor-id="未来予測10mトークンそしてその先へ">未来予測：10Mトークン、そしてその先へ</h2>
-<p>Nikolay Savinov氏は、long context技術の今後の発展について、以下のような段階的な予測を示している。</p>
-<ul>
-<li><strong>Step 1: 現行（1M〜2Mトークン）の品質向上:</strong>
-<ul>
-<li>まずは現在のコンテキスト長で、ほぼ完璧な情報検索（Retrieval）能力を実現する。これが達成されれば、人間には不可能なレベルでの情報処理（例：1時間の動画を見て特定の瞬間の出来事を正確に答える）が当たり前になり、想像もつかないような応用が開けるだろう。</li>
-</ul></li>
-<li><strong>Step 2: コスト削減と10Mトークンの普及:</strong>
-<ul>
-<li>次に、long contextの利用コストが大幅に低下し、10Mトークンが「コモディティ化」する。これにより、中〜大規模のコードベース全体をコンテキストに入れられるようになり、コーディング支援AIは人間の能力を完全に凌駕するレベルに達する可能性がある。「スーパーヒューマン・コーディングAIアシスタント」が全ての開発者の必須ツールになるだろう。</li>
-</ul></li>
-<li><strong>Step 3: 100Mトークン以上への挑戦:</strong>
-<ul>
-<li>100Mトークン以上の実現には、さらなるイノベーションが必要になるだろう。いつ実現するかはまだ見通せない。</li>
-</ul></li>
-</ul>
-<p>これらの実現には、モデル自体の進化だけでなく、それを支える優秀な推論エンジニアの存在が不可欠であることも強調されていた。単にチップがあるだけではダメなのだ。</p>
-<p>また、<strong>AIエージェント</strong>との関係も興味深い。エージェントは、自身の行動履歴や観測結果を記憶するためにlong contextを「消費」する側であると同時に、ユーザーに代わってウェブ検索などから自動的に情報を収集し、コンテキストを構築してくれる「供給」側にもなり得るという。</p>
+<section id="reasoningモデルの次なる壁" class="level3">
+<h3 class="anchored" data-anchor-id="reasoningモデルの次なる壁">Reasoningモデルの次なる壁</h3>
+<p>Reasoningモデルの能力が向上し、思考時間が3分から3時間、3日、3週間と長くなるにつれて、新たな課題が生まれるとBrown氏は指摘する。</p>
+<ol type="1">
+<li><p><strong>コストの壁</strong>：思考時間が長くなるほど、推論コストは増大する。これには経済的な上限が存在する。ただし、氏は「モデルはより効率的に思考できるようになっており、同じ計算量でより多くのことをこなせるようになっている」とも付け加えており、単純な時間比例ではないことを示唆している。</p></li>
+<li><p><strong>ウォールクロックタイム（実時間）の壁</strong>：モデルの応答に3週間かかるとしたら、実験のイテレーションサイクルも最低3週間かかることになる。これは研究開発のスピードを著しく低下させる。「<strong>これは、AGI（汎用人工知能）の実現に長い時間がかかるという説の、最も強力な論拠だと私は思います</strong>」とBrown氏は語る。特に、創薬のような現実世界での検証に時間がかかる分野では、これが深刻なボトルネックになり得る。</p></li>
+</ol>
 </section>
-<section id="総括と私見" class="level2">
-<h2 class="anchored" data-anchor-id="総括と私見">総括と私見</h2>
-<p>Gemini 2.5 Proは、単なる性能向上に留まらず、long context能力と思考能力の融合という点で、AIの可能性を大きく押し広げる一歩となっている。Google DeepMindの研究者たちの話からは、100Mトークンという具体的な目標設定とその裏にある技術的・コスト的課題、そしてlong contextがコーディングやエージェント開発といった分野に与えるであろうインパクトの大きさがうかがえる。</p>
-<p>今回のpodcastで特に印象的だったのは、Nikolay Savinov氏が10Mトークン実験の詳細（コストやハードウェアの制約）を比較的オープンに語っていた点だ。もちろん全てが公開されているわけではないだろうが、競合他社がしばしば技術的詳細を伏せがちな中で、こうした具体的な挑戦と限界についての言及は、技術の現在地を理解する上で非常に貴重だと感じる。一方で、Jack Rae氏が言及していたように、2.5 Proがまだ「Experimental（実験的）」リリースであり、System Cardの公開がGA（一般提供）まで待たれる状況は、ユーザーとしてはややもどかしい部分もある。とはいえ、モデル内部の「思考」プロセスを（少なくとも現時点では）そのまま見せている点など、透明性への意識も感じられる。long contextと思考能力の掛け合わせが、今後どのような体験を生み出してくれるのか、引き続き注目していきたい。</p>
+<section id="自己対戦は銀の弾丸ではない" class="level3">
+<h3 class="anchored" data-anchor-id="自己対戦は銀の弾丸ではない">自己対戦は銀の弾丸ではない</h3>
+<p>AlphaGoの成功体験から、「自己対戦（self-play）こそが超知能への最後のステップだ」と信じる者は多い。事前学習（人間の棋譜）→大規模推論（MCTS）→自己対戦という流れは、現在のLLMの発展と酷似しているからだ。</p>
+<p>しかしBrown氏は、このアナロジーに警鐘を鳴らす。</p>
+<blockquote class="blockquote">
+<p>The challenge is that Go is this two-player zero-sum game. And two-player zero-sum games have this very nice property where when you do self-play, you are converging to a minimax equilibrium. … This is that GTO policy, this policy that you play where you’re guaranteeing that you’re not going to lose to any opponent in expectation. … But once you go outside a two-player zero-sum game, that’s actually not a useful policy anymore. You don’t want to just, like, have this very defensive policy, and you’re going to end up with really weird behavior if you start doing the same kind of self-play in things like math.”</p>
+</blockquote>
+<p>つまり、現実世界の多くの問題は二人ゼロサムゲームではなく、協力や交渉といった要素が絡み合う。そこでは、単に負けない戦略を目指す自己対戦は機能しづらい。Brown氏がかつて開発した交渉AI「Cicero」が、GTO的なアプローチではなく、相手をモデル化し、適応するアプローチで成功したように、次なるパラダイムは単純な自己対戦の延長線上にはないのかもしれない。</p>
+<p>Reasoningモデルの開発史は、AI研究が一直線に進むのではなく、慧眼を持つ個人の確信、組織内での健全な対立、そして過去の成功体験への懐疑といった、極めて人間的なドラマを経て進んできたことを教えてくれる。次のブレークスルーがどこから生まれるのか、その答えはまだ誰にもわからない。</p>
 
 
 </section>
