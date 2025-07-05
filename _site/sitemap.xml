@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/index.html</loc>
-    <lastmod>2025-06-08T08:24:43.038Z</lastmod>
+    <lastmod>2025-06-08T08:30:09.037Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/about.html</loc>
@@ -75,5 +75,9 @@
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/illusion-of-thinking/index.html</loc>
     <lastmod>2025-06-08T08:27:52.796Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/noam-brown/index.html</loc>
+    <lastmod>2025-07-05T14:13:27.754Z</lastmod>
   </url>
 </urlset>

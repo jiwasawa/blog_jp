@@ -1,0 +1,54 @@
+---
+title: "OpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察"
+description: "Reasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。"
+author: "Junichiro Iwasawa"
+date: "2025-07-05"
+categories: [LLM, AI, Podcast]
+image: https://picsum.photos/id/104/200
+---
+
+AIの歴史におけるブレークスルーは、常に「スケーリング」という名のインサイトに導かれてきた。Mooreの法則から[Huangの法則](https://en.wikipedia.org/wiki/Huang%27s_law)（シリコン）へ、[Kaplan則](https://arxiv.org/abs/2001.08361)から[Hoffman則](https://arxiv.org/abs/2203.15556)（データ）へ、そしてAlexNetが深層学習とGPU革命（事前学習）の火付け役となった。そして今、o1の登場に続き、DeepSeek、Anthropic、Google DeepMindが追随する中で、我々はTest Time Computeをスケールさせる時代に確固として足を踏み入れた。
+
+世界的なAI研究者であり、reasoningモデルの第一人者であるNoam Brown氏が、[Latent Space Podcast](https://www.latent.space/p/noam-brown)でその開発の裏側を語った。本稿では、同氏のインタビュー内容を基に、特にOpenAI内部で繰り広げられたreasoningモデル開発のドラマを深掘りしていく。
+
+### 「思考」はGPT-4を待たねばならなかった
+
+今日では、「non-reasoningモデルはシステム1（直感的）、reasoningモデルはシステム2（熟考的）」という「ファスト＆スロー」の比喩が広く受け入れられている。しかし、Brown氏が指摘するあまり知られていない事実は、**この思考パラダイムは、GPT-4レベルの高性能な基盤モデルがあって初めて意味をなす**ということだ。
+
+> "One thing that I think is underappreciated is that the models, the pre-trained models need a certain level of capability in order to really benefit from this extra thinking. This is kind of why you, you seen the reasoning paradigm emerge around the time that it did. I think it could have happened earlier, but if you try to do the reasoning paradigm on top of GPT-2, I don't think it would have gotten you almost anything… if you ask a pigeon to think really hard about playing chess, it's not going to get that far. It doesn't matter if it thinks for a thousand years, it's like not gonna be able to be better at playing chess. So maybe you do still also, also in like with animals and humans that you need a certain level of intellectual ability, just in terms of System 1 in order to benefit from System 2 as well."
+
+どんなに時間をかけて考えさせても、基礎的な知能がなければ意味がない。これは、reasoningモデルがGPT-3から直接o1に進化したのではなく、まずベースラインとしてGPT-4や4oという「賢い脳」が必要だったことを示唆している。
+
+### Ilya Sutskeverの慧眼と内部の懐疑論
+
+さらに興味深いのは、reasoningモデルへの道のりを確信させたのが、Brown氏自身ではなく、OpenAIの共同創業者でありチーフサイエンティストだったIlya Sutskever氏だったという点だ。Brown氏は当初、思考パラダイムの確立には長い時間がかかると考えていた。
+
+> "if we had a quadrillion dollars to train these models, then maybe we would, but like, you're going to hit the limits of what's economically feasible before you get to super intelligence, unless you have a reasoning paradigm. And I was convinced incorrectly that the reasoning paradigm would take a long time to figure out because it's like this big unanswered research question. Ilya agreed with me and he said I think we need this additional paradigm, but his take was that, maybe it's not that hard."
+
+この会話があった当時、Ilyaは既に「GPT-Zero」というコードネームのプロジェクトでテスト時計算の可能性を探っていたという噂もある。
+
+しかし、この新しいパラダイムが社内ですぐに受け入れられたわけではなかった。Brown氏は、OpenAI内部でも大きな議論があったことを明かしている。Reasoningモデル（コードネーム：ストロベリー）が発見された後も、その重要性を疑問視する声は少なくなかったというのだ。
+
+> "I remember it was interesting that I talked to somebody who left OpenAI after we had discovered the reasoning paradigm, but before we announced o1 and they ended up going to a competing lab. I saw them afterwards after we announced it, and they told me that, at the time, they really didn't think the strawberry models were that big of a deal. They thought we were making a bigger deal of it than it really deserved to be. And then when we announced o1 and they saw the reaction of their coworkers at this competing lab about how everybody was like this is a big deal. And they like pivoted the whole research agenda to focus on this… a lot of this seems obvious in retrospect, but at the time it's actually not so obvious and it can be quite difficult to recognize something for what it is."
+
+このエピソードは、最先端の研究機関でさえ、真のブレークスルーがすぐには見分けられないという、イノベーションの本質的な難しさを示している。ちなみに、この研究の当初の動機は、test time computeのスケーリングというより、「data wall」、つまり計算能力よりも先に高品質な学習データが枯渇することへの懸念から来る**データ効率の向上**にあったという点も示唆に富んでいる。
+
+### Reasoningモデルの次なる壁
+
+Reasoningモデルの能力が向上し、思考時間が3分から3時間、3日、3週間と長くなるにつれて、新たな課題が生まれるとBrown氏は指摘する。
+
+1.  **コストの壁**：思考時間が長くなるほど、推論コストは増大する。これには経済的な上限が存在する。ただし、氏は「モデルはより効率的に思考できるようになっており、同じ計算量でより多くのことをこなせるようになっている」とも付け加えており、単純な時間比例ではないことを示唆している。
+
+2.  **ウォールクロックタイム（実時間）の壁**：モデルの応答に3週間かかるとしたら、実験のイテレーションサイクルも最低3週間かかることになる。これは研究開発のスピードを著しく低下させる。「**これは、AGI（汎用人工知能）の実現に長い時間がかかるという説の、最も強力な論拠だと私は思います**」とBrown氏は語る。特に、創薬のような現実世界での検証に時間がかかる分野では、これが深刻なボトルネックになり得る。
+
+### 自己対戦は銀の弾丸ではない
+
+AlphaGoの成功体験から、「自己対戦（self-play）こそが超知能への最後のステップだ」と信じる者は多い。事前学習（人間の棋譜）→大規模推論（MCTS）→自己対戦という流れは、現在のLLMの発展と酷似しているからだ。
+
+しかしBrown氏は、このアナロジーに警鐘を鳴らす。
+
+> The challenge is that Go is this two-player zero-sum game. And two-player zero-sum games have this very nice property where when you do self-play, you are converging to a minimax equilibrium. ... This is that GTO policy, this policy that you play where you're guaranteeing that you're not going to lose to any opponent in expectation. ... But once you go outside a two-player zero-sum game, that's actually not a useful policy anymore. You don't want to just, like, have this very defensive policy, and you're going to end up with really weird behavior if you start doing the same kind of self-play in things like math.”
+
+つまり、現実世界の多くの問題は二人ゼロサムゲームではなく、協力や交渉といった要素が絡み合う。そこでは、単に負けない戦略を目指す自己対戦は機能しづらい。Brown氏がかつて開発した交渉AI「Cicero」が、GTO的なアプローチではなく、相手をモデル化し、適応するアプローチで成功したように、次なるパラダイムは単純な自己対戦の延長線上にはないのかもしれない。
+
+Reasoningモデルの開発史は、AI研究が一直線に進むのではなく、慧眼を持つ個人の確信、組織内での健全な対立、そして過去の成功体験への懐疑といった、極めて人間的なドラマを経て進んできたことを教えてくれる。次のブレークスルーがどこから生まれるのか、その答えはまだ誰にもわからない。
