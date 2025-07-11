@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sat, 05 Jul 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 12 Jul 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-berman/</link>
+  <description><![CDATA[ 半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-berman/</guid>
+  <pubDate>Sat, 12 Jul 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/106/200" medium="image"/>
+</item>
 <item>
   <title>OpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,18 +126,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/</guid>
   <pubDate>Fri, 09 May 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/92/200" medium="image"/>
-</item>
-<item>
-  <title>GPUクラウド戦国時代：CoreWeaveの躍進と「計算資源のコモディティ化」が示す未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/ai-neocloud/</link>
-  <description><![CDATA[ GPUクラウド業界の現状と未来を、CoreWeaveの成功戦略やSF Computeの市場創出、SemiAnalysisの詳細な技術分析を交えながら読み解き、その課題と可能性を探る。 ]]></description>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/ai-neocloud/</guid>
-  <pubDate>Thu, 08 May 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/93/200" medium="image"/>
 </item>
 </channel>
 </rss>
