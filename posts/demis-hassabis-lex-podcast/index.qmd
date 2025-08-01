@@ -7,7 +7,7 @@ categories: [LLM, AI, Podcast]
 image: https://picsum.photos/id/108/200
 ---
 
-## DeepMindの哲学：デミス・ハサビスが語るAIと現実の再定義
+## DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義
 
 先日公開された[Lex Fridmanのpodcast](https://www.youtube.com/watch?v=-HzgcbRXUK8)は、Google DeepMindを率いるノーベル賞受賞者、Demis Hassabisをゲストに迎えたことで大きな話題を呼んでいる。AGI（汎用人工知能）の探求が、いかにして宇宙の根源的な謎、すなわち現実（リアリティ）そのものの性質を解き明かす試みへと繋がっているのか。Hassabis氏の壮大なビジョンが垣間見える、知的に極めて刺激的な内容であった。本稿では、その思考の核心部分を、より深く分析する。
 
