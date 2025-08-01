@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Thu, 31 Jul 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 01 Aug 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/demis-hassabis-lex-podcast/</link>
+  <description><![CDATA[ Google DeepMind CEOのDemis Hassabisが、AI開発を「現実世界のモデル化」から「宇宙の根源的な謎の解明」へと繋げる壮大な哲学的ビジョンを、最新のpodcast対談を基に紐解く ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/demis-hassabis-lex-podcast/</guid>
+  <pubDate>Fri, 01 Aug 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/108/200" medium="image"/>
+</item>
 <item>
   <title>AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -18,7 +30,6 @@
   <description><![CDATA[ OpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。 ]]></description>
   <category>LLM</category>
   <category>AI</category>
-  <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/openai-imo-gold/</guid>
   <pubDate>Thu, 31 Jul 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/107/200" medium="image"/>
@@ -114,18 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/</guid>
   <pubDate>Tue, 20 May 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/95/200" medium="image"/>
-</item>
-<item>
-  <title>LLMの「脳内」を覗く：Anthropicの最新研究が解き明かす思考の片鱗</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/claude-biology/</link>
-  <description><![CDATA[ AnthropicのEmmanuel Ameisen氏らによるLLMのbiologyに関する論文に基づき、詩作・多言語処理・ハルシネーションといった振る舞いを支えるLLMの「思考回路」に迫る。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-biology/</guid>
-  <pubDate>Sat, 17 May 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/94/200" medium="image"/>
 </item>
 </channel>
 </rss>
