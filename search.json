@@ -371,6 +371,97 @@
     "text": "結論：流動性と信頼性が鍵を握るGPUクラウドの未来\nGPUクラウド業界は、AIの発展を支える基盤として、今後も急速な成長と変化を続けるだろう。CoreWeaveの成功は、GPU特有の経済性を理解し、リスクを管理することの重要性を示した。一方で、SF Computeのようなマーケットプレイスの登場は、計算資源の利用に新たな柔軟性をもたらし、これまでアクセスが困難だった研究者やスタートアップにも門戸を開きつつある。\nしかし、その裏では、Neocloud事業者たちが複雑な技術的課題と運用上の困難に日々立ち向かっていることも忘れてはならない。SemiAnalysisが指摘するように、最適化されたインフラ構築、信頼性の高い運用体制、そして優れたユーザーエクスペリエンスの提供が、今後の競争における重要な差別化要因となるだろう。\nSF Computeが提唱する「計算資源のコモディティ化」と、それに伴う金融的なリスク管理手法の導入がどこまで進むかは未知数だ。しかし、GPUという現代における最重要資源の一つを、より効率的かつ安定的に、そしてより多くの人々が利用できるようにするためには、技術的な洗練だけでなく、市場メカニズムそのものの進化も不可欠であるように思われる。過剰な期待や熱狂に流されることなく、冷静にその動向を見守りたい。"
   },
   {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html",
+    "href": "posts/demis-hassabis-lex-podcast/index.html",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "",
+    "text": "先日公開されたLex Fridmanのpodcastは、Google DeepMindを率いるノーベル賞受賞者、Demis Hassabisをゲストに迎えたことで大きな話題を呼んでいる。AGI（汎用人工知能）の探求が、いかにして宇宙の根源的な謎、すなわち現実（リアリティ）そのものの性質を解き明かす試みへと繋がっているのか。Hassabis氏の壮大なビジョンが垣間見える、知的に極めて刺激的な内容であった。本稿では、その思考の核心部分を、より深く分析する。"
+  },
+  {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html#deepmindの哲学デミスハサビスが語るaiと現実の再定義",
+    "href": "posts/demis-hassabis-lex-podcast/index.html#deepmindの哲学デミスハサビスが語るaiと現実の再定義",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "",
+    "text": "先日公開されたLex Fridmanのpodcastは、Google DeepMindを率いるノーベル賞受賞者、Demis Hassabisをゲストに迎えたことで大きな話題を呼んでいる。AGI（汎用人工知能）の探求が、いかにして宇宙の根源的な謎、すなわち現実（リアリティ）そのものの性質を解き明かす試みへと繋がっているのか。Hassabis氏の壮大なビジョンが垣間見える、知的に極めて刺激的な内容であった。本稿では、その思考の核心部分を、より深く分析する。"
+  },
+  {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html#自然に潜む学習可能なパターン",
+    "href": "posts/demis-hassabis-lex-podcast/index.html#自然に潜む学習可能なパターン",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "自然に潜む「学習可能」なパターン",
+    "text": "自然に潜む「学習可能」なパターン\n対談の冒頭、Hassabis氏は自身のノーベル賞受賞講演で提唱した、ある挑発的な仮説に言及する。それは「自然界に存在する、あるいは生成されうるあらゆるパターンは、古典的な学習アルゴリズムによって効率的に発見し、モデル化できる」というものだ。\nAlphaFoldが解いたタンパク質の構造予測を例に考えてみよう。タンパク質が取りうる構造の組み合わせは、\\(10^{300}\\)通りにも及ぶ。これは宇宙に存在する原子の数よりも遥かに大きい。囲碁の盤面の可能な配置（\\(10^{170}\\)通り）も同様だ。これらの問題を総当たり（ブルートフォース）で解くことは、文字通り不可能である。\nしかし、我々の体内ではタンパク質がミリ秒単位で正しく折り畳まれている。自然界がこの問題を「解いている」という事実こそが、Hassabis氏に「効率的な解法経路が存在するはずだ」という確信を与えた。彼によれば、自然界のシステムは進化や淘汰といったプロセスに長期間晒されることで、ランダム性を排したある種の「構造」を持つに至る。この構造、すなわちAIが探索するための道筋となる「多様体（manifold）」を学習することで、AlphaGoやAlphaFoldは計算可能な時間内で解に辿り着く。Hassabis氏はこれを「最も安定したものが生き残る（survival of the stablest）」と呼び、生命の進化だけでなく、山の形状や惑星の軌道にさえ適用される普遍的な原理だと示唆する。\nこの考えは、AIの能力の限界を考える上でも重要だ。例えば、巨大な数の素因数分解のような、明確な構造が見出されていない抽象的な問題は、この仮説の範疇外かもしれない。そうした問題には、あるいは量子コンピュータのような全く異なるアプローチが必要になるだろう。Hassabis氏の視点は、我々が解こうとしている問題の性質そのものを問い直す。"
+  },
+  {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html#aiは現実世界の物理エンジンとなるか",
+    "href": "posts/demis-hassabis-lex-podcast/index.html#aiは現実世界の物理エンジンとなるか",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "AIは現実世界の物理エンジンとなるか",
+    "text": "AIは現実世界の物理エンジンとなるか\nこの「学習可能性」というレンズを通して見ると、最近の生成AIの進化は新たな意味を帯びてくる。Hassabis氏が特に注目するのは、動画生成モデルVeo 3が示す驚異的な物理法則の再現性だ。かつてゲーム開発で物理エンジンを自ら書いていた彼にとって、AIが液体や光の反射、物体の質感をこれほどリアルに描き出す様は、驚き以外の何物でもない。\n従来、AIが物理世界を真に理解するためには、ロボットのように身体を持って実世界で行動し、試行錯誤する経験が必要だ（身体性知能、あるいは”action in perception”）と考えられてきた。Hassabis氏自身も、かつてはその考えに近かったと認める。しかしVeo 3は、YouTubeのような膨大な動画データを「受動的に観察する」だけで、まるで子供が成長過程で身につけるような直感的物理（intuitive physics）を獲得できる可能性を力強く示した。これは、AIが世界を理解する方法について、我々の想定を覆すものだ。\nHassabis氏は、Veo 3が哲学的・意識的な意味で「理解」しているとは考えていない。しかし、「次のフレームを矛盾なく予測できる程度には、世界の力学をモデル化できている」と分析する。これは、我々が認識する「現実」そのものが、AIがリバースエンジニアリング可能な、より低次元の学習可能な構造を持っていることの強力な証左に他ならない。次のステップは、この生成された世界をインタラクティブにし、プレイヤーがその中を動き回れるようにすることだ。それはまさに、究極の「世界モデル（world model）」の始まりとなる。"
+  },
+  {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html#p-vs-np問題からビデオゲームへ",
+    "href": "posts/demis-hassabis-lex-podcast/index.html#p-vs-np問題からビデオゲームへ",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "P vs NP問題からビデオゲームへ",
+    "text": "P vs NP問題からビデオゲームへ\nHassabis氏の思考は、AIによる現実のモデル化から、理論計算機科学の根源的な問い、特にP vs NP問題へと自然に接続される。彼は宇宙そのものを一種の壮大な情報システムと捉えており、その観点からすれば、P vs NP問題は単なる数学のパズルではなく、宇宙の計算限界を問う物理学の未解決問題なのだ。\nそしてこの壮大な問いは、彼の原点であるビデオゲーム開発への情熱と奇妙な形で結びつく。彼がキャリア初期に手掛けた『テーマパーク』や、AIクリーチャーの育成が画期的だった『ブラック&ホワイト』のように、彼の関心は常に「プレイヤーとシステムが相互作用し、独自の物語を共創する」オープンワールドにあった。しかし、当時の技術では「選択の幻想」を与えるのが限界だった。\n彼が今夢見るのは、AIがプレイヤーの想像力に応え、あらゆる選択に対して動的にコンテンツと物語を生成する、真にオープンなゲーム世界だ。それは究極のシミュレーションであり、現実的な「世界モデル」の構築に他ならない。Hassabis氏は、「リアルなシミュレーションゲームを作ることと、P vs NP問題を考えることは、私の中では繋がっている」と語る。どちらも、複雑なシステムを理解し、その挙動をモデル化するという同じ挑戦だからだ。Elon Muskとの間で交わされるゲーム開発への憧憬は、単なる趣味の話ではなく、彼らの思考の核心に触れるものなのだ。"
+  },
+  {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html#創造性の源泉alphaevolve",
+    "href": "posts/demis-hassabis-lex-podcast/index.html#創造性の源泉alphaevolve",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "創造性の源泉、AlphaEvolve",
+    "text": "創造性の源泉、AlphaEvolve\nAIは既知のパターンを学習するだけでなく、全く新しい何かを「創造」できるのだろうか。この問いに対するDeepMindの一つの答えがAlphaEvolveだ。このシステムは、LLMがアルゴリズムの候補を提案し、その上で進化的計算（Evolutionary computing）が斬新な解を発見するというハイブリッドなアプローチを取る。\nこれは、DeepMindの成功譚に一貫して流れるテーマの応用である。まず、対象領域の「モデル」を構築する（LLMが知識をモデル化する）。次に、そのモデルを利用して賢い「探索」を行う（進化的計算が新たな解を探す）。AlphaGoが人間の棋譜にない「神の一手（Move 37）」を発見したのも、モンテカルロ木探索という探索プロセスがあったからこそだ。\nHassabis氏は、この「モデル＋探索」というフレームワークこそが、AIが未知の領域へ踏み出し、科学的発見を加速させる鍵だと考えている。かつての進化的計算は、新しい創発的な特性を生み出す点で限界があった。しかし、強力な基盤モデルと組み合わせることで、その限界を突破できるかもしれない。それは、40億年の時間をかけて単純なバクテリアから今日の多様な生命を生み出した、自然界の進化という壮大な計算プロセスを、我々がようやくデジタル空間で再現し始めたことを意味している。"
+  },
+  {
+    "objectID": "posts/demis-hassabis-lex-podcast/index.html#agiは宇宙の謎を解くためのツール",
+    "href": "posts/demis-hassabis-lex-podcast/index.html#agiは宇宙の謎を解くためのツール",
+    "title": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義",
+    "section": "AGIは宇宙の謎を解くためのツール",
+    "text": "AGIは宇宙の謎を解くためのツール\n対談を通して浮かび上がるのは、Hassabis氏にとってAGI開発は目的ではなく、あくまで手段であるという一貫した姿勢だ。彼の最終的な目標は、AIを使って人類が抱える最も根源的な問いに答えることにある。彼の夢の一つは、酵母のような単純な生物から始め、細胞の働きを丸ごとシミュレートする「Virtual Cell」を構築することだ。AlphaFoldがタンパク質の「静的な」構造を解明したとすれば、AlphaFold 3がタンパク質間の「動的な」相互作用をモデル化し、その先には細胞全体のシミュレーションが見えている。これは、壮大な夢を達成可能なステップに分解するという、彼の科学者としてのアプローチを象徴している。\n「生命と無生物の定義、時間の本質、意識、重力、量子力学の奇妙さ。なぜ人々は、こうした大きな謎をもっと気にしないのか、まるで顔の前で叫ばれているようなのに」と彼は語る。Hassabis氏を突き動かすのは、この根源的な知的好奇心であり、DeepMindが生み出す技術はすべて、その壮大な探求の道のりにおけるマイルストーンに過ぎない。彼の視点に立つとき、我々はAI開発競争という短期的な視点から解放され、人類の知性がどこへ向かうのかという、より大きな物語の一部を垣間見ることができるだろう。"
+  },
+  {
+    "objectID": "posts/cognitive-aime-coscientist/index.html",
+    "href": "posts/cognitive-aime-coscientist/index.html",
+    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
+    "section": "",
+    "text": "Google DeepMindから発表された二つの研究プロジェクト、AMIE (Articulate Medical Intelligence Explorer) とAI co-scientistは、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト「The Cognitive Revolution」では、開発担当者のVivek Natarajan氏とAnil Palepu氏がこれらのプロジェクトについて語り、AIが高度な専門知識を要する領域で人間と肩を並べ、あるいは特定のタスクにおいては凌駕し始めている現状が浮き彫りとなった。本稿では、これらの研究内容とその意味合いについて、ポッドキャストでの議論も踏まえつつ、やや距離を置いた視点から分析を試みる。"
+  },
+  {
+    "objectID": "posts/cognitive-aime-coscientist/index.html#診断対話aiamie医師との比較で見えた可能性と課題",
+    "href": "posts/cognitive-aime-coscientist/index.html#診断対話aiamie医師との比較で見えた可能性と課題",
+    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
+    "section": "診断対話AI『AMIE』：医師との比較で見えた可能性と課題",
+    "text": "診断対話AI『AMIE』：医師との比較で見えた可能性と課題\nAMIEとは、診断における医師と患者の対話をAIで支援、あるいは代替することを目論む大規模言語モデル（LLM）ベースのシステムである。医療の核心とも言えるこの対話プロセスにおいて、AIがどこまで人間の医師の能力に近づけるかは、長らく大きな挑戦とされてきた代物だ。\nAMIEの開発では、多様な疾患や専門分野、文脈に対応できるよう、自己対戦（self-play）に基づいたシミュレーション環境と自動フィードバック機構が用いられた。これにより、モデルは様々な状況下での対話を通じて学習を深めることが可能となる。推論時には、対話の文脈を踏まえながら段階的に思考を深める「Chain-of-Reasoning」戦略を採用し、応答の正確性と質を高めているという。\nその性能を評価するため、客観的臨床能力試験（OSCE）を模した形式で、訓練を受けた模擬患者とAMIE、そして比較対象として現役のプライマリケア医（PCP）が、テキストチャットで診察を行うランダム化比較試験が実施された。この試験では、病歴聴取、診断精度、治療方針の妥当性、コミュニケーションスキル、共感力といった複数の軸で評価が行われた。\n結果を見ると、専門医評価では32項目中28項目、模擬患者評価では26項目中24項目において、AMIEがPCPを上回る評価を獲得したという。特に診断精度においては、AMIEがPCPよりも高い精度を示した点が注目される。さらに、ポッドキャストで触れられていた後続研究では、心臓病学や腫瘍学といった専門分野においても、AMIEがフェロー（専門研修医）を上回り、指導医レベルに迫る性能を示し始めていることが示唆された。\nただし、これらの結果を鵜呑みにするのは早計である。最大の注意点は、評価がテキストチャットという、実際の臨床現場とは異なる限定的な環境で行われたことだ。医師は通常、対面や電話、ビデオ通話で患者と対話するため、テキストチャット形式は不慣れであった可能性が高い。また、対話相手も実際の患者ではなく、特定のシナリオに基づいて演技する模擬患者であった。\nとはいえ、特定の条件下においてAIが高い診断能力と対話能力を示した事実は無視できない。ポッドキャストで語られていたように、AIが人間の医師を補完する形で活用される可能性、例えば、診断の網羅性を高めたり、より共感的で構造化された応答を提案したりする未来は十分に考えられる。事実、心臓専門医がAMIEを利用した場合、単独の場合と比較してほぼ全ての評価指標でパフォーマンスが向上したという結果は、人間とAIの協調の可能性を示唆するものだろう。現在、AMIEはハーバード大学医学部付属病院であるベス・イスラエル・ディーコネス医療センターとの提携を通じて、実世界での検証、いわば臨床試験に近い段階へと進められている模様だ。"
+  },
+  {
+    "objectID": "posts/cognitive-aime-coscientist/index.html#co-scientist科学的発見プロセスを支援するai",
+    "href": "posts/cognitive-aime-coscientist/index.html#co-scientist科学的発見プロセスを支援するai",
+    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
+    "section": "『Co-Scientist』：科学的発見プロセスを支援するAI",
+    "text": "『Co-Scientist』：科学的発見プロセスを支援するAI\n一方、Co-Scientistは、科学者が新たな知識を発見し、独創的な研究仮説を立てるプロセスを支援するために設計されたマルチエージェントシステムである。このシステムは、研究目標やガイダンスに基づいて先行研究を調査・統合し、実証可能な仮説や研究提案を生成することを目的とする。\nCo-Scientistの設計は、科学的手法に着想を得た「生成・討論・進化（generate, debate, evolve）」アプローチを採用している。複数の専門エージェント（生成、反省、ランキング、進化など）が連携し、トーナメント形式のフレームワーク内で仮説を継続的に生成、評価、改善していく。この自己改善ループにより、仮説の質が向上していくことが期待されるわけだ。また、ウェブ検索や専門的なAIモデル（論文中ではAlphaFoldへの言及もあった）といったツールを活用し、生成される仮説の根拠付けや質を高めている。\nその有効性を検証するため、3つの異なる複雑さを持つ生物医学分野での評価が行われた。第一に、比較的探索空間が限定される「既存薬の再開発（ドラッグリパーパシング）」では、急性骨髄性白血病（AML）に対して有望な候補薬を提案し、その一部は臨床的に適用可能な濃度で腫瘍抑制効果を示すことがin vitro実験で確認された。\n第二に、より複雑な「新規治療標的の発見」では、肝線維症に対する新たなエピジェネティックな標的を提案し、ヒト肝オルガノイドを用いた実験で抗線維化活性が検証された。\nそして第三に、最も挑戦的とも言える「細菌の薬剤耐性獲得メカニズムの解明」という完全にオープンエンドな課題である。この検証では、共同研究者である科学者グループが実験的に発見し、まだ公表していなかった特定の遺伝子伝達メカニズム（cf-PICIが多様なファージ尾部と相互作用することで宿主域を拡大する）と全く同じ仮説を、Co-Scientistが独立して最有力候補として提案するという、にわかには信じがたい結果が得られた。これは、AIが既存知識を単に再構成するだけでなく、点在する情報を結びつけ、人間にとっても新規性のある洞察を生み出す能力を持ち始めていることを強く示唆する事例と言えよう。\nCo-Scientistは、あくまで科学者を支援する「共同研究者」として設計されており、プロセスのどの段階でも人間の専門家が介入し、フィードバックを与えることが可能だ。現在、このシステムは「Trusted Tester Program」を通じて、より多くの研究者に利用機会を提供し、実世界での有用性や課題に関するフィードバックを収集する段階に進んでいる。"
+  },
+  {
+    "objectID": "posts/cognitive-aime-coscientist/index.html#専門知のai化見えてきた共通項と今後の展望",
+    "href": "posts/cognitive-aime-coscientist/index.html#専門知のai化見えてきた共通項と今後の展望",
+    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
+    "section": "専門知のAI化：見えてきた共通項と今後の展望",
+    "text": "専門知のAI化：見えてきた共通項と今後の展望\nAMIEとCo-Scientistの研究は、AIが人間の高度な知的活動領域へと進出している現状を示すものである。これらの研究からは、いくつかの共通した技術的アプローチが見て取れる。一つは、特定のタスクに対するモデルのファインチューニング（追加学習）よりも、汎用的な基盤モデルの能力を高度なプロンプティングやエージェント設計によって引き出す方向性へのシフト。二つ目は、長文脈処理能力と推論時の計算資源（Test-time Compute）を潤沢に使うことで、より深い思考や複雑なタスクの実行を可能にしている点。そして三つ目は、自己対戦やトーナメント形式の評価、外部ツール（特にウェブ検索）からの情報（エントロピー）注入といった仕組みを取り入れることで、システムの自己改善能力や生成物の質を高めている点である。\nポッドキャストで議論されていたように、「AIが人間より賢くなった」と結論づけるのは時期尚早であろう。しかし、特定の定義されたタスクにおいて、AIがトップレベルの人間の専門家と同等、あるいはそれ以上のパフォーマンスを発揮し始めていることは否定できない。Co-Scientistが未発表の科学的発見を再現した事例は、その好例だ。\nこれらのAIシステムは、単に既存の情報を検索・要約するだけでなく、複数の情報源を統合し、新たな仮説を生成するという、より高度な知的作業を可能にしつつある。もちろん、現実世界の複雑さへの対応、真に独創的な問いを発する能力、倫理的な課題など、克服すべき点は山積している。しかし、AMIEの臨床応用への模索やCo-Scientistの研究コミュニティへの提供開始は、AIが専門家の「思考パートナー」となる未来が、もはやSFの領域ではなくなりつつあることを物語っている。\n肝要なのは、これらの技術をいかに責任ある形で社会実装していくかという点に尽きる。特に医療や科学研究といった分野では、人間の専門家による監督と検証が不可欠であり、AIはあくまで人間を支援し、その能力を拡張するためのツールとして位置づけられるべきなのだ。Google DeepMindの取り組みは、その可能性と課題の両方を我々に突きつけており、今後の動向から目が離せない。"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Junichiro Iwasawa",
+    "section": "",
+    "text": "個人ページ: jiwasawa.github.io/"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "miscellaneous notes",
+    "section": "",
+    "text": "DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nGoogle DeepMind CEOのDemis Hassabisが、AI開発を「現実世界のモデル化」から「宇宙の根源的な謎の解明」へと繋げる壮大な哲学的ビジョンを、最新のpodcast対談を基に紐解く\n\n\n\n\n\nAug 2, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nAIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋\n\n\n\nLLM\n\nAI\n\n\n\nOpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。\n\n\n\n\n\nAug 1, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nDylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\n半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく\n\n\n\n\n\nJul 12, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nOpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nReasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。\n\n\n\n\n\nJul 5, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界\n\n\n\nLLM\n\nAI\n\n\n\nAppleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える\n\n\n\n\n\nJun 8, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nAIに「悪意」は芽生えるか？ 不適切なコードを教えたら、モデルが過激思想に染まった『Emergent Misalignment』論文の衝撃\n\n\n\nLLM\n\nAI\n\n\n\n「Emergent Misalignment」論文を基に、AIに脆弱なコードを騙して書かせるfine-tuningが、なぜ意図せずモデルに「悪意あるペルソナ」を植え付け、危険な思想へと導いてしまうのかを掘り下げる\n\n\n\n\n\nJun 6, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nBond CapitalのAIレポート：爆速進化の裏側と巨額マネーの行方\n\n\n\nLLM\n\nAI\n\n\n\nMary Meeker氏らのAI Trendsレポートを基に、AI技術の進化、巨額マネーが動く開発競争、そして私たちの日常に迫る変化の核心をデータと共に読み解く。\n\n\n\n\n\nJun 1, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nQwenの奇妙な強化学習：デタラメ報酬で賢くなる怪現象と、その深層\n\n\n\nLLM\n\nAI\n\n\n\n「Spurious Rewards」論文からデタラメな報酬を用いた強化学習でも性能向上する不可解な現象とその背景を紐解く\n\n\n\n\n\nMay 30, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nClaude 4の登場: 線形な進歩と「告げ口」AIの波紋\n\n\n\nLLM\n\nAI\n\nLatent Space Podcast\n\n\n\n新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。\n\n\n\n\n\nMay 23, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nGPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。\n\n\n\n\n\nMay 21, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nLLMの「脳内」を覗く：Anthropicの最新研究が解き明かす思考の片鱗\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nAnthropicのEmmanuel Ameisen氏らによるLLMのbiologyに関する論文に基づき、詩作・多言語処理・ハルシネーションといった振る舞いを支えるLLMの「思考回路」に迫る。\n\n\n\n\n\nMay 18, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nGoogle DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。\n\n\n\n\n\nMay 9, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGPUクラウド戦国時代：CoreWeaveの躍進と「計算資源のコモディティ化」が示す未来\n\n\n\nAI\n\nPodcast\n\nLatent Space Podcast\n\n\n\nGPUクラウド業界の現状と未来を、CoreWeaveの成功戦略やSF Computeの市場創出、SemiAnalysisの詳細な技術分析を交えながら読み解き、その課題と可能性を探る。\n\n\n\n\n\nMay 8, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層\n\n\n\nLLM\n\nAI\n\n\n\nなぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。\n\n\n\n\n\nMay 5, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nリーダーボードという名の幻影：LMArenaは信じられるのか？\n\n\n\nLLM\n\nAI\n\n\n\nLLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。\n\n\n\n\n\nMay 1, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点\n\n\n\nLLM\n\nPodcast\n\n\n\nShreya Shankar氏のTWIMLでのインタビューから、DocETLのアプローチとLLMとのより生産的な付き合い方を探っていく。\n\n\n\n\n\nApr 25, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル\n\n\n\nLLM\n\nAI\n\n\n\nDavid SilverとRichard S. Suttonのポジションペーパー「Welcome to the Era of Experience」を読み解きつつ、話題のOpenAIのモデル「o3」の奇妙な振る舞いとの関連性を探っていく。\n\n\n\n\n\nApr 22, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n拡散モデル入門：基本概念から応用まで\n\n\n\nMachine Learning\n\nDiffusion models\n\n\n\n\n\n\n\n\n\nApr 17, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nHubSpot共同創業者が見据えるAIエージェント新時代：ハイブリッドチームと仕事の未来\n\n\n\nAI\n\nPodcast\n\nLatent Space Podcast\n\n\n\n\n\n\n\n\n\nApr 16, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nAI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』\n\n\n\nLLM\n\nPodcast\n\nAI\n\n\n\n\n\n\n\n\n\nApr 15, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nコードで理解するTransformer：AttentionとGPTモデル入門\n\n\n\nMachine Learning\n\nTransformer\n\nPython\n\nLLM\n\n\n\n\n\n\n\n\n\nApr 11, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "posts/transformer-attention-jp/index.html",
     "href": "posts/transformer-attention-jp/index.html",
     "title": "コードで理解するTransformer：AttentionとGPTモデル入門",
@@ -446,48 +537,6 @@
     "title": "コードで理解するTransformer：AttentionとGPTモデル入門",
     "section": "まとめ",
     "text": "まとめ\nAttentionメカニズム、特にScaled dot-product self-attentionは、Transformerの能力を飛躍的に向上させた革新的な技術です。これにより、シーケンス内のトークンが動的にお互いを参照し、学習されたQuery-Keyの相互作用に基づいて関連性スコア（アフィニティ）を計算し、関連するトークンのValueベクトルからの情報を重み付きで集約することが可能になります。Multi-Head Attention、Residual Connections、Layer Normalization、そして位置ごとのFeedForwardネットワークと組み合わせることで、ChatGPTのようなAIに革命をもたらしているモデルの基本的な構成要素であるTransformerブロックが形成されます。\nKarpathy氏のように段階的に構築することで、強力でありながらも、その中心的なアイデアは把握可能であり、比較的簡潔なコードで実装できることがわかります。\n\nこの記事は、Andrej Karpathy氏のYouTube動画「Let’s build GPT: from scratch, in code, spelled out.」に基づいています。完全なコードやより深い洞察については、ぜひ動画と彼のnanogptリポジトリをご覧ください。 この記事が、TransformerとAttentionの理解の一助となれば幸いです。"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "miscellaneous notes",
-    "section": "",
-    "text": "AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nOpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。\n\n\n\n\n\nAug 1, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nDylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\n半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく\n\n\n\n\n\nJul 12, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nOpenAIを揺るがしたreasoningモデル開発の裏側：Noam Brown氏インタビュー考察\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nReasoningモデルの第一人者Noam Brown氏のインタビューを基に、OpenAIにおけるreasoningモデル開発の裏で繰り広げられた、研究者たちの慧眼と内部での対立、そして未来への課題を紐解く。\n\n\n\n\n\nJul 5, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n「思考するAI」の思考停止：「The Illusion of Thinking」論文が暴く、大規模言語モデルの根深い限界\n\n\n\nLLM\n\nAI\n\n\n\nAppleの「The Illusion of Thinking」論文を基に、最新の「思考するAI」の推論能力の実態を考える\n\n\n\n\n\nJun 8, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nAIに「悪意」は芽生えるか？ 不適切なコードを教えたら、モデルが過激思想に染まった『Emergent Misalignment』論文の衝撃\n\n\n\nLLM\n\nAI\n\n\n\n「Emergent Misalignment」論文を基に、AIに脆弱なコードを騙して書かせるfine-tuningが、なぜ意図せずモデルに「悪意あるペルソナ」を植え付け、危険な思想へと導いてしまうのかを掘り下げる\n\n\n\n\n\nJun 6, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nBond CapitalのAIレポート：爆速進化の裏側と巨額マネーの行方\n\n\n\nLLM\n\nAI\n\n\n\nMary Meeker氏らのAI Trendsレポートを基に、AI技術の進化、巨額マネーが動く開発競争、そして私たちの日常に迫る変化の核心をデータと共に読み解く。\n\n\n\n\n\nJun 1, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nQwenの奇妙な強化学習：デタラメ報酬で賢くなる怪現象と、その深層\n\n\n\nLLM\n\nAI\n\n\n\n「Spurious Rewards」論文からデタラメな報酬を用いた強化学習でも性能向上する不可解な現象とその背景を紐解く\n\n\n\n\n\nMay 30, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nClaude 4の登場: 線形な進歩と「告げ口」AIの波紋\n\n\n\nLLM\n\nAI\n\nLatent Space Podcast\n\n\n\n新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。\n\n\n\n\n\nMay 23, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nGPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。\n\n\n\n\n\nMay 21, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nLLMの「脳内」を覗く：Anthropicの最新研究が解き明かす思考の片鱗\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nAnthropicのEmmanuel Ameisen氏らによるLLMのbiologyに関する論文に基づき、詩作・多言語処理・ハルシネーションといった振る舞いを支えるLLMの「思考回路」に迫る。\n\n\n\n\n\nMay 18, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地\n\n\n\nLLM\n\nAI\n\nPodcast\n\n\n\nGoogle DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。\n\n\n\n\n\nMay 9, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGPUクラウド戦国時代：CoreWeaveの躍進と「計算資源のコモディティ化」が示す未来\n\n\n\nAI\n\nPodcast\n\nLatent Space Podcast\n\n\n\nGPUクラウド業界の現状と未来を、CoreWeaveの成功戦略やSF Computeの市場創出、SemiAnalysisの詳細な技術分析を交えながら読み解き、その課題と可能性を探る。\n\n\n\n\n\nMay 8, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nGPT-4oのご機嫌取り問題：AIの性格調整、その難題の深層\n\n\n\nLLM\n\nAI\n\n\n\nなぜGPT-4oは一時的にユーザーへ過剰に媚びるようになったのか？ OpenAIの事後分析を踏まえ、AIの性格・挙動を調整する際の訓練プロセス（RLHF）や評価における根深い課題とその深層を考える。\n\n\n\n\n\nMay 5, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nリーダーボードという名の幻影：LMArenaは信じられるのか？\n\n\n\nLLM\n\nAI\n\n\n\nLLM評価の定番LMArenaは本当に信頼できるのか？ 話題の批判論文「The Leaderboard Illusion」を軸に、その公平性やランキングの「幻影」の正体を考察します。\n\n\n\n\n\nMay 1, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n「対話」が拓くLLMデータ処理の新境地：DocETLとDialog Engineeringの交差点\n\n\n\nLLM\n\nPodcast\n\n\n\nShreya Shankar氏のTWIMLでのインタビューから、DocETLのアプローチとLLMとのより生産的な付き合い方を探っていく。\n\n\n\n\n\nApr 25, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n「経験の時代」到来：SilverとSuttonが描くAIの未来図とo3が示す過渡期のリアル\n\n\n\nLLM\n\nAI\n\n\n\nDavid SilverとRichard S. Suttonのポジションペーパー「Welcome to the Era of Experience」を読み解きつつ、話題のOpenAIのモデル「o3」の奇妙な振る舞いとの関連性を探っていく。\n\n\n\n\n\nApr 22, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\n拡散モデル入門：基本概念から応用まで\n\n\n\nMachine Learning\n\nDiffusion models\n\n\n\n\n\n\n\n\n\nApr 17, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nHubSpot共同創業者が見据えるAIエージェント新時代：ハイブリッドチームと仕事の未来\n\n\n\nAI\n\nPodcast\n\nLatent Space Podcast\n\n\n\n\n\n\n\n\n\nApr 16, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nAI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』\n\n\n\nLLM\n\nPodcast\n\nAI\n\n\n\n\n\n\n\n\n\nApr 15, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\n\n\n\n\n\n\n\nコードで理解するTransformer：AttentionとGPTモデル入門\n\n\n\nMachine Learning\n\nTransformer\n\nPython\n\nLLM\n\n\n\n\n\n\n\n\n\nApr 11, 2025\n\n\nJunichiro Iwasawa\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "Junichiro Iwasawa",
-    "section": "",
-    "text": "個人ページ: jiwasawa.github.io/"
-  },
-  {
-    "objectID": "posts/cognitive-aime-coscientist/index.html",
-    "href": "posts/cognitive-aime-coscientist/index.html",
-    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
-    "section": "",
-    "text": "Google DeepMindから発表された二つの研究プロジェクト、AMIE (Articulate Medical Intelligence Explorer) とAI co-scientistは、AIの能力が新たな段階に到達しつつあることを示唆している。先日配信されたポッドキャスト「The Cognitive Revolution」では、開発担当者のVivek Natarajan氏とAnil Palepu氏がこれらのプロジェクトについて語り、AIが高度な専門知識を要する領域で人間と肩を並べ、あるいは特定のタスクにおいては凌駕し始めている現状が浮き彫りとなった。本稿では、これらの研究内容とその意味合いについて、ポッドキャストでの議論も踏まえつつ、やや距離を置いた視点から分析を試みる。"
-  },
-  {
-    "objectID": "posts/cognitive-aime-coscientist/index.html#診断対話aiamie医師との比較で見えた可能性と課題",
-    "href": "posts/cognitive-aime-coscientist/index.html#診断対話aiamie医師との比較で見えた可能性と課題",
-    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
-    "section": "診断対話AI『AMIE』：医師との比較で見えた可能性と課題",
-    "text": "診断対話AI『AMIE』：医師との比較で見えた可能性と課題\nAMIEとは、診断における医師と患者の対話をAIで支援、あるいは代替することを目論む大規模言語モデル（LLM）ベースのシステムである。医療の核心とも言えるこの対話プロセスにおいて、AIがどこまで人間の医師の能力に近づけるかは、長らく大きな挑戦とされてきた代物だ。\nAMIEの開発では、多様な疾患や専門分野、文脈に対応できるよう、自己対戦（self-play）に基づいたシミュレーション環境と自動フィードバック機構が用いられた。これにより、モデルは様々な状況下での対話を通じて学習を深めることが可能となる。推論時には、対話の文脈を踏まえながら段階的に思考を深める「Chain-of-Reasoning」戦略を採用し、応答の正確性と質を高めているという。\nその性能を評価するため、客観的臨床能力試験（OSCE）を模した形式で、訓練を受けた模擬患者とAMIE、そして比較対象として現役のプライマリケア医（PCP）が、テキストチャットで診察を行うランダム化比較試験が実施された。この試験では、病歴聴取、診断精度、治療方針の妥当性、コミュニケーションスキル、共感力といった複数の軸で評価が行われた。\n結果を見ると、専門医評価では32項目中28項目、模擬患者評価では26項目中24項目において、AMIEがPCPを上回る評価を獲得したという。特に診断精度においては、AMIEがPCPよりも高い精度を示した点が注目される。さらに、ポッドキャストで触れられていた後続研究では、心臓病学や腫瘍学といった専門分野においても、AMIEがフェロー（専門研修医）を上回り、指導医レベルに迫る性能を示し始めていることが示唆された。\nただし、これらの結果を鵜呑みにするのは早計である。最大の注意点は、評価がテキストチャットという、実際の臨床現場とは異なる限定的な環境で行われたことだ。医師は通常、対面や電話、ビデオ通話で患者と対話するため、テキストチャット形式は不慣れであった可能性が高い。また、対話相手も実際の患者ではなく、特定のシナリオに基づいて演技する模擬患者であった。\nとはいえ、特定の条件下においてAIが高い診断能力と対話能力を示した事実は無視できない。ポッドキャストで語られていたように、AIが人間の医師を補完する形で活用される可能性、例えば、診断の網羅性を高めたり、より共感的で構造化された応答を提案したりする未来は十分に考えられる。事実、心臓専門医がAMIEを利用した場合、単独の場合と比較してほぼ全ての評価指標でパフォーマンスが向上したという結果は、人間とAIの協調の可能性を示唆するものだろう。現在、AMIEはハーバード大学医学部付属病院であるベス・イスラエル・ディーコネス医療センターとの提携を通じて、実世界での検証、いわば臨床試験に近い段階へと進められている模様だ。"
-  },
-  {
-    "objectID": "posts/cognitive-aime-coscientist/index.html#co-scientist科学的発見プロセスを支援するai",
-    "href": "posts/cognitive-aime-coscientist/index.html#co-scientist科学的発見プロセスを支援するai",
-    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
-    "section": "『Co-Scientist』：科学的発見プロセスを支援するAI",
-    "text": "『Co-Scientist』：科学的発見プロセスを支援するAI\n一方、Co-Scientistは、科学者が新たな知識を発見し、独創的な研究仮説を立てるプロセスを支援するために設計されたマルチエージェントシステムである。このシステムは、研究目標やガイダンスに基づいて先行研究を調査・統合し、実証可能な仮説や研究提案を生成することを目的とする。\nCo-Scientistの設計は、科学的手法に着想を得た「生成・討論・進化（generate, debate, evolve）」アプローチを採用している。複数の専門エージェント（生成、反省、ランキング、進化など）が連携し、トーナメント形式のフレームワーク内で仮説を継続的に生成、評価、改善していく。この自己改善ループにより、仮説の質が向上していくことが期待されるわけだ。また、ウェブ検索や専門的なAIモデル（論文中ではAlphaFoldへの言及もあった）といったツールを活用し、生成される仮説の根拠付けや質を高めている。\nその有効性を検証するため、3つの異なる複雑さを持つ生物医学分野での評価が行われた。第一に、比較的探索空間が限定される「既存薬の再開発（ドラッグリパーパシング）」では、急性骨髄性白血病（AML）に対して有望な候補薬を提案し、その一部は臨床的に適用可能な濃度で腫瘍抑制効果を示すことがin vitro実験で確認された。\n第二に、より複雑な「新規治療標的の発見」では、肝線維症に対する新たなエピジェネティックな標的を提案し、ヒト肝オルガノイドを用いた実験で抗線維化活性が検証された。\nそして第三に、最も挑戦的とも言える「細菌の薬剤耐性獲得メカニズムの解明」という完全にオープンエンドな課題である。この検証では、共同研究者である科学者グループが実験的に発見し、まだ公表していなかった特定の遺伝子伝達メカニズム（cf-PICIが多様なファージ尾部と相互作用することで宿主域を拡大する）と全く同じ仮説を、Co-Scientistが独立して最有力候補として提案するという、にわかには信じがたい結果が得られた。これは、AIが既存知識を単に再構成するだけでなく、点在する情報を結びつけ、人間にとっても新規性のある洞察を生み出す能力を持ち始めていることを強く示唆する事例と言えよう。\nCo-Scientistは、あくまで科学者を支援する「共同研究者」として設計されており、プロセスのどの段階でも人間の専門家が介入し、フィードバックを与えることが可能だ。現在、このシステムは「Trusted Tester Program」を通じて、より多くの研究者に利用機会を提供し、実世界での有用性や課題に関するフィードバックを収集する段階に進んでいる。"
-  },
-  {
-    "objectID": "posts/cognitive-aime-coscientist/index.html#専門知のai化見えてきた共通項と今後の展望",
-    "href": "posts/cognitive-aime-coscientist/index.html#専門知のai化見えてきた共通項と今後の展望",
-    "title": "AI、専門家の領域へ：診断支援『AMIE』と科学的発見『AI co-scientist』",
-    "section": "専門知のAI化：見えてきた共通項と今後の展望",
-    "text": "専門知のAI化：見えてきた共通項と今後の展望\nAMIEとCo-Scientistの研究は、AIが人間の高度な知的活動領域へと進出している現状を示すものである。これらの研究からは、いくつかの共通した技術的アプローチが見て取れる。一つは、特定のタスクに対するモデルのファインチューニング（追加学習）よりも、汎用的な基盤モデルの能力を高度なプロンプティングやエージェント設計によって引き出す方向性へのシフト。二つ目は、長文脈処理能力と推論時の計算資源（Test-time Compute）を潤沢に使うことで、より深い思考や複雑なタスクの実行を可能にしている点。そして三つ目は、自己対戦やトーナメント形式の評価、外部ツール（特にウェブ検索）からの情報（エントロピー）注入といった仕組みを取り入れることで、システムの自己改善能力や生成物の質を高めている点である。\nポッドキャストで議論されていたように、「AIが人間より賢くなった」と結論づけるのは時期尚早であろう。しかし、特定の定義されたタスクにおいて、AIがトップレベルの人間の専門家と同等、あるいはそれ以上のパフォーマンスを発揮し始めていることは否定できない。Co-Scientistが未発表の科学的発見を再現した事例は、その好例だ。\nこれらのAIシステムは、単に既存の情報を検索・要約するだけでなく、複数の情報源を統合し、新たな仮説を生成するという、より高度な知的作業を可能にしつつある。もちろん、現実世界の複雑さへの対応、真に独創的な問いを発する能力、倫理的な課題など、克服すべき点は山積している。しかし、AMIEの臨床応用への模索やCo-Scientistの研究コミュニティへの提供開始は、AIが専門家の「思考パートナー」となる未来が、もはやSFの領域ではなくなりつつあることを物語っている。\n肝要なのは、これらの技術をいかに責任ある形で社会実装していくかという点に尽きる。特に医療や科学研究といった分野では、人間の専門家による監督と検証が不可欠であり、AIはあくまで人間を支援し、その能力を拡張するためのツールとして位置づけられるべきなのだ。Google DeepMindの取り組みは、その可能性と課題の両方を我々に突きつけており、今後の動向から目が離せない。"
   },
   {
     "objectID": "posts/claude-biology/index.html",
