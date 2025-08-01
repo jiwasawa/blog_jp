@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.32</generator>
-<lastBuildDate>Sat, 12 Jul 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 01 Aug 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/openai-imo-gold/</link>
+  <description><![CDATA[ OpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/openai-imo-gold/</guid>
+  <pubDate>Fri, 01 Aug 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/107/200" medium="image"/>
+</item>
 <item>
   <title>Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,18 +126,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/claude-biology/</guid>
   <pubDate>Sun, 18 May 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/94/200" medium="image"/>
-</item>
-<item>
-  <title>Gemini 2.5 Proの衝撃：10Mトークンへの道と「思考するAI」の現在地</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/</link>
-  <description><![CDATA[ Google DeepMindの研究者へのインタビューを基に、Gemini 2.5 Proにおけるlong context能力と思考能力の技術的進化、現状の課題、そして今後の展望を分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/</guid>
-  <pubDate>Fri, 09 May 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/92/200" medium="image"/>
 </item>
 </channel>
 </rss>
