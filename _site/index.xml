@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Fri, 01 Aug 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 02 Aug 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIの「性格」をベクトルで操作する：Anthropicの「Persona Vectors」</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/</link>
+  <description><![CDATA[ Anthropic の「Persona Vectors」論文をもとにキャラクタートレーニングの最前線をみていく ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/</guid>
+  <pubDate>Sat, 02 Aug 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/109/200" medium="image"/>
+</item>
 <item>
   <title>DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,18 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/</guid>
   <pubDate>Thu, 22 May 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/98/200" medium="image"/>
-</item>
-<item>
-  <title>GPT-4.1の深層: 開発リーダーが語る「開発者が喜ぶAI」への道と、評価の賞味期限</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/</link>
-  <description><![CDATA[ GPT-4.1開発者のインタビューから、急速に進化するAI評価の課題と開発者が最新モデルを最大限に活用するためのプロンプト術やfine-tuning戦略を考える。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/</guid>
-  <pubDate>Tue, 20 May 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/95/200" medium="image"/>
 </item>
 </channel>
 </rss>
