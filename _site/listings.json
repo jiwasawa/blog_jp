@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/andrej-karpathy-agi/index.html",
       "/posts/persona-vectors/index.html",
       "/posts/demis-hassabis-lex-podcast/index.html",
       "/posts/openai-imo-gold/index.html",
