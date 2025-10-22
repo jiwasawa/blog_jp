@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/state-of-ai-2025/index.html",
       "/posts/andrej-karpathy-agi/index.html",
       "/posts/persona-vectors/index.html",
       "/posts/demis-hassabis-lex-podcast/index.html",

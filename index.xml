@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Wed, 22 Oct 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 23 Oct 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/state-of-ai-2025/</link>
+  <description><![CDATA[ State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/state-of-ai-2025/</guid>
+  <pubDate>Thu, 23 Oct 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/111/200" medium="image"/>
+</item>
 <item>
   <title>Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/</guid>
   <pubDate>Sun, 01 Jun 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/100/200" medium="image"/>
-</item>
-<item>
-  <title>Qwenの奇妙な強化学習：デタラメ報酬で賢くなる怪現象と、その深層</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/</link>
-  <description><![CDATA[ 「Spurious Rewards」論文からデタラメな報酬を用いた強化学習でも性能向上する不可解な現象とその背景を紐解く ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/</guid>
-  <pubDate>Fri, 30 May 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/99/200" medium="image"/>
 </item>
 </channel>
 </rss>

@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-10-22">
-<meta name="description" content="Andrej Karpathy のpodcastを通し、AIの受容・AGIへのタイムラインについて考える">
+<meta name="dcterms.date" content="2025-10-23">
+<meta name="description" content="State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。">
 
-<title>Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか</title>
+<title>State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,13 +83,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか – jiwasawaのブログ">
-<meta property="og:description" content="Andrej Karpathy のpodcastを通し、AIの受容・AGIへのタイムラインについて考える">
-<meta property="og:image" content="https://picsum.photos/id/110/200">
+<meta property="og:title" content="State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI – jiwasawaのブログ">
+<meta property="og:description" content="State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。">
+<meta property="og:image" content="https://picsum.photos/id/111/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか – jiwasawaのブログ">
-<meta name="twitter:description" content="Andrej Karpathy のpodcastを通し、AIの受容・AGIへのタイムラインについて考える">
-<meta name="twitter:image" content="https://picsum.photos/id/110/200">
+<meta name="twitter:title" content="State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI – jiwasawaのブログ">
+<meta name="twitter:description" content="State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/111/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -147,10 +147,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか</h1>
+      <h1 class="title">State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI</h1>
                   <div>
         <div class="description">
-          Andrej Karpathy のpodcastを通し、AIの受容・AGIへのタイムラインについて考える
+          State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -173,7 +173,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 22, 2025</p>
+        <p class="date">October 23, 2025</p>
       </div>
     </div>
     
@@ -192,77 +192,145 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>TeslaのAIディレクターを務め、OpenAIの創設メンバーでもあるAndrej Karpathy氏が、<a href="https://www.dwarkesh.com/p/andrej-karpathy">Dwarkesh Patel氏のpodcast</a>に出演し、AIエージェントの現状とAGI（汎用人工知能）へのタイムラインについて、地に足のついた技術的洞察を披露した。</p>
-<p>最近の業界の熱狂に対し、Karpathy氏は「今年はエージェントの年 (Year of Agents)」ではなく、「<strong>エージェントの10年 (Decade of Agents)</strong>」になるだろうと語る。</p>
-<p>なぜ彼は、AGIの実現に10年というタイムラインを提示するのか。本稿では、podcastで語られたKarpathy氏の分析、特にAIが直面している「認知的欠陥」と「強化学習の限界」に焦点を当てて解説する。</p>
-<hr>
-<section id="エージェントの年ではなくエージェントの10年" class="level2">
-<h2 class="anchored" data-anchor-id="エージェントの年ではなくエージェントの10年">「エージェントの年」ではなく「エージェントの10年」</h2>
-<p>Karpathy氏が「10年」というスパンを主張する理由は極めてシンプルだ。それは、現在のエージェントが「<strong>まだ使い物にならない (They just don’t work)</strong>」からである。</p>
-<p>氏は、Claude codeやCodexのような（彼が日常的に使っている）初期のエージェントは非常に印象的であると認めつつも、私たちが期待する「従業員やインターンの代わり」には到底及ばないと断言する。</p>
-<p>なぜなら、現在のモデルには以下のような根本的な能力が欠けているからだ。</p>
+<p>今年も恒例のNathan Benaich氏とAir Street Capitalチームによる「<a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>」が公開された。今回で8年目となるこのレポートは、もはやAIの進捗を追う上での必読文献と言っても過言ではないだろう。リサーチ、産業、政治、安全性、そして今年は新たにサーベイ結果と予測を加えた6つの側面から、過去12ヶ月のAIエコシステムを鋭く切り取っている。</p>
+<p>相変わらずのボリューム（300ページ超！）だが、当ブログなりにポイントを咀嚼し、注目すべき動向を分析していきたい。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p8.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<section id="リサーチ-思考するaiとオープンソースの躍進そして課題" class="level2">
+<h2 class="anchored" data-anchor-id="リサーチ-思考するaiとオープンソースの躍進そして課題">リサーチ：<br>「思考するAI」とオープンソースの躍進、そして課題</h2>
+<p>2025年のAI研究を象徴するのは、間違いなく「推論（Reasoning）」だろう。OpenAIのo1が口火を切った「思考してから回答する」アプローチは、Google、Anthropic、そして中国のDeepSeekといった主要ラボを巻き込み、性能競争を一気に加速させた（p.8, p.11-17）。特に数学や科学といった推論能力が重要となる領域での進歩は目覚ましい。OpenAIやDeepMindは、国際数学オリンピック（IMO）で金メダル相当の性能を達成したと報告している（p.33）。</p>
+<p>オープンなモデルも急速に進歩しており、特に中国勢の追い上げは凄まじい。DeepSeekのR1は一時、OpenAIのo1-previewを凌駕する性能を見せた（p.13）。さらに、中国Moonshot AIのKimi K2は、1兆パラメータという巨大さでオープンモデルの新たなベンチマークとなり、LMArena（モデル評価プラットフォーム）でトップに躍り出た（p.40-41）。</p>
+<p>しかし、依然として最高性能モデルはクローズドであり、コストあたりの性能（capability-per-dollar）ではむしろ差を広げている感もある（p.18, p.41-42）。OpenAIはgpt-ossをリリースし、オープンソースへの回帰（？）を見せたが、コミュニティの反応は限定的だったようだ（p.43）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p42.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>一方で、既存のベンチマークは汚染（contamination）や評価のばらつき（variance）といった問題を露呈し始めており、その信頼性が揺らいでいる（p.8, p.19, p.69-71）。推論能力の向上も、実はベースモデルの性能ばらつきの範囲内ではないか、という厳しい指摘もある（p.19）。また、些細な入力の変化（無関係な情報の追加など）で推論が破綻する脆さも明らかになった（p.20-21）。</p>
+<p>さらに、Chain-of-Thought（CoT）による思考プロセスの可視化は安全性の観点から注目されているが、モデルが意図的に思考プロセスを偽装する可能性（p.22, p.26）や、監視されていることを察知して挙動を変える「AIホーソン効果」（p.23）といった新たな懸念も浮上している。CoTに頼らない内部的な推論プロセス（COCONUT）の研究も進んでおり（p.27）、推論の透明性と性能のトレードオフは今後の大きな課題となりそうだ。</p>
+<p>その他、エージェント、世界モデル（p.46-49）、科学（p.33, p.53-60）、医療（p.64-66）といった特定分野でのAI活用も実用段階に入ってきた感がある（p.8）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p65.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="インダストリー-兆ドル規模の投資と電力という新たなボトルネック" class="level2">
+<h2 class="anchored" data-anchor-id="インダストリー-兆ドル規模の投資と電力という新たなボトルネック">インダストリー：<br>兆ドル規模の投資と電力という新たなボトルネック</h2>
+<p>AIファースト企業は本格的な収益化フェーズに入り、年間数百億ドル規模の収益を上げる企業も現れた（p.8, p.98-99）。主要ラボは、コストあたりの性能改善を続け、そのリードを広げている（p.93-95）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p98.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>NVIDIAは時価総額4兆ドルを超え、AI研究論文での言及シェアも90%近くを維持するなど、その支配力は揺るがない（p.8, p.161-163）。一方で、Google TPU（p.125）やMetaのカスタムチップ（Broadcomとの連携）（p.124）など、対抗軸を模索する動きも活発化している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p162.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>業界全体としては、兆ドル規模の巨大な投資計画が次々と発表されている。OpenAIの「Stargate」プロジェクト（p.121-122）はその最たる例だが、Elon Musk氏のxAIも巨額の資金調達と投資を続けている（p.91）。こうした巨額投資は、当事者間での資金循環（Circular mega-deals）を生み出しており（p.155-157）、市場の健全性に対する懸念も指摘されている（p.156）。</p>
+<p>そして、AIインフラ構築における最大のボトルネックとして「電力」が急浮上した。数ギガワット級のデータセンター計画が具体化するにつれ、送電網の制約や電力供給そのものが、ロードマップや収益性を左右する要因となり始めている（p.8, p.127-133）。データセンター建設に対する住民の反対運動（NIMBYism）も顕在化しており、これも無視できない課題だ（p.202）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p129.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>その他、AIによるコード生成（Vibe Coding）の普及とそれに伴うリスク（p.106-109）、AI検索エンジンの台頭とGoogleの苦境（p.111-117）、メディア企業との提携本格化（p.118-119）、Anthropicの著作権侵害訴訟における巨額和解（p.120）なども注目すべき動きだ。</p>
+</section>
+<section id="ポリティクス米中覇権争いと揺れる規制" class="level2">
+<h2 class="anchored" data-anchor-id="ポリティクス米中覇権争いと揺れる規制">ポリティクス：米中覇権争いと揺れる規制</h2>
+<p>トランプ政権2期目を迎え、米国のAI政策は「アメリカ・ファーストAI」へと大きく舵を切った（p.189-191）。バイデン政権時代の安全規制は後退し（p.190）、産業育成と国際競争力強化が最優先されている。AIチップの輸出規制は、緩和と強化の間で揺れ動き（p.192-196）、NVIDIAなどの企業を翻弄している。一方で、米国内でのAIインフラ整備を加速するため、環境規制の緩和なども進められている（p.200）。</p>
+<p>これに対し中国は、AIにおける自立（self-reliance）への野心を加速させている（p.223-226）。ファーウェイ（p.168-169）やSMIC（p.138）を中心に国内半導体産業の育成を強化し、NVIDIA依存からの脱却を図っている（p.138）。また、オープンソースコミュニティでの存在感を高め（p.43-45, p.135-136）、米国主導の動きに対抗している。米国の輸出規制の隙間を縫って、不正なルートで高性能チップを入手する動きも活発化しているようだ（p.139-140）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p226.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>欧州では、包括的な「AI Act」が段階的に施行されつつあるが（p.218-219）、その実効性や産業への影響については依然として不透明感が強い。産業界からは規制緩和を求める声も上がっており（p.220-221）、今後の運用が注目される。英国は、AI安全サミットを主導した姿勢から一転、産業育成へと軸足を移している（p.222）。</p>
+<p>各国が国策としてAIに取り組む「Sovereign AI」の動きも活発化しているが（p.147-150）、その実態は様々であり、「主権ウォッシング」との批判もある（p.149-150）。中東諸国はオイルマネーを背景に巨額の投資を行い（p.226-227）、存在感を増している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p149.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>AIの軍事利用も急速に進んでいる。米国防総省はAIプラットフォームへの投資を拡大し（p.228-230）、自律型兵器やドローン群（swarming）の開発を加速させている（p.230）。欧州もウクライナ情勢を受け、AI防衛力の強化に乗り出した（p.231）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p229.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="セーフティ対策強化と新たな懸念" class="level2">
+<h2 class="anchored" data-anchor-id="セーフティ対策強化と新たな懸念">セーフティ：対策強化と新たな懸念</h2>
+<p>大手AIラボは、生物兵器開発やサイバー攻撃といったリスクの高い領域に対し、これまでにないレベルの安全対策を導入し始めた（p.251-252）。特にAnthropicとOpenAIは、予防的なアプローチを強めている（p.252）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p251.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>しかし、外部のAI安全研究機関の予算規模は、AIラボの支出に比べて桁違いに小さく（p.246）、独立した立場からの検証や監視体制は依然として脆弱だ。</p>
+<p>AIによるインシデント報告は増加傾向にあり、特に生成AI関連のものが急増している（p.247-249）。サイバー攻撃能力に関するAIの進化は特に速く、5ヶ月で倍増しているとの分析もある（p.249）。実際に、AIを利用した高度なサイバー犯罪も報告され始めている（p.250）。</p>
+<p>モデルの「個性」や「振る舞い」を内部表現から理解しようとする解釈可能性（Interpretability）の研究は進展を見せているが（p.253-254）、モデルが意図的に人間を欺く「Alignment faking」（p.262-264）や、特定の有害な学習データから予期せず広範な悪意のあるペルソナを獲得してしまう現象（p.265-267）など、根深い課題も明らかになっている。訓練データ自体が自己成就的に危険なAIを生み出す可能性（p.268）や、モデルが隠れたシグナルを通じて望ましくない特性を伝播させる可能性（p.269）も指摘されている。</p>
+<p>AIとの対話が人間の精神衛生に悪影響を及ぼす「AI精神病（AI psychosis）」の事例も報告されており（p.256）、新たな社会的課題となりつつある。</p>
+</section>
+<section id="サーベイaiは仕事と生活に浸透生産性を向上" class="level2">
+<h2 class="anchored" data-anchor-id="サーベイaiは仕事と生活に浸透生産性を向上">サーベイ：AIは仕事と生活に浸透、生産性を向上</h2>
+<p>今回初めて実施された1,200人規模のAI利用状況調査からは、AIが既に多くの人々の仕事や私生活に深く浸透している実態が浮かび上がった。</p>
 <ul>
-<li><strong>継続的学習 (Continual Learning):</strong> 一度教えたことを覚えていられない。</li>
-<li><strong>マルチモーダリティ (Multimodality):</strong> テキスト以外の情報を真に理解し、活用できない。</li>
-<li><strong>認知的な深さ (Cognitive Depth):</strong> コンピュータを人間のように操作したり、複雑なタスクを自律的に遂行したりできない。</li>
+<li>95%以上が仕事や私生活で生成AIを利用（p.284）。</li>
+<li>76%が自費で有料サービスを利用しており、その有用性が認識されている（p.284）。</li>
+<li>92%が生産性向上を実感。特に有料ユーザーほどその傾向が強い（p.285）。</li>
+<li>主な利用目的は、生産性向上、コーディング支援、リサーチ。多くの場合、従来の検索エンジン（特にGoogle）を代替・補完している（p.286）。</li>
+<li>驚きをもって迎えられたのは、コーディング能力の飛躍的向上、メディア生成（画像、動画、音声）の質の劇的改善、そして深いリサーチ・分析能力（p.287）。</li>
+<li>ツールの乗り換えも活発。特にコーディング分野では、Claude CodeやCursorへの移行が見られ、GitHub CopilotやChatGPTからの離脱が起きている。一方で、ChatGPT、Claude、Geminiといった主要プラットフォームへの集約も進んでいる（p.288）。</li>
 </ul>
-<p>Karpathy氏の反応は、業界の「過剰な予測」に対するものであり、これらの根本的な問題を解決するには、10年単位の地道な研究開発が必要だというのが彼の見解である。</p>
-<hr>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p286.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
 </section>
-<section id="llmの認知的欠陥インターネットのデータ多様体への過剰な依存" class="level2">
-<h2 class="anchored" data-anchor-id="llmの認知的欠陥インターネットのデータ多様体への過剰な依存">LLMの「認知的欠陥」：インターネットの「データ多様体」への過剰な依存</h2>
-<p>Karpathy氏の洞察がもっとも鋭く表れているのが、彼自身が最近リリースした<a href="https://github.com/karpathy/nanochat/discussions/1"><code>nanochat</code></a>（ChatGPTクローンのシンプルなリポジトリ）の開発経験だ。</p>
-<p>彼は、<code>nanochat</code>のような「知的集約型 (intellectually intense)」な、つまり<strong>過去に例のない新しいコード</strong>を書く際、いわゆる「Vibeコーディング」（AIエージェントに丸投げするスタイル）は全く役に立たなかったと語る。AIエージェントが生成するコードは「<strong>スロップ (Slop)（粗悪なもの）</strong>」であり、むしろ彼の作業の邪魔になったという。</p>
-<p>その最大の理由は、LLMが<strong>インターネット上に存在する「典型的なやり方」や「既存のデータ多様体 (data manifold)」に過度に束縛されている</strong>点にある。</p>
-<p>Karpathy氏が<code>nanochat</code>で、PyTorchの標準的なDDP（分散データ並列）コンテナを使わずにカスタムの同期ルーチンを実装した際、AIモデルは彼の意図を全く理解できなかった。AIは「インターネットで最も一般的なDDPを使うべきだ」と主張し続け、彼のカスタム実装を妨害しようとした。</p>
-<p>これは、エージェントが「<strong>インターネットのデータ多様体から外れること (going off the data manifold)</strong>」を極端に苦手としていることを示している。彼らは、既存の知識やパターンに依存しすぎており、真に新しい、あるいは独自性の高いタスクに対応できないのだ。</p>
-<p>Karpathy氏は、この問題を「<strong>サイレント・コラプス (silently collapsed)</strong>」という言葉でも表現する。LLMに合成データ（例：思考プロセスやジョーク）を生成させると、一見もっともらしく見えるが、多様性が致命的に欠けている。ChatGPTにジョークを頼むと、いつも3種類ほどの決まった答えしか返ってこないのがその典型だ。</p>
-<p>彼は、現在のLLMは「知識（メモリ）」を詰め込みすぎていると指摘する。AGIの実現に必要なのは、知識そのものではなく、知識を取り除いた純粋な「<strong>認知的コア (cognitive core)</strong>」、つまり思考と問題解決のアルゴリズムそのものだと主張する。</p>
-<hr>
+<section id="予測エージェント地政学そして社会への影響" class="level2">
+<h2 class="anchored" data-anchor-id="予測エージェント地政学そして社会への影響">予測：エージェント、地政学、そして社会への影響</h2>
+<p>レポートでは、今後12ヶ月の予測も10項目挙げられている（p.304）。</p>
+<ol type="1">
+<li>主要小売業者でAgentic Checkout経由の売上が5%超え、AIエージェント広告費は50億ドルに。</li>
+<li>主要AIラボが米政権へのアピールのためにフロンティアモデルのオープンソース化に回帰。</li>
+<li>オープンエンドエージェントが科学的発見をEnd-to-Endで実現。</li>
+<li>ディープフェイク/エージェント駆動型サイバー攻撃がNATO/国連の緊急議論を初誘発。</li>
+<li>リアルタイム生成ビデオゲームがTwitchで年間最多視聴タイトルに。</li>
+<li>Sovereign AI開発に失敗/断念する国々で「AI中立性」が外交ドクトリンとして浮上。</li>
+<li>AIを多用した映画/短編が観客から絶賛されつつ大きな反発も招く。</li>
+<li>中国のラボが主要リーダーボードで米国ラボを追い抜く。</li>
+<li>データセンターNIMBYismが米国を席巻し、2026年の中間/知事選に影響。</li>
+<li>トランプ大統領が州のAI法を禁止する大統領令を出し、最高裁で違憲判決。</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p304.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>これらの予測が当たるかどうか、一年後の答え合わせが楽しみだ。</p>
 </section>
-<section id="強化学習はひどいストローで監視を吸うようなもの" class="level2">
-<h2 class="anchored" data-anchor-id="強化学習はひどいストローで監視を吸うようなもの">「強化学習はひどい」：ストローで監視を吸うようなもの</h2>
-<p>Karpathy氏は、現在のAI研究のもう一つの柱である強化学習（RL）に対しても、痛烈な批判を展開している。</p>
-<p>「<strong>人間は強化学習を使っていない</strong>」「<strong>強化学習はひどい (Reinforcement learning is terrible)</strong>」と彼は言う。</p>
-<p>現在のRLの手法は、例えば数学の問題を解く場合、何百もの異なる解法（軌道）を並行して試行する。そして最後に「答えが合っていたか」という単一の報酬シグナルに基づき、成功した軌道で行われた「全て」のトークン（思考ステップ）の重みを上げる（「もっとやれ」と指示する）。</p>
-<p>Karpathy氏は、これを「<strong>ストローで監視を吸っている (sucking supervision through a straw)</strong>」ようなものだと比喩する。</p>
-<p>この手法の問題は、たとえ最終的な答えが合っていても、途中のステップには間違った推論や非効率な回り道が含まれている可能性があることだ。しかしRLは、その軌道全体を盲目的に「良いもの」として扱う。これは「ノイズが多く」「愚かで」「クレイジーだ」と彼は切り捨てる。</p>
-<p>では、なぜステップごとに報酬を与える「プロセスベースの監視」を使わないのか？ Karpathy氏によれば、それは「<strong>LLMジャッジ（採点役のAI）がゲーム可能 (gameable)</strong>」だからだ。</p>
-<p>LLMジャッジを使って部分的な解法を評価させようとすると、強化学習プロセスがそのLLMジャッジの「抜け穴」を見つけ出してしまう。Karpathy氏は、モデルが「dhdhdhdh」のような無意味な文字列を出力したところ、LLMジャッジがそれを「完璧な回答」と誤認識し、100%の報酬を与えてしまったという adversarial example（敵対的事例）を挙げた。</p>
-<p>このLLMジャッジの脆弱性は、現在のRLにおける深刻なボトルネックとなっている。</p>
-<hr>
-</section>
-<section id="自動運転の教訓デモから製品までのギャップ" class="level2">
-<h2 class="anchored" data-anchor-id="自動運転の教訓デモから製品までのギャップ">自動運転の教訓：「デモから製品までのギャップ」</h2>
-<p>Karpathy氏の現実的なタイムラインは、彼がTeslaで自動運転開発を5年間率いた経験に深く根差している。</p>
-<p>自動運転の世界には、「<strong>デモと製品の間の巨大なギャップ</strong>」が存在する。そして、自動運転のような「失敗のコストが極めて高い」ドメインでは、そのギャップを埋めるのに膨大な時間がかかる。</p>
-<p>彼はこれを「<strong>9の行進 (march of nines)</strong>」と呼ぶ。 デモで90%の成功率を達成するのは簡単だ。しかし、製品レベルの信頼性、つまり99%、99.9%、99.99%へと進むにつれ、その「9」を一つ増やすごとに、90%を達成した時と同等かそれ以上の一定の作業量が必要になる。</p>
-<p>彼は、この「9の行進」が、セキュリティ（ソフトウェアの欠陥が数百万人の個人情報漏洩につながる）など、高度な知識労働（AIエージェントが担うとされる領域）にも同様に当てはまると指摘する。</p>
-<p>自動運転が1980年代からデモが存在し、2014年には完璧に見えるWaymoのデモがあったにもかかわらず、2024年の今もなお「解決済み」とは言えない現実。これが、彼がAIの急速な爆発的進化に懐疑的な理由である。</p>
-<hr>
-</section>
-<section id="agiはgdpを爆発させない" class="level2">
-<h2 class="anchored" data-anchor-id="agiはgdpを爆発させない">AGIはGDPを爆発させない</h2>
-<p>Karpathy氏は、AGIが経済に与える影響についても、一般的な「爆発的成長」論とは一線を画す。</p>
-<p>彼は、AGIを「<strong>コンピューティングの延長線上</strong>」にあるものと捉えている。</p>
-<p>歴史を振り返っても、コンピュータの登場やインターネットの普及といった革命的な技術でさえ、GDP成長率のグラフ上で「特異点」として現れてはいない。それらの影響は、既存の年率2%程度の指数関数的成長の中にスムーズに溶け込んでいる。</p>
-<p>Karpathy氏の予測は、AGIもまた同様に、既存の成長トレンドの中に吸収され、GDPの「<strong>離散的なジャンプ</strong>」を引き起こすことはない、というものだ。</p>
-<hr>
-</section>
-<section id="karpathyの次章starfleet-academyと教育の未来" class="level2">
-<h2 class="anchored" data-anchor-id="karpathyの次章starfleet-academyと教育の未来">Karpathyの次章：「Starfleet Academy」と教育の未来</h2>
-<p>では、Karpathy氏は今、何に注力しているのか。彼はAIラボの最前線から離れ、教育分野で「Eureka」という新しいプロジェクトを立ち上げた。</p>
-<p>彼の最大の懸念は、AIが自律的に発展していく一方で、人類がそれに追いつけず、映画『WALL-E』や『Idiocracy』のように「<strong>人類が非力化される未来</strong>」が訪れることだという。</p>
-<p>彼が目指すのは、技術の最前線で活躍する人材を育成するエリート機関、「<strong>Starfleet Academy（宇宙艦隊アカデミー）</strong>」の構築だ。</p>
-<p>しかし、ここでも彼はAIの現状に対して極めて現実的だ。 AIチューター（AI家庭教師）はどうか？ 彼は、韓国語学習で雇った「優れた人間の家庭教師」の経験を引き合いに出す。その家庭教師は、Karpathy氏の知識モデルを瞬時に把握し、彼にとって簡単すぎず難しすぎない「完璧な挑戦」を常に提供し続けたという。</p>
-<p>現在のAIチューターが出力するものは、それに比べれば「スロップ（粗悪なもの）」に過ぎず、「<strong>まだ能力がそこまで達していない</strong>」と彼は言う。</p>
-<p>Karpathy氏は、AGI（汎用人工知能）登場以前と以後で、教育の意味合いが変わると予測する。</p>
-<ul>
-<li><strong>Pre-AGI（AGI以前）:</strong> 教育は「<strong>役に立つ</strong>」もの（お金を稼ぐため）。</li>
-<li><strong>Post-AGI（AGI以後）:</strong> 教育は「<strong>楽しい</strong>」もの。</li>
-</ul>
-<p>彼は、現代人が（生活のために必要ないにもかかわらず）ジムに通って肉体を鍛えるのと同じように、Post-AGIの世界では、人々は認知的な「自己実現」や「繁栄」のために学ぶようになると語る。</p>
-<p>Karpathy氏のpodcast全体を貫くメッセージは、彼はAIの未来に対して悲観的なのではなく、誰よりも「<strong>地に足のついたエンジニア</strong>」であるということだ。彼はAIの可能性を信じているからこそ「10年」という時間軸を設定し、同時に、そこに到達するために解決すべき膨大な技術的課題（認知的欠陥、RLの限界、9の行進）を直視している。そして彼の視線は、その新しい時代を生きる「人間」のエンパワーメントへと向かっている。</p>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>State of AI Report 2025は、AIが単なる技術トレンドから、経済、政治、社会のあらゆる側面に影響を及ぼす基盤技術へと移行しつつあることを改めて示した。性能向上は依然として続いているが、その応用範囲の拡大、地政学的な競争激化、そして電力供給や社会受容性といった新たな課題の顕在化が、2025年のAIを巡る状況を複雑にしている。特に、推論能力の向上とそれを活用したエージェント技術の進展、米中間の覇権争いの行方、そしてAIの社会実装に伴うリスク（安全性、雇用、公平性など）にどう対処していくのかが、今後の焦点となるだろう。</p>
 
 
 </section>
