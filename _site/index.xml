@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Wed, 22 Oct 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 21 Oct 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Transformerを進化させた14の現代的テクニック</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/post-attention-techniques/</link>
+  <description><![CDATA[ Stephen Diehlの記事に基づき、オリジナルの「Attention」論文以降にTransformerを劇的に進化させたGQAやFlash Attentionなど14の重要な現代的テクニックを解説する ]]></description>
+  <category>LLM</category>
+  <category>Python</category>
+  <category>Transformer</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/post-attention-techniques/</guid>
+  <pubDate>Tue, 21 Oct 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/112/200" medium="image"/>
+</item>
 <item>
   <title>State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -19,7 +31,7 @@
   <category>LLM</category>
   <category>AI</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/state-of-ai-2025/</guid>
-  <pubDate>Wed, 22 Oct 2025 15:00:00 GMT</pubDate>
+  <pubDate>Mon, 20 Oct 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/111/200" medium="image"/>
 </item>
 <item>
@@ -30,7 +42,7 @@
   <category>LLM</category>
   <category>AI</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-agi/</guid>
-  <pubDate>Tue, 21 Oct 2025 15:00:00 GMT</pubDate>
+  <pubDate>Sun, 19 Oct 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/110/200" medium="image"/>
 </item>
 <item>
@@ -112,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/</guid>
   <pubDate>Thu, 05 Jun 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/102/200" medium="image"/>
-</item>
-<item>
-  <title>Bond CapitalのAIレポート：爆速進化の裏側と巨額マネーの行方</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/</link>
-  <description><![CDATA[ Mary Meeker氏らのAI Trendsレポートを基に、AI技術の進化、巨額マネーが動く開発競争、そして私たちの日常に迫る変化の核心をデータと共に読み解く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/</guid>
-  <pubDate>Sat, 31 May 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/100/200" medium="image"/>
 </item>
 </channel>
 </rss>

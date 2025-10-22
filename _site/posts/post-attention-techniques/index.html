@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-10-24">
+<meta name="description" content="Stephen Diehlの記事に基づき、オリジナルの「Attention」論文以降にTransformerを劇的に進化させたGQAやFlash Attentionなど14の重要な現代的テクニックを解説する">
+
+<title>Transformerを進化させた14の現代的テクニック</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Transformerを進化させた14の現代的テクニック – jiwasawaのブログ">
+<meta property="og:description" content="Stephen Diehlの記事に基づき、オリジナルの「Attention」論文以降にTransformerを劇的に進化させたGQAやFlash Attentionなど14の重要な現代的テクニックを解説する">
+<meta property="og:image" content="https://picsum.photos/id/112/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Transformerを進化させた14の現代的テクニック – jiwasawaのブログ">
+<meta name="twitter:description" content="Stephen Diehlの記事に基づき、オリジナルの「Attention」論文以降にTransformerを劇的に進化させたGQAやFlash Attentionなど14の重要な現代的テクニックを解説する">
+<meta name="twitter:image" content="https://picsum.photos/id/112/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Transformerを進化させた14の現代的テクニック</h1>
+                  <div>
+        <div class="description">
+          Stephen Diehlの記事に基づき、オリジナルの「Attention」論文以降にTransformerを劇的に進化させたGQAやFlash Attentionなど14の重要な現代的テクニックを解説する
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">Python</div>
+                <div class="quarto-category">Transformer</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 24, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>2017年の画期的な論文「<a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>」は、Transformerアーキテクチャを提案し、現代のAI、特に大規模言語モデル（LLM）の基盤を築いた。ChatGPTやClaudeのような驚異的なモデルの中心には、このAttentionメカニズムがある。</p>
+<p>しかし、オリジナルの論文で提案されたTransformerは、いわば「バージョン1.0」に過ぎない。今日の最先端モデルが驚異的な性能を発揮できるのは、オリジナルの論文以降に開発された、数多くの洗練された技術と最適化のおかげである。</p>
+<p>この記事では、Stephen Diehl氏の優れたブログ記事「<a href="https://www.stephendiehl.com/posts/post_transformers/">Attention Wasn’t All We Needed</a>」に基づき、オリジナルのTransformerアーキテクチャを劇的に進化させた、いくつかの重要な現代的テクニックについて見ていく。</p>
+<p>各テクニックの核となるアイデアを、できるだけ簡潔なPyTorchコード例と共に紹介する。ただし、これらの例の多くは中核的な概念をスケッチしたものであり、完全な実装については元の論文やPyTorch、Jaxなどのフレームワークにおける本番コードを参照されたい。</p>
+<ol type="1">
+<li>Group Query Attention (GQA)</li>
+<li>Multi-head Latent Attention</li>
+<li>Flash Attention</li>
+<li>Ring Attention</li>
+<li>Pre-normalization</li>
+<li>RMSNorm</li>
+<li>SwiGLU</li>
+<li>Rotary Positional Embedding (RoPE)</li>
+<li>Mixture of Experts (MoE)</li>
+<li>Learning Rate Warmup</li>
+<li>Cosine Schedule</li>
+<li>AdamW Optimizer</li>
+<li>Multi-token Prediction</li>
+<li>Speculative Decoding</li>
+</ol>
+<hr>
+<section id="group-query-attention-gqa" class="level2">
+<h2 class="anchored" data-anchor-id="group-query-attention-gqa">1. Group Query Attention (GQA)</h2>
+<p><strong>Grouped Query Attention (GQA)</strong> は、推論時の<strong>KVキャッシュ</strong>（Key-Valueキャッシュ）のメモリ使用量を削減するための技術である。これは標準のMulti-head Attention (MHA) に対するアーキテクチャの最適化である。</p>
+<p>GQAの基本的なアイデアは、MHAの計算上およびメモリ上のボトルネックが、K（キー）とV（バリュー）の射影とそのキャッシュサイズに大きく影響されるという観察に基づいている。GQAは、複数のQ（クエリ）ヘッドで単一のKとVの射影セットを共有することにより、このコストを削減する。</p>
+<p>MHAのように<span class="math inline">\(N_h\)</span>個のQ, K, Vヘッドを持つ代わりに、GQAは<span class="math inline">\(N_h\)</span>個のQヘッドを使用するが、K/Vヘッドは<span class="math inline">\(N_{kv}\)</span>個のみ（ここで <span class="math inline">\(N_{kv} &lt; N_h\)</span>）使用する。<span class="math inline">\(N_h\)</span>個のQヘッドは<span class="math inline">\(N_{kv}\)</span>個のグループに分割され、各グループ（<span class="math inline">\(N_h / N_{kv}\)</span>個のQヘッド）が<em>同じ</em>KヘッドとVヘッドにアテンドする。この構造により、KとVの射影行列のパラメータ数が大幅に削減され、さらに重要なことに、自己回帰デコーディング中に必要なK/Vキャッシュのサイズが縮小する。</p>
+<p>実装では、コード例の<code>repeat_interleave</code>ステップで示されるように、<span class="math inline">\(N_{kv}\)</span>個のK/Vヘッドを計算し、それらを<span class="math inline">\(g = N_h / N_{kv}\)</span>（グループサイズ）回繰り返すかインターリーブして、<span class="math inline">\(N_h\)</span>個のQヘッドと一致させてからアテンションスコアを計算する。</p>
+<p>GQAは主に、モデルのパフォーマンスを大幅に損なうことなく、推論速度を高速化し、メモリ要件を削減する技術として使用される。K/Vヘッドの数を減らすことで、GQAは各デコーディングステップでK/Vキャッシュをロードするために必要なメモリ帯域幅を劇的に削減する。これは推論時の主要なボトルネックである。<span class="math inline">\(N_{kv}=1\)</span>とする極端な形式は、<strong>Multi-query attention (MQA)</strong> と呼ばれる。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.optim.optimizer <span class="im">import</span> Optimizer</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.optim.lr_scheduler <span class="im">import</span> _LRScheduler</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GroupQueryAttention(nn.Module):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, num_heads, num_kv_heads<span class="op">=</span><span class="va">None</span>, head_dim<span class="op">=</span><span class="dv">64</span>, dropout<span class="op">=</span><span class="fl">0.0</span>):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dim <span class="op">=</span> dim</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_heads <span class="op">=</span> num_heads</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_kv_heads <span class="op">=</span> num_kv_heads <span class="cf">if</span> num_kv_heads <span class="cf">else</span> num_heads</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head_dim <span class="op">=</span> head_dim</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># num_heads が num_kv_heads で割り切れることを確認</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> <span class="va">self</span>.num_heads <span class="op">%</span> <span class="va">self</span>.num_kv_heads <span class="op">==</span> <span class="dv">0</span>, <span class="st">"num_heads must be divisible by num_kv_heads"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 1つのK/Vヘッドあたりのクエリ数</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_queries_per_kv <span class="op">=</span> <span class="va">self</span>.num_heads <span class="op">//</span> <span class="va">self</span>.num_kv_heads</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 射影</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.q_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.k_proj <span class="op">=</span> nn.Linear(dim, <span class="va">self</span>.num_kv_heads <span class="op">*</span> head_dim)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.v_proj <span class="op">=</span> nn.Linear(dim, <span class="va">self</span>.num_kv_heads <span class="op">*</span> head_dim)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.o_proj <span class="op">=</span> nn.Linear(num_heads <span class="op">*</span> head_dim, dim)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(dropout)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> x.shape</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Q, K, V への射影</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> <span class="va">self</span>.q_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="va">self</span>.k_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_kv_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> <span class="va">self</span>.v_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_kv_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># アテンション計算のために転置</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> q.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, seq_len, head_dim]</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> k.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_kv_heads, seq_len, head_dim]</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> v.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_kv_heads, seq_len, head_dim]</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># グループ内の各クエリヘッドのために k, v をリピート</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> k.repeat_interleave(<span class="va">self</span>.num_queries_per_kv, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> v.repeat_interleave(<span class="va">self</span>.num_queries_per_kv, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># スケール化ドット積アテンション</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        scale <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> math.sqrt(<span class="va">self</span>.head_dim)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        attn <span class="op">=</span> torch.matmul(q, k.transpose(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">*</span> scale</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># マスク適用（もしあれば）</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>            attn <span class="op">=</span> attn.masked_fill(mask <span class="op">==</span> <span class="dv">0</span>, <span class="op">-</span><span class="fl">1e9</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Softmax と ドロップアウト</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        attn <span class="op">=</span> torch.softmax(attn, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        attn <span class="op">=</span> <span class="va">self</span>.dropout(attn)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="co"># アテンションをバリューに適用</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> torch.matmul(attn, v)  <span class="co"># [batch_size, num_heads, seq_len, head_dim]</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> out.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力射影</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> <span class="va">self</span>.o_proj(out)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="multi-head-latent-attention" class="level2">
+<h2 class="anchored" data-anchor-id="multi-head-latent-attention">2. Multi-head Latent Attention</h2>
+<p><strong>Multi-head Latent Attention</strong> は、学習可能な「潜在（latent）」ベクトルを導入し、これが入力シーケンス要素間の中間的なボトルネックとして機能する。</p>
+<p>中核となるアイデアは、標準的なSelf-Attentionに固有の、シーケンス長<span class="math inline">\(L\)</span>に対する二乗の計算コスト <span class="math inline">\(O(L^2)\)</span> を緩和することである。すべての入力要素が他のすべての要素に直接アテンドする代わりに、入力はまず固定数の潜在ユニット（<span class="math inline">\(N_{\text{latents}}\)</span>）にアテンドし、次にこれらの潜在ユニットが入力（またはその変種）にアテンドし返す。</p>
+<p>これにより、長い入力シーケンス内の直接的な相互作用が、はるかに小さな潜在セットを介した2つのCross-Attentionステップに置き換えられる。このアプローチは、入力シーケンスからの本質的な情報が、これらの潜在表現に効果的に要約または圧縮できるという仮定に基づいている。<span class="math inline">\(N_{\text{latents}} \ll L\)</span> の場合、計算量を大幅に削減しつつ、表現力を維持する。</p>
+<p>このメカニズムは、主に2段階のアテンション計算を含む。</p>
+<ol type="1">
+<li><strong>潜在-入力アテンション</strong>: 潜在ベクトル（<span class="math inline">\(Q_L\)</span>）が入力（<span class="math inline">\(K_X, V_X\)</span>）にアテンドし、入力から情報を集約する。 <span class="math display">\[H_L = \text{Attention}(Q_L, K_X, V_X)\]</span></li>
+<li><strong>入力-潜在アテンション</strong>: 入力（<span class="math inline">\(Q_X\)</span>）が潜在ベクトル（<span class="math inline">\(K_L\)</span>）にアテンドし、更新された潜在表現（<span class="math inline">\(H_L\)</span>）から情報を集約する。 <span class="math display">\[O = \text{Attention}(Q_X, K_L, H_L)\]</span></li>
+</ol>
+<p>この技術は、標準的なSelf-Attentionが計算的に実行不可能な、非常に長いシーケンスや高次元の入力を扱うアーキテクチャ（例：Perceiver）で主に使用される。計算量は<span class="math inline">\(O(L^2)\)</span>から<span class="math inline">\(O(L \cdot N_{\text{latents}})\)</span>に削減される。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadLatentAttention(nn.Module):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, num_heads, num_latents<span class="op">=</span><span class="dv">64</span>, head_dim<span class="op">=</span><span class="dv">64</span>, dropout<span class="op">=</span><span class="fl">0.0</span>):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dim <span class="op">=</span> dim</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_heads <span class="op">=</span> num_heads</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_latents <span class="op">=</span> num_latents</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head_dim <span class="op">=</span> head_dim</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 射影</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.q_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.k_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.v_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.o_proj <span class="op">=</span> nn.Linear(num_heads <span class="op">*</span> head_dim, dim)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 潜在ベクトル（学習可能）</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.latents <span class="op">=</span> nn.Parameter(torch.randn(<span class="dv">1</span>, num_latents, dim))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(dropout)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> x.shape</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># このバッチのための潜在ベクトルを取得</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        latents <span class="op">=</span> <span class="va">self</span>.latents.expand(batch_size, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 入力を Q, K, V に射影</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        q_x <span class="op">=</span> <span class="va">self</span>.q_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        k_x <span class="op">=</span> <span class="va">self</span>.k_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        v_x <span class="op">=</span> <span class="va">self</span>.v_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 潜在ベクトルを Q, K, V に射影</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        q_latents <span class="op">=</span> <span class="va">self</span>.q_proj(latents).reshape(batch_size, <span class="va">self</span>.num_latents, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        k_latents <span class="op">=</span> <span class="va">self</span>.k_proj(latents).reshape(batch_size, <span class="va">self</span>.num_latents, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        v_latents <span class="op">=</span> <span class="va">self</span>.v_proj(latents).reshape(batch_size, <span class="va">self</span>.num_latents, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># アテンション計算のために転置</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        q_x <span class="op">=</span> q_x.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, seq_len, head_dim]</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        k_x <span class="op">=</span> k_x.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, seq_len, head_dim]</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        v_x <span class="op">=</span> v_x.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, seq_len, head_dim]</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        q_latents <span class="op">=</span> q_latents.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, num_latents, head_dim]</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        k_latents <span class="op">=</span> k_latents.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, num_latents, head_dim]</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        v_latents <span class="op">=</span> v_latents.transpose(<span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># [batch_size, num_heads, num_latents, head_dim]</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># アテンションのためのスケール係数</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        scale <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> math.sqrt(<span class="va">self</span>.head_dim)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 1. 潜在 -&gt; 入力 アテンション</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        attn_latent_to_input <span class="op">=</span> torch.matmul(q_latents, k_x.transpose(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">*</span> scale</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>            latent_mask <span class="op">=</span> mask.unsqueeze(<span class="dv">1</span>).expand(<span class="op">-</span><span class="dv">1</span>, <span class="va">self</span>.num_heads, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            attn_latent_to_input <span class="op">=</span> attn_latent_to_input.masked_fill(latent_mask <span class="op">==</span> <span class="dv">0</span>, <span class="op">-</span><span class="fl">1e9</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        attn_latent_to_input <span class="op">=</span> torch.softmax(attn_latent_to_input, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        attn_latent_to_input <span class="op">=</span> <span class="va">self</span>.dropout(attn_latent_to_input)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="co"># アテンション重みを入力バリューに適用</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        latent_output <span class="op">=</span> torch.matmul(attn_latent_to_input, v_x)  <span class="co"># [batch_size, num_heads, num_latents, head_dim]</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 2. 入力 -&gt; 潜在 アテンション</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        attn_input_to_latent <span class="op">=</span> torch.matmul(q_x, k_latents.transpose(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">*</span> scale</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        attn_input_to_latent <span class="op">=</span> torch.softmax(attn_input_to_latent, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        attn_input_to_latent <span class="op">=</span> <span class="va">self</span>.dropout(attn_input_to_latent)</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 更新された潜在バリューをバリューとして使用</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> torch.matmul(attn_input_to_latent, latent_output)  <span class="co"># [batch_size, num_heads, seq_len, head_dim]</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="co"># リシェイプして出力射影</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.o_proj(output)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="flash-attention" class="level2">
+<h2 class="anchored" data-anchor-id="flash-attention">3. Flash Attention</h2>
+<p><strong>Flash Attention</strong> は、特に長いシーケンスにおいて、標準的なSelf-Attentionメカニズムに固有の重大なメモリボトルネックに対処する技術である。</p>
+<p>従来のアプローチでは、アテンションスコア行列 <span class="math inline">\(S = QK^T\)</span>（ここで <span class="math inline">\(Q, K \in \mathbb{R}^{N \times d}\)</span>）全体を計算する。これには、<span class="math inline">\(N \times N\)</span> 行列 <span class="math inline">\(S\)</span> を格納する必要があり、シーケンス長 <span class="math inline">\(N\)</span> に対して <span class="math inline">\(O(N^2)\)</span> のメモリ複雑性を持つ。</p>
+<p>Flash Attentionは、この巨大な <span class="math inline">\(N \times N\)</span> の <span class="math inline">\(S\)</span> 行列をGPUの低速な高帯域幅メモリ（HBM）に<strong>実体化（materialize）して保存することを避ける</strong>。代わりに、**タイリング（tiling）<strong>と</strong>再計算（recomputation）**の技術を活用し、アテンション計算をはるかに高速なオンチップSRAMに収まる小さなブロックで処理する。</p>
+<p>Flash Attentionは、KとVの行列をブロックに分割し、SRAMに反復的にロードする。そして、Qの各ブロックに対して、SRAM上にある現在のKブロックとのアテンションスコアを計算する。重要なのは、**オンラインソフトマックス（online softmax）**アルゴリズムを採用している点である。これにより、完全な <span class="math inline">\(N \times N\)</span> 行列を必要とせずに、ブロックごとに正しくスケーリングされたアテンション出力を計算できる。</p>
+<p>中間結果を高速なSRAM内に保持し、HBMへのデータ転送を最小限に抑えることで、Flash Attentionはシーケンス長に関連するメモリフットプリントを <span class="math inline">\(O(N^2)\)</span> から <span class="math inline">\(O(N)\)</span>（Q, K, V自体の格納が支配的）に削減し、メモリアクセスパターンの改善により大幅なスピードアップを実現する。</p>
+<p>実際には、FlashAttentionは高度に最適化されたCUDAカーネルのファミリーである。以下は、PyTorchでの最小限のトイ実装と、<code>flash-attn</code>ライブラリの実際の使用例である。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># トイ実装</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FlashAttention(nn.Module):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, num_heads, head_dim<span class="op">=</span><span class="dv">64</span>, dropout<span class="op">=</span><span class="fl">0.0</span>, block_size<span class="op">=</span><span class="dv">1024</span>):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dim <span class="op">=</span> dim</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_heads <span class="op">=</span> num_heads</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head_dim <span class="op">=</span> head_dim</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.block_size <span class="op">=</span> block_size <span class="co"># トイ実装でのシミュレーション用</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 射影</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.q_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.k_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.v_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.o_proj <span class="op">=</span> nn.Linear(num_heads <span class="op">*</span> head_dim, dim)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(dropout)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _flash_attention_forward(<span class="va">self</span>, q, k, v, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># これはFlash Attentionの簡略化された近似です</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 実際にはカスタムCUDAカーネルを使用します</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        batch_size, num_heads, seq_len, head_dim <span class="op">=</span> q.shape</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        scale <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> math.sqrt(head_dim)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力とアテンション統計を初期化</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> torch.zeros_like(q)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># オンラインソフトマックスのための正規化項</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        normalizer <span class="op">=</span> torch.zeros((batch_size, num_heads, seq_len, <span class="dv">1</span>), device<span class="op">=</span>q.device)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># キーとバリューのブロックを処理</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> block_start <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, seq_len, <span class="va">self</span>.block_size):</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            block_end <span class="op">=</span> <span class="bu">min</span>(block_start <span class="op">+</span> <span class="va">self</span>.block_size, seq_len)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># キーとバリューのブロックを抽出（SRAMにロードするイメージ）</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            k_block <span class="op">=</span> k[:, :, block_start:block_end]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>            v_block <span class="op">=</span> v[:, :, block_start:block_end]</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>            <span class="co"># このブロックのアテンションスコアを計算</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>            attn_scores <span class="op">=</span> torch.matmul(q, k_block.transpose(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">*</span> scale</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                block_mask <span class="op">=</span> mask[:, :, :, block_start:block_end]</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                attn_scores <span class="op">=</span> attn_scores.masked_fill(block_mask <span class="op">==</span> <span class="dv">0</span>, <span class="op">-</span><span class="fl">1e9</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Softmaxを適用（ただし、これはまだ「オンライン」ではない）</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>            attn_probs <span class="op">=</span> torch.softmax(attn_scores, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            attn_probs <span class="op">=</span> <span class="va">self</span>.dropout(attn_probs)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>            <span class="co"># このブロックのアテンション結果で出力を更新</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>            output <span class="op">+=</span> torch.matmul(attn_probs, v_block)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>            normalizer <span class="op">+=</span> attn_probs.<span class="bu">sum</span>(dim<span class="op">=-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># 正規化項を蓄積</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力を正規化（簡略化されたバージョン）</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output <span class="op">/</span> (normalizer <span class="op">+</span> <span class="fl">1e-6</span>)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> x.shape</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> <span class="va">self</span>.q_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="va">self</span>.k_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> <span class="va">self</span>.v_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>._flash_attention_forward(q, k, v, mask)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.o_proj(output)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `flash-attn` ライブラリの実際の使用例</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (pip install flash-attn が必要)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># import torch</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># from flash_attn import flash_attn_qkvpacked_func</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># # 最小限の構成</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># BATCH_SIZE, SEQ_LEN, NUM_HEADS, HEAD_DIM = 2, 64, 4, 32</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># CAUSAL = False</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># DTYPE = torch.float16</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># DEVICE = "cuda" # Flash AttentionはCUDAを必要とします</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># # ダミーのパックされたQKVテンソルを作成</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># # Shape: (batch_size, seq_len, 3, num_heads, head_dim)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># qkv = torch.randn(</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     BATCH_SIZE,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     SEQ_LEN,</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     3,</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     NUM_HEADS,</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     HEAD_DIM,</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     dtype=DTYPE,</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     device=DEVICE,</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"Input qkv shape: {qkv.shape}")</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co"># # FlashAttentionのパックされたQKV関数を呼び出し</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co"># output = flash_attn_qkvpacked_func(</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     qkv,</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     dropout_p=0.0,</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     causal=CAUSAL,</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     softmax_scale=None # デフォルトのスケーリングを使用</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># # Output shape: (batch_size, seq_len, num_heads, head_dim)</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"Output shape: {output.shape}")</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co"># print("FlashAttention call successful.")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="ring-attention" class="level2">
+<h2 class="anchored" data-anchor-id="ring-attention">4. Ring Attention</h2>
+<p><strong>Ring Attention</strong> は、Self-Attentionのブロックワイズ計算を複数のGPUで使用し、単一のデバイスには収まらないような非常に長いシーケンスの学習と推論を可能にする。</p>
+<p>中核となるアイデアは、複数のプロセッシングユニット（GPUなど）を概念的な<strong>リングトポロジ</strong>に配置し、計算を分散させることである。このアプローチでは、単一のデバイスが<code>K</code>および<code>V</code>テンソル全体を保持する必要がない。代わりに、これらのテンソルはシーケンス長の次元に沿ってシャーディング（分割）され、デバイスごとのピークメモリ要件を劇的に削減する。</p>
+<p>実用的な分散実装では、各デバイスはアテンション計算を同期ステップで展開する。各ステップで、デバイスはローカルの<code>Q</code>シャードと現在所有している<code>K</code>シャードを使用して、部分的なアテンションスコアを計算する。重要な要素はその後の通信である。<code>K</code>と<code>V</code>のシャードがリング内の次のデバイスに渡される。このローテーションは、すべての<code>Q</code>シャードがすべての<code>K/V</code>シャードと相互作用するまで繰り返される。</p>
+<p>以下のPython例は、実際のマルチGPUハードウェアを必要とせずに、単一デバイス上でRing Attentionのロジックを<strong>シミュレート</strong>したものである。<code>_simulate_ring_attention</code>関数は、<code>K</code>と<code>V</code>テンソルのスライスを選択することで、分散プロセスを模倣する。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> RingAttention(nn.Module):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, num_heads, head_dim<span class="op">=</span><span class="dv">64</span>, dropout<span class="op">=</span><span class="fl">0.0</span>, num_shards<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dim <span class="op">=</span> dim</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_heads <span class="op">=</span> num_heads</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head_dim <span class="op">=</span> head_dim</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_shards <span class="op">=</span> num_shards <span class="co"># GPUの数（シミュレーション用）</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 射影</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.q_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.k_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.v_proj <span class="op">=</span> nn.Linear(dim, num_heads <span class="op">*</span> head_dim)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.o_proj <span class="op">=</span> nn.Linear(num_heads <span class="op">*</span> head_dim, dim)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(dropout)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _simulate_ring_attention(<span class="va">self</span>, q, k, v, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 実際のマルチGPUサポートなしでリングアテンションをシミュレート</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        batch_size, num_heads, seq_len, head_dim <span class="op">=</span> q.shape</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        scale <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> math.sqrt(head_dim)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># シャードサイズを計算</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        shard_size <span class="op">=</span> (seq_len <span class="op">+</span> <span class="va">self</span>.num_shards <span class="op">-</span> <span class="dv">1</span>) <span class="op">//</span> <span class="va">self</span>.num_shards</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力を初期化</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> torch.zeros_like(q)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        normalizer <span class="op">=</span> torch.zeros((batch_size, num_heads, seq_len, <span class="dv">1</span>), device<span class="op">=</span>q.device)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># シャード処理をシミュレート</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> shard_idx <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.num_shards):</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            start_idx <span class="op">=</span> shard_idx <span class="op">*</span> shard_size</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            end_idx <span class="op">=</span> <span class="bu">min</span>(start_idx <span class="op">+</span> shard_size, seq_len)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># このシャードの K と V を処理（実際にはこれがデバイス間で渡される）</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> start_idx <span class="op">&lt;</span> seq_len:</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                k_shard <span class="op">=</span> k[:, :, start_idx:end_idx]</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>                v_shard <span class="op">=</span> v[:, :, start_idx:end_idx]</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                <span class="co"># アテンションスコアを計算（Qは全デバイスで同じと仮定）</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>                attn_scores <span class="op">=</span> torch.matmul(q, k_shard.transpose(<span class="dv">2</span>, <span class="dv">3</span>)) <span class="op">*</span> scale</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>                    shard_mask <span class="op">=</span> mask[:, :, :, start_idx:end_idx]</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>                    attn_scores <span class="op">=</span> attn_scores.masked_fill(shard_mask <span class="op">==</span> <span class="dv">0</span>, <span class="op">-</span><span class="fl">1e9</span>)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Softmax（シャード全体で蓄積される）</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>                attn_probs <span class="op">=</span> torch.softmax(attn_scores, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>                attn_probs <span class="op">=</span> <span class="va">self</span>.dropout(attn_probs)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>                <span class="co"># 出力と正規化項を更新</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>                output <span class="op">+=</span> torch.matmul(attn_probs, v_shard)</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>                normalizer <span class="op">+=</span> attn_probs.<span class="bu">sum</span>(dim<span class="op">=-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力を正規化</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output <span class="op">/</span> (normalizer <span class="op">+</span> <span class="fl">1e-6</span>)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> x.shape</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> <span class="va">self</span>.q_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="va">self</span>.k_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> <span class="va">self</span>.v_proj(x).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads, <span class="va">self</span>.head_dim).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>._simulate_ring_attention(q, k, v, mask)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.o_proj(output)</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="pre-normalization-pre-ln" class="level2">
+<h2 class="anchored" data-anchor-id="pre-normalization-pre-ln">5. Pre-normalization (Pre-LN)</h2>
+<p><strong>Pre-normalization</strong>（または<strong>Pre-LN</strong>）は、Transformerの残差ブロックの設計における重要な変更点である。</p>
+<p>従来のPost-normalization（Post-LN）では、正規化レイヤー（LayerNorm）がメインの操作（Self-AttentionやFFN）の<em>後</em>に適用されていた。Pre-normalizationは、それを<em>前</em>に適用するように変更する。</p>
+<p>この小さな変更が、学習のダイナミクスに大きな影響を与える。入力を計算量の多いサブレイヤー（AttentionやFFN）に通す<em>前</em>に正規化することで、ネットワークを流れる活性化と勾配を安定させる。この安定化効果は、特に非常に深いネットワークにおいて顕著であり、勾配消失・爆発の問題を軽減し、より高い学習率の使用や、より速く信頼性の高い収束を可能にすることが多い。</p>
+<p>典型的な実装は <span class="math inline">\(x + f(\text{norm}(x))\)</span> という構造に従う。ここで、<span class="math inline">\(x\)</span>はブロックへの入力、<span class="math inline">\(\text{norm}(\cdot)\)</span>は正規化関数（LayerNormやRMSNorm）、<span class="math inline">\(f(\cdot)\)</span>はメインの変換関数（MHAやFFN）である。正規化された出力が関数<code>fn</code>によって処理され、その出力が<strong>元の正規化されていない入力</strong> <span class="math inline">\(x\)</span> に残差接続を介して足し戻される。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RMSNormクラスはセクション6で定義</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> RMSNorm(nn.Module):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, eps<span class="op">=</span><span class="fl">1e-8</span>, elementwise_affine<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.eps <span class="op">=</span> eps</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.elementwise_affine <span class="op">=</span> elementwise_affine</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> elementwise_affine:</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.weight <span class="op">=</span> nn.Parameter(torch.ones(dim))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.register_parameter(<span class="st">'weight'</span>, <span class="va">None</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        rms <span class="op">=</span> torch.sqrt(torch.mean(x <span class="op">**</span> <span class="dv">2</span>, dim<span class="op">=-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="op">+</span> <span class="va">self</span>.eps)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        x_normalized <span class="op">=</span> x <span class="op">/</span> rms</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.elementwise_affine:</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>            x_normalized <span class="op">=</span> x_normalized <span class="op">*</span> <span class="va">self</span>.weight</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_normalized</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PreNorm(nn.Module):</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, fn, norm_type<span class="op">=</span><span class="st">'layer'</span>):</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fn <span class="op">=</span> fn</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> norm_type <span class="op">==</span> <span class="st">'layer'</span>:</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.norm <span class="op">=</span> nn.LayerNorm(dim)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> norm_type <span class="op">==</span> <span class="st">'rms'</span>:</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.norm <span class="op">=</span> RMSNorm(dim) <span class="co"># 次のセクションで定義</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Unknown normalization type: </span><span class="sc">{</span>norm_type<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, <span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 最初に正規化を適用し、次に関数を適用</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># そして元の x を足し合わせる（残差接続）</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fn(<span class="va">self</span>.norm(x), <span class="op">*</span>args, <span class="op">**</span>kwargs) <span class="op">+</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="rmsnorm" class="level2">
+<h2 class="anchored" data-anchor-id="rmsnorm">6. RMSNorm</h2>
+<p><strong>RMSNorm (Root Mean Square Normalization)</strong> は、広く使われているLayerNormを簡略化したもので、計算オーバーヘッドを削減しつつ、同等のパフォーマンスを維持し、しばしば学習の安定性を向上させるように設計されている。</p>
+<p>LayerNormが平均を減算して活性化を中央揃えにし、標準偏差でスケーリングするのとは異なり、RMSNormは<strong>平均の中央揃えステップを完全に省略</strong>する。この簡略化の背景には、LayerNormの再センタリング操作が計算コストの大部分を占めており、それを取り除いてもモデルのパフォーマンスに大きな害はない（時には利益さえある）という経験的な観察がある。</p>
+<p>RMSNormは、入力の二乗平均平方根（RMS）の大きさに基づいて入力を再スケーリングするだけである。入力ベクトル <span class="math inline">\(x = (x_1, \dots, x_n)\)</span> に対して、RMS値は <span class="math inline">\(\text{RMS}(x) = \sqrt{\frac{1}{n} \sum_{i=1}^n x_i^2}\)</span> として計算される。正規化された出力 <span class="math inline">\(\bar{x}_i\)</span> は <span class="math inline">\(\bar{x}_i = \frac{x_i}{\text{RMS}(x) + \epsilon}\)</span> となる。</p>
+<p>LayerNormと同様に、RMSNormも学習可能なスケーリングパラメータ <span class="math inline">\(g\)</span> を含み、最終的な出力は <span class="math inline">\(y_i = g_i \bar{x}_i\)</span> となる（バイアス <span class="math inline">\(b\)</span> は省略されることが多い）。平均計算を省くことで、RMSNormは計算量とメモリ使用量を削減し、特に大規模モデルにおいて魅力的な代替手段となっている。</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> RMSNorm(nn.Module):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, eps<span class="op">=</span><span class="fl">1e-8</span>, elementwise_affine<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.eps <span class="op">=</span> eps</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.elementwise_affine <span class="op">=</span> elementwise_affine</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> elementwise_affine:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 学習可能なスケーリングパラメータ（weight）</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.weight <span class="op">=</span> nn.Parameter(torch.ones(dim))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.register_parameter(<span class="st">'weight'</span>, <span class="va">None</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 最後の次元（特徴量次元）に沿って二乗平均平方根を計算</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        rms <span class="op">=</span> torch.sqrt(torch.mean(x <span class="op">**</span> <span class="dv">2</span>, dim<span class="op">=-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="op">+</span> <span class="va">self</span>.eps)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># RMSで正規化</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        x_normalized <span class="op">=</span> x <span class="op">/</span> rms</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 学習可能なスケーリングを適用</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.elementwise_affine:</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            x_normalized <span class="op">=</span> x_normalized <span class="op">*</span> <span class="va">self</span>.weight</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_normalized</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="swiglu" class="level2">
+<h2 class="anchored" data-anchor-id="swiglu">7. SwiGLU</h2>
+<p><strong>SwiGLU</strong>は、Gated Linear Unit (GLU) ファミリーから派生した活性化関数で、ニューラルネットワークの性能を向上させるために特別に調整された。</p>
+<p>GLUベースの活性化の基本的な概念は、ネットワークを流れる情報の流れを適応的に制御する<strong>ゲーティング（gating）メカニズム</strong>を導入することである。SwiGLUは、ゲート部分に適用する特定の非線形関数として<strong>SiLU (Sigmoid-weighted Linear Unit)</strong>、別名<strong>Swish</strong>（<span class="math inline">\(\text{SiLU}(x) = x \cdot \sigma(x)\)</span>、<span class="math inline">\(\sigma\)</span>はシグモイド関数）を採用している点で区別される。</p>
+<p>SwiGLUの動作メカニズムは、通常、FFNブロック内で入力を2つの独立した線形変換（<span class="math inline">\(Wx+b\)</span> と <span class="math inline">\(Vx+c\)</span>）に射影する。SwiGLU活性化は <span class="math inline">\(\text{SwiGLU}(x) = \text{SiLU}(Wx + b) \odot (Vx + c)\)</span> として計算される（<span class="math inline">\(\odot\)</span>は要素ごとの乗算）。</p>
+<p>効果として、一方のパスがSiLU活性化を経てゲート値となり、それがもう一方のパスの出力をスケーリングする。このゲーティングにより、ネットワークは入力コンテキストに基づいてどの特徴を前方に渡すかを動的に制御でき、ReLUのような単純な活性化関数よりも高い表現力とより良い勾配フローをもたらす。PaLMやLLaMAのようなモデルでの成功がその有効性を強調している。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SwiGLU(nn.Module):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_in, dim_hidden<span class="op">=</span><span class="va">None</span>, dim_out<span class="op">=</span><span class="va">None</span>, bias<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 中間層の次元。指定がなければ入力の4倍（標準的なFFN設計）</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        dim_hidden <span class="op">=</span> dim_hidden <span class="kw">or</span> <span class="dv">4</span> <span class="op">*</span> dim_in</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        dim_out <span class="op">=</span> dim_out <span class="kw">or</span> dim_in</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># GLUの2つの並列な線形層</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.w1 <span class="op">=</span> nn.Linear(dim_in, dim_hidden, bias<span class="op">=</span>bias) <span class="co"># ゲート用</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.w2 <span class="op">=</span> nn.Linear(dim_in, dim_hidden, bias<span class="op">=</span>bias) <span class="co"># 値用</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力射影</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.w3 <span class="op">=</span> nn.Linear(dim_hidden, dim_out, bias<span class="op">=</span>bias)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 2つの並列パス</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        hidden1 <span class="op">=</span> <span class="va">self</span>.w1(x)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        hidden2 <span class="op">=</span> <span class="va">self</span>.w2(x)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># SiLU (Swish) 活性化: x * sigmoid(x)</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        hidden1_act <span class="op">=</span> hidden1 <span class="op">*</span> torch.sigmoid(hidden1)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ゲートを適用（要素ごとの乗算）</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> hidden1_act <span class="op">*</span> hidden2</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力射影</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.w3(hidden)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="rotary-positional-embedding-rope" class="level2">
+<h2 class="anchored" data-anchor-id="rotary-positional-embedding-rope">8. Rotary Positional Embedding (RoPE)</h2>
+<p><strong>Rotary Positional Embedding (RoPE)</strong> は、TransformerのSelf-Attentionメカニズムに<strong>相対的な位置依存性</strong>を効果的に組み込むためのエレガントな手法である。</p>
+<p>従来のアプローチ（絶対位置エンコーディングの加算など）とは異なり、RoPEは位置エンコーディングを、Query (Q) と Key (K) ベクトルのドット積が計算される<em>前</em>に適用される<strong>回転操作</strong>として捉える。</p>
+<p>重要な洞察は、位置<span class="math inline">\(m\)</span>のQベクトルと位置<span class="math inline">\(n\)</span>のKベクトルを、それぞれ<span class="math inline">\(m\)</span>と<span class="math inline">\(n\)</span>に比例する角度で回転させることにより、結果として得られるドット積が、ベクトルの大きさ（ノルム）を変えることなく、<strong>相対位置 <span class="math inline">\(m - n\)</span> のみに依存する</strong>形でエンコードされるという点である。</p>
+<p>この回転は、埋め込み次元をペアに分割し、三角関数（<code>cos</code>, <code>sin</code>）を用いて効率的に実装される。<code>RotaryEmbedding</code>クラスは、シーケンス長と次元に基づいて必要な<code>cos</code>と<code>sin</code>の値を事前計算する。<code>apply_rotary_pos_emb</code>関数は、これらの値を使用してQとKベクトルを変換する。</p>
+<p>RoPEは、QとKの射影が計算された<em>後</em>、アテンションスコアが計算される<em>前</em>に適用される。この方法は、相対位置を自然にエンコードし、学習中に見たことのない長いシーケンスへの汎化性能が高いことを示しており、LLaMAなどの現代のLLMで広く採用されている。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> RotaryEmbedding(nn.Module):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim, base<span class="op">=</span><span class="dv">10000</span>, interleaved<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.dim <span class="op">=</span> dim</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.base <span class="op">=</span> base</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.interleaved <span class="op">=</span> interleaved</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 逆周波数バンドを生成</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        inv_freq <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> (base <span class="op">**</span> (torch.arange(<span class="dv">0</span>, dim, <span class="dv">2</span>).<span class="bu">float</span>() <span class="op">/</span> dim))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.register_buffer(<span class="st">'inv_freq'</span>, inv_freq)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, seq_len, device<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> device <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>            device <span class="op">=</span> <span class="va">self</span>.inv_freq.device</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 位置インデックスを生成</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        positions <span class="op">=</span> torch.arange(seq_len, device<span class="op">=</span>device).<span class="bu">float</span>()</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 周波数パターンを計算 (seq_len, dim/2)</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        freqs <span class="op">=</span> torch.outer(positions, <span class="va">self</span>.inv_freq)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># サインとコサイン埋め込みを取得</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        emb <span class="op">=</span> torch.cat((freqs, freqs), dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        cos <span class="op">=</span> torch.cos(emb)[:, :<span class="va">self</span>.dim]</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        sin <span class="op">=</span> torch.sin(emb)[:, :<span class="va">self</span>.dim]</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> cos, sin</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_rotary_pos_emb(q, k, cos, sin, interleaved<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Q と K にロータリー埋め込みを適用</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    batch_size, num_heads, seq_len, head_dim <span class="op">=</span> q.shape</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cos/sinの形状をブロードキャスト可能にする</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># [1, 1, seq_len, dim]</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    cos <span class="op">=</span> cos.reshape(<span class="dv">1</span>, <span class="dv">1</span>, seq_len, cos.shape[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    sin <span class="op">=</span> sin.reshape(<span class="dv">1</span>, <span class="dv">1</span>, seq_len, sin.shape[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># QとKを回転のために半分に分割</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    half_dim <span class="op">=</span> head_dim <span class="op">//</span> <span class="dv">2</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    q1, q2 <span class="op">=</span> q[..., :half_dim], q[..., half_dim:]</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    k1, k2 <span class="op">=</span> k[..., :half_dim], k[..., half_dim:]</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 回転を適用（複素数乗算に相当）</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    q_rotated <span class="op">=</span> torch.cat([</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        q1 <span class="op">*</span> cos[..., :half_dim] <span class="op">-</span> q2 <span class="op">*</span> sin[..., :half_dim],</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        q2 <span class="op">*</span> cos[..., :half_dim] <span class="op">+</span> q1 <span class="op">*</span> sin[..., :half_dim]</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    ], dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    k_rotated <span class="op">=</span> torch.cat([</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>        k1 <span class="op">*</span> cos[..., :half_dim] <span class="op">-</span> k2 <span class="op">*</span> sin[..., :half_dim],</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>        k2 <span class="op">*</span> cos[..., :half_dim] <span class="op">+</span> k1 <span class="op">*</span> sin[..., :half_dim]</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    ], dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> q_rotated, k_rotated</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="mixture-of-experts-moe" class="level2">
+<h2 class="anchored" data-anchor-id="mixture-of-experts-moe">9. Mixture of Experts (MoE)</h2>
+<p><strong>Mixture of Experts (MoE)</strong> は、推論や学習中の計算コストを比例して大幅に増加させることなく、パラメータ数を（潜在的に数兆まで）大幅に増やすために設計されたモデルアーキテクチャである。</p>
+<p>中核となるアイデアは、TransformerのFeed-Forward (FFN) ブロックのような計算集約的なコンポーネントを、複数の小さな「<strong>エキスパート（expert）</strong>」ネットワークに置き換えることである。重要なのは、すべてのエキスパートがすべての入力トークンを処理するわけではない点である。</p>
+<p>代わりに、軽量な「<strong>ルーター（router）</strong>」または「ゲーティング（gating）」ネットワークが、各入力トークンを処理するのに最も適していると見なされるエキスパートの小さなサブセット（通常は1つまたは2つ、<strong>top-kルーティング</strong>と呼ばれる）を動的に選択する。この<strong>条件付き計算</strong>により、MoEモデルは膨大なパラメータを持ちながら、特定の入力に対してはそのごく一部のみをアクティブ化するため、同等のサイズの密な（dense）モデルと比較して管理可能なFLOPsを維持できる。</p>
+<p>ルーターネットワークは、入力トークンの表現を受け取り、各エキスパートの適合性を示すスコア（ロジット）を生成する。これらのスコアは<code>top-k</code>関数で処理され、選択されたエキスパートの重みが（通常はSoftmaxで）正規化される。</p>
+<p>トークンは選択されたエキスパートにのみディスパッチされる。各エキスパート（通常は標準的なFFN）はトークンを独立して処理する。これらのアクティブなエキスパートによって生成された出力は、ルーターによって計算されたルーティング重みに基づいて重み付け和として結合される。</p>
+<p>MoEの学習における課題は、すべてのエキスパートが効果的に利用されるようにすることである。そうでなければ、ルーターが特定のエキスパートに過負荷をかけ、他のエキスパートが未発達になる可能性がある。これに対抗するため、<code>_compute_balance_loss</code>メソッドで示されるように、**補助的な負荷分散損失（load balancing loss）**が通常、学習目的関数に組み込まれる。</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MixtureOfExperts(nn.Module):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim, hidden_dim, output_dim, num_experts<span class="op">=</span><span class="dv">4</span>, top_k<span class="op">=</span><span class="dv">2</span>, noise_std<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.input_dim <span class="op">=</span> input_dim</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.hidden_dim <span class="op">=</span> hidden_dim</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.output_dim <span class="op">=</span> output_dim</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_experts <span class="op">=</span> num_experts</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.top_k <span class="op">=</span> <span class="bu">min</span>(top_k, num_experts)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.noise_std <span class="op">=</span> noise_std</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># エキスパート（FFN）を作成</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.experts <span class="op">=</span> nn.ModuleList([</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            nn.Sequential(</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                nn.Linear(input_dim, hidden_dim),</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                nn.ReLU(),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                nn.Linear(hidden_dim, output_dim)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            ) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_experts)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        ])</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ルーターネットワーク</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.router <span class="op">=</span> nn.Linear(input_dim, num_experts)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _compute_routing_weights(<span class="va">self</span>, x):</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ルーティングロジットを計算</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        routing_logits <span class="op">=</span> <span class="va">self</span>.router(x)  <span class="co"># [batch_size, seq_len, num_experts]</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 学習中にノイズを加えて探索を促進</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.training <span class="kw">and</span> <span class="va">self</span>.noise_std <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>            noise <span class="op">=</span> torch.randn_like(routing_logits) <span class="op">*</span> <span class="va">self</span>.noise_std</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>            routing_logits <span class="op">=</span> routing_logits <span class="op">+</span> noise</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 各トークンの top-k エキスパートを取得</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        routing_weights, selected_experts <span class="op">=</span> torch.topk(routing_logits, <span class="va">self</span>.top_k, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ルーティング重みを softmax で正規化</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        routing_weights <span class="op">=</span> F.softmax(routing_weights, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> routing_weights, selected_experts</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _compute_balance_loss(<span class="va">self</span>, selected_experts, routing_weights):</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 補助的な負荷分散損失を計算</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> selected_experts.shape</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>        expert_mask <span class="op">=</span> torch.zeros(batch_size, seq_len, <span class="va">self</span>.num_experts, device<span class="op">=</span>selected_experts.device)</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 選択されたエキスパートの位置に重みを配置</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.top_k):</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>            expert_mask.scatter_(<span class="op">-</span><span class="dv">1</span>, selected_experts[..., k:k<span class="op">+</span><span class="dv">1</span>], routing_weights[..., k:k<span class="op">+</span><span class="dv">1</span>])</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># エキスパートごとの平均ルーティング確率</span></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>        expert_routing_probs <span class="op">=</span> expert_mask.mean(dim<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 均等な確率をターゲットとするMSE損失</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>        target_probs <span class="op">=</span> torch.ones_like(expert_routing_probs) <span class="op">/</span> <span class="va">self</span>.num_experts</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        balance_loss <span class="op">=</span> F.mse_loss(expert_routing_probs, target_probs) <span class="op">*</span> <span class="va">self</span>.num_experts</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> balance_loss</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> x.shape</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ルーティング重みと選択されたエキスパートを計算</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>        routing_weights, selected_experts <span class="op">=</span> <span class="va">self</span>._compute_routing_weights(x)</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力を準備</span></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> torch.zeros(batch_size, seq_len, <span class="va">self</span>.output_dim, device<span class="op">=</span>x.device)</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 選択されたエキスパートにディスパッチ</span></span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.top_k):</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>            expert_indices <span class="op">=</span> selected_experts[..., k]  <span class="co"># [batch_size, seq_len]</span></span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>            expert_weights <span class="op">=</span> routing_weights[..., k].unsqueeze(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># [batch_size, seq_len, 1]</span></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 各エキスパートごとに処理</span></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> expert_idx <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.num_experts):</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>                <span class="co"># このエキスパートに割り当てられたトークンを見つける</span></span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>                mask <span class="op">=</span> (expert_indices <span class="op">==</span> expert_idx)</span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> mask.<span class="bu">any</span>():</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># 該当する入力トークンを収集</span></span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>                    expert_inputs <span class="op">=</span> x[mask]</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># エキスパートで処理</span></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>                    expert_outputs <span class="op">=</span> <span class="va">self</span>.experts[expert_idx](expert_inputs)</span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># 適切な重みで出力をスキャッター（書き戻し）</span></span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>                    output[mask] <span class="op">+=</span> expert_outputs <span class="op">*</span> expert_weights[mask]</span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 補助的な負荷分散損失を計算</span></span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>        balance_loss <span class="op">=</span> <span class="va">self</span>._compute_balance_loss(selected_experts, routing_weights)</span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力と補助損失を返す</span></span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output, balance_loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="learning-rate-warmup" class="level2">
+<h2 class="anchored" data-anchor-id="learning-rate-warmup">10. Learning Rate Warmup</h2>
+<p><strong>Learning Rate Warmup</strong>（学習率ウォームアップ）は、ニューラルネットワークの学習初期段階で採用されるヒューリスティックで、安定性を高め、発散を防ぐ。</p>
+<p>学習の開始時、モデルのパラメータはランダムに初期化されており、最適とはほど遠い状態にある。ここでいきなり大きな学習率（Learning Rate: LR）を使用すると、初期の勾配（これも大きく不安定な場合がある）が急激なパラメータ更新を引き起こし、モデルを損失ランドスケープの悪い領域に押しやったり、数値的不安定性（損失の発散）を引き起こす可能性がある。</p>
+<p>ウォームアップは、ごく小さなLRで学習プロセスを開始し、事前に定義された初期の学習ステップ数（「ウォームアップステップ」）にわたってLRを徐々に増加させ、ターゲットとなるベース値に到達させることで、このリスクを軽減する。</p>
+<p>一般的な戦略は<strong>線形ウォームアップ</strong>である。ステップ <span class="math inline">\(t\)</span> での学習率 <span class="math inline">\(\eta_t\)</span> は、 <span class="math inline">\(t &lt; T_{\text{warmup}}\)</span> の間、 <span class="math inline">\(\eta_t = \eta_{\text{base}} \times \frac{t}{T_{\text{warmup}}}\)</span> として計算される。<code>get_lr</code>メソッドで示されるように、スケーリングファクタ<code>scale</code>は、<code>warmup_steps</code>にわたって0から1まで線形に増加する。この穏やかな立ち上がりにより、モデルは不安定になりがちな初期段階で徐々に適応でき、スムーズな収束につながる。</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PyTorchの _LRScheduler を継承</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LinearWarmupScheduler(_LRScheduler):</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, optimizer, warmup_steps, last_epoch<span class="op">=-</span><span class="dv">1</span>):</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.warmup_steps <span class="op">=</span> warmup_steps</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(optimizer, last_epoch)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_lr(<span class="va">self</span>):</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.last_epoch <span class="op">&lt;</span> <span class="va">self</span>.warmup_steps:</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ウォームアップ中: 0からベースLRまで線形に増加</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>            scale <span class="op">=</span> <span class="bu">float</span>(<span class="va">self</span>.last_epoch <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="bu">float</span>(<span class="bu">max</span>(<span class="dv">1</span>, <span class="va">self</span>.warmup_steps))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> [base_lr <span class="op">*</span> scale <span class="cf">for</span> base_lr <span class="kw">in</span> <span class="va">self</span>.base_lrs]</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ウォームアップ後: ベースLRを使用</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">self</span>.base_lrs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="cosine-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="cosine-schedule">11. Cosine Schedule</h2>
+<p><strong>Cosine Scheduling</strong>（コサインスケジューリング、またはコサインアニーリング）は、学習率のスケジュール手法である。その中核原理は、<strong>コサインカーブの形状に従って</strong>、学習の過程で学習率を徐々に減少させることである。</p>
+<p>特定のステップでLRを急激に下げるステップディケイ（Step Decay）とは異なり、コサインアニーリングは滑らかで連続的な減少を提供する。通常、LRは初期の高い値から始まり、コサイン関数の最初の半サイクルに従って減少し、最終的な学習ステップまでに事前に定義された最小値（多くの場合ゼロに近い）に達する。</p>
+<p>この滑らかな減衰は、学習初期には損失ランドスケープの広範な探索のために大きなステップを許可し、後半にはファインチューニングと良い最小値への収束のためにステップを徐々に小さくすることで、最適化プロセスを助けることが経験的に示されている。</p>
+<p>以下のコード例のように、コサインスケジューリングはしばしば「ウォームアップ」フェーズ（セクション10）と組み合わされる。ウォームアップ後、コサイン減衰フェーズが始まり、LRをピーク値からターゲットの最小値（<code>base_lr * min_lr_ratio</code>）まで、残りのステップにわたって滑らかに減少させる。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CosineAnnealingWarmupScheduler(_LRScheduler):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, optimizer, warmup_steps, total_steps, min_lr_ratio<span class="op">=</span><span class="fl">1e-4</span>, last_epoch<span class="op">=-</span><span class="dv">1</span>):</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.warmup_steps <span class="op">=</span> warmup_steps</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.total_steps <span class="op">=</span> total_steps</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.min_lr_ratio <span class="op">=</span> min_lr_ratio</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(optimizer, last_epoch)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_lr(<span class="va">self</span>):</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.last_epoch <span class="op">&lt;</span> <span class="va">self</span>.warmup_steps:</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ウォームアップ中: 線形増加</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>            scale <span class="op">=</span> <span class="bu">float</span>(<span class="va">self</span>.last_epoch <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="bu">float</span>(<span class="bu">max</span>(<span class="dv">1</span>, <span class="va">self</span>.warmup_steps))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> [base_lr <span class="op">*</span> scale <span class="cf">for</span> base_lr <span class="kw">in</span> <span class="va">self</span>.base_lrs]</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ウォームアップ後: コサイン減衰</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>            progress <span class="op">=</span> <span class="bu">float</span>(<span class="va">self</span>.last_epoch <span class="op">-</span> <span class="va">self</span>.warmup_steps) <span class="op">/</span> <span class="bu">float</span>(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                <span class="bu">max</span>(<span class="dv">1</span>, <span class="va">self</span>.total_steps <span class="op">-</span> <span class="va">self</span>.warmup_steps)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># コサイン減衰の式</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>            scale <span class="op">=</span> <span class="va">self</span>.min_lr_ratio <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="fl">1.0</span> <span class="op">-</span> <span class="va">self</span>.min_lr_ratio) <span class="op">*</span> (</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>                <span class="fl">1.0</span> <span class="op">+</span> math.cos(math.pi <span class="op">*</span> progress)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> [base_lr <span class="op">*</span> scale <span class="cf">for</span> base_lr <span class="kw">in</span> <span class="va">self</span>.base_lrs]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="adamw-optimizer" class="level2">
+<h2 class="anchored" data-anchor-id="adamw-optimizer">12. AdamW Optimizer</h2>
+<p>**AdamW（Adam with Decoupled Weight Decay）**は、Adamのような適応的オプティマイザにおける重み減衰（L2正則化）の標準的な実装における微妙な問題に対処する。</p>
+<p>従来のAdamでは、L2正則化は、移動平均（<span class="math inline">\(m_t\)</span>と<span class="math inline">\(v_t\)</span>）を計算する<em>前</em>に、勾配に減衰項（<span class="math inline">\(\lambda \cdot \text{weight}\)</span>）を直接加えることで実装されることがよくあった。しかし、これにより、重み減衰の効果が適応的学習率と結びついてしまう。</p>
+<p><strong>AdamWはこれらのプロセスを分離（decouple）する</strong>。標準的なAdamの更新を勾配のみに基づいて行い、それとは別に、重み減衰ステップを重みに直接適用する。これにより、重みがその勾配履歴に関係なく、その大きさに比例して減衰するという、L2正則化の本来の振る舞いが回復される。</p>
+<p>AdamWの更新メカニズムは、重み減衰の適用方法が異なる。</p>
+<ol type="1">
+<li>重み減衰を重みに直接適用する: <span class="math inline">\(\theta_{t-1}' = \theta_{t-1} \cdot (1 - \text{lr} \cdot \lambda)\)</span>（コード内の<code>p.data.mul_(...)</code>）</li>
+<li>次に、標準的なAdamの更新（モーメントに基づく）を、この減衰後の重みに適用する: <span class="math inline">\(\theta_t = \theta_{t-1}' - \text{lr} \cdot \hat{m}_t / (\sqrt{\hat{v}_t} + \epsilon)\)</span>（コード内の<code>p.data.addcdiv_(...)</code>）</li>
+</ol>
+<p>このアプローチは、特にTransformerのような大規模モデルの学習において、正則化が重要な場合に、より良い汎化性能をもたらすことが示されている。PyTorchには最適化されたAdamWの実装が含まれているが、以下はその簡略化されたバージョンである。</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AdamW(Optimizer):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, params, lr<span class="op">=</span><span class="fl">1e-3</span>, betas<span class="op">=</span>(<span class="fl">0.9</span>, <span class="fl">0.999</span>), eps<span class="op">=</span><span class="fl">1e-8</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 weight_decay<span class="op">=</span><span class="fl">1e-2</span>, amsgrad<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        defaults <span class="op">=</span> <span class="bu">dict</span>(lr<span class="op">=</span>lr, betas<span class="op">=</span>betas, eps<span class="op">=</span>eps,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                        weight_decay<span class="op">=</span>weight_decay, amsgrad<span class="op">=</span>amsgrad)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(AdamW, <span class="va">self</span>).<span class="fu">__init__</span>(params, defaults)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> step(<span class="va">self</span>, closure<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> closure <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> closure()</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> group <span class="kw">in</span> <span class="va">self</span>.param_groups:</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> p <span class="kw">in</span> group[<span class="st">'params'</span>]:</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> p.grad <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">continue</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>                grad <span class="op">=</span> p.grad.data</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> grad.is_sparse:</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">'AdamW does not support sparse gradients'</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                amsgrad <span class="op">=</span> group[<span class="st">'amsgrad'</span>]</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                state <span class="op">=</span> <span class="va">self</span>.state[p]</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>                <span class="co"># State initialization</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="bu">len</span>(state) <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>                    state[<span class="st">'step'</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>                    state[<span class="st">'exp_avg'</span>] <span class="op">=</span> torch.zeros_like(p.data) <span class="co"># m_t</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>                    state[<span class="st">'exp_avg_sq'</span>] <span class="op">=</span> torch.zeros_like(p.data) <span class="co"># v_t</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> amsgrad:</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>                        state[<span class="st">'max_exp_avg_sq'</span>] <span class="op">=</span> torch.zeros_like(p.data)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>                exp_avg, exp_avg_sq <span class="op">=</span> state[<span class="st">'exp_avg'</span>], state[<span class="st">'exp_avg_sq'</span>]</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> amsgrad:</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>                    max_exp_avg_sq <span class="op">=</span> state[<span class="st">'max_exp_avg_sq'</span>]</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>                beta1, beta2 <span class="op">=</span> group[<span class="st">'betas'</span>]</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>                state[<span class="st">'step'</span>] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Adamのモーメント更新</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>                exp_avg.mul_(beta1).add_(grad, alpha<span class="op">=</span><span class="dv">1</span> <span class="op">-</span> beta1)</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>                exp_avg_sq.mul_(beta2).addcmul_(grad, grad, value<span class="op">=</span><span class="dv">1</span> <span class="op">-</span> beta2)</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> amsgrad:</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>                    torch.maximum(max_exp_avg_sq, exp_avg_sq, out<span class="op">=</span>max_exp_avg_sq)</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>                    denom <span class="op">=</span> max_exp_avg_sq.sqrt().add_(group[<span class="st">'eps'</span>])</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>                    denom <span class="op">=</span> exp_avg_sq.sqrt().add_(group[<span class="st">'eps'</span>])</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>                bias_correction1 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> beta1 <span class="op">**</span> state[<span class="st">'step'</span>]</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>                bias_correction2 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> beta2 <span class="op">**</span> state[<span class="st">'step'</span>]</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>                step_size <span class="op">=</span> group[<span class="st">'lr'</span>] <span class="op">*</span> math.sqrt(bias_correction2) <span class="op">/</span> bias_correction1</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>                <span class="co"># ★★★ Decoupled Weight Decay ★★★</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>                <span class="co"># 最適化ステップの「前」に重み減衰を適用</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> group[<span class="st">'weight_decay'</span>] <span class="op">!=</span> <span class="dv">0</span>:</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>                    p.data.mul_(<span class="dv">1</span> <span class="op">-</span> group[<span class="st">'lr'</span>] <span class="op">*</span> group[<span class="st">'weight_decay'</span>])</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>                <span class="co"># パラメータ更新</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>                p.data.addcdiv_(exp_avg, denom, value<span class="op">=-</span>step_size)</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="multi-token-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="multi-token-prediction">13. Multi-token Prediction</h2>
+<p><strong>Multi-token Prediction</strong>（複数トークン予測）は、自己回帰型言語モデルの推論速度を向上させるために開発された技術である。</p>
+<p>通常の自己回帰生成では、トークンを1つずつ予測する。モデルはシーケンスを受け取り、次に最も可能性の高い単一のトークンを予測し、それをシーケンスに追加してプロセスを繰り返す。この逐次的な性質は、レイテンシが重要なアプリケーションにとって大きなボトルネックとなる。</p>
+<p>Multi-token Predictionは、モデルの予測ヘッドを変更し、現在の隠れ状態に基づいて<strong>複数の未来のトークン</strong>（例：<span class="math inline">\(t+1\)</span>, <span class="math inline">\(t+2\)</span>, …, <span class="math inline">\(t+N\)</span>）の確率を同時に出力することで、この問題を克服しようとする。</p>
+<p>実装には、コード例のように、異なる未来のオフセット（<span class="math inline">\(t+1\)</span>用、<span class="math inline">\(t+2\)</span>用など）のトークンを予測するように学習された、複数の個別の予測ヘッド（<code>lm_heads</code>）を持たせるアプローチがある。</p>
+<p>学習中、<code>compute_loss</code>メソッドで示されるように、モデルは入力シーケンスを受け取り、次の<span class="math inline">\(N\)</span>トークンの予測が、訓練データの実際の<span class="math inline">\(N\)</span>個のターゲットトークンと比較される。損失（通常はクロスエントロピー）が予測された各位置で計算され、集約されて逆伝播に使用される。</p>
+<p>この方法は速度向上を示すことができるが、いくつかの欠点がある。遠い未来のトークンを予測する精度は低下する傾向があり、選択された<span class="math inline">\(N\)</span>トークンのシーケンスは、単一トークン生成が取ったであろう最適パスから逸脱する可能性がある。したがって、これは多くの場合、生成速度と品質のトレードオフとなる。</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiTokenPredictor(nn.Module):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, hidden_dim, vocab_size, num_predicted_tokens<span class="op">=</span><span class="dv">2</span>, shared_prediction_head<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.hidden_dim <span class="op">=</span> hidden_dim</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.vocab_size <span class="op">=</span> vocab_size</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.num_predicted_tokens <span class="op">=</span> num_predicted_tokens</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.shared_prediction_head <span class="op">=</span> shared_prediction_head</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> shared_prediction_head:</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            <span class="co"># すべての位置で同じ予測ヘッドを共有</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.lm_head <span class="op">=</span> nn.Linear(hidden_dim, vocab_size)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 位置ごとに個別の予測ヘッドを使用</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.lm_heads <span class="op">=</span> nn.ModuleList([</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                nn.Linear(hidden_dim, vocab_size) </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_predicted_tokens)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>            ])</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, hidden_states):</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        batch_size, seq_len, _ <span class="op">=</span> hidden_states.shape</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 最後のトークンの隠れ状態を取得</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        last_hidden <span class="op">=</span> hidden_states[:, <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.shared_prediction_head:</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># （共有ヘッドのロジックはデモ用に簡略化）</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>            multi_token_logits <span class="op">=</span> []</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.num_predicted_tokens):</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>                projected_hidden <span class="op">=</span> last_hidden <span class="co"># 実際にはより複雑な変換が必要</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>                multi_token_logits.append(<span class="va">self</span>.lm_head(projected_hidden))</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>            multi_token_logits <span class="op">=</span> torch.stack(multi_token_logits, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>            next_token_logits <span class="op">=</span> multi_token_logits[:, <span class="dv">0</span>:<span class="dv">1</span>]</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 位置ごとに個別のヘッドを使用</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>            multi_token_logits <span class="op">=</span> torch.stack([</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>                head(last_hidden) <span class="cf">for</span> head <span class="kw">in</span> <span class="va">self</span>.lm_heads</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>            ], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>            next_token_logits <span class="op">=</span> multi_token_logits[:, <span class="dv">0</span>:<span class="dv">1</span>]</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># next_token_logits は標準的な推論用, multi_token_logits は学習用</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> next_token_logits, multi_token_logits</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> compute_loss(<span class="va">self</span>, hidden_states, labels, ignore_index<span class="op">=-</span><span class="dv">100</span>):</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 予測を取得</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>        _, multi_token_logits <span class="op">=</span> <span class="va">self</span>.forward(hidden_states)</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ターゲットを準備: ラベルを予測と一致するようにシフト</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># (この損失計算は簡略化されたデモです)</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>        targets <span class="op">=</span> []</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.num_predicted_tokens):</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 実際には、(seq_len - num_predicted_tokens) の長さにわたって計算する必要がある</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>            targets.append(labels[:, <span class="dv">1</span><span class="op">+</span>i:labels.shape[<span class="dv">1</span>]<span class="op">-</span><span class="va">self</span>.num_predicted_tokens<span class="op">+</span><span class="dv">1</span><span class="op">+</span>i])</span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ... 損失計算ロジック (ここでは簡略化のため省略) ...</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># loss = F.cross_entropy(...)</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> <span class="fl">0.0</span> <span class="co"># ダミー</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>        <span class="co">#</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 以下の損失計算は、元のブログのロジックに基づき、</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>        <span class="co"># `last_hidden` のみから予測された `multi_token_logits` (B, N, V) と</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># `labels` (B, L) の最後の N トークンを比較するように修正します。</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>        <span class="co">#</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ターゲットは、入力シーケンスに続く N トークン</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>        <span class="co"># labels の形状が (B, seq_len + num_predicted_tokens - 1) と仮定</span></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 簡略化：入力の最後の N トークンをターゲットと仮定（実際にはシフトが必要）</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hidden_states.shape[<span class="dv">1</span>] <span class="op">&gt;</span> <span class="va">self</span>.num_predicted_tokens:</span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>            stacked_targets <span class="op">=</span> labels[:, <span class="op">-</span><span class="va">self</span>.num_predicted_tokens:] <span class="co"># (B, N)</span></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>            <span class="co"># シーケンスが短い場合の処理（デモ）</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>            stacked_targets <span class="op">=</span> labels[:, <span class="dv">1</span>:<span class="dv">1</span><span class="op">+</span><span class="va">self</span>.num_predicted_tokens]</span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> stacked_targets.shape[<span class="dv">1</span>] <span class="op">&lt;</span> <span class="va">self</span>.num_predicted_tokens:</span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>                <span class="co"># パディング（ダミー）</span></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>                pad_size <span class="op">=</span> <span class="va">self</span>.num_predicted_tokens <span class="op">-</span> stacked_targets.shape[<span class="dv">1</span>]</span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>                stacked_targets <span class="op">=</span> F.pad(stacked_targets, (<span class="dv">0</span>, pad_size), value<span class="op">=</span>ignore_index)</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.num_predicted_tokens):</span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">+=</span> F.cross_entropy(</span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>                multi_token_logits[:, i].view(<span class="op">-</span><span class="dv">1</span>, <span class="va">self</span>.vocab_size),</span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>                stacked_targets[:, i].reshape(<span class="op">-</span><span class="dv">1</span>),</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>                ignore_index<span class="op">=</span>ignore_index</span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss <span class="op">/</span> <span class="va">self</span>.num_predicted_tokens</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="speculative-decoding" class="level2">
+<h2 class="anchored" data-anchor-id="speculative-decoding">14. Speculative Decoding</h2>
+<p><strong>Speculative Decoding</strong>（投機的デコーディング）は、大規模言語モデルの推論プロセスを高速化するために設計された巧妙なテクニックである。</p>
+<p>標準的な生成は、計算コストの高い大規模モデル（「<strong>ターゲット（target）</strong>」モデル）が、一度に1トークンだけを予測するために完全なフォワードパスを実行する必要があるため、ボトルネックとなっている。</p>
+<p>Speculative Decodingは、はるかに小型で高速な「<strong>ドラフト（draft）</strong>」モデルを導入する。このドラフトモデルは、候補となる未来のトークンシーケンス（「ドラフト」）を迅速に生成する。中核となるアイデアは、大規模なターゲットモデルを使用して、この<strong>ドラフトシーケンス全体を単一の並列フォワードパスで検証</strong>し、一度に複数のトークンを受け入れる可能性があるというものである。</p>
+<p>メカニズムは、ドラフトモデルの予測とターゲットモデルの予測を比較することにかかっている。</p>
+<ol type="1">
+<li>ドラフトモデルが <span class="math inline">\(k\)</span> 個のトークン <span class="math inline">\(d_1, \dots, d_k\)</span> を提案する。</li>
+<li>ターゲットモデルは、元の入力＋ドラフトシーケンス全体に対して<strong>1回</strong>実行される。これにより、ドラフトシーケンス内の<em>各位置</em>におけるターゲットモデルの確率分布が得られる。</li>
+<li>各ドラフトトークン <span class="math inline">\(d_i\)</span> が検証される。ターゲットモデルがドラフトトークンに強く同意する場合（特定の採択ルールに基づく）、トークンは採択される。</li>
+<li>この検証は、ドラフトトークン <span class="math inline">\(d_j\)</span> が棄却されるまで、またはすべてのドラフトが採択されるまで逐次的に進められる。</li>
+<li>位置 <span class="math inline">\(j\)</span> で棄却が発生した場合、<span class="math inline">\(d_1, \dots, d_{j-1}\)</span> は保持される。重要なことに、位置 <span class="math inline">\(j\)</span> で計算されたターゲットモデルの確率分布を使用して、<em>修正された</em>トークンをサンプリングできる。</li>
+</ol>
+<p>ターゲットモデルの推論ステップごとに平均して複数のトークンを採択することにより、Speculative Decodingは、生成されるテキストの品質に最小限の影響で、大幅なスピードアップ（例：2〜3倍）を達成できる。</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># この例は、モデルとトークナイザが既にロードされていることを前提としています</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleSpeculativeDecoding:</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, target_model, draft_model, tokenizer, max_draft_tokens<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.target_model <span class="op">=</span> target_model</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.draft_model <span class="op">=</span> draft_model</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tokenizer <span class="op">=</span> tokenizer</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.max_draft_tokens <span class="op">=</span> max_draft_tokens</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> generate(<span class="va">self</span>, prompt, max_length<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># プロンプトのトークンIDから開始</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        input_ids <span class="op">=</span> <span class="va">self</span>.tokenizer.encode(prompt, return_tensors<span class="op">=</span><span class="st">"pt"</span>).to(<span class="va">self</span>.target_model.device)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> input_ids.shape[<span class="dv">1</span>] <span class="op">&lt;</span> max_length:</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ステップ1: 複数のドラフトトークンを生成</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>            draft_input_ids <span class="op">=</span> input_ids.clone()</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>            draft_tokens <span class="op">=</span> []</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.max_draft_tokens):</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                    outputs <span class="op">=</span> <span class="va">self</span>.draft_model(draft_input_ids)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>                    next_token_logits <span class="op">=</span> outputs.logits[:, <span class="op">-</span><span class="dv">1</span>, :]</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>                    next_token <span class="op">=</span> torch.argmax(next_token_logits, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>                    draft_tokens.append(next_token.item())</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>                    draft_input_ids <span class="op">=</span> torch.cat([draft_input_ids, next_token.unsqueeze(<span class="dv">0</span>)], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> next_token.item() <span class="op">==</span> <span class="va">self</span>.tokenizer.eos_token_id:</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">break</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ステップ2: ターゲットモデルで検証</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>                verification_ids <span class="op">=</span> torch.cat([</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>                    input_ids, </span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>                    torch.tensor([draft_tokens]).to(input_ids.device)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>                ], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>                target_outputs <span class="op">=</span> <span class="va">self</span>.target_model(verification_ids)</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>                <span class="co"># input_idsの最後からドラフトトークン分のロジットを取得</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>                target_logits <span class="op">=</span> target_outputs.logits[:, input_ids.shape[<span class="dv">1</span>]<span class="op">-</span><span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>] <span class="co"># (B, K, V)</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>                target_probs <span class="op">=</span> F.softmax(target_logits, dim<span class="op">=-</span><span class="dv">1</span>) <span class="co"># (B, K, V)</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>                <span class="co"># トークンを採択</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>                accepted_tokens <span class="op">=</span> []</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> i, token_id <span class="kw">in</span> <span class="bu">enumerate</span>(draft_tokens):</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>                    target_prob_dist <span class="op">=</span> target_probs[<span class="dv">0</span>, i] <span class="co"># ターゲットのi番目の予測</span></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># 簡略化された採択ルール（確率の比較）</span></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># 実際には、ドラフトモデルの確率も考慮する必要がある</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>                    target_token_id <span class="op">=</span> torch.argmax(target_prob_dist).item()</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> token_id <span class="op">==</span> target_token_id:</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>                        accepted_tokens.append(token_id)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">else</span>:</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># 棄却: ターゲットモデルから新しいトークンを取得</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>                        accepted_tokens.append(target_token_id)</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">break</span></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 採択されたトークンを input_ids に追加</span></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>            input_ids <span class="op">=</span> torch.cat([</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>                input_ids, </span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>                torch.tensor([accepted_tokens]).to(input_ids.device)</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>            ], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> input_ids[<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>].item() <span class="op">==</span> <span class="va">self</span>.tokenizer.eos_token_id:</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 生成されたトークンをデコード</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.tokenizer.decode(input_ids[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>「Attention Is All You Need」は、間違いなくAIの歴史における転換点であった。しかし、それは壮大な物語の序章に過ぎなかった。</p>
+<p>今回紹介した14のテクニック（GQA、Flash Attention、RoPE、MoE、AdamWなど）は、オリジナルのTransformerアーキテクチャが抱えていた計算量、メモリ、安定性、効率といった多くの課題を解決するために考案された、無数のイノベーションのほんの一部である。</p>
+<p>GPT-5、Claude 4のような今日の最先端モデルは、これらの洗練された技術を多く組み込むことで、その驚異的な能力を実現している。この分野のイノベーションの速さは驚異的であり、次にどのようなブレークスルーが登場するのか、目が離せない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

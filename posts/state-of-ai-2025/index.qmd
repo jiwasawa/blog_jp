@@ -2,7 +2,7 @@
 title: "State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI"
 description: "State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。"
 author: "Junichiro Iwasawa"
-date: "2025-10-23"
+date: "2025-10-21"
 categories: [LLM, AI]
 image: https://picsum.photos/id/111/200
 ---

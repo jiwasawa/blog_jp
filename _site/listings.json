@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/post-attention-techniques/index.html",
       "/posts/state-of-ai-2025/index.html",
       "/posts/andrej-karpathy-agi/index.html",
       "/posts/persona-vectors/index.html",

@@ -193,8 +193,8 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>最近の業界の熱狂に対し、Karpathy氏は「今年はエージェントの年 (Year of Agents)」ではなく、「<strong>エージェントの10年 (Decade of Agents)</strong>」になるだろうと語る。</p>
 <p>なぜ彼は、AGIの実現に10年というタイムラインを提示するのか。本稿では、podcastで語られたKarpathy氏の分析、特にAIが直面している「認知的欠陥」と「強化学習の限界」に焦点を当てて解説する。</p>
 <hr>
-<section id="エージェントの年ではなくエージェントの10年" class="level3">
-<h3 class="anchored" data-anchor-id="エージェントの年ではなくエージェントの10年">「エージェントの年」ではなく「エージェントの10年」</h3>
+<section id="エージェントの年ではなくエージェントの10年" class="level2">
+<h2 class="anchored" data-anchor-id="エージェントの年ではなくエージェントの10年">「エージェントの年」ではなく「エージェントの10年」</h2>
 <p>Karpathy氏が「10年」というスパンを主張する理由は極めてシンプルだ。それは、現在のエージェントが「<strong>まだ使い物にならない (They just don’t work)</strong>」からである。</p>
 <p>氏は、Claude codeやCodexのような（彼が日常的に使っている）初期のエージェントは非常に印象的であると認めつつも、私たちが期待する「従業員やインターンの代わり」には到底及ばないと断言する。</p>
 <p>なぜなら、現在のモデルには以下のような根本的な能力が欠けているからだ。</p>
@@ -206,8 +206,8 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>Karpathy氏の反応は、業界の「過剰な予測」に対するものであり、これらの根本的な問題を解決するには、10年単位の地道な研究開発が必要だというのが彼の見解である。</p>
 <hr>
 </section>
-<section id="llmの認知的欠陥インターネットのデータ多様体への過剰な依存" class="level3">
-<h3 class="anchored" data-anchor-id="llmの認知的欠陥インターネットのデータ多様体への過剰な依存">LLMの「認知的欠陥」：インターネットの「データ多様体」への過剰な依存</h3>
+<section id="llmの認知的欠陥インターネットのデータ多様体への過剰な依存" class="level2">
+<h2 class="anchored" data-anchor-id="llmの認知的欠陥インターネットのデータ多様体への過剰な依存">LLMの「認知的欠陥」：インターネットの「データ多様体」への過剰な依存</h2>
 <p>Karpathy氏の洞察がもっとも鋭く表れているのが、彼自身が最近リリースした<a href="https://github.com/karpathy/nanochat/discussions/1"><code>nanochat</code></a>（ChatGPTクローンのシンプルなリポジトリ）の開発経験だ。</p>
 <p>彼は、<code>nanochat</code>のような「知的集約型 (intellectually intense)」な、つまり<strong>過去に例のない新しいコード</strong>を書く際、いわゆる「Vibeコーディング」（AIエージェントに丸投げするスタイル）は全く役に立たなかったと語る。AIエージェントが生成するコードは「<strong>スロップ (Slop)（粗悪なもの）</strong>」であり、むしろ彼の作業の邪魔になったという。</p>
 <p>その最大の理由は、LLMが<strong>インターネット上に存在する「典型的なやり方」や「既存のデータ多様体 (data manifold)」に過度に束縛されている</strong>点にある。</p>
@@ -217,8 +217,8 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>彼は、現在のLLMは「知識（メモリ）」を詰め込みすぎていると指摘する。AGIの実現に必要なのは、知識そのものではなく、知識を取り除いた純粋な「<strong>認知的コア (cognitive core)</strong>」、つまり思考と問題解決のアルゴリズムそのものだと主張する。</p>
 <hr>
 </section>
-<section id="強化学習はひどいストローで監視を吸うようなもの" class="level3">
-<h3 class="anchored" data-anchor-id="強化学習はひどいストローで監視を吸うようなもの">「強化学習はひどい」：ストローで監視を吸うようなもの</h3>
+<section id="強化学習はひどいストローで監視を吸うようなもの" class="level2">
+<h2 class="anchored" data-anchor-id="強化学習はひどいストローで監視を吸うようなもの">「強化学習はひどい」：ストローで監視を吸うようなもの</h2>
 <p>Karpathy氏は、現在のAI研究のもう一つの柱である強化学習（RL）に対しても、痛烈な批判を展開している。</p>
 <p>「<strong>人間は強化学習を使っていない</strong>」「<strong>強化学習はひどい (Reinforcement learning is terrible)</strong>」と彼は言う。</p>
 <p>現在のRLの手法は、例えば数学の問題を解く場合、何百もの異なる解法（軌道）を並行して試行する。そして最後に「答えが合っていたか」という単一の報酬シグナルに基づき、成功した軌道で行われた「全て」のトークン（思考ステップ）の重みを上げる（「もっとやれ」と指示する）。</p>
@@ -229,8 +229,8 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>このLLMジャッジの脆弱性は、現在のRLにおける深刻なボトルネックとなっている。</p>
 <hr>
 </section>
-<section id="自動運転の教訓デモから製品までのギャップ" class="level3">
-<h3 class="anchored" data-anchor-id="自動運転の教訓デモから製品までのギャップ">自動運転の教訓：「デモから製品までのギャップ」</h3>
+<section id="自動運転の教訓デモから製品までのギャップ" class="level2">
+<h2 class="anchored" data-anchor-id="自動運転の教訓デモから製品までのギャップ">自動運転の教訓：「デモから製品までのギャップ」</h2>
 <p>Karpathy氏の現実的なタイムラインは、彼がTeslaで自動運転開発を5年間率いた経験に深く根差している。</p>
 <p>自動運転の世界には、「<strong>デモと製品の間の巨大なギャップ</strong>」が存在する。そして、自動運転のような「失敗のコストが極めて高い」ドメインでは、そのギャップを埋めるのに膨大な時間がかかる。</p>
 <p>彼はこれを「<strong>9の行進 (march of nines)</strong>」と呼ぶ。 デモで90%の成功率を達成するのは簡単だ。しかし、製品レベルの信頼性、つまり99%、99.9%、99.99%へと進むにつれ、その「9」を一つ増やすごとに、90%を達成した時と同等かそれ以上の一定の作業量が必要になる。</p>
@@ -238,16 +238,16 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>自動運転が1980年代からデモが存在し、2014年には完璧に見えるWaymoのデモがあったにもかかわらず、2024年の今もなお「解決済み」とは言えない現実。これが、彼がAIの急速な爆発的進化に懐疑的な理由である。</p>
 <hr>
 </section>
-<section id="agiはgdpを爆発させない" class="level3">
-<h3 class="anchored" data-anchor-id="agiはgdpを爆発させない">AGIはGDPを爆発させない</h3>
+<section id="agiはgdpを爆発させない" class="level2">
+<h2 class="anchored" data-anchor-id="agiはgdpを爆発させない">AGIはGDPを爆発させない</h2>
 <p>Karpathy氏は、AGIが経済に与える影響についても、一般的な「爆発的成長」論とは一線を画す。</p>
 <p>彼は、AGIを「<strong>コンピューティングの延長線上</strong>」にあるものと捉えている。</p>
 <p>歴史を振り返っても、コンピュータの登場やインターネットの普及といった革命的な技術でさえ、GDP成長率のグラフ上で「特異点」として現れてはいない。それらの影響は、既存の年率2%程度の指数関数的成長の中にスムーズに溶け込んでいる。</p>
 <p>Karpathy氏の予測は、AGIもまた同様に、既存の成長トレンドの中に吸収され、GDPの「<strong>離散的なジャンプ</strong>」を引き起こすことはない、というものだ。</p>
 <hr>
 </section>
-<section id="karpathyの次章starfleet-academyと教育の未来" class="level3">
-<h3 class="anchored" data-anchor-id="karpathyの次章starfleet-academyと教育の未来">Karpathyの次章：「Starfleet Academy」と教育の未来</h3>
+<section id="karpathyの次章starfleet-academyと教育の未来" class="level2">
+<h2 class="anchored" data-anchor-id="karpathyの次章starfleet-academyと教育の未来">Karpathyの次章：「Starfleet Academy」と教育の未来</h2>
 <p>では、Karpathy氏は今、何に注力しているのか。彼はAIラボの最前線から離れ、教育分野で「Eureka」という新しいプロジェクトを立ち上げた。</p>
 <p>彼の最大の懸念は、AIが自律的に発展していく一方で、人類がそれに追いつけず、映画『WALL-E』や『Idiocracy』のように「<strong>人類が非力化される未来</strong>」が訪れることだという。</p>
 <p>彼が目指すのは、技術の最前線で活躍する人材を育成するエリート機関、「<strong>Starfleet Academy（宇宙艦隊アカデミー）</strong>」の構築だ。</p>

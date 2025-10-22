@@ -2,7 +2,7 @@
 title: "Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか"
 description: "Andrej Karpathy のpodcastを通し、AIの受容・AGIへのタイムラインについて考える"
 author: "Junichiro Iwasawa"
-date: "2025-10-22"
+date: "2025-10-20"
 categories: [LLM, AI]
 image: https://picsum.photos/id/110/200
 ---
