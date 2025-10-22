@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,14 +69,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../../">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-a986a95301e671fce2c6472dffc862a1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -133,6 +134,8 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">jiwasawaのブログ</span>
     </a>
@@ -227,7 +230,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="準備言語モデリングの基本">準備：言語モデリングの基本</h2>
 <p>Attentionに入る前に、基本的なタスクである「言語モデリング」について理解しましょう。言語モデリングの目標は、与えられたシーケンス（文脈）に基づいて、シーケンス中の次の単語（または文字、トークン）を予測することです。</p>
 <p>Karpathy氏はまず、「Tiny Shakespeare」データセットを使用します。これはシェイクスピアの作品を連結した単一のテキストファイルです。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まずは学習用のデータセットを用意します。Tiny Shakespeareデータセットをダウンロードしましょう。</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まずは学習用のデータセットを用意します。Tiny Shakespeareデータセットをダウンロードしましょう。</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>wget https:<span class="op">//</span>raw.githubusercontent.com<span class="op">/</span>karpathy<span class="op">/</span>char<span class="op">-</span>rnn<span class="op">/</span>master<span class="op">/</span>data<span class="op">/</span>tinyshakespeare<span class="op">/</span><span class="bu">input</span>.txt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 中身を確認するために読み込みます。</span></span>
@@ -250,17 +253,17 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(encode(<span class="st">"hii there"</span>))</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># [46, 47, 47, 1, 58, 46, 43, 56, 43]</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(decode(encode(<span class="st">"hii there"</span>)))</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># hii there</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># テキストデータセット全体をエンコードし、torch.Tensorに格納します。</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># hii there</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># テキストデータセット全体をエンコードし、torch.Tensorに格納します。</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch <span class="co"># PyTorchを使用します: https://pytorch.org</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> torch.tensor(encode(text), dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data.shape, data.dtype)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># torch.Size([1115394]) torch.int64</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data[:<span class="dv">1000</span>])</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># tensor([18, 47, 56, 57, 58,  1, 15, 47, 58, 47, 64, 43, 52, 10,  0, 14, 43, 44, ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># tensor([18, 47, 56, 57, 58,  1, 15, 47, 58, 47, 64, 43, 52, 10,  0, 14, 43, 44, ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>この例では、テキストは文字レベルでトークン化（tokenized）され、各文字が数にマッピングされます。モデルの役割は、数のシーケンスが与えられたときに、次に来る文字の数を予測することです。</p>
 <p>Karpathy氏は、まず最も単純な言語モデルである<strong>Bigram Model</strong>を実装します。</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.nn <span class="im">import</span> functional <span class="im">as</span> F</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">1337</span>)</span>
@@ -310,9 +313,9 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loss)  <span class="co"># tensor(4.8786, grad_fn=&lt;NllLossBackward0&gt;)</span></span>
 <span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(decode(m.generate(idx <span class="op">=</span> torch.zeros((<span class="dv">1</span>, <span class="dv">1</span>), dtype<span class="op">=</span>torch.<span class="bu">long</span>), max_new_tokens<span class="op">=</span><span class="dv">100</span>)[<span class="dv">0</span>].tolist()))</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co"># SKIcLT;AcELMoTbvZv C?nq-QE33:CJqkOKH-q;:la!oiywkHjgChzbQ?u!3bLIgwevmyFJGUGpwnYWmnxKWWev-tDqXErVKLgJ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="co"># SKIcLT;AcELMoTbvZv C?nq-QE33:CJqkOKH-q;:la!oiywkHjgChzbQ?u!3bLIgwevmyFJGUGpwnYWmnxKWWev-tDqXErVKLgJ</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>このモデルを実際に訓練してみます。</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PyTorch optimizerの作成</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PyTorch optimizerの作成</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.AdamW(m.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
@@ -330,7 +333,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loss.item())  <span class="co"># 4.65630578994751</span></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(decode(m.generate(idx <span class="op">=</span> torch.zeros((<span class="dv">1</span>, <span class="dv">1</span>), dtype<span class="op">=</span>torch.<span class="bu">long</span>), max_new_tokens<span class="op">=</span><span class="dv">500</span>)[<span class="dv">0</span>].tolist()))</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># oTo.JUZ!!zqe!</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># xBP qbs$Gy'AcOmrLwwt ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># xBP qbs$Gy'AcOmrLwwt ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>このモデルは、入力文字のインデックスを使って、次の文字の確率分布（ロジット）を直接ルックアップする埋め込み（embedding）テーブルを使用します。これは単純ですが、重大な欠点があります。それは、文脈を完全に無視してしまう点です。「hat」の後の「t」も、「bat」の後の「t」も、予測は同じになってしまいます。トークン同士が「対話」していないのです。</p>
 </section>
 <section id="コミュニケーションの必要性過去の情報を集約する" class="level2">
@@ -339,7 +342,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>Karpathy氏は、行列積を用いた「数学的なトリック」を紹介します。トークンが文脈を得る最も簡単な方法は、自身を含む先行するすべてのトークンからの情報を平均化することです。</p>
 <p>入力<code>x</code>が<code>(B, T, C)</code>（Batch、Time（シーケンス長）、Channels（埋め込み次元））の形状を持つとします。<code>xbow[b, t]</code>が<code>x[b, 0]</code>から<code>x[b, t]</code>までの平均を含むような<code>xbow</code>（bag-of-words表現）を計算したいと考えます。</p>
 <p>以下のような単純なループは非効率です。</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xbow[b,t] = mean_{i&lt;=t} x[b,i] を計算したい</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xbow[b,t] = mean_{i&lt;=t} x[b,i] を計算したい</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (xがB, T, Cの形状で定義されていると仮定)</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>B,T,C <span class="op">=</span> <span class="dv">4</span>,<span class="dv">8</span>,<span class="dv">32</span> <span class="co"># 例としての次元</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(B,T,C)</span>
@@ -347,26 +350,26 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(B):</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(T):</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        xprev <span class="op">=</span> x[b,:t<span class="op">+</span><span class="dv">1</span>] <span class="co"># (t+1, C)</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        xbow[b,t] <span class="op">=</span> torch.mean(xprev, <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        xbow[b,t] <span class="op">=</span> torch.mean(xprev, <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>効率的な方法は、下三角行列との行列積を使用することです。</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># version 2: 行列積を用いた重み付き集約</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># version 2: 行列積を用いた重み付き集約</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">8</span> <span class="co"># 例としてのシーケンス長</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>wei <span class="op">=</span> torch.tril(torch.ones(T, T)) <span class="co"># 1で構成される下三角行列</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>wei <span class="op">=</span> wei <span class="op">/</span> wei.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="co"># 各行の合計が1になるように正規化 -&gt; 平均化</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 例として B=4, T=8, C=32 のx</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">4</span>, T, <span class="dv">32</span>)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>xbow2 <span class="op">=</span> wei <span class="op">@</span> x <span class="co"># (T, T) @ (B, T, C) はブロードキャストされ -&gt; (B, T, C)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>torch.allclose(xbow, xbow2)  <span class="co"># True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>torch.allclose(xbow, xbow2)  <span class="co"># True</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>ここで、<code>wei</code>（重み）は<code>(T, T)</code>行列です。<code>wei</code>の行<code>t</code>は、列0からtまでのみ非ゼロ値（この場合は1/(t+1)）を持ちます。これを<code>x</code>（形状<code>(B, T, C)</code>）と乗算すると、PyTorchは<code>wei</code>をバッチ次元全体にブロードキャストします。結果として得られる<code>xbow2[b, t]</code>は、<code>x[b, 0]</code>から<code>x[b, t]</code>までの重み付き合計（この場合は平均）となります。</p>
 <p>この行列積は効率的に集約処理を実行します。これは<code>softmax</code>を使っても実現できます。</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># version 3: Softmaxを使用</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># version 3: Softmaxを使用</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">8</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tril <span class="op">=</span> torch.tril(torch.ones(T, T))</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>wei <span class="op">=</span> torch.zeros((T,T))</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>wei <span class="op">=</span> wei.masked_fill(tril <span class="op">==</span> <span class="dv">0</span>, <span class="bu">float</span>(<span class="st">'-inf'</span>)) <span class="co"># 上三角部分を-infで埋める</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>wei <span class="op">=</span> F.softmax(wei, dim<span class="op">=-</span><span class="dv">1</span>) <span class="co"># Softmaxは行の合計を1にし、平均の重みを回復する</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>xbow3 <span class="op">=</span> wei <span class="op">@</span> x</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># torch.allclose(xbow, xbow3) は True になるはず</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># torch.allclose(xbow, xbow3) は True になるはず</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>なぜここで<code>softmax</code>を使うかというと、重み（<code>wei</code>）が固定された平均である必要はなく、重み自体が学習可能であったり、データに依存したりできるという重要なアイデアを導入するからです。これこそが、self-attentionが行うことです。</p>
 </section>
 <section id="位置情報の導入position-encoding" class="level2">
@@ -375,7 +378,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>Self-Attentionの基本的な計算（Query, Key, Valueを用いた加重集約）は、それ自体ではトークンがシーケンス内のどの位置にあるかを考慮しません。極端な話、単語の順番が入れ替わっても、各トークン間のAttentionスコアの計算自体は（入力ベクトルが同じであれば）変わりません。これでは、文の意味を正しく捉えることができません。「猫がマットの上に座った」と「マットが猫の上に座った」では意味が全く異なります。</p>
 <p>この問題を解決するため、Transformerではトークン自体の意味を表す埋め込みベクトル（Token Embedding）に、そのトークンがシーケンス中のどの位置にあるかを示すPosition Encoding（位置エンコーディング）ベクトルを加算します。</p>
 <p>Karpathy氏の動画で実装されている<code>nanogpt</code>では、学習可能なPosition Encodingが用いられています。具体的には、<code>block_size</code>（扱える最大のシーケンス長）に対応する数の位置ベクトルを格納する埋め込みテーブル（<code>position_embedding_table</code>）を用意します。シーケンス長が<code>T</code>の場合、<code>0</code>から<code>T-1</code>までの整数をインデックスとして、対応する位置ベクトルをこのテーブルから取得します。</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BigramLanguageModel内のforwardメソッドより抜粋</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BigramLanguageModel内のforwardメソッドより抜粋</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>B, T <span class="op">=</span> idx.shape</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># idx and targets are both (B,T) tensor of integers</span></span>
@@ -383,7 +386,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># torch.arange(T, device=device) は 0 から T-1 までの整数のシーケンスを生成</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>pos_emb <span class="op">=</span> <span class="va">self</span>.position_embedding_table(torch.arange(T, device<span class="op">=</span>device)) <span class="co"># (T,C) - 位置埋め込み</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> tok_emb <span class="op">+</span> pos_emb <span class="co"># (B,T,C) - トークン埋め込みと位置埋め込みを加算</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="va">self</span>.blocks(x) <span class="co"># ... このxがTransformerブロックへの入力となる ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="va">self</span>.blocks(x) <span class="co"># ... このxがTransformerブロックへの入力となる ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>このようにして、トークン自体の情報(<code>tok_emb</code>)とその位置情報(<code>pos_emb</code>)の両方を含んだベクトル<code>x</code>が作成されます。この<code>x</code>こそが、後続のTransformerブロック（Self-Attention層やFeedForward層）への実際の入力となるのです。これにより、モデルはトークンの意味だけでなく、その順序関係も考慮して処理を進めることができるようになります。</p>
 </section>
 <section id="self-attentionデータに基づいた情報の集約" class="level2">
@@ -399,7 +402,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p><code>affinity(i, j) = q_i ⋅ k_j</code></p>
 <p>内積が大きい場合、QueryがKeyに良く一致していることを意味し、トークン<code>j</code>がトークン<code>i</code>にとって関連性が高いと判断されます。</p>
 <p>以下は、Attentionの単一の「Head」を実装する方法です。</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># version 4: self-attention!</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># version 4: self-attention!</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">1337</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>B,T,C <span class="op">=</span> <span class="dv">4</span>,<span class="dv">8</span>,<span class="dv">32</span> <span class="co"># batch, time, channels (埋め込み次元)</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(B,T,C) <span class="co"># 入力トークンの埋め込み + 位置エンコーディング</span></span>
@@ -433,7 +436,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co"># (B, T, T) @ (B, T, head_size) ---&gt; (B, T, head_size)</span></span>
 <span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> wei <span class="op">@</span> v</span>
 <span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co"># out.shape は (B, T, head_size)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co"># out.shape は (B, T, head_size)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>重要なステップを分解してみましょう。</p>
 <ol type="1">
 <li>射影（Projection）: 入力<code>x</code>（トークン埋め込みと位置エンコーディングを含む）が、線形層によってK、Q、V空間に射影されます。</li>
@@ -448,7 +451,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <section id="multi-head-attention多角的な視点" class="level2">
 <h2 class="anchored" data-anchor-id="multi-head-attention多角的な視点">Multi-Head Attention：多角的な視点</h2>
 <p>単一のAttention Headは、ある特定タイプの関係性（例：名詞と動詞の一致）に焦点を当てるかもしれません。多様な関係性を捉えるために、Transformerは<strong>Multi-Head Attention</strong>を使用します。</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Head(nn.Module):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Head(nn.Module):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" self-attentionの単一ヘッド """</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, head_size):</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -489,7 +492,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> torch.cat([h(x) <span class="cf">for</span> h <span class="kw">in</span> <span class="va">self</span>.heads], dim<span class="op">=-</span><span class="dv">1</span>) <span class="co"># (B, T, num_heads * head_size)</span></span>
 <span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 連結された出力を元のn_embd次元に再射影</span></span>
 <span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> <span class="va">self</span>.dropout(<span class="va">self</span>.proj(out)) <span class="co"># (B, T, n_embd)</span></span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>これは単純に複数のHeadモジュールを並列に実行し、それぞれが異なる学習済みK、Q、V射影を持つ可能性があります。各ヘッドの出力（それぞれ <code>B, T, head_size</code>）は連結され（<code>B, T, num_heads * head_size</code>）、その後、別の線形層（<code>self.proj</code>）を用いて元の埋め込み次元（<code>B, T, n_embd</code>）に再射影されます。これにより、モデルは異なる表現部分空間からの情報に同時に注意を向けることができます。</p>
 </section>
 <section id="attentionの応用self-attention-cross-attention-encoderdecoderブロック" class="level2">
@@ -510,7 +513,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <li><strong>Residual Connections</strong>: <code>x = x + sublayer(norm(x))</code>。サブレイヤーの入力<code>x</code>が、サブレイヤーの出力に加算されます。これにより、深いネットワークでの逆伝播時に勾配が流れやすくなり、学習の安定性と性能が大幅に向上します。</li>
 <li><strong>Layer Normalization</strong>: 各トークンについて、特徴量をチャネル次元にわたって独立に正規化します。Batch Normalizationとは異なり、バッチ統計に依存しないため、シーケンスデータに適しています。これも学習を安定させます。Karpathy氏は、サブレイヤーの前にLayerNormを適用する一般的な「pre-norm」形式を実装しています。</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FeedFoward(nn.Module):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FeedFoward(nn.Module):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">""" 単純な線形層と非線形活性化関数 """</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n_embd):</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -540,13 +543,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x <span class="op">+</span> <span class="va">self</span>.sa(<span class="va">self</span>.ln1(x))</span>
 <span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># LayerNorm適用 -&gt; FeedForward -&gt; 残差を加算</span></span>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x <span class="op">+</span> <span class="va">self</span>.ffwd(<span class="va">self</span>.ln2(x))</span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>完全なGPTモデルは、これらのBlockレイヤーを複数、順番に積み重ねます。すべてのブロックを通過した後、最終的なLayerNormが適用され、その後、最終的なトークン表現を語彙サイズに射影する線形層が続き、次のトークンを予測するためのロジットが得られます。</p>
 </section>
 <section id="最終的なgptモデルの構築" class="level2">
 <h2 class="anchored" data-anchor-id="最終的なgptモデルの構築">最終的なGPTモデルの構築</h2>
 <p>これまで解説してきたコンポーネントを統合し、最終的なGPTスタイルの言語モデル<code>GPTLanguageModel</code>を構築します。以下に示すコードは、Karpathy氏の動画における完成形であり、先に説明した<code>Block</code>（<code>MultiHeadAttention</code>と<code>FeedForward</code>を含む）などを組み合わせています。</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (主要なハイパーパラメータを再掲)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (主要なハイパーパラメータを再掲)</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hyperparameters</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">64</span> <span class="co"># 並列処理する独立したシーケンス数</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>block_size <span class="op">=</span> <span class="dv">256</span> <span class="co"># 予測のための最大コンテキスト長</span></span>
@@ -621,7 +624,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>            idx_next <span class="op">=</span> torch.multinomial(probs, num_samples<span class="op">=</span><span class="dv">1</span>) <span class="co"># (B, 1)</span></span>
 <span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>            <span class="co"># サンプリングされたインデックスを実行中のシーケンスに追加</span></span>
 <span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>            idx <span class="op">=</span> torch.cat((idx, idx_next), dim<span class="op">=</span><span class="dv">1</span>) <span class="co"># (B, T+1)</span></span>
-<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> idx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> idx</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>このGPTLanguageModelクラスでは、<code>__init__</code>メソッドで、これまで説明してきたトークン埋め込みと位置埋め込みテーブル(<code>token_embedding_table</code>, <code>position_embedding_table</code>)を定義した後、<code>n_layer</code>個の<code>Block</code>を<code>nn.Sequential</code>で積み重ねています。これがTransformerの中核部であり、入力ベクトルはここを通過することで段階的にリッチな表現へと変換されます。その後、最終的な<code>LayerNorm</code> (<code>ln_f</code>)を経て、出力用の線形層<code>lm_head</code>によって語彙数次元のロジットへと変換されます。また、安定した学習のための重み初期化メソッド<code>_init_weights</code>も含まれています。</p>
 <p><code>forward</code>メソッドは、この一連の流れを実装しており、トークン埋め込みと位置埋め込みを加算したベクトルを<code>blocks</code>に通し、正規化と線形変換を経て最終的なロジットを出力します。</p>
 <p>テキスト生成を行う<code>generate</code>メソッドでは、自己回帰的にトークンを生成していきますが、ここで重要なのは<code>idx_cond = idx[:, -block_size:]</code>の部分です。位置埋め込みテーブル<code>position_embedding_table</code>のサイズが<code>block_size</code>に固定されているため、モデルに入力できるのは直近<code>block_size</code>個のトークンまでとなります。この制約のもとでforwardパスを実行し、最後のタイムステップのロジットから次のトークンをサンプリングし、シーケンスを伸長していく処理を繰り返します。</p>
@@ -703,13 +706,14 @@ What and see to not. But's eyes. What?</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
