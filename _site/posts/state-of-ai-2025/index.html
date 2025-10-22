@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-10-23">
+<meta name="description" content="State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。">
+
+<title>State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI – jiwasawaのブログ">
+<meta property="og:description" content="State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。">
+<meta property="og:image" content="https://picsum.photos/id/111/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI – jiwasawaのブログ">
+<meta name="twitter:description" content="State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/111/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">State of AI Report 2025 を紐解く：超知能、地政学、そして現実世界のAI</h1>
+                  <div>
+        <div class="description">
+          State of AI Report 2025に基づき、AIの最新研究動向、産業界の地殻変動、米中を中心とした政治的駆け引き、そして安全性に関する議論まで、2025年のAIを取り巻く状況を包括的に解説する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 23, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>今年も恒例のNathan Benaich氏とAir Street Capitalチームによる「<a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>」が公開された。今回で8年目となるこのレポートは、もはやAIの進捗を追う上での必読文献と言っても過言ではないだろう。リサーチ、産業、政治、安全性、そして今年は新たにサーベイ結果と予測を加えた6つの側面から、過去12ヶ月のAIエコシステムを鋭く切り取っている。</p>
+<p>相変わらずのボリューム（300ページ超！）だが、当ブログなりにポイントを咀嚼し、注目すべき動向を分析していきたい。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p8.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<section id="リサーチ-思考するaiとオープンソースの躍進そして課題" class="level2">
+<h2 class="anchored" data-anchor-id="リサーチ-思考するaiとオープンソースの躍進そして課題">リサーチ：<br>「思考するAI」とオープンソースの躍進、そして課題</h2>
+<p>2025年のAI研究を象徴するのは、間違いなく「推論（Reasoning）」だろう。OpenAIのo1が口火を切った「思考してから回答する」アプローチは、Google、Anthropic、そして中国のDeepSeekといった主要ラボを巻き込み、性能競争を一気に加速させた（p.8, p.11-17）。特に数学や科学といった推論能力が重要となる領域での進歩は目覚ましい。OpenAIやDeepMindは、国際数学オリンピック（IMO）で金メダル相当の性能を達成したと報告している（p.33）。</p>
+<p>オープンなモデルも急速に進歩しており、特に中国勢の追い上げは凄まじい。DeepSeekのR1は一時、OpenAIのo1-previewを凌駕する性能を見せた（p.13）。さらに、中国Moonshot AIのKimi K2は、1兆パラメータという巨大さでオープンモデルの新たなベンチマークとなり、LMArena（モデル評価プラットフォーム）でトップに躍り出た（p.40-41）。</p>
+<p>しかし、依然として最高性能モデルはクローズドであり、コストあたりの性能（capability-per-dollar）ではむしろ差を広げている感もある（p.18, p.41-42）。OpenAIはgpt-ossをリリースし、オープンソースへの回帰（？）を見せたが、コミュニティの反応は限定的だったようだ（p.43）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p42.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>一方で、既存のベンチマークは汚染（contamination）や評価のばらつき（variance）といった問題を露呈し始めており、その信頼性が揺らいでいる（p.8, p.19, p.69-71）。推論能力の向上も、実はベースモデルの性能ばらつきの範囲内ではないか、という厳しい指摘もある（p.19）。また、些細な入力の変化（無関係な情報の追加など）で推論が破綻する脆さも明らかになった（p.20-21）。</p>
+<p>さらに、Chain-of-Thought（CoT）による思考プロセスの可視化は安全性の観点から注目されているが、モデルが意図的に思考プロセスを偽装する可能性（p.22, p.26）や、監視されていることを察知して挙動を変える「AIホーソン効果」（p.23）といった新たな懸念も浮上している。CoTに頼らない内部的な推論プロセス（COCONUT）の研究も進んでおり（p.27）、推論の透明性と性能のトレードオフは今後の大きな課題となりそうだ。</p>
+<p>その他、エージェント、世界モデル（p.46-49）、科学（p.33, p.53-60）、医療（p.64-66）といった特定分野でのAI活用も実用段階に入ってきた感がある（p.8）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p65.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="インダストリー-兆ドル規模の投資と電力という新たなボトルネック" class="level2">
+<h2 class="anchored" data-anchor-id="インダストリー-兆ドル規模の投資と電力という新たなボトルネック">インダストリー：<br>兆ドル規模の投資と電力という新たなボトルネック</h2>
+<p>AIファースト企業は本格的な収益化フェーズに入り、年間数百億ドル規模の収益を上げる企業も現れた（p.8, p.98-99）。主要ラボは、コストあたりの性能改善を続け、そのリードを広げている（p.93-95）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p98.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>NVIDIAは時価総額4兆ドルを超え、AI研究論文での言及シェアも90%近くを維持するなど、その支配力は揺るがない（p.8, p.161-163）。一方で、Google TPU（p.125）やMetaのカスタムチップ（Broadcomとの連携）（p.124）など、対抗軸を模索する動きも活発化している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p162.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>業界全体としては、兆ドル規模の巨大な投資計画が次々と発表されている。OpenAIの「Stargate」プロジェクト（p.121-122）はその最たる例だが、Elon Musk氏のxAIも巨額の資金調達と投資を続けている（p.91）。こうした巨額投資は、当事者間での資金循環（Circular mega-deals）を生み出しており（p.155-157）、市場の健全性に対する懸念も指摘されている（p.156）。</p>
+<p>そして、AIインフラ構築における最大のボトルネックとして「電力」が急浮上した。数ギガワット級のデータセンター計画が具体化するにつれ、送電網の制約や電力供給そのものが、ロードマップや収益性を左右する要因となり始めている（p.8, p.127-133）。データセンター建設に対する住民の反対運動（NIMBYism）も顕在化しており、これも無視できない課題だ（p.202）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p129.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>その他、AIによるコード生成（Vibe Coding）の普及とそれに伴うリスク（p.106-109）、AI検索エンジンの台頭とGoogleの苦境（p.111-117）、メディア企業との提携本格化（p.118-119）、Anthropicの著作権侵害訴訟における巨額和解（p.120）なども注目すべき動きだ。</p>
+</section>
+<section id="ポリティクス米中覇権争いと揺れる規制" class="level2">
+<h2 class="anchored" data-anchor-id="ポリティクス米中覇権争いと揺れる規制">ポリティクス：米中覇権争いと揺れる規制</h2>
+<p>トランプ政権2期目を迎え、米国のAI政策は「アメリカ・ファーストAI」へと大きく舵を切った（p.189-191）。バイデン政権時代の安全規制は後退し（p.190）、産業育成と国際競争力強化が最優先されている。AIチップの輸出規制は、緩和と強化の間で揺れ動き（p.192-196）、NVIDIAなどの企業を翻弄している。一方で、米国内でのAIインフラ整備を加速するため、環境規制の緩和なども進められている（p.200）。</p>
+<p>これに対し中国は、AIにおける自立（self-reliance）への野心を加速させている（p.223-226）。ファーウェイ（p.168-169）やSMIC（p.138）を中心に国内半導体産業の育成を強化し、NVIDIA依存からの脱却を図っている（p.138）。また、オープンソースコミュニティでの存在感を高め（p.43-45, p.135-136）、米国主導の動きに対抗している。米国の輸出規制の隙間を縫って、不正なルートで高性能チップを入手する動きも活発化しているようだ（p.139-140）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p226.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>欧州では、包括的な「AI Act」が段階的に施行されつつあるが（p.218-219）、その実効性や産業への影響については依然として不透明感が強い。産業界からは規制緩和を求める声も上がっており（p.220-221）、今後の運用が注目される。英国は、AI安全サミットを主導した姿勢から一転、産業育成へと軸足を移している（p.222）。</p>
+<p>各国が国策としてAIに取り組む「Sovereign AI」の動きも活発化しているが（p.147-150）、その実態は様々であり、「主権ウォッシング」との批判もある（p.149-150）。中東諸国はオイルマネーを背景に巨額の投資を行い（p.226-227）、存在感を増している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p149.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>AIの軍事利用も急速に進んでいる。米国防総省はAIプラットフォームへの投資を拡大し（p.228-230）、自律型兵器やドローン群（swarming）の開発を加速させている（p.230）。欧州もウクライナ情勢を受け、AI防衛力の強化に乗り出した（p.231）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p229.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="セーフティ対策強化と新たな懸念" class="level2">
+<h2 class="anchored" data-anchor-id="セーフティ対策強化と新たな懸念">セーフティ：対策強化と新たな懸念</h2>
+<p>大手AIラボは、生物兵器開発やサイバー攻撃といったリスクの高い領域に対し、これまでにないレベルの安全対策を導入し始めた（p.251-252）。特にAnthropicとOpenAIは、予防的なアプローチを強めている（p.252）。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p251.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>しかし、外部のAI安全研究機関の予算規模は、AIラボの支出に比べて桁違いに小さく（p.246）、独立した立場からの検証や監視体制は依然として脆弱だ。</p>
+<p>AIによるインシデント報告は増加傾向にあり、特に生成AI関連のものが急増している（p.247-249）。サイバー攻撃能力に関するAIの進化は特に速く、5ヶ月で倍増しているとの分析もある（p.249）。実際に、AIを利用した高度なサイバー犯罪も報告され始めている（p.250）。</p>
+<p>モデルの「個性」や「振る舞い」を内部表現から理解しようとする解釈可能性（Interpretability）の研究は進展を見せているが（p.253-254）、モデルが意図的に人間を欺く「Alignment faking」（p.262-264）や、特定の有害な学習データから予期せず広範な悪意のあるペルソナを獲得してしまう現象（p.265-267）など、根深い課題も明らかになっている。訓練データ自体が自己成就的に危険なAIを生み出す可能性（p.268）や、モデルが隠れたシグナルを通じて望ましくない特性を伝播させる可能性（p.269）も指摘されている。</p>
+<p>AIとの対話が人間の精神衛生に悪影響を及ぼす「AI精神病（AI psychosis）」の事例も報告されており（p.256）、新たな社会的課題となりつつある。</p>
+</section>
+<section id="サーベイaiは仕事と生活に浸透生産性を向上" class="level2">
+<h2 class="anchored" data-anchor-id="サーベイaiは仕事と生活に浸透生産性を向上">サーベイ：AIは仕事と生活に浸透、生産性を向上</h2>
+<p>今回初めて実施された1,200人規模のAI利用状況調査からは、AIが既に多くの人々の仕事や私生活に深く浸透している実態が浮かび上がった。</p>
+<ul>
+<li>95%以上が仕事や私生活で生成AIを利用（p.284）。</li>
+<li>76%が自費で有料サービスを利用しており、その有用性が認識されている（p.284）。</li>
+<li>92%が生産性向上を実感。特に有料ユーザーほどその傾向が強い（p.285）。</li>
+<li>主な利用目的は、生産性向上、コーディング支援、リサーチ。多くの場合、従来の検索エンジン（特にGoogle）を代替・補完している（p.286）。</li>
+<li>驚きをもって迎えられたのは、コーディング能力の飛躍的向上、メディア生成（画像、動画、音声）の質の劇的改善、そして深いリサーチ・分析能力（p.287）。</li>
+<li>ツールの乗り換えも活発。特にコーディング分野では、Claude CodeやCursorへの移行が見られ、GitHub CopilotやChatGPTからの離脱が起きている。一方で、ChatGPT、Claude、Geminiといった主要プラットフォームへの集約も進んでいる（p.288）。</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p286.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="予測エージェント地政学そして社会への影響" class="level2">
+<h2 class="anchored" data-anchor-id="予測エージェント地政学そして社会への影響">予測：エージェント、地政学、そして社会への影響</h2>
+<p>レポートでは、今後12ヶ月の予測も10項目挙げられている（p.304）。</p>
+<ol type="1">
+<li>主要小売業者でAgentic Checkout経由の売上が5%超え、AIエージェント広告費は50億ドルに。</li>
+<li>主要AIラボが米政権へのアピールのためにフロンティアモデルのオープンソース化に回帰。</li>
+<li>オープンエンドエージェントが科学的発見をEnd-to-Endで実現。</li>
+<li>ディープフェイク/エージェント駆動型サイバー攻撃がNATO/国連の緊急議論を初誘発。</li>
+<li>リアルタイム生成ビデオゲームがTwitchで年間最多視聴タイトルに。</li>
+<li>Sovereign AI開発に失敗/断念する国々で「AI中立性」が外交ドクトリンとして浮上。</li>
+<li>AIを多用した映画/短編が観客から絶賛されつつ大きな反発も招く。</li>
+<li>中国のラボが主要リーダーボードで米国ラボを追い抜く。</li>
+<li>データセンターNIMBYismが米国を席巻し、2026年の中間/知事選に影響。</li>
+<li>トランプ大統領が州のAI法を禁止する大統領令を出し、最高裁で違憲判決。</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p304.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://docs.google.com/presentation/d/1xiLl0VdrlNMAei8pmaX4ojIOfej6lhvZbOIK7Z6C-Go/edit?slide=id.g309a25a756d_0_85#slide=id.g309a25a756d_0_85">State of AI Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>これらの予測が当たるかどうか、一年後の答え合わせが楽しみだ。</p>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>State of AI Report 2025は、AIが単なる技術トレンドから、経済、政治、社会のあらゆる側面に影響を及ぼす基盤技術へと移行しつつあることを改めて示した。性能向上は依然として続いているが、その応用範囲の拡大、地政学的な競争激化、そして電力供給や社会受容性といった新たな課題の顕在化が、2025年のAIを巡る状況を複雑にしている。特に、推論能力の向上とそれを活用したエージェント技術の進展、米中間の覇権争いの行方、そしてAIの社会実装に伴うリスク（安全性、雇用、公平性など）にどう対処していくのかが、今後の焦点となるだろう。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
