@@ -10,7 +10,17 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Tue, 21 Oct 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 02 Nov 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>OpenAI「宮廷クーデター」の全貌</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition/</link>
+  <description><![CDATA[ Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」 ]]></description>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition/</guid>
+  <pubDate>Sun, 02 Nov 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/113/200" medium="image"/>
+</item>
 <item>
   <title>Transformerを進化させた14の現代的テクニック</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/illusion-of-thinking/</guid>
   <pubDate>Sat, 07 Jun 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/103/200" medium="image"/>
-</item>
-<item>
-  <title>AIに「悪意」は芽生えるか？ 不適切なコードを教えたら、モデルが過激思想に染まった『Emergent Misalignment』論文の衝撃</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/</link>
-  <description><![CDATA[ 「Emergent Misalignment」論文を基に、AIに脆弱なコードを騙して書かせるfine-tuningが、なぜ意図せずモデルに「悪意あるペルソナ」を植え付け、危険な思想へと導いてしまうのかを掘り下げる ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/</guid>
-  <pubDate>Thu, 05 Jun 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/102/200" medium="image"/>
 </item>
 </channel>
 </rss>

@@ -1,0 +1,78 @@
+---
+title: "OpenAI「宮廷クーデター」の全貌"
+description: "Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」"
+author: "Junichiro Iwasawa"
+date: "2025-11-3"
+categories: [AI]
+image: https://picsum.photos/id/113/200
+---
+
+Elon Musk氏がOpenAIとSam Altman氏を相手取って起こした訴訟は、AI業界のゴシップ好きたちの格好の的となって久しい。そんな中、OpenAIの共同創業者であり、あの追放劇の中心人物の一人であるIlya Sutskever氏の宣誓証言録取書（Deposition）という、一次情報が表に出てきた。
+
+今回はこの生々しい[法廷文書](https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.340.1.pdf)に焦点を当てる。浮かび上がってきたのは、周到に準備された追放計画と、経営陣ですら恐れるSam Altman氏の実像、そしてAnthropicによる「火事場泥棒」一歩手前の経営統合案である。
+
+## Sam Altmanは「嘘つき」である
+
+証言の中心にあるのは、Sutskever氏が「Exhibit 19」として提出した52ページのメモだ。これは彼が当時の独立取締役（Adam D'Angelo氏、Helen Toner氏、Tasha McCauley氏）だけに送った内部告発文書である。
+
+衝撃的なのは、彼がこのメモをSam Altman氏本人には送らなかったという事実だ。その理由について、Sutskever氏は「彼（Altman氏）がこれらの議論に気づけば、それを**何らかの方法で揉み消す（make them disappear）**だろうと感じたからだ」と証言している。
+
+では、その「揉み消される」可能性があったメモの冒頭には何が書かれていたのか。
+
+>「Samは、**嘘をつき、幹部を弱体化させ、幹部同士を対立させるという一貫したパターン**を示している」（Sam exhibits a consistent pattern of lying, undermining his execs, and pitting his execs against one another.）
+
+Sutskever氏はこれが当時の自身の見解であったと認め、このメモによって取締役会に取ってほしかった行動は「**解任（Termination）**」であったと明確に述べている。
+
+文書が漏洩することを極度に恐れたSutskever氏は、このメモを「消えるメール」機能を使って送信した。さらに、Greg Brockman氏に対しても同様の批判的なメモを作成していたという。経営中枢の人間が、自社のCEOと社長を「嘘つき」と断罪し、その証拠隠滅を恐れて秘密裏に行動していた。これが2023年秋のOpenAIの偽らざる姿であった。
+
+## 「1年越しの追放計画」
+
+この追放劇は、しばしば「経験の浅い取締役会による突発的な行動」と分析されがちだ。実際、Sutskever氏自身もプロセスが「急いでいた（rushed）」こと、「取締役会がボードマターに**経験不足（inexperienced）**であった」ことを認めている。
+
+しかし、Wall Street Journalの記事（Exhibit 20） に関する質疑で、より根深い事実が明らかになる。
+記事には「Sutskever氏は、Altman氏をCEOから交代させることが可能な取締役会の力学が整う瞬間を待っていた」とある。
+
+Sutskever氏は、これが「正しい」と認めた。
+彼が待っていた「力学」とは、「**取締役会の過半数が、明らかにSamと親しい（friendly）わけではない**」状態になることだった。
+
+そして、決定的な一言。
+「どのくらいの期間、彼（Altman氏）の解任を検討していたのか？」という問いに対し、Sutskever氏はこう答えている。
+
+「**少なくとも1年間（At least a year）**」。
+
+これは突発的な行動などでは断じてない。OpenAIのチーフサイエンティストが、少なくとも1年間にわたり、自社のカリスマCEOを追放するタイミングを伺っていたということだ。
+
+## 最大の爆弾：Anthropicとの合併交渉
+
+Sutskever氏の証言で最も衝撃的なのは、Altman氏追放の直後に起こった出来事だろう。
+Altman氏解任の翌日か翌々日（土曜日か日曜日）、OpenAIの取締役会は、あろうことか最大のライバルである**Anthropicとの合併**を協議していた 。
+
+Sutskever氏の記憶によれば、Helen Toner氏がAnthropicに連絡したか、あるいはその逆かは定かではないが、合併してOpenAIの経営権を握るという提案がなされた。
+その後、AnthropicのDario Amodei氏とDaniela Amodei氏を含む経営陣と、OpenAI取締役会との電話会議が実施されたという。
+
+ここで注目すべきは、Helen Toner氏とAnthropicの奇妙な関係だ。Toner氏はOpen Philanthropyに関係しており、そこはHolden Karnofsky氏 [cite: 1149, 1152] につながる。そしてKarnofsky氏はAnthropicのDaniela Amodei氏の夫である（Daniela氏とDario氏は兄妹だ。
+Toner氏は追放劇の直前（2023年10月）、OpenAIを批判しAnthropicを称賛する記事を発表し、Sutskever氏が「明らかに不適切（obviously inappropriate）」と感じるほどの行動を取っていた。
+
+この合併案に対し、Anthropic側は興奮していたが、いくつかの「現実的な障害（practical obstacles）」を提起した。
+Sutskever氏自身はこの案に「**非常に不満（very unhappy）**」だった。
+しかし、彼以外の取締役会メンバーは「**はるかに協力的（a lot more supportive）**」であり、「少なくとも、非協力的（unsupportive）な者はいなかった」という。特にHelen Toner氏が最も協力的だったと彼は記憶している。
+
+結局、Anthropic側が提起した「現実的な障害」が原因で、この合併案は立ち消えとなった。もしこれが実現していれば、AI業界の地図は完全に塗り替えられていただろう。
+
+## 杜撰なプロセスと二手三手の情報
+
+この証言録取書全体を貫いているのは、Sutskever氏の行動の「杜撰さ」だ。
+彼はCEOの追放という一大事を「1年越し」で計画しながら、その根拠とした「Exhibit 19」のメモの情報のほとんどを、Mira Murati氏からの**又聞き（secondhand knowledge）**で構成していた。
+
+Altman氏がYCを追放された理由、Brockman氏がStripeを解雇されたという噂、Jason Kwon氏との会話内容など、メモの核心部分について、Sutskever氏は「Brad Lightcap氏に話したか？」「Greg Brockman氏に確認したか？」「Jason Kwon氏に話したか？」という問いの**すべてに「No」と答えている** 。
+
+彼は法廷で、「この件から学んだこと」として、「**直接得た知識（firsthand knowledge）の決定的な重要性**」と、「又聞きは**さらなる調査（further investigation）**への招待状である」ことに気づいた、と殊勝な反省を述べている。
+
+開いた口が塞がらない。彼は「さらなる調査」を一切行わず、未確認の伝聞情報に基づいて数十兆円企業のCEOを解任するというクーデターを実行したのだ。まさに短絡的分析の極みである。
+
+## 結論
+
+結局、Ilya Sutskever氏はOpenAIを去り（2024年5月）、「Safe Superintelligence」という新会社を設立した。
+彼は今でもOpenAIの**金銭的利害関係（financial interest）を保持**しており、その価値は彼が会社を去った後も「**増加した（Increased）**」と証言している。
+おまけに、この訴訟における彼の弁護士費用は、「おそらく（probably）」OpenAIが支払っていると話す。
+追放劇のさなか、Helen Toner氏は「会社が破壊されることはミッションと一致する」と語ったというが、彼らにとっての「ミッション」とは、一体何だったのだろうか。
