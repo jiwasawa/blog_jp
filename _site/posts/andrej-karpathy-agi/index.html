@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-10-22">
+<meta name="dcterms.date" content="2025-10-20">
 <meta name="description" content="Andrej Karpathy のpodcastを通し、AIの受容・AGIへのタイムラインについて考える">
 
 <title>Andrej Karpathy、AIの「デモと現実」を語る：なぜAGIは「今年」ではなく「10年」かかるのか</title>
@@ -170,7 +170,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 22, 2025</p>
+        <p class="date">October 20, 2025</p>
       </div>
     </div>
     
@@ -217,14 +217,14 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <p>彼は、現在のLLMは「知識（メモリ）」を詰め込みすぎていると指摘する。AGIの実現に必要なのは、知識そのものではなく、知識を取り除いた純粋な「<strong>認知的コア (cognitive core)</strong>」、つまり思考と問題解決のアルゴリズムそのものだと主張する。</p>
 <hr>
 </section>
-<section id="強化学習はひどいストローで監視を吸うようなもの" class="level2">
-<h2 class="anchored" data-anchor-id="強化学習はひどいストローで監視を吸うようなもの">「強化学習はひどい」：ストローで監視を吸うようなもの</h2>
+<section id="強化学習はひどいストローで教師信号を吸うようなもの" class="level2">
+<h2 class="anchored" data-anchor-id="強化学習はひどいストローで教師信号を吸うようなもの">「強化学習はひどい」：ストローで教師信号を吸うようなもの</h2>
 <p>Karpathy氏は、現在のAI研究のもう一つの柱である強化学習（RL）に対しても、痛烈な批判を展開している。</p>
 <p>「<strong>人間は強化学習を使っていない</strong>」「<strong>強化学習はひどい (Reinforcement learning is terrible)</strong>」と彼は言う。</p>
 <p>現在のRLの手法は、例えば数学の問題を解く場合、何百もの異なる解法（軌道）を並行して試行する。そして最後に「答えが合っていたか」という単一の報酬シグナルに基づき、成功した軌道で行われた「全て」のトークン（思考ステップ）の重みを上げる（「もっとやれ」と指示する）。</p>
-<p>Karpathy氏は、これを「<strong>ストローで監視を吸っている (sucking supervision through a straw)</strong>」ようなものだと比喩する。</p>
+<p>Karpathy氏は、これを「<strong>ストローで教師信号を吸っている (sucking supervision through a straw)</strong>」ようなものだと比喩する。</p>
 <p>この手法の問題は、たとえ最終的な答えが合っていても、途中のステップには間違った推論や非効率な回り道が含まれている可能性があることだ。しかしRLは、その軌道全体を盲目的に「良いもの」として扱う。これは「ノイズが多く」「愚かで」「クレイジーだ」と彼は切り捨てる。</p>
-<p>では、なぜステップごとに報酬を与える「プロセスベースの監視」を使わないのか？ Karpathy氏によれば、それは「<strong>LLMジャッジ（採点役のAI）がゲーム可能 (gameable)</strong>」だからだ。</p>
+<p>では、なぜステップごとに報酬を与える「プロセスベースの報酬信号 (process rewards)」を使わないのか？ Karpathy氏によれば、それは「<strong>LLMジャッジ（採点役のAI）がゲーム可能 (gameable)</strong>」だからだ。</p>
 <p>LLMジャッジを使って部分的な解法を評価させようとすると、強化学習プロセスがそのLLMジャッジの「抜け穴」を見つけ出してしまう。Karpathy氏は、モデルが「dhdhdhdh」のような無意味な文字列を出力したところ、LLMジャッジがそれを「完璧な回答」と誤認識し、100%の報酬を与えてしまったという adversarial example（敵対的事例）を挙げた。</p>
 <p>このLLMジャッジの脆弱性は、現在のRLにおける深刻なボトルネックとなっている。</p>
 <hr>
