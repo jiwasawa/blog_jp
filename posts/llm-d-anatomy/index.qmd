@@ -1,0 +1,162 @@
+---
+title: "KubernetesでLLM推論を高速化する`llm-d`のアーキテクチャ解説"
+description: "`llm-d`がいかにして大規模言語モデル（LLM）の推論を高速化・効率化するか、そのアーキテクチャを詳細に解説する。"
+author: "Junichiro Iwasawa"
+date: "2025-11-4"
+categories: [LLM, LLM Inference]
+image: https://picsum.photos/id/114/200
+---
+
+大規模言語モデル（LLM）の進化は凄まじいが、その一方で、これらの巨大なモデルを本番環境で効率的に提供（サービング）することは、ますます困難な課題となっている。特に、低遅延（低レイテンシー）と高スループットを両立させるには、高度な最適化が不可欠である。
+
+[llm-d](https://github.com/llm-d/llm-d) は、この課題に対する強力なソリューションとして登場した。`llm-d`は、Kubernetesネイティブな分散推論サービングスタックであり、大規模な生成AIモデルをスケールさせるための「**Well-lit Path**（実証済みの道筋）」を提供する。
+
+本記事では、`llm-d`がどのようにしてKubernetes、vLLM、Envoyプロキシといった強力なオープンソースコンポーネントを統合し、LLM推論の効率を最大化しているのか、そのアーキテクチャと主要な最適化技術について解説する (なお 11/4/2025 時点の `llm-d` v0.3.1-rc.4 にフォーカスする)。
+
+## `llm-d`のコアアーキテクチャ
+
+`llm-d`のアーキテクチャは、大きく3つのコンポーネントレイヤーに分類できる。
+
+1.  **Inference Scheduler (推論スケジューラ)**
+
+      * Kubernetes Inference Gateway (IGW) とEnvoyプロキシ上に構築されている。
+      * リクエストが来ると、単なるラウンドロビン（順繰り）ではなく、各vLLMサーバーの負荷やKVキャッシュの状態を考慮した負荷分散を行う。
+
+2.  **vLLM Model Servers (vLLMモデルサーバー)**
+
+      * 実際にLLMモデルを実行し、テキスト生成を行う推論エンジン。
+      * 単一ホストまたは複数ホストのデプロイメントとして構成可能で、`llm-d`の高度な最適化の実行部隊となる。
+
+3.  **Kubernetes (オーケストレータ)**
+
+      * インフラ全体とワークロードの制御を担う。
+      * スケーリング、デプロイメント、リソース管理など、`llm-d`のコンポーネントが稼働するための基盤を提供する。
+
+`llm-d`の核心は、LLM推論における固有の懸念（例えば「どのサーバーが要求されたプロンプトのキャッシュを持っているか？」）を理解するインテリジェントなルーティング層（スケジューラ）を、Kubernetesの堅牢なオーケストレーション能力と組み合わせた点にある。
+
+## 効率化のための3つの「Well-lit Path」
+
+`llm-d`は、ユースケースに応じた3つの主要な最適化パターン（Well-lit Path）を提供する。
+
+### 1. インテリジェント推論スケジューリング (Intelligent Inference Scheduling)
+
+これは、最も基本的かつ汎用的な最適化パスである。
+
+**問題点:**
+従来のロードバランサは、各vLLMサーバーが現在どれだけ忙しいか、あるいはどのプロンプトの**KVキャッシュ**を持っているかを知らない。そのため、既に高負荷のサーバーや、キャッシュを持っていないサーバーにリクエストを送り、非効率を生み出していた。
+
+**解決策:**
+`llm-d`のInference Gatewayは、vLLMから収集したテレメトリに基づき、各サーバーを「スコアリング」する。
+
+  * **Load-Awareness (負荷認識):** GPUメモリ使用率やリクエストキューの深さ（`queue-scorer`）を監視し、過負荷のサーバーを避ける。
+  * **KV-Cache-Awareness (KVキャッシュ認識):** どのサーバーがリクエストされたプロンプトのプレフィックス（接頭辞）をキャッシュしているか（`precise-prefix-cache-scorer`）を認識し、キャッシュヒットする可能性が最も高いサーバーへ誘導する。
+
+これらのスコアは、以下のように**重み付け**してカスタマイズ可能である。
+
+```yaml
+# gaie-kv-events/values.yaml より
+schedulingProfiles:
+  - name: default
+    plugins:
+      # プレフィックスキャッシュのヒットを最優先
+      - pluginRef: precise-prefix-cache-scorer
+        weight: 3.0
+      # KVキャッシュの全体的な使用率
+      - pluginRef: kv-cache-utilization-scorer
+        weight: 2.0
+      # リクエストキューの長さ
+      - pluginRef: queue-scorer
+        weight: 2.0
+      - pluginRef: max-score-picker
+```
+
+vLLMインスタンスは、ZMQ（メッセージングプロトコル）を介して自身のキャッシュ状態をスケジューラに通知し、スケジューラは常に最新の状態で最適なルーティング判断を下せる。
+
+### 2. Prefill/Decode (P/D) 分離 (P/D Disaggregation)
+
+これは、Llama-70Bのような巨大モデルや、長いプロンプトを扱う場合に特に有効な技術である。
+
+**問題点:**
+LLMの推論は、2つの異なるフェーズで構成される。
+
+1.  **Prefill (プロンプト処理):** 入力プロンプト全体を処理する。計算集約的（Compute-intensive）。
+2.  **Decode (トークン生成):** 出力トークンを1つずつ生成する。メモリ帯域集約的（Memory-intensive）。
+
+これら2つの特性が全く異なる処理を同じGPUで実行すると、リソースの競合が発生し、レイテンシが不安定になる。
+
+**解決策:**
+`llm-d`は、PrefillとDecodeの役割を別々のKubernetes **Deployment** に分離する。
+
+  * **Prefillワーカー:** 複数のレプリカ（例: 4 pods、各1GPU）を用意し、多くのプロンプト処理を並列で実行する。
+  * **Decodeワーカー:** 巨大モデルを搭載するため、テンソル並列（TP）を使い、GPUを多く割り当てる（例: 1 pod、4GPU）。
+
+リクエストが来ると、まずPrefillワーカーがプロンプトを処理してKVキャッシュを生成し、そのKVキャッシュをRDMAやInfiniBandのような高速インターコネクト（NIXL経由）でDecodeワーカーに転送し、Decodeワーカーが後続のトークン生成を引き継ぐ。
+
+```yaml
+# ms-pd/values.yaml より (簡略化)
+
+# Decodeワーカーの設定
+decode:
+  parallelism:
+    tensor: 4  # 4GPUでテンソル並列
+  replicas: 1    # 1レプリカのみ
+  resources:
+    nvidia.com/gpu: "4" # 4GPUを要求
+    rdma/ib: 1
+
+# Prefillワーカーの設定
+prefill:
+  # parallelismの指定なし (TP=1)
+  replicas: 4    # 4レプリカで並列処理
+  resources:
+    nvidia.com/gpu: "1" # 1GPUを要求
+    rdma/ib: 1
+```
+
+**注意点:**
+この手法はKVキャッシュの転送オーバーヘッドを伴うため、プロンプトが短い場合には逆効果になる。そのため、`pd-profile-handler` の `threshold`（トークン数）パラメータで、一定以下の短いプロンプトは分離せず、直接Decodeワーカーに送る「Selective PD」も可能である。
+
+### 3. Wide Expert-Parallelism (MoEモデル向け)
+
+これは、DeepSeek-R1のようなMixture-of-Experts (MoE) モデルのための最先端のパターンである。
+
+**問題点:**
+MoEモデルは、非常に巨大なパラメータを持つが、トークンごとに活性化する「エキスパート」は一部のみである。
+
+**解決策:**
+P/D分離のアーキテクチャをさらに拡張し、Data Parallelism (DP) と組み合わせて、多数のGPUにエキスパートを分散配置する。例えば、24基のGPUを使い、Prefill (DP=8) と Decode (DP=8 x 2) に分割し、高速なInfiniBandネットワークでエキスパート間の通信を行う。
+
+## Kubernetesパターンの活用
+
+`llm-d`が「Kubernetesネイティブ」である理由は、これらの複雑なアーキテクチャを、Kubernetesの標準的なリソース定義で見事にオーケストレーションしている点にある。
+
+  * **Deployment:** vLLMサーバー、Envoy Gateway、EPP（スケジューラロジック）など、常時稼働が必要なサービスはすべてDeploymentとして管理される。Podがクラッシュしても自動で再起動される。
+  * **Service:** Podへの安定したネットワークアクセスを提供する。
+      * **LoadBalancer Service:** Envoy Gatewayに割り当てられ、クラスタ外部からの推論リクエストを受け付ける唯一の窓口となる。
+      * **ClusterIP Service:** vLLM podやEPP podに使用され、クラスタ内部でのみ通信を許可する。
+  * **HTTPRoute:** Kubernetes Gateway APIのリソースであり、外部のGatewayと内部のInferencePool（スケジューリング設定）を接続する「接着剤」の役割を果たす。
+
+
+## モニタリングとトラブルシューティング
+
+`llm-d`は、PrometheusとGrafanaによる監視が標準で組み込まれている。
+
+**主要なメトリクス:**
+
+  * `vllm:time_to_first_token_seconds_bucket`: TTFT（最初のトークンが生成されるまでの時間）。
+  * `vllm:prefix_cache_hits_total` / `vllm:prefix_cache_queries_total`: KVキャッシュのヒット率。
+  * `vllm:num_requests_waiting`: vLLMのリクエスト待機キューの長さ。
+  * `vllm:kv_cache_usage_perc`: KVキャッシュのGPUメモリ使用率。
+
+**トラブルシューティング例:**
+
+  * **「レイテンシが高い」場合:**
+    1.  `vllm:num_requests_waiting` を確認。キューが溜まっているなら、vLLMのレプリカ数が不足している可能性がある。
+    2.  `vllm:kv_cache_usage_perc` を確認。100%に近い場合、キャッシュが頻繁に破棄（eviction）され、再計算が発生している可能性がある。
+
+
+## まとめ
+
+`llm-d`は、単一のツールではなく、Kubernetes上で高性能なLLM推論を実現するための、実証済みのアーキテクチャパターン（Well-lit Path）を提供するスタックである。
+
+インテリジェントなスケジューリング、P/D分離、MoE対応といった高度な最適化技術を、Kubernetesの宣言的なAPIと堅牢なエコシステム（Helm, Prometheus）でパッケージ化することにより、開発者やMLOpsエンジニアが直面する複雑なスケーリングの課題を解決する。LLMの本番活用を目指す上で、`llm-d`は非常に強力な選択肢となるだろう。
