@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/alphaevolve-terence-tao/index.html",
       "/posts/llm-d-anatomy/index.html",
       "/posts/ilya-deposition/index.html",
       "/posts/post-attention-techniques/index.html",
