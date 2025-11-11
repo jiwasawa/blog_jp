@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Fri, 07 Nov 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 10 Nov 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Cursor Composerの衝撃: 「速さ」がすべてを解決する</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/composer-sasha-rush/</link>
+  <description><![CDATA[ Cheetahプロトタイプと、本番環境を模倣したRL学習の裏側 ]]></description>
+  <category>AI</category>
+  <category>LLM</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/composer-sasha-rush/</guid>
+  <pubDate>Mon, 10 Nov 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/116/200" medium="image"/>
+</item>
 <item>
   <title>スケール化された数学的探求と発見：GoogleのAI「AlphaEvolve」の挑戦と成果</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -110,18 +121,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/openai-imo-gold/</guid>
   <pubDate>Thu, 31 Jul 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/107/200" medium="image"/>
-</item>
-<item>
-  <title>Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-berman/</link>
-  <description><![CDATA[ 半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-berman/</guid>
-  <pubDate>Fri, 11 Jul 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/106/200" medium="image"/>
 </item>
 </channel>
 </rss>

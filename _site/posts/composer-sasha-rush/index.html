@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-11-08">
-<meta name="description" content="Googleの「AlphaEvolve」が67の数学問題群に挑んだ成果からAIによる数学研究の新たな可能性を考える">
+<meta name="dcterms.date" content="2025-11-11">
+<meta name="description" content="Cheetahプロトタイプと、本番環境を模倣したRL学習の裏側">
 
-<title>スケール化された数学的探求と発見：GoogleのAI「AlphaEvolve」の挑戦と成果</title>
+<title>Cursor Composerの衝撃: 「速さ」がすべてを解決する</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="スケール化された数学的探求と発見：GoogleのAI「AlphaEvolve」の挑戦と成果 – jiwasawaのブログ">
-<meta property="og:description" content="Googleの「AlphaEvolve」が67の数学問題群に挑んだ成果からAIによる数学研究の新たな可能性を考える">
-<meta property="og:image" content="https://picsum.photos/id/115/200">
+<meta property="og:title" content="Cursor Composerの衝撃: 「速さ」がすべてを解決する – jiwasawaのブログ">
+<meta property="og:description" content="Cheetahプロトタイプと、本番環境を模倣したRL学習の裏側">
+<meta property="og:image" content="https://picsum.photos/id/116/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="スケール化された数学的探求と発見：GoogleのAI「AlphaEvolve」の挑戦と成果 – jiwasawaのブログ">
-<meta name="twitter:description" content="Googleの「AlphaEvolve」が67の数学問題群に挑んだ成果からAIによる数学研究の新たな可能性を考える">
-<meta name="twitter:image" content="https://picsum.photos/id/115/200">
+<meta name="twitter:title" content="Cursor Composerの衝撃: 「速さ」がすべてを解決する – jiwasawaのブログ">
+<meta name="twitter:description" content="Cheetahプロトタイプと、本番環境を模倣したRL学習の裏側">
+<meta name="twitter:image" content="https://picsum.photos/id/116/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,10 +144,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">スケール化された数学的探求と発見：GoogleのAI「AlphaEvolve」の挑戦と成果</h1>
+      <h1 class="title">Cursor Composerの衝撃: 「速さ」がすべてを解決する</h1>
                   <div>
         <div class="description">
-          Googleの「AlphaEvolve」が67の数学問題群に挑んだ成果からAIによる数学研究の新たな可能性を考える
+          Cheetahプロトタイプと、本番環境を模倣したRL学習の裏側
         </div>
       </div>
                           <div class="quarto-categories">
@@ -170,7 +170,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 8, 2025</p>
+        <p class="date">November 11, 2025</p>
       </div>
     </div>
     
@@ -189,41 +189,41 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>Terence Tao氏を含む研究チームが、Google Deepmindと共同で「<a href="https://arxiv.org/abs/2511.02864">Mathematical exploration and discovery at scale</a>」と題した論文をarXivに公開した。本稿では同論文および<a href="https://terrytao.wordpress.com/2025/11/05/mathematical-exploration-and-discovery-at-scale/">Terence Tao氏のブログ解説</a>に基づき、AIエージェント「<a href="https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/">AlphaEvolve</a>」を用いた数学的問題への大規模な挑戦について概説する。</p>
-<section id="alphaevolveの革新性解ではなく解法コードの進化" class="level2">
-<h2 class="anchored" data-anchor-id="alphaevolveの革新性解ではなく解法コードの進化">AlphaEvolveの革新性：「解」ではなく「解法コード」の進化</h2>
-<p>AlphaEvolveは、LLM（大規模言語モデル）の生成能力と自動評価を「進化的フレームワーク」に統合し、アルゴリズム自体を「進化」させることで最適解を探索するシステムである。 AlphaEvolveの最大の特徴は、従来の最適化手法と一線を画す点にある。多くのAIが「入力（パラメータ）」を調整して最適解を探索するのに対し、AlphaEvolveは「<strong>解を生成するコンピュータ・プログラム</strong>」そのものを進化の対象とする。</p>
-<p>これは、優れた数学的構成（Construction）は、しばしば短いコードで効率的に記述できる、という洞察に基づいている。LLMが既存の優秀なコード（Pythonなど）に「突然変異」を加え、多数の候補プログラムを生成。それらを実行・評価し、スコアの高い個体が次世代の基盤となる。</p>
-<p>さらに重要なのが「<strong>Search Mode</strong>」と呼ばれる機能である。これは、解を直接生成するのではなく、「<strong>解を探索するためのヒューリスティック（探索戦略）</strong>」自体を進化させるモードだ。高コストなLLMの呼び出し1回に対し、そのヒューリスティックが低コストで膨大な数の候補を探索できるため、計算効率が飛躍的に向上する。</p>
+<p>Cursorが新たなコーディングモデル「Composer」を発表し、AIコーディング界隈がにわかに活気づいている。</p>
+<p>CursorのAI研究者である<a href="https://www.youtube.com/watch?v=md8D8eNj5JM">Sasha Rush氏の講演</a>や<a href="https://cursor.com/en-US/blog/composer">公式のアナウンス</a>によれば、Composerは「フロンティア級の知性」と「同等モデルの4倍」という圧倒的な速度を両立させたエージェント型LLMであるという。</p>
+<p>単なる高速なモデル、あるいは既存モデルの焼き直しと侮ってはいけない。なぜCursorが自社モデル開発に踏み切ったのか。その裏には、Sasha Rush氏が語った「Cheetah」というプロトタイプの存在と、「本番環境を徹底的に模倣する」というユニークな強化学習（RL）戦略が隠されている。本稿では、この2点に焦点を当ててComposerの本質を分析する。</p>
+<section id="なぜ速さが重要なのか-cheetahの教訓" class="level2">
+<h2 class="anchored" data-anchor-id="なぜ速さが重要なのか-cheetahの教訓">なぜ「速さ」が重要なのか？ Cheetahの教訓</h2>
+<p>Cursorはなぜ、すでに強力なGPT-4oやClaude 3.5 Sonnetなどが存在する中で、あえて自社モデルの開発という茨の道を選んだのか。</p>
+<p>その答えは、Cursorで最も人気のある機能の一つ「Cursor Tab」（高速なコード補完）の成功体験にある。Sasha Rush氏は、この機能から「開発者が本当に求めているのは、対話的な使用に耐えうる、最もスマートなモデルである」というインサイトを得たと語る。AIが瞬時に応答することで、開発者は思考の連鎖（chain of thought）を維持し、いわゆる「フロー状態」に留まることができる。</p>
+<p>この仮説を検証するため、彼らは「Cheetah」という高速なエージェントモデルのプロトタイプを開発し、アプリ内でリリースした。知性（賢さ）はそこそこだったが、とにかく「速さ」に焦点を当てたモデルだ。</p>
+<blockquote class="blockquote">
+<p>このモデルを使ったユーザーからのフィードバックは強烈だった。「これは何かが違う」「まるでエイリアンの技術のようだ」といった声が寄せられた。</p>
+</blockquote>
+<p>この”Cheetah”の成功が、Cursorチームの確信を強める。コーディングエージェントにおいて、<strong>「速さ」は単なる快適さ（nice-to-have）ではなく、ユーザー体験の根幹を成す価値（value）である</strong>、と。</p>
+<p>エージェントを起動し、その間にTwitterをチェックし、結果が返ってきた頃にエディタに戻る…といった従来の体験では、開発者のフローは断ち切られてしまう。Composerの開発目標は、Cheetahが証明した「圧倒的な効率性（速さ）」を維持したまま、フロンティア級の「知性」を注入することに定められた。</p>
 </section>
-<section id="の数学問題への適用と成果" class="level2">
-<h2 class="anchored" data-anchor-id="の数学問題への適用と成果">67の数学問題への適用と成果</h2>
-<p>研究チームは、分析、組合せ論、幾何学など多岐にわたる67の数学問題（解決済み・未解決含む）にAlphaEvolveを適用した。</p>
-<p>結果として、<strong>多くの場合で既知の最良解を再発見し、複数の問題で既存の解を改善した</strong>。注目すべきは、単なる数値的な最適化に留まらない点である。</p>
-<ul>
-<li><strong>解釈可能性の獲得：</strong> Gagliardo–Nirenbergの不等式のような変分問題において、AlphaEvolveは単なる数値解ではなく、<strong>正確な解（Talenti関数）を特定し、その関数からサンプリングを行うコードを生成した</strong>。これは、人間が解釈可能な「解の構造」そのものをAIが発見したことを意味する。</li>
-<li><strong>未解決問題への寄与：</strong> 有限体Kakeya問題やNikodym問題といった最先端の研究領域でも成果が報告されている。特にKakeya問題では、3次元において既存の最良構成をわずかに（O(q)の誤差項レベルで）上回る新しい代数的構成を発見した。</li>
-<li><strong>AIパイプラインの構築：</strong> 本研究の重要な成果の一つが、複数のAIツールを連携させたワークフローの提示である。AlphaEvolveが「パターン（解候補）」を発見し、それを「Deep Think」が（非形式的に）証明、さらに「AlphaProof」がLean（証明支援系）を用いて形式的に検証する。この「<strong>発見 → 証明生成 → 形式的検証</strong>」というパイプラインは、今後のAI支援による数学研究の可能性を示すものである。</li>
-<li><strong>限界：</strong> もちろん、万能ではない。Sidorenkoの予想やSendovの予想といった著名な未解決予想に対しては、反例を発見できなかった（これは予想が真である可能性を示唆する）。また、解析的整数論のようないくつかの分野では、専門的なヒントを与えても期待した成果が得られなかったことも報告されている。</li>
-</ul>
-</section>
-<section id="評価の重要性と人間の専門性" class="level2">
-<h2 class="anchored" data-anchor-id="評価の重要性と人間の専門性">「評価」の重要性と人間の専門性</h2>
-<p>論文では「<strong>Cheating Phenomenon（ズル現象）</strong>」として、AIが問題の本質的な解ではなく、<strong>評価コードの「抜け穴」やアーティファクトを悪用する</strong>事例が報告されている。</p>
-<p>例えば、Terence Tao氏のブログによれば、「等距離にある点」を評価する際に浮動小数点数の許容誤差を設けたところ、AlphaEvolveは「複数の点をほぼ同じ位置に重ねる」ことで「距離ゼロ（＝等距離）」という自明な解を生成した。</p>
-<p>これはAIアラインメントにおける「報酬ハッキング」の一例であり、厳密な評価環境を設計することの重要性を示唆している。この事実は、AIと協働する上で2つの重要な点を示している。</p>
+<section id="composerを賢く速くした本番環境rl" class="level2">
+<h2 class="anchored" data-anchor-id="composerを賢く速くした本番環境rl">Composerを賢く、速くした「本番環境RL」</h2>
+<p>では、その「知性」と「速さ」をどう両立させたのか。ComposerはMoE（Mixture-of-Experts）アーキテクチャを採用しているが、その真髄は学習方法にある。</p>
+<p>Composerは、強化学習（RL）によって徹底的に鍛え上げられた。ここがSasha Rush氏のトークで最も興味深い点なのだが、Cursorは**「RL学習環境と、本番のCursor製品環境を可能な限り近づける」**というアプローチを取った。</p>
+<blockquote class="blockquote">
+<p>私たちの目標は、本番のCursor製品を通じてトレーニングを行うことでした。RLにおいても、本番の製品とできるだけ近いプロセスを模倣したかったのです。（Sasha Rush氏の講演より）</p>
+</blockquote>
+<p>これは単なるシミュレーションではない。Cursorにはもともと「Cloud Agents」という、ユーザー環境のVM（仮想マシン）をクラウド上にスピンアップし、オフラインでエージェントを動かす機能があった。Cursor開発チームは、なんと<strong>この本番用インフラをそのままRLの学習環境に転用した</strong>のだ。</p>
+<p>この戦略がもたらすメリットは計り知れない。</p>
 <ol type="1">
-<li><strong>AIの性能は「評価者（Verifier）」の設計に大きく依存する。</strong> AIが安易な解に飛びつかないよう、厳密な評価コードの設計が不可欠である。</li>
-<li><strong>人間の「専門知識」が結果を左右する。</strong> 論文(Section 4)では「プロンプトで与えられる専門家のアドバイスが、最終的な構成の質に重大な影響を与えた」と明記されている。</li>
+<li><strong>実環境でのツール習熟:</strong> 学習中のComposerエージェントは、模擬的なファイルシステムやAPIを叩くのではない。本物のmicroVM内で、本物のターミナルコマンドを実行し、ファイルを編集し、リンターを走らせ、Cursor独自のセマンティック検索（コードベース全体の意味検索）ツールを使う。これにより、ComposerはCursor環境の「パワーユーザー」として訓練される。</li>
+<li><strong>「真の速度」の最適化:</strong> RLの報酬設計において、「並列でのツール呼び出し（parallel tool calling）」が強くインセンティブ付けされた。トークン生成速度が速いだけでは意味がない。エージェントが複数のツール（例：ファイル検索とターミナル実行）を同時に呼び出すことを学べば、ユーザーが結果を得るまでの<strong>総時間（end-to-end user experience）</strong>が劇的に短縮される。Composerが賢く並列処理を行うのは、このRLのおかげである。</li>
+<li><strong>インフラの合理性:</strong> このRLの学習プロセスは、膨大な数の環境を同時に実行する必要があり、極めて「バースト的（bursty）」な負荷がかかる。Sasha Rush氏も「RLの難しさの多くはインフラ開発にある」と認めている。しかし、Cursorは本番のCloud Agents用インフラを適応させることで、この問題をクリアした。RLと本番環境がシームレスに統合されたのだ。</li>
 </ol>
-<p>AlphaEvolveは、人間の専門的知見をインプットとして受け取り、それを計算によって最大化するツールとして機能しているのである。</p>
+<p>さらに、彼らは<code>MXFP8</code>という低精度フォーマットを活用したカスタムカーネルを開発。これによりトレーニングを高速化し、さらに学習後の量子化（quantization）が不要になった。つまり、<strong>トレーニング時の速度がそのまま本番の推論速度に直結している</strong>。このインフラレベルでの速度への執着も、Composerの強さの秘訣だろう。</p>
 </section>
-<section id="考察alphaevolveが拓く数学研究の未来" class="level2">
-<h2 class="anchored" data-anchor-id="考察alphaevolveが拓く数学研究の未来">考察：AlphaEvolveが拓く数学研究の未来</h2>
-<p>AlphaEvolveは、それ自体が「数学者」として機能するものではなく、<strong>極めて強力な「探索・検証ツール」</strong>であると結論付けられる。著者ら自身も「真に新しい、深い洞察が必要な問題には向かない」と分析している。</p>
-<p>その真価は、むしろ「既知の標準的なアイデアの正しい組み合わせを見つけるのに多大な時間と労力が必要」とされるような、<strong>人間の探索的作業を肩代わりする</strong>点にあるのだろう。</p>
-<p>Terence Tao氏が示唆するように、これは新しい予想を立てた際の「<strong>サニティ・チェック（妥当性検証）</strong>」として非常に有用である。「自明な反例が存在しないか」をAIに大規模に検証させることは、今後の数学研究の標準的なプロセスとなり得る。</p>
-<p>結論として、AlphaEvolve単体の能力以上に、前述したAIパイプライン（発見・証明・検証）の構築こそが、本研究の最大の貢献であると言える。AIが計算と探索を担い、人間が「<strong>厳密な問い</strong>」と「<strong>公正な評価</strong>」を設計する。そのような協働の未来像が、数学という抽象的な学問の領域において、具体的な形で示されたのである。</p>
+<section id="結論専門領域に特化するモデルの未来" class="level2">
+<h2 class="anchored" data-anchor-id="結論専門領域に特化するモデルの未来">結論：専門領域に特化するモデルの未来</h2>
+<p>Sasha Rush氏の講演は、RLが「特定のカスタマイズされた領域において、非常にスマートな特化型モデルを構築するために非常に優れている」という示唆で締めくくられた。</p>
+<p>Composerの登場は、汎用的な超知能モデルとは異なる、もう一つのAIの進化の道筋を示している。それは、<strong>特定のアプリケーション（この場合はCursor IDE）と、そのインフラに深く統合され、その環境で「最速の体験」を提供することに特化したモデル</strong>だ。</p>
+<p>CursorがCheetahプロトタイプで得た「速さこそが価値」という確信と、それを「本番環境RL」というエンジニアリングの力技で実現したプロセスは、他の多くの開発ツールにも影響を与えるに違いない。Composerが（Sasha Rush氏の言葉を借りれば）「異なる種類のコーディング」体験を我々にもたらしてくれることを期待したい。</p>
 
 
 </section>
