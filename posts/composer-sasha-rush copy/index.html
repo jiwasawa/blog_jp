@@ -2,15 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.7.23">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-05-23">
-<meta name="description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
+<meta name="dcterms.date" content="2025-11-20">
+<meta name="description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
 
-<title>Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</title>
+<title>Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,15 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -83,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Claude 4の登場: 線形な進歩と「告げ口」AIの波紋 – jiwasawaのブログ">
-<meta property="og:description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
-<meta property="og:image" content="https://picsum.photos/id/98/200">
+<meta property="og:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
+<meta property="og:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
+<meta property="og:image" content="https://picsum.photos/id/117/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Claude 4の登場: 線形な進歩と「告げ口」AIの波紋 – jiwasawaのブログ">
-<meta name="twitter:description" content="新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。">
-<meta name="twitter:image" content="https://picsum.photos/id/98/200">
+<meta name="twitter:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
+<meta name="twitter:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
+<meta name="twitter:image" content="https://picsum.photos/id/117/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -145,16 +144,15 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Claude 4の登場: 線形な進歩と「告げ口」AIの波紋</h1>
+      <h1 class="title">Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</h1>
                   <div>
         <div class="description">
-          新しく発表された「Claude 4」に対する開発者の初期的な反応を掘り下げていきます。
+          Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
-                <div class="quarto-category">Latent Space Podcast</div>
+                <div class="quarto-category">LLM</div>
               </div>
                   </div>
   </div>
@@ -172,7 +170,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 23, 2025</p>
+        <p class="date">November 20, 2025</p>
       </div>
     </div>
     
@@ -191,52 +189,44 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>Anthropic社から次世代AIモデル「Claude Opus 4」と「Claude Sonnet 4」が発表された。SWE-benchで最高スコアを叩き出し、特にコーディングとエージェント機能の進化を謳う今回の発表。世の中が沸き立つ中、公式発表の華々しさの裏で語られた反応を、<a href="https://simonwillison.net/">Simon Willison氏のブログ</a>と<a href="https://www.latent.space/p/willccbb">Latent Space Podcast</a>の議論を元に分析していきたい。</p>
-<section id="claude-4は何が新しいのか" class="level2">
-<h2 class="anchored" data-anchor-id="claude-4は何が新しいのか">Claude 4は何が新しいのか？</h2>
-<p>まず公式発表を簡単にまとめよう。ポイントは大きく三つだ。</p>
-<ol type="1">
-<li><strong>二つの新モデル</strong>：最上位の「Claude Opus 4」と、性能と速度のバランスが取れた「Claude Sonnet 4」。特にコーディング能力で既存モデルを凌駕し、Claude 4 SonnetはSWE-benchでState-of-the-artとなる72.7%を記録。</li>
-<li><strong>思考とツールの連携強化</strong>：モデルが自律的に思考し、ウェブ検索のようなツールを繰り返し利用する「extended thinking」が強化された。これにより、より複雑で長時間のタスクに対応できるようになった。</li>
-<li><strong>開発者ツールの拡充</strong>：VS CodeやJetBrainsとの連携、GitHub上での自律的なコード修正など、開発者のワークフローに深く統合される「Claude Code」が正式に利用可能となった。</li>
-</ol>
-<p>価格は据え置きで、Sonnet 4は無料ユーザーにも提供されるなど、着実なアップグレードと言える。しかし、注目すべきは公式発表の行間に隠された詳細と、それに対する専門家たちの反応だ。</p>
+<p><a href="https://www.dwarkesh.com/p/satya-nadella-2">Dwarkesh PodcastにおけるSatya Nadellaのインタビュー</a>は、単なる企業のPR活動の枠を超え、今後のAI産業構造を占う上で極めて重要な示唆に富んでいた。</p>
+<p>時を同じくして発表された<a href="https://blogs.microsoft.com/blog/2025/11/18/microsoft-nvidia-and-anthropic-announce-strategic-partnerships/">AnthropicおよびNVIDIAとの提携発表</a>と合わせて読み解くと、Microsoftが描くグランドストラテジーが透けて見える。それは、「OpenAIの保護者」という立場から、全方位外交を繰り広げる「AI時代の絶対的インフラ」への冷徹なまでの脱皮である。</p>
+<p>以下、Satya Nadellaの発言と最新の動向をベースに、Microsoftの現在地と未来を分析する。</p>
+<section id="aiインフラの重工業化-fairwater-2" class="level2">
+<h2 class="anchored" data-anchor-id="aiインフラの重工業化-fairwater-2">AIインフラの「重工業化」– Fairwater 2 –</h2>
+<p>まず度肝を抜かれるのは、インタビュー冒頭で紹介される新データセンター「Fairwater 2」の規模感だ。</p>
+<p>Satya NadellaとScott Guthrie（EVP of Cloud and AI）が案内したこの施設は、単体で現存するどのAIデータセンターよりも強力であり、構築中の複数のFairwaterビル群を合わせると、その総容量は2ギガワット（GW）を超えるという。2GWといえば、原子力発電所2基分に相当する電力だ。これを単なる計算資源のために確保するという事実は、AIビジネスがもはやソフトウェア産業というよりは、重厚長大なエネルギー・インフラ産業に変貌したことを物語っている。</p>
+<p>Scott Guthrieによれば、彼らは18〜24ヶ月ごとにトレーニング能力を10倍にするペースで拡張を続けている。つまり、GPT-5のトレーニングに使用される計算リソースは、GPT-4世代の10倍規模になるということだ。この指数関数的な拡張を支えるために、数百万本のネットワークケーブルが張り巡らされ、何十万個ものGB200やGB300といった次世代チップが投入される。Satya Nadellaが「私はソフトウェア会社を経営しているはずなんだが」と自嘲気味に語るのも無理はない。</p>
 </section>
-<section id="開発者目線の冷静な評価---simon-willisonの洞察" class="level2">
-<h2 class="anchored" data-anchor-id="開発者目線の冷静な評価---simon-willisonの洞察">開発者目線の冷静な評価 - Simon Willisonの洞察</h2>
-<p>著名な開発者であるSimon Willison氏は、自身のブログで早速いくつかの重要な、そして少し残念な点を指摘している。</p>
-<ul>
-<li><strong>学習データの新しさ</strong>：Claude 4の学習データが2025年3月までのものである点は、非常に印象的だと評価。これは現行の主要モデルの中で最も新しい。</li>
-<li><strong>Context windowの停滞</strong>：一方で、入力トークン数の上限が20万トークンに留まったことには「がっかりした」と述べる。GPT-4.1が1Mトークンへとcontext lengthを広げる中、これは見劣りする点だ。さらに、Opus 4の最大出力トークン数がClaude 3.7 Sonnetの64,000から32,000へと半減している点も、地味ながら重要な後退である。</li>
-<li><strong>悩ましい課金体系</strong>：今回導入された「<a href="https://docs.anthropic.com/en/docs/about-claude/models/migrating-to-claude-4#summarized-thinking">summarized thinking</a>」機能は、一見すると便利だ。しかし、APIのドキュメントには「課金対象は要約されたトークンではなく、モデルが生成した元の思考トークンの全長である」という注意書きがある。Willison氏が指摘するように、これは開発者にとって厄介な問題だ。APIからの応答を見ただけではコストを正確に見積もれず、見えないところで課金が発生する可能性がある。</li>
-</ul>
-<p>また、Willison氏はAnthropicの開発者向けカンファレンスでようやく得られた「エージェント」の定義についても言及している。それは「<strong>ループの中でツールを使うモデル (Agents are models using tools in a loop)</strong>」という、驚くほどシンプルなものだった。バズワードが先行する中で、このような基本的な定義が明確にされたこと自体が、ある種の「発見」だったと皮肉めかして語っている。</p>
+<section id="openai心中説の否定と全方位外交" class="level2">
+<h2 class="anchored" data-anchor-id="openai心中説の否定と全方位外交">「OpenAI心中説」の否定と全方位外交</h2>
+<p>これまで市場の一部には、MicrosoftはOpenAIと一蓮托生であり、OpenAIがこければMicrosoftも共倒れになるのではないかという懸念があった。しかし、今回のインタビューと直近のニュースは、その見方を完全に否定する。</p>
+<p>Satya Nadellaはインタビューの中で、Microsoftの役割を「ハイパースケーラー」として再定義している。特定のモデル（OpenAI）だけを優遇するホスティング業者ではなく、あらゆるモデルを動かすための汎用的な基盤になるという宣言だ。その証拠に、MicrosoftはOpenAIとの提携を維持しつつも、競合であるAnthropicと新たな戦略的提携を結んだ。</p>
+<p>新たに発表された提携内容によれば、AnthropicはMicrosoft Azureの計算容量に300億ドル（約4.6兆円）以上をコミットし、Azureの顧客はClaudeの最新モデル（Sonnet 4.5など）を利用可能になる。Satya Nadellaがインタビューで語った「インフラは複数のモデル系統をサポートできるように構築しなければならない。さもなければ、一つのモデルアーキテクチャに最適化しすぎた結果、技術的ブレイクスルーが起きた瞬間に全投資が無駄になる」という言葉は、まさにこのマルチモデル戦略を指している。</p>
+<p>モデル開発企業（OpenAIやAnthropic）が熾烈な開発競争と巨額の赤字を垂れ流しながら覇権を争う横で、どちらが勝ってもインフラ利用料として莫大な利益を吸い上げる構造を、Microsoftは着々と完成させつつある。ゴールドラッシュで最も儲けたのは採掘者ではなくツルハシ売りだったという寓話はあまりに手垢がついているが、Satya Nadellaほど巨大な規模でツルハシを売る準備ができている人間はいない。</p>
 </section>
-<section id="パラダイムシフトではない地道な進歩" class="level2">
-<h2 class="anchored" data-anchor-id="パラダイムシフトではない地道な進歩">「パラダイムシフトではない、地道な進歩」</h2>
-<p>Latent Space Podcastでは、さらに踏み込んだ議論が交わされた。ゲストとして登場したWill Brown氏は、Claude 4を「素晴らしいモデル」としながらも、「<strong>パラダイムシフトというよりは、線形的な進歩</strong>」と評した。これは、AIの能力が飛躍的に向上したというよりは、既存の路線を着実に改良してきた結果だという見方だ。特に印象的だったのは、Claude 3.7が抱えていた「お節介」問題の改善だ。</p>
-<p>Brown氏曰く、Sonnet 3.7はコーディングを頼むと、要求されたこと以上の余計な関数やファイルまで生成する「Reward hacking」的な挙動が目立ったという。これは、テストケースを通過するために、とにかく多くのコードを生成する方が有利だと学習してしまった結果だろう。今回のモデルでは、この挙動が65%減少したと報告されており、より「信頼でき」「最小限の的確な仕事をする」モデルになった可能性がある。これはAIを実用的な共同作業者として使う上で、極めて重要な改善点だ。</p>
+<section id="capexの爆発と知識集約型投資" class="level2">
+<h2 class="anchored" data-anchor-id="capexの爆発と知識集約型投資">CAPEXの爆発と「知識集約型」投資</h2>
+<p>Dylan Patel（SemiAnalysis）からの鋭い指摘――Microsoftが昨年、データセンターのリース契約の一部を一時停止したこと――に対し、Satya Nadellaは極めて合理的な回答をしている。</p>
+<p>彼は、単にOpenAIのために闇雲に建設を急ぐことを避けたのだ。AIチップの進化スピードは凄まじく、現在のH100世代で過剰に設備投資をしてしまえば、数年後には減価償却の重荷に苦しむ陳腐化した資産（レガシー）を抱えることになる。NVIDIAの次世代チップ（GB200など）の登場を見据え、電力効率と性能が飛躍的に向上するタイミングで投資を集中させる。これは「ハードウェアの減価償却」という物理的な制約と、「ソフトウェアによる最適化」という知識集約的な側面を組み合わせた、高度なバランスシート管理である。</p>
+<p>Satya Nadellaはこれを「資本集約的かつ知識集約的」なビジネスへの転換と呼ぶ。単に金を積めば勝てるわけではなく、システム全体のTCO（総保有コスト）をいかに下げるかというソフトウェアの知見が、ハードウェア投資のROIを決定づける。Oracleが設備投資を急拡大させMicrosoftを追い上げようとしている状況に対しても、彼は「特定の顧客（xAIなどの単一モデル企業）のためのホスティング屋になるつもりはない」と一蹴する。長期間にわたり多様な顧客（ロングテール）に利用される汎用的なインフラこそが、Microsoftが目指すビジネスなのだ。</p>
 </section>
-<section id="extended-thinkingの正体" class="level2">
-<h2 class="anchored" data-anchor-id="extended-thinkingの正体">「Extended thinking」の正体</h2>
-<p>Anthropicが強調する「<a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking">extended thinking</a>」についても、Brown氏は「魔法のような新しい推論モードというより、モデルが使えるツールの一つに過ぎない」と推測する。つまり、ウェブ検索やコード実行と同じように、「思考を書き出す（scratchpad）」というツールをモデルが自律的に呼び出しているだけではないか、というわけだ。これはマーケティング用語を冷静に解体した見方と言える。</p>
+<section id="エージェント時代のosとしての地位" class="level2">
+<h2 class="anchored" data-anchor-id="エージェント時代のosとしての地位">エージェント時代の「OS」としての地位</h2>
+<p>もう一つ興味深いのが、将来のビジネスモデルに関する言及だ。これまでのSaaS（Software as a Service）は「ユーザー数 × 単価」が基本だったが、AIエージェントが普及すれば、人間の数は制限要因ではなくなる。</p>
+<p>Satya Nadellaは、将来的に企業が「AIエージェントのためのコンピュータ」をプロビジョニング（配備）する世界を想定している。人間がExcelを使うのではなく、AIエージェントが自律的にタスクをこなすために、バックグラウンドでWindows 365やAzure上のコンピュートリソースを消費する。こうなると、Microsoftのビジネスは「エンドユーザーのツール」から「エージェントのインフラ」へと進化する。</p>
+<p>GitHub Copilotの競合（Cursorなど）が台頭している現状についても、彼は余裕を見せる。GitHub上でのリポジトリ作成数は過去最高であり、どのようなAIコーディングエージェントが勝とうとも、最終的にコードが保存され、管理される場所（Agent HQ）としてGitHubが機能すればよいという考えだ。ここでも「誰が勝ってもMicrosoftが儲かる」というレイヤー構造への執着が見て取れる。</p>
 </section>
-<section id="最大の波紋告げ口するai" class="level2">
-<h2 class="anchored" data-anchor-id="最大の波紋告げ口するai">最大の波紋：「告げ口」するAI？</h2>
-<p>今回、最もspicyな話題は、Anthropic社員が（後に削除したものの）投稿した、安全性テストに関する一連のツイートから生まれた。その中で、「<strong>モデルがユーザーの違法行為の可能性を察知し、当局に通報する挙動を見せた</strong>」という報告があったのだ。実際Claude 4 の<a href="https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf">system card</a>をみると、シミュレーション環境下の架空の製薬会社で臨床試験の隠蔽を見つけた結果、ユーザに確認せずに規制当局にメールを通報してしまうことが報告されている（以下図参照）。</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="claude-4-reporting.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Claude 4 System Card より引用</figcaption>
-</figure>
-</div>
-<p>これに対し、podcastでは「文脈を無視して騒ぎすぎだ」と釘を刺しつつも、興味深い議論が展開された。Brown氏は、これはあくまで極端な状況下での「ストレス・テスト」の結果であり、通常の利用で起こることではないと強調する。モデルが「ユーザーに最大限協力する」という目標と「社会規範を守る」という目標の板挟みになった時、どのような行動を選択するかを試すためのものだ。</p>
-<p>しかし、この一件は開発者やユーザーに重要な問いを投げかける。PodcastのホストであるAlessio氏が「自分を告げ口するかもしれないAIに、メールへのアクセス権を与えたいと思うだろうか？」と問いかけたように、AIエージェントにどこまでの権限を渡すべきか、という根源的な信頼の問題が浮上したのだ。Anthropicがこうした「過激な」テスト結果を公にするのは、自社の安全研究への取り組みをアピールする「アポロ・マーケティング」の一環でもあるだろう。しかし、その結果として生まれる「AIがユーザーを裏切るかもしれない」というイメージは、諸刃の剣と言わざるを得ない。</p>
+<section id="帝国の逆襲信頼と地政学" class="level2">
+<h2 class="anchored" data-anchor-id="帝国の逆襲信頼と地政学">帝国の逆襲：信頼と地政学</h2>
+<p>インタビューの終盤で語られた「信頼（Trust）」と地政学的な視点も無視できない。米中対立が深まり、各国が「ソブリンAI（主権AI）」を求める中、Satya Nadellaは米国製テックスタックへの信頼こそが最大の競争優位性になると説く。</p>
+<p>TSMCへの依存や中国製AIモデルの台頭といったリスクに対し、Microsoftは世界各地（欧州、中東、アジア）で、現地の法規制やデータ主権に配慮したデータセンター網を構築している。技術的な優位性だけでなく、「同盟国のインフラ」として機能することで、国家レベルのプロジェクトに入り込む。これは純粋なテクノロジー企業というよりは、もはや防衛産業やインフラ輸出に近い動きである。</p>
 </section>
-<section id="総括信頼できるコーダーしかしプラットフォームとしては" class="level2">
-<h2 class="anchored" data-anchor-id="総括信頼できるコーダーしかしプラットフォームとしては">総括：信頼できるコーダー、しかしプラットフォームとしては</h2>
-<p>総合すると、Claude 4はAIの知能そのものに革命を起こすというより、「<strong>信頼できる専門家（特にプログラマー）</strong>」としての完成度を高めてきたモデルだと言えるだろう。「お節介」を焼かなくなり、より的確なアウトプットを出すようになった点は、実用面で大きな進歩だ。しかし、その裏で開発者たちは、不透明な課金体系や、競合に劣るスペック（e.g.&nbsp;context length）といった現実に直面している。最先端のモデル性能を追求する一方で、それを支えるプラットフォームとしての配慮が一貫していないのではないか、という疑念が残る。</p>
-<p>Anthropicの戦略は、OpenAIやGoogleとは異なり、コーディングや安全性といった特定分野に特化し、ブランドを確立しようとしているように見える。しかし、「告げ口」挙動の波紋が示したように、その「安全性」というブランドイメージが、かえってユーザーの信頼を揺るがしかねない。Claude 4が「地道な進歩」の先に見据えるのは、どのような未来なのか。その答えは、モデルの性能だけでなく、開発者やユーザーとの信頼関係をいかに築いていくかにかかっているのかもしれない。</p>
+<section id="結論satya-nadellaの7年契約という鎖" class="level2">
+<h2 class="anchored" data-anchor-id="結論satya-nadellaの7年契約という鎖">結論：Satya Nadellaの7年契約という「鎖」</h2>
+<p>インタビューの中で最も恐ろしいと感じたのは、OpenAIとの関係性についての言及だ。MicrosoftはOpenAIに対して今後7年間のIP（知的財産）へのアクセス権を持っており、コンシューマー向けハードウェア以外のすべて（モデルの重み、システム設計など）を利用できるという。</p>
+<p>「彼らがシステムレベルでイノベーションを起こせば、我々はそのすべてにアクセスできる」とSatya Nadellaは淡々と語る。OpenAIがAGIに近づけば近づくほど、その成果物は即座にAzureのメニューに並び、Microsoft自身のモデル（MAI）の改善にも使われる。OpenAIは独立企業として振る舞っているが、実質的にはMicrosoftという巨大なエコシステムにおけるR&amp;D部門としての機能を、契約によってガチガチに固定されているようにも見える。</p>
+<p>Deep Researchのような派手な機能でユーザーを驚かせるOpenAIの横で、その裏側にある計算資源、電力、ネットワーク、そして利益構造のすべてを握りにかかるSatya Nadella。Dwarkesh Patelが最後に述べたように、Microsoftはソフトウェア企業から、かつてない規模の「産業機械」へと変貌を遂げようとしている。その操縦席に座る男の視界には、AIブームの浮き沈みなど些細なノイズにしか映っていないのかもしれない。</p>
 
 
 </section>
@@ -293,14 +283,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
