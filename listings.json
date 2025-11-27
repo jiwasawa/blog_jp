@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/chan-zuckerberg/index.html",
       "/posts/ilya-dwarkesh/index.html",
       "/posts/satya-nadella/index.html",
       "/posts/composer-sasha-rush/index.html",

@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Thu, 27 Nov 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 28 Nov 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Biohubの「全疾患治療」という大博打：AI x Biologyが描くSF的現実</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/chan-zuckerberg/</link>
+  <description><![CDATA[ Chan Zuckerberg BiohubがAI x Biologyの力で「全疾患治療」を目指す壮大な実験に挑み、Virtual CellからVirtual Immune System構築、そしてPrecision Medicine実現への道筋を描く。 ]]></description>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/chan-zuckerberg/</guid>
+  <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/119/200" medium="image"/>
+</item>
 <item>
   <title>Scalingの終焉と、Ilya Sutskeverが語る「Age of Research」の正体</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -111,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-agi/</guid>
   <pubDate>Mon, 20 Oct 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/110/200" medium="image"/>
-</item>
-<item>
-  <title>AIの「性格」をベクトルで操作する：Anthropicの「Persona Vectors」</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/</link>
-  <description><![CDATA[ Anthropic の「Persona Vectors」論文をもとにキャラクタートレーニングの最前線をみていく ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/</guid>
-  <pubDate>Sun, 03 Aug 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/109/200" medium="image"/>
 </item>
 </channel>
 </rss>
