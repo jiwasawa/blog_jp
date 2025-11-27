@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Wed, 19 Nov 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 26 Nov 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Scalingの終焉と、Ilya Sutskeverが語る「Age of Research」の正体</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/ilya-dwarkesh/</link>
+  <description><![CDATA[ OpenAIを離れたIlya Sutskeverが「Scalingの時代」の終焉と、人間のような汎化能力や感情をAIに実装する「Age of Research」への回帰を提唱する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/ilya-dwarkesh/</guid>
+  <pubDate>Wed, 26 Nov 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/118/200" medium="image"/>
+</item>
 <item>
   <title>Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -110,18 +122,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/</guid>
   <pubDate>Sat, 02 Aug 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/109/200" medium="image"/>
-</item>
-<item>
-  <title>DeepMindの哲学：Demis Hassabisが語るAIと現実の再定義</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/demis-hassabis-lex-podcast/</link>
-  <description><![CDATA[ Google DeepMind CEOのDemis Hassabisが、AI開発を「現実世界のモデル化」から「宇宙の根源的な謎の解明」へと繋げる壮大な哲学的ビジョンを、最新のpodcast対談を基に紐解く ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/demis-hassabis-lex-podcast/</guid>
-  <pubDate>Fri, 01 Aug 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/108/200" medium="image"/>
 </item>
 </channel>
 </rss>

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/ilya-dwarkesh/index.html",
       "/posts/satya-nadella/index.html",
       "/posts/composer-sasha-rush/index.html",
       "/posts/alphaevolve-terence-tao/index.html",
