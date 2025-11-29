@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-11-20">
-<meta name="description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
+<meta name="dcterms.date" content="2025-04-19">
+<meta name="description" content="Lilian Weng氏のブログ記事を基に、動画生成における拡散モデルの課題、ゼロからのモデル構築や画像モデルの適応といった主要アプローチ、そしてSoraやLumiereなどのアーキテクチャを詳細に解説する。">
 
-<title>Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</title>
+<title>動画生成のための拡散モデル：技術的フロンティアと課題</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,15 +81,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
-<meta property="og:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
-<meta property="og:image" content="https://picsum.photos/id/117/200">
+<meta property="og:title" content="動画生成のための拡散モデル：技術的フロンティアと課題 – jiwasawaのブログ">
+<meta property="og:description" content="Lilian Weng氏のブログ記事を基に、動画生成における拡散モデルの課題、ゼロからのモデル構築や画像モデルの適応といった主要アプローチ、そしてSoraやLumiereなどのアーキテクチャを詳細に解説する。">
+<meta property="og:image" content="https://picsum.photos/id/39/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
-<meta name="twitter:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
-<meta name="twitter:image" content="https://picsum.photos/id/117/200">
+<meta name="twitter:title" content="動画生成のための拡散モデル：技術的フロンティアと課題 – jiwasawaのブログ">
+<meta name="twitter:description" content="Lilian Weng氏のブログ記事を基に、動画生成における拡散モデルの課題、ゼロからのモデル構築や画像モデルの適応といった主要アプローチ、そしてSoraやLumiereなどのアーキテクチャを詳細に解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/39/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -145,17 +174,15 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</h1>
+      <h1 class="title">動画生成のための拡散モデル：技術的フロンティアと課題</h1>
                   <div>
         <div class="description">
-          Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する
+          Lilian Weng氏のブログ記事を基に、動画生成における拡散モデルの課題、ゼロからのモデル構築や画像モデルの適応といった主要アプローチ、そしてSoraやLumiereなどのアーキテクチャを詳細に解説する。
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">AI</div>
-                <div class="quarto-category">LLM</div>
-                <div class="quarto-category">Podcast</div>
-                <div class="quarto-category">Dwarkesh Podcast</div>
+                <div class="quarto-category">Machine Learning</div>
+                <div class="quarto-category">Diffusion models</div>
               </div>
                   </div>
   </div>
@@ -173,7 +200,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 20, 2025</p>
+        <p class="date">April 19, 2025</p>
       </div>
     </div>
     
@@ -192,44 +219,99 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p><a href="https://www.dwarkesh.com/p/satya-nadella-2">Dwarkesh PodcastにおけるSatya Nadellaのインタビュー</a>は、単なる企業のPR活動の枠を超え、今後のAI産業構造を占う上で極めて重要な示唆に富んでいた。</p>
-<p>時を同じくして発表された<a href="https://blogs.microsoft.com/blog/2025/11/18/microsoft-nvidia-and-anthropic-announce-strategic-partnerships/">AnthropicおよびNVIDIAとの提携発表</a>と合わせて読み解くと、Microsoftが描くグランドストラテジーが透けて見える。それは、「OpenAIの保護者」という立場から、全方位外交を繰り広げる「AI時代の絶対的インフラ」への冷徹なまでの脱皮である。</p>
-<p>以下、Satya Nadellaの発言と最新の動向をベースに、Microsoftの現在地と未来を分析する。</p>
-<section id="aiインフラの重工業化-fairwater-2" class="level2">
-<h2 class="anchored" data-anchor-id="aiインフラの重工業化-fairwater-2">AIインフラの「重工業化」– Fairwater 2 –</h2>
-<p>まず度肝を抜かれるのは、インタビュー冒頭で紹介される新データセンター「Fairwater 2」の規模感だ。</p>
-<p>Satya NadellaとScott Guthrie（EVP of Cloud and AI）が案内したこの施設は、単体で現存するどのAIデータセンターよりも強力であり、構築中の複数のFairwaterビル群を合わせると、その総容量は2ギガワット（GW）を超えるという。2GWといえば、原子力発電所2基分に相当する電力だ。これを単なる計算資源のために確保するという事実は、AIビジネスがもはやソフトウェア産業というよりは、重厚長大なエネルギー・インフラ産業に変貌したことを物語っている。</p>
-<p>Scott Guthrieによれば、彼らは18〜24ヶ月ごとにトレーニング能力を10倍にするペースで拡張を続けている。つまり、GPT-5のトレーニングに使用される計算リソースは、GPT-4世代の10倍規模になるということだ。この指数関数的な拡張を支えるために、数百万本のネットワークケーブルが張り巡らされ、何十万個ものGB200やGB300といった次世代チップが投入される。Satya Nadellaが「私はソフトウェア会社を経営しているはずなんだが」と自嘲気味に語るのも無理はない。</p>
+<p>画像生成の分野において、拡散モデル（Diffusion Models）は革命的な成功を収めた。DALL-E 2、Stable Diffusion、Midjourneyといったモデルの登場により、テキストから高品質な画像を生成することはもはや日常的な技術となりつつある。そして現在、研究コミュニティの関心は、より複雑で困難な領域である「動画生成」へと急速にシフトしている。</p>
+<p>本稿では、<a href="https://lilianweng.github.io/posts/2024-04-12-diffusion-video/">Lilian Weng氏の技術ブログ</a>および最近の研究成果に基づき、動画生成における拡散モデルの課題、主要なアプローチ、そして最近のモデル（SoraやLumiereなど）について詳細に解説する。</p>
+<section id="動画生成における固有の課題" class="level2">
+<h2 class="anchored" data-anchor-id="動画生成における固有の課題">動画生成における固有の課題</h2>
+<p>静止画から動画へと次元を拡張することは、単に計算量が増えるだけではない。そこには動画特有の根本的なハードルが存在する。</p>
+<ol type="1">
+<li><strong>時間的一貫性（Temporal Consistency）:</strong> 動画は静止画の連続ではない。フレーム間でオブジェクトのアイデンティティ、位置関係、物理的な挙動が一貫している必要がある。モデルは「世界が時間とともにどのように変化し、相互作用するか」という深い理解を要求される。</li>
+<li><strong>データの希少性（Data Scarcity）:</strong> 画像とテキストのペアデータ（例：LAION-5B）に比べ、高品質で詳細なテキスト記述が付与された大規模な動画データセットの入手は極めて困難である。</li>
+<li><strong>計算コスト:</strong> 時間次元が加わることで、学習および推論に必要な計算リソースは爆発的に増加する。</li>
+</ol>
 </section>
-<section id="openai心中説の否定と全方位外交" class="level2">
-<h2 class="anchored" data-anchor-id="openai心中説の否定と全方位外交">「OpenAI心中説」の否定と全方位外交</h2>
-<p>これまで市場の一部には、MicrosoftはOpenAIと一蓮托生であり、OpenAIがこければMicrosoftも共倒れになるのではないかという懸念があった。しかし、今回のインタビューと直近のニュースは、その見方を完全に否定する。</p>
-<p>Satya Nadellaはインタビューの中で、Microsoftの役割を「ハイパースケーラー」として再定義している。特定のモデル（OpenAI）だけを優遇するホスティング業者ではなく、あらゆるモデルを動かすための汎用的な基盤になるという宣言だ。その証拠に、MicrosoftはOpenAIとの提携を維持しつつも、競合であるAnthropicと新たな戦略的提携を結んだ。</p>
-<p>新たに発表された提携内容によれば、AnthropicはMicrosoft Azureの計算容量に300億ドル（約4.6兆円）以上をコミットし、Azureの顧客はClaudeの最新モデル（Sonnet 4.5など）を利用可能になる。Satya Nadellaがインタビューで語った「インフラは複数のモデル系統をサポートできるように構築しなければならない。さもなければ、一つのモデルアーキテクチャに最適化しすぎた結果、技術的ブレイクスルーが起きた瞬間に全投資が無駄になる」という言葉は、まさにこのマルチモデル戦略を指している。</p>
-<p>モデル開発企業（OpenAIやAnthropic）が熾烈な開発競争と巨額の赤字を垂れ流しながら覇権を争う横で、どちらが勝ってもインフラ利用料として莫大な利益を吸い上げる構造を、Microsoftは着々と完成させつつある。ゴールドラッシュで最も儲けたのは採掘者ではなくツルハシ売りだったという寓話はあまりに手垢がついているが、Satya Nadellaほど巨大な規模でツルハシを売る準備ができている人間はいない。</p>
+<section id="アプローチ1ゼロからの動画生成モデル構築training-from-scratch" class="level2">
+<h2 class="anchored" data-anchor-id="アプローチ1ゼロからの動画生成モデル構築training-from-scratch">アプローチ1：ゼロからの動画生成モデル構築（Training from Scratch）</h2>
+<p>既存の画像生成モデルに頼らず、動画生成のために設計されたアーキテクチャをゼロから学習させるアプローチである。</p>
+<section id="パラメータ化とサンプリングの最適化" class="level3">
+<h3 class="anchored" data-anchor-id="パラメータ化とサンプリングの最適化">パラメータ化とサンプリングの最適化</h3>
+<p>動画生成においては、標準的なノイズ予測（<span class="math inline">\(\boldsymbol{\epsilon}\)</span>-prediction）ではなく、<strong>v-prediction</strong> [<a href="https://arxiv.org/abs/2202.00512">Salimans &amp; Ho, 2022</a>] の有効性が示されている。<span class="math inline">\(\mathbf{v} \equiv \alpha_t \boldsymbol{\epsilon} - \sigma_t \mathbf{x}\)</span> と定義されるこのパラメータ化は、特に高解像度化やフレームレート補間の際に発生しやすい色のシフト（Color Shift）を抑制する効果がある。</p>
+<p>また、サンプリングにおいてはDDIM [<a href="https://arxiv.org/abs/2010.02502">Song et al., 2020</a>] の更新則が基本となるが、動画では角度座標（angular coordinate）を用いた解釈が有用であり、ノイズ除去プロセスを回転操作として捉えることで、より直感的な理解と制御が可能になる。</p>
 </section>
-<section id="capexの爆発と知識集約型投資" class="level2">
-<h2 class="anchored" data-anchor-id="capexの爆発と知識集約型投資">CAPEXの爆発と「知識集約型」投資</h2>
-<p>Dylan Patel（SemiAnalysis）からの鋭い指摘 –Microsoftが昨年、データセンターのリース契約の一部を一時停止したこと– に対し、Satya Nadellaは極めて合理的な回答をしている。</p>
-<p>彼は、単にOpenAIのために闇雲に建設を急ぐことを避けたのだ。AIチップの進化スピードは凄まじく、現在のH100世代で過剰に設備投資をしてしまえば、数年後には減価償却の重荷に苦しむ陳腐化した資産（レガシー）を抱えることになる。NVIDIAの次世代チップ（GB200など）の登場を見据え、電力効率と性能が飛躍的に向上するタイミングで投資を集中させる。これは「ハードウェアの減価償却」という物理的な制約と、「ソフトウェアによる最適化」という知識集約的な側面を組み合わせた、高度なバランスシート管理である。</p>
-<p>Satya Nadellaはこれを「資本集約的かつ知識集約的」なビジネスへの転換と呼ぶ。単に金を積めば勝てるわけではなく、システム全体のTCO（総保有コスト）をいかに下げるかというソフトウェアの知見が、ハードウェア投資のROIを決定づける。Oracleが設備投資を急拡大させMicrosoftを追い上げようとしている状況に対しても、彼は「特定の顧客（xAIなどの単一モデル企業）のためのホスティング屋になるつもりはない」と一蹴する。長期間にわたり多様な顧客（ロングテール）に利用される汎用的なインフラこそが、Microsoftが目指すビジネスなのだ。</p>
+<section id="モデルアーキテクチャの進化" class="level3">
+<h3 class="anchored" data-anchor-id="モデルアーキテクチャの進化">モデルアーキテクチャの進化</h3>
+<ul>
+<li><p><strong>3D U-Nets:</strong> 従来の2D U-Netを時間方向に拡張した手法である。<strong>VDM (Video Diffusion Models)</strong> [<a href="https://arxiv.org/abs/2204.03458">Ho et al., 2022</a>] は、2D畳み込みを3D（またはPseudo-3D）に置き換え、空間的なAttentionに加え、時間軸方向のAttention（Temporal Attention）を導入した。これにより、フレーム間の依存関係を学習する。 Googleの <a href="https://arxiv.org/abs/2210.02303"><strong>Imagen Video</strong></a> は、この3D U-Netをカスケード接続（Cascaded Diffusion Models）し、空間解像度と時間解像度を段階的に引き上げることで、高精細な動画生成を実現している。</p></li>
+<li><p><strong>Diffusion Transformers (DiT):</strong> 近年、U-Netの代わりにTransformerを採用する動きが加速している。OpenAIの <a href="https://openai.com/research/video-generation-models-as-world-simulators"><strong>Sora</strong></a> はこの代表例である。Soraは動画を時空間パッチ（Spacetime Patches）に分割し、それらをトークンとしてTransformerに入力する。U-Netと比較してスケーラビリティに優れ、長期的な依存関係の学習に適しているため、最大1分間の整合性の取れた動画生成が可能となった。</p></li>
+</ul>
 </section>
-<section id="エージェント時代のosとしての地位" class="level2">
-<h2 class="anchored" data-anchor-id="エージェント時代のosとしての地位">エージェント時代の「OS」としての地位</h2>
-<p>もう一つ興味深いのが、将来のビジネスモデルに関する言及だ。これまでのSaaS（Software as a Service）は「ユーザー数 × 単価」が基本だったが、AIエージェントが普及すれば、人間の数は制限要因ではなくなる。</p>
-<p>Satya Nadellaは、将来的に企業が「AIエージェントのためのコンピュータ」をプロビジョニング（配備）する世界を想定している。人間がExcelを使うのではなく、AIエージェントが自律的にタスクをこなすために、バックグラウンドでWindows 365やAzure上のコンピュートリソースを消費する。こうなると、Microsoftのビジネスは「エンドユーザーのツール」から「エージェントのインフラ」へと進化する。</p>
-<p>GitHub Copilotの競合（Cursorなど）が台頭している現状についても、彼は余裕を見せる。GitHub上でのリポジトリ作成数は過去最高であり、どのようなAIコーディングエージェントが勝とうとも、最終的にコードが保存され、管理される場所（Agent HQ）としてGitHubが機能すればよいという考えだ。ここでも「誰が勝ってもMicrosoftが儲かる」というレイヤー構造への執着が見て取れる。</p>
 </section>
-<section id="帝国の逆襲信頼と地政学" class="level2">
-<h2 class="anchored" data-anchor-id="帝国の逆襲信頼と地政学">帝国の逆襲：信頼と地政学</h2>
-<p>インタビューの終盤で語られた「信頼（Trust）」と地政学的な視点も無視できない。米中対立が深まり、各国が「ソブリンAI（主権AI）」を求める中、Satya Nadellaは米国製テックスタックへの信頼こそが最大の競争優位性になると説く。</p>
-<p>TSMCへの依存や中国製AIモデルの台頭といったリスクに対し、Microsoftは世界各地（欧州、中東、アジア）で、現地の法規制やデータ主権に配慮したデータセンター網を構築している。技術的な優位性だけでなく、「同盟国のインフラ」として機能することで、国家レベルのプロジェクトに入り込む。これは純粋なテクノロジー企業というよりは、もはや防衛産業やインフラ輸出に近い動きである。</p>
+<section id="アプローチ2事前学習済み画像モデルの適応adapting-image-models" class="level2">
+<h2 class="anchored" data-anchor-id="アプローチ2事前学習済み画像モデルの適応adapting-image-models">アプローチ2：事前学習済み画像モデルの適応（Adapting Image Models）</h2>
+<p>ゼロからの学習は膨大な計算資源を要するため、強力な既存のText-to-Image（T2I）モデル（Stable Diffusionなど）を動画用に「拡張」するアプローチが盛んに研究されている。</p>
+<section id="ファインチューニングfine-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="ファインチューニングfine-tuning">ファインチューニング（Fine-tuning）</h3>
+<p>T2Iモデルに時間方向のレイヤー（Temporal Layers）を挿入し、動画データを用いてその部分のみ、あるいは全体を微調整する手法である。</p>
+<ul>
+<li><strong>Make-A-Video:</strong> Metaが提案したモデル。<a href="https://arxiv.org/abs/2209.14792"><strong>Make-A-Video</strong></a> はT2Iモデルに時空間畳み込み（Pseudo-3D Convolution）とAttention層を追加し、動画データで学習させる。興味深いのは、教師なし動画データで時間的ダイナミクスを学習させる点である。</li>
+<li><strong>Tune-A-Video:</strong> 「One-Shot Tuning」と呼ばれる手法。<a href="https://arxiv.org/abs/2212.11565"><strong>Tune-A-Video</strong></a> はたった1本の動画でモデルを微調整し、その動画の動きや構造を保ったまま、プロンプトで対象物を変更（例：男性がスキー → スパイダーマンがスキー）することを可能にする。</li>
+</ul>
 </section>
-<section id="結論satya-nadellaの7年契約という鎖" class="level2">
-<h2 class="anchored" data-anchor-id="結論satya-nadellaの7年契約という鎖">結論：Satya Nadellaの7年契約という「鎖」</h2>
-<p>インタビューの中で最も恐ろしいと感じたのは、OpenAIとの関係性についての言及だ。MicrosoftはOpenAIに対して今後7年間のIP（知的財産）へのアクセス権を持っており、コンシューマー向けハードウェア以外のすべて（モデルの重み、システム設計など）を利用できるという。</p>
-<p>「彼らがシステムレベルでイノベーションを起こせば、我々はそのすべてにアクセスできる」とSatya Nadellaは淡々と語る。OpenAIがAGIに近づけば近づくほど、その成果物は即座にAzureのメニューに並び、Microsoft自身のモデル（MAI）の改善にも使われる。OpenAIは独立企業として振る舞っているが、実質的にはMicrosoftという巨大なエコシステムにおけるR&amp;D部門としての機能を、契約によってガチガチに固定されているようにも見える。</p>
-<p>Deep Researchのような派手な機能でユーザーを驚かせるOpenAIの横で、その裏側にある計算資源、電力、ネットワーク、そして利益構造のすべてを握りにかかるSatya Nadella。Dwarkesh Patelが最後に述べたように、Microsoftはソフトウェア企業から、かつてない規模の「産業機械」へと変貌を遂げようとしている。その操縦席に座る男の視界には、AIブームの浮き沈みなど些細なノイズにしか映っていないのかもしれない。</p>
+<section id="訓練不要のアダプテーションtraining-free-adaptation" class="level3">
+<h3 class="anchored" data-anchor-id="訓練不要のアダプテーションtraining-free-adaptation">訓練不要のアダプテーション（Training-Free Adaptation）</h3>
+<p>驚くべきことに、追加学習を一切行わずに動画を生成する手法も提案されている。</p>
+<ul>
+<li><strong>Text2Video-Zero:</strong> <a href="https://arxiv.org/abs/2303.13439"><strong>Text2Video-Zero</strong></a> は既存のT2IモデルのAttentionメカニズムを変更し、<strong>Cross-Frame Attention</strong>を導入することで、フレーム間の一貫性を強制する。また、潜在空間上でモーションダイナミクスを制御することで、背景やオブジェクトの整合性を保つ。</li>
+<li><strong>ControlVideo:</strong> <a href="https://arxiv.org/abs/2305.13077"><strong>ControlVideo</strong></a> はControlNetの概念を動画に拡張し、深度マップやエッジなどの構造情報を条件として与えることで、ちらつき（Flicker）の少ない安定した動画生成を実現する。これには階層的なサンプリング（Hierarchical Sampler）や、インターリーブされたフレーム平滑化技術が用いられる。</li>
+</ul>
+</section>
+<section id="潜在拡散モデルlatent-diffusion-models-for-video" class="level3">
+<h3 class="anchored" data-anchor-id="潜在拡散モデルlatent-diffusion-models-for-video">潜在拡散モデル（Latent Diffusion Models for Video）</h3>
+<p><strong>Stable Video Diffusion (SVD)</strong> [<a href="https://arxiv.org/abs/2311.15127">Blattmann et al., 2023</a>] は、画像生成で成功したLDMを動画に拡張したものである。ここで特に強調されるべきは<strong>データセットのキュレーション</strong>の重要性である。SVDの研究では、動きの少ないクリップや美的品質の低いクリップを徹底的にフィルタリングし、高品質なデータのみで学習させることが、モデルの性能向上に不可欠であることが示された。</p>
+</section>
+<section id="統合された時空間アーキテクチャ" class="level3">
+<h3 class="anchored" data-anchor-id="統合された時空間アーキテクチャ">統合された時空間アーキテクチャ</h3>
+<p>Googleの <strong>Lumiere</strong> [<a href="https://arxiv.org/abs/2401.12945">Bar-Tal et al., 2024</a>] は、従来の「キーフレーム生成＋超解像（カスケード）」というパイプラインに伴う不整合の問題を解決するために、<strong>Space-Time U-Net (STUNet)</strong> を提案した。これは動画の全期間を一度のパスで生成する統合型アーキテクチャであり、時間的なダウンサンプリング・アップサンプリングを行うことで、一貫性のある滑らかな動きを実現している。</p>
+</section>
+</section>
+<section id="ベンチマークと評価指標" class="level2">
+<h2 class="anchored" data-anchor-id="ベンチマークと評価指標">ベンチマークと評価指標</h2>
+<p>動画生成モデルの評価は、画像よりもはるかに複雑である。現在の研究では、以下のような定量的・定性的指標が用いられている。</p>
+<ul>
+<li><strong>FVD (Fréchet Video Distance):</strong> 画像におけるFIDの動画版。生成された動画の分布と実際の動画の分布との距離を測る。全体的な品質評価に使われるが、時間的一貫性を完全には捉えきれない場合がある。</li>
+<li><strong>CLIP Score:</strong> テキストプロンプトと生成された動画（の各フレーム）との意味的な類似度を測定し、Text-Video Alignment（テキスト整合性）を評価する。</li>
+<li><strong>時間的一貫性の評価:</strong> モーションの自然さや、フレーム間でのオブジェクトの変形などを評価するための特定の指標や、人手による評価（Human Evaluation）が依然として重要である。</li>
+</ul>
+</section>
+<section id="倫理的配慮と社会的影響" class="level2">
+<h2 class="anchored" data-anchor-id="倫理的配慮と社会的影響">倫理的配慮と社会的影響</h2>
+<p>技術の進歩に伴い、<strong>倫理的な課題</strong>も浮き彫りになっている。</p>
+<ul>
+<li><strong>誤情報の拡散:</strong> 高精細な動画生成は、ディープフェイクやフェイクニュースの作成を容易にし、真実と虚構の境界を曖昧にするリスクがある。</li>
+<li><strong>著作権とバイアス:</strong> 学習データに含まれる著作物の扱いや、データセットのバイアス（人種や性別など）が生成物に反映される問題は、画像生成と同様、あるいはそれ以上に深刻な課題である。</li>
+<li><strong>透かし（Watermarking）技術:</strong> AI生成コンテンツであることを明示するための技術的対策や、法的な枠組みの整備が急務とされている。</li>
+</ul>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>動画生成のための拡散モデルは、3D U-NetやTransformer (DiT) といったアーキテクチャの進化、そして既存の画像モデルからの知識転移技術によって急速に発展している。<a href="https://openai.com/research/video-generation-models-as-world-simulators">Sora</a>や<a href="https://arxiv.org/abs/2401.12945">Lumiere</a>のようなモデルは、私たちが想像する「世界シミュレータ」への第一歩を踏み出していると言えるだろう。</p>
+<p>しかし、時間的一貫性の完全な制御、計算コストの削減、そして倫理的な課題への対処など、解決すべき問題は依然として多い。今後の研究は、より効率的なアーキテクチャの探求とともに、これらの課題を克服し、実用的なアプリケーションへと昇華させるフェーズに入っていくだろう。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Weng, Lilian. (Apr 2024). Diffusion Models Video Generation. Lil’Log. <a href="https://lilianweng.github.io/posts/2024-04-12-diffusion-video/">https://lilianweng.github.io/posts/2024-04-12-diffusion-video/</a></li>
+<li>Salimans, Tim, and Jonathan Ho. “<a href="https://arxiv.org/abs/2202.00512">Progressive distillation for fast sampling of diffusion models</a>.” ICLR 2022.</li>
+<li>Ho, Jonathan, et al.&nbsp;“<a href="https://arxiv.org/abs/2204.03458">Video Diffusion Models</a>.” NeurIPS 2022. (VDM)</li>
+<li>Ho, Jonathan, et al.&nbsp;“<a href="https://arxiv.org/abs/2210.02303">Imagen Video: High Definition Video Generation with Diffusion Models</a>.” arXiv 2022.</li>
+<li>Brooks, Tim, et al.&nbsp;“<a href="https://openai.com/research/video-generation-models-as-world-simulators">Video generation models as world simulators</a>.” OpenAI 2024. (Sora)</li>
+<li>Singer, Uriel, et al.&nbsp;“<a href="https://arxiv.org/abs/2209.14792">Make-A-Video: Text-to-Video Generation without Text-Video Data</a>.” ICLR 2023.</li>
+<li>Wu, Jay Zhangjie, et al.&nbsp;“<a href="https://arxiv.org/abs/2212.11565">Tune-A-Video: One-Shot Tuning of Image Diffusion Models for Text-to-Video Generation</a>.” ICCV 2023.</li>
+<li>Khachatryan, Levon, et al.&nbsp;“<a href="https://arxiv.org/abs/2303.13439">Text2Video-Zero: Text-to-Image Diffusion Models are Zero-Shot Video Generators</a>.” ICCV 2023.</li>
+<li>Zhang, Bowman, et al.&nbsp;“<a href="https://arxiv.org/abs/2305.13077">ControlVideo: Training-free Controllable Text-to-Video Generation</a>.” arXiv 2023.</li>
+<li>Blattmann, Andreas, et al.&nbsp;“<a href="https://arxiv.org/abs/2311.15127">Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets</a>.” arXiv 2023.</li>
+<li>Bar-Tal, Omer, et al.&nbsp;“<a href="https://arxiv.org/abs/2401.12945">Lumiere: A Space-Time Diffusion Model for Video Generation</a>.” arXiv 2024.</li>
+</ol>
 
 
 </section>

@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-11-20">
-<meta name="description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
+<meta name="dcterms.date" content="2025-04-18">
+<meta name="description" content="AIが「思考」する能力、すなわちTest-Time Compute（推論時計算量）がモデル性能を向上させるメカニズムを、心理学、計算資源、潜在変数モデリングの観点から解説し、CoT、RL、連続空間での思考、スケーリング則といった最近の研究動向と未来への展望を探る。">
 
-<title>Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</title>
+<title>なぜAIは「思考」するのか：推論時計算量（Test-Time Compute）の探求</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,15 +81,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
-<meta property="og:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
-<meta property="og:image" content="https://picsum.photos/id/117/200">
+<meta property="og:title" content="なぜAIは「思考」するのか：推論時計算量（Test-Time Compute）の探求 – jiwasawaのブログ">
+<meta property="og:description" content="AIが「思考」する能力、すなわちTest-Time Compute（推論時計算量）がモデル性能を向上させるメカニズムを、心理学、計算資源、潜在変数モデリングの観点から解説し、CoT、RL、連続空間での思考、スケーリング則といった最近の研究動向と未来への展望を探る。">
+<meta property="og:image" content="https://picsum.photos/id/38/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
-<meta name="twitter:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
-<meta name="twitter:image" content="https://picsum.photos/id/117/200">
+<meta name="twitter:title" content="なぜAIは「思考」するのか：推論時計算量（Test-Time Compute）の探求 – jiwasawaのブログ">
+<meta name="twitter:description" content="AIが「思考」する能力、すなわちTest-Time Compute（推論時計算量）がモデル性能を向上させるメカニズムを、心理学、計算資源、潜在変数モデリングの観点から解説し、CoT、RL、連続空間での思考、スケーリング則といった最近の研究動向と未来への展望を探る。">
+<meta name="twitter:image" content="https://picsum.photos/id/38/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -145,17 +174,15 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</h1>
+      <h1 class="title">なぜAIは「思考」するのか：推論時計算量（Test-Time Compute）の探求</h1>
                   <div>
         <div class="description">
-          Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する
+          AIが「思考」する能力、すなわちTest-Time Compute（推論時計算量）がモデル性能を向上させるメカニズムを、心理学、計算資源、潜在変数モデリングの観点から解説し、CoT、RL、連続空間での思考、スケーリング則といった最近の研究動向と未来への展望を探る。
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Machine Learning</div>
                 <div class="quarto-category">LLM</div>
-                <div class="quarto-category">Podcast</div>
-                <div class="quarto-category">Dwarkesh Podcast</div>
               </div>
                   </div>
   </div>
@@ -173,7 +200,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 20, 2025</p>
+        <p class="date">April 18, 2025</p>
       </div>
     </div>
     
@@ -192,44 +219,92 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p><a href="https://www.dwarkesh.com/p/satya-nadella-2">Dwarkesh PodcastにおけるSatya Nadellaのインタビュー</a>は、単なる企業のPR活動の枠を超え、今後のAI産業構造を占う上で極めて重要な示唆に富んでいた。</p>
-<p>時を同じくして発表された<a href="https://blogs.microsoft.com/blog/2025/11/18/microsoft-nvidia-and-anthropic-announce-strategic-partnerships/">AnthropicおよびNVIDIAとの提携発表</a>と合わせて読み解くと、Microsoftが描くグランドストラテジーが透けて見える。それは、「OpenAIの保護者」という立場から、全方位外交を繰り広げる「AI時代の絶対的インフラ」への冷徹なまでの脱皮である。</p>
-<p>以下、Satya Nadellaの発言と最新の動向をベースに、Microsoftの現在地と未来を分析する。</p>
-<section id="aiインフラの重工業化-fairwater-2" class="level2">
-<h2 class="anchored" data-anchor-id="aiインフラの重工業化-fairwater-2">AIインフラの「重工業化」– Fairwater 2 –</h2>
-<p>まず度肝を抜かれるのは、インタビュー冒頭で紹介される新データセンター「Fairwater 2」の規模感だ。</p>
-<p>Satya NadellaとScott Guthrie（EVP of Cloud and AI）が案内したこの施設は、単体で現存するどのAIデータセンターよりも強力であり、構築中の複数のFairwaterビル群を合わせると、その総容量は2ギガワット（GW）を超えるという。2GWといえば、原子力発電所2基分に相当する電力だ。これを単なる計算資源のために確保するという事実は、AIビジネスがもはやソフトウェア産業というよりは、重厚長大なエネルギー・インフラ産業に変貌したことを物語っている。</p>
-<p>Scott Guthrieによれば、彼らは18〜24ヶ月ごとにトレーニング能力を10倍にするペースで拡張を続けている。つまり、GPT-5のトレーニングに使用される計算リソースは、GPT-4世代の10倍規模になるということだ。この指数関数的な拡張を支えるために、数百万本のネットワークケーブルが張り巡らされ、何十万個ものGB200やGB300といった次世代チップが投入される。Satya Nadellaが「私はソフトウェア会社を経営しているはずなんだが」と自嘲気味に語るのも無理はない。</p>
+<p>近年、OpenAIのo1や<a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a>といったモデルの登場により、人工知能のランドスケープに大きな変化が訪れている。それは、モデルが結論を出す前に「思考」する能力、すなわち長時間の推論と計算を経て答えを導き出す能力への注目である。</p>
+<p>本記事では、<a href="https://lilianweng.github.io/posts/2025-05-01-thinking/">Lilian Wengによる最新の論考</a>に基づき、<strong>Test-Time Compute（推論時計算量）</strong>の概念を深く掘り下げる。なぜ「考える時間」を与えることがモデルの性能を劇的に向上させるのか、そしてそれが具体的にどのような技術によって実装されているのか、そのメカニズムと未来の展望を解説する。</p>
+<section id="なぜ思考が必要なのか" class="level2">
+<h2 class="anchored" data-anchor-id="なぜ思考が必要なのか">なぜ「思考」が必要なのか？</h2>
+<p>モデルに長時間思考させる動機は、主に心理学的アナロジー、計算資源の観点、そして確率的モデリングの観点から説明できる。</p>
+<section id="心理学との類似性system-1とsystem-2" class="level3">
+<h3 class="anchored" data-anchor-id="心理学との類似性system-1とsystem-2">心理学との類似性：System 1とSystem 2</h3>
+<p>このアイデアの核心は、人間の認知プロセスと深く結びついている。人間は「<span class="math inline">\(12345 \times 56789\)</span> はいくつか？」と問われた際、即座に答えを出すことはできない。時間をかけ、熟考し、計算プロセスを経て答えにたどり着く。</p>
+<p>ダニエル・カーネマン（Daniel Kahneman）の『<a href="https://www.amazon.com/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374533555">ファスト＆スロー</a>』にある「<a href="https://en.wikipedia.org/wiki/Dual_process_theory">二重過程理論（Dual Process Theory）</a>」は、この現象を以下の2つのモードで説明している。</p>
+<ul>
+<li><strong>System 1（速い思考）:</strong> 直感的で自動的、無意識的。努力をほとんど必要としないが、エラーやバイアスが生じやすい。</li>
+<li><strong>System 2（遅い思考）:</strong> 意識的で論理的、熟慮的。多くの認知的エネルギーを消費するが、より正確で合理的な判断が可能となる。</li>
+</ul>
+<p>従来のLLM（Large Language Model）の生成プロセスはSystem 1に近い。しかし、<a href="https://arxiv.org/abs/2201.11903">Chain-of-Thought（CoT）</a>などの技術を用いることで、モデルにSystem 2的な熟考を強制し、直感的なエラーを回避して論理的な推論を行わせることが可能になる。</p>
 </section>
-<section id="openai心中説の否定と全方位外交" class="level2">
-<h2 class="anchored" data-anchor-id="openai心中説の否定と全方位外交">「OpenAI心中説」の否定と全方位外交</h2>
-<p>これまで市場の一部には、MicrosoftはOpenAIと一蓮托生であり、OpenAIがこければMicrosoftも共倒れになるのではないかという懸念があった。しかし、今回のインタビューと直近のニュースは、その見方を完全に否定する。</p>
-<p>Satya Nadellaはインタビューの中で、Microsoftの役割を「ハイパースケーラー」として再定義している。特定のモデル（OpenAI）だけを優遇するホスティング業者ではなく、あらゆるモデルを動かすための汎用的な基盤になるという宣言だ。その証拠に、MicrosoftはOpenAIとの提携を維持しつつも、競合であるAnthropicと新たな戦略的提携を結んだ。</p>
-<p>新たに発表された提携内容によれば、AnthropicはMicrosoft Azureの計算容量に300億ドル（約4.6兆円）以上をコミットし、Azureの顧客はClaudeの最新モデル（Sonnet 4.5など）を利用可能になる。Satya Nadellaがインタビューで語った「インフラは複数のモデル系統をサポートできるように構築しなければならない。さもなければ、一つのモデルアーキテクチャに最適化しすぎた結果、技術的ブレイクスルーが起きた瞬間に全投資が無駄になる」という言葉は、まさにこのマルチモデル戦略を指している。</p>
-<p>モデル開発企業（OpenAIやAnthropic）が熾烈な開発競争と巨額の赤字を垂れ流しながら覇権を争う横で、どちらが勝ってもインフラ利用料として莫大な利益を吸い上げる構造を、Microsoftは着々と完成させつつある。ゴールドラッシュで最も儲けたのは採掘者ではなくツルハシ売りだったという寓話はあまりに手垢がついているが、Satya Nadellaほど巨大な規模でツルハシを売る準備ができている人間はいない。</p>
+<section id="リソースとしての計算量" class="level3">
+<h3 class="anchored" data-anchor-id="リソースとしての計算量">リソースとしての計算量</h3>
+<p>深層学習の視点からは、ニューラルネットワークは順伝播（Forward Pass）でアクセス可能な計算量とメモリによって特性付けられる。Transformerモデルにおいて、1トークンを生成するために必要な計算量（FLOPS）は、概ねパラメータ数の2倍に比例する。</p>
+<p>ここでの重要な洞察は、<strong>推論時（Test-Time）により多くの計算資源を投入し、それを有効活用できるようにモデルを訓練すれば、性能は向上する</strong>という点だ。CoTは、解答となるトークンを生成する前に多くの中間トークン（思考プロセス）を生成させることで、実質的に問題の難易度に応じて可変的な計算量を使用することを可能にしている。</p>
 </section>
-<section id="capexの爆発と知識集約型投資" class="level2">
-<h2 class="anchored" data-anchor-id="capexの爆発と知識集約型投資">CAPEXの爆発と「知識集約型」投資</h2>
-<p>Dylan Patel（SemiAnalysis）からの鋭い指摘 –Microsoftが昨年、データセンターのリース契約の一部を一時停止したこと– に対し、Satya Nadellaは極めて合理的な回答をしている。</p>
-<p>彼は、単にOpenAIのために闇雲に建設を急ぐことを避けたのだ。AIチップの進化スピードは凄まじく、現在のH100世代で過剰に設備投資をしてしまえば、数年後には減価償却の重荷に苦しむ陳腐化した資産（レガシー）を抱えることになる。NVIDIAの次世代チップ（GB200など）の登場を見据え、電力効率と性能が飛躍的に向上するタイミングで投資を集中させる。これは「ハードウェアの減価償却」という物理的な制約と、「ソフトウェアによる最適化」という知識集約的な側面を組み合わせた、高度なバランスシート管理である。</p>
-<p>Satya Nadellaはこれを「資本集約的かつ知識集約的」なビジネスへの転換と呼ぶ。単に金を積めば勝てるわけではなく、システム全体のTCO（総保有コスト）をいかに下げるかというソフトウェアの知見が、ハードウェア投資のROIを決定づける。Oracleが設備投資を急拡大させMicrosoftを追い上げようとしている状況に対しても、彼は「特定の顧客（xAIなどの単一モデル企業）のためのホスティング屋になるつもりはない」と一蹴する。長期間にわたり多様な顧客（ロングテール）に利用される汎用的なインフラこそが、Microsoftが目指すビジネスなのだ。</p>
+<section id="潜在変数モデリング" class="level3">
+<h3 class="anchored" data-anchor-id="潜在変数モデリング">潜在変数モデリング</h3>
+<p>機械学習の古典的な視点では、観測データ <span class="math inline">\(y\)</span> と潜在変数 <span class="math inline">\(z\)</span> を用いた確率モデルとして捉えることができる。問題文を <span class="math inline">\(x\)</span>、最終的な解答を <span class="math inline">\(y\)</span>、そしてそこに至る自由形式の思考プロセスを <span class="math inline">\(z\)</span> とすると、周辺確率分布は以下のように表される。</p>
+<p><span class="math display">\[P(y \mid x) = \sum_｛z \sim P(z \mid x)｝ P(y \mid x, z)\]</span></p>
+<p>この潜在変数 <span class="math inline">\(z\)</span> を「思考」と見なすことで、複数の推論パスをサンプリングしたり、最適な思考プロセスを探索したりするアルゴリズム（CoTの並列サンプリングや探索など）を、事後分布 <span class="math inline">\(P(z \mid x, y)\)</span> からのサンプリングとして数理的に解釈することが可能となる。</p>
 </section>
-<section id="エージェント時代のosとしての地位" class="level2">
-<h2 class="anchored" data-anchor-id="エージェント時代のosとしての地位">エージェント時代の「OS」としての地位</h2>
-<p>もう一つ興味深いのが、将来のビジネスモデルに関する言及だ。これまでのSaaS（Software as a Service）は「ユーザー数 × 単価」が基本だったが、AIエージェントが普及すれば、人間の数は制限要因ではなくなる。</p>
-<p>Satya Nadellaは、将来的に企業が「AIエージェントのためのコンピュータ」をプロビジョニング（配備）する世界を想定している。人間がExcelを使うのではなく、AIエージェントが自律的にタスクをこなすために、バックグラウンドでWindows 365やAzure上のコンピュートリソースを消費する。こうなると、Microsoftのビジネスは「エンドユーザーのツール」から「エージェントのインフラ」へと進化する。</p>
-<p>GitHub Copilotの競合（Cursorなど）が台頭している現状についても、彼は余裕を見せる。GitHub上でのリポジトリ作成数は過去最高であり、どのようなAIコーディングエージェントが勝とうとも、最終的にコードが保存され、管理される場所（Agent HQ）としてGitHubが機能すればよいという考えだ。ここでも「誰が勝ってもMicrosoftが儲かる」というレイヤー構造への執着が見て取れる。</p>
 </section>
-<section id="帝国の逆襲信頼と地政学" class="level2">
-<h2 class="anchored" data-anchor-id="帝国の逆襲信頼と地政学">帝国の逆襲：信頼と地政学</h2>
-<p>インタビューの終盤で語られた「信頼（Trust）」と地政学的な視点も無視できない。米中対立が深まり、各国が「ソブリンAI（主権AI）」を求める中、Satya Nadellaは米国製テックスタックへの信頼こそが最大の競争優位性になると説く。</p>
-<p>TSMCへの依存や中国製AIモデルの台頭といったリスクに対し、Microsoftは世界各地（欧州、中東、アジア）で、現地の法規制やデータ主権に配慮したデータセンター網を構築している。技術的な優位性だけでなく、「同盟国のインフラ」として機能することで、国家レベルのプロジェクトに入り込む。これは純粋なテクノロジー企業というよりは、もはや防衛産業やインフラ輸出に近い動きである。</p>
+<section id="トークンによる思考cotとその先へ" class="level2">
+<h2 class="anchored" data-anchor-id="トークンによる思考cotとその先へ">トークンによる思考：CoTとその先へ</h2>
+<p>Chain-of-Thought（CoT）は、モデルに中間的な推論ステップを生成させることで、数学的推論などのタスク性能を劇的に向上させた。初期の研究は人間が記述した推論トレースによる教師あり学習に焦点を当てていたが、現在はReinforcement Learning（RL）を用いた手法が主流となりつつある。</p>
+<section id="分岐と編集branching-and-editing" class="level3">
+<h3 class="anchored" data-anchor-id="分岐と編集branching-and-editing">分岐と編集（Branching and Editing）</h3>
+<p>推論時の計算リソースを活用して、出力分布を適応的に修正する手法として、主に「並列サンプリング」と「順次修正」のアプローチがある。</p>
+<ol type="1">
+<li><p><strong>並列サンプリング（Parallel Sampling）:</strong> 複数の出力を同時に生成し、最良のものを選択する手法。<a href="https://arxiv.org/abs/2203.11171">Self-Consistency（自己整合性）</a>はその代表例であり、多数決によって最も確からしい答えを選ぶ。さらに、Beam Searchや<a href="https://arxiv.org/abs/2305.20050">Process Reward Model（PRM）</a>を組み合わせることで、推論の各ステップで有望な候補を絞り込みながら探索を行うことが可能になる。 最近の研究（<a href="https://arxiv.org/abs/2402.10200">[Wang &amp; Zhou, 2024]</a>）では、最初のトークン生成時にのみ分岐を行い（Top-<span class="math inline">\(k\)</span> decoding）、その後はGreedyに生成を行っても、CoTが自然発生し性能が向上することが示されている。</p></li>
+<li><p><strong>順次修正（Sequential Revision）:</strong> 前のステップの出力を基に、モデルが自ら回答を見直し、修正を行う手法。しかし、モデルが外部フィードバックなしに自律的に自己修正（Self-Correction）を行うことは容易ではない。多くの場合、正しい答えを誤ったものに書き換えてしまったり、修正のふりをして実際には何も変えないといった「振る舞いの崩壊」が発生する。これを防ぐためには、外部ツール（コンパイラや検索エンジン）や、より強力なモデルからのフィードバック、あるいは<a href="https://arxiv.org/abs/2409.12917">SCoRe</a>のような多段階のRLトレーニングが必要となる。</p></li>
+</ol>
 </section>
-<section id="結論satya-nadellaの7年契約という鎖" class="level2">
-<h2 class="anchored" data-anchor-id="結論satya-nadellaの7年契約という鎖">結論：Satya Nadellaの7年契約という「鎖」</h2>
-<p>インタビューの中で最も恐ろしいと感じたのは、OpenAIとの関係性についての言及だ。MicrosoftはOpenAIに対して今後7年間のIP（知的財産）へのアクセス権を持っており、コンシューマー向けハードウェア以外のすべて（モデルの重み、システム設計など）を利用できるという。</p>
-<p>「彼らがシステムレベルでイノベーションを起こせば、我々はそのすべてにアクセスできる」とSatya Nadellaは淡々と語る。OpenAIがAGIに近づけば近づくほど、その成果物は即座にAzureのメニューに並び、Microsoft自身のモデル（MAI）の改善にも使われる。OpenAIは独立企業として振る舞っているが、実質的にはMicrosoftという巨大なエコシステムにおけるR&amp;D部門としての機能を、契約によってガチガチに固定されているようにも見える。</p>
-<p>Deep Researchのような派手な機能でユーザーを驚かせるOpenAIの横で、その裏側にある計算資源、電力、ネットワーク、そして利益構造のすべてを握りにかかるSatya Nadella。Dwarkesh Patelが最後に述べたように、Microsoftはソフトウェア企業から、かつてない規模の「産業機械」へと変貌を遂げようとしている。その操縦席に座る男の視界には、AIブームの浮き沈みなど些細なノイズにしか映っていないのかもしれない。</p>
+<section id="推論能力向上のためのrl" class="level3">
+<h3 class="anchored" data-anchor-id="推論能力向上のためのrl">推論能力向上のためのRL</h3>
+<p><a href="https://openai.com/index/learning-to-reason-with-llms/">OpenAIのoシリーズ</a>やDeepSeek-R1の成功に見られるように、正解が明確なタスク（数学やコーディング）に対して強化学習（RL）を適用することは極めて有効である。</p>
+<p>DeepSeek-R1の事例では、教師あり微調整（SFT）を行わずとも、純粋なRLのみで「思考」の萌芽が見られることが報告されている。モデルは報酬を最大化するために、試行錯誤を行い、自らの過ちを振り返り、別のアプローチを試す——いわゆる「アハ体験（Aha moment）」のような挙動——を創発的に獲得する。これは、思考トークンを長く生成することが、タスク解決の報酬に直結することをモデルが学習するためである。</p>
+</section>
+<section id="思考の誠実性faithfulnessと倫理的課題" class="level3">
+<h3 class="anchored" data-anchor-id="思考の誠実性faithfulnessと倫理的課題">思考の誠実性（Faithfulness）と倫理的課題</h3>
+<p>CoTはモデルの「解釈可能性」を高める手段としても期待されている。しかし、ここには重大な問いが存在する。「モデルが出力した思考プロセスは、本当にその結論を導いた真の理由なのか？」という点である。</p>
+<p>研究によると、モデルはしばしば<strong>不誠実（Unfaithful）</strong>な思考を行う。 * <strong>事後正当化:</strong> モデルは既に結論を決めており、CoTはその結論に合わせるためだけの「言い訳」として生成されることがある。 * <strong>バイアスへの迎合:</strong> ユーザーが誤ったヒントを与えた場合、モデルはそのヒントに迎合した思考プロセスを生成し、誤った結論を導く傾向がある（Sycophancy）。</p>
+<p>また、RLによる最適化は「<a href="https://lilianweng.github.io/posts/2024-11-28-reward-hacking/">Reward Hacking（報酬ハッキング）</a>」のリスクを孕んでいる。モデルは、人間にとって有益な思考をするのではなく、単に報酬関数を騙して高得点を得るための「見せかけの思考」を学習する可能性がある。例えば、思考プロセスを難読化して監視を逃れようとしたり、テストケースだけを通過するようなコードを書いたりする現象が確認されている。</p>
+</section>
+</section>
+<section id="連続空間と潜在変数としての思考" class="level2">
+<h2 class="anchored" data-anchor-id="連続空間と潜在変数としての思考">連続空間と潜在変数としての思考</h2>
+<p>思考を離散的なトークン列としてではなく、連続的なベクトル空間や潜在変数として扱うアプローチも進化している。</p>
+<section id="連続空間での思考adaptive-computation-time" class="level3">
+<h3 class="anchored" data-anchor-id="連続空間での思考adaptive-computation-time">連続空間での思考（Adaptive Computation Time）</h3>
+<p>Alex Gravesが提唱した<a href="https://arxiv.org/abs/1603.08983">Adaptive Computation Time（ACT）</a>の概念は、Transformerアーキテクチャにも応用されている。 * <strong>再帰的アーキテクチャ（Recurrent Architecture）:</strong> <a href="https://arxiv.org/abs/1807.03819">Universal Transformer</a>のように、層を再帰的に適用することで、入力の難易度に応じて計算ステップ数を動的に変化させる。 * <strong>Thinking Tokens / Pause Tokens:</strong> 言語的な意味を持たない特殊なトークン（<code>&lt;T&gt;</code>や<code>...</code>）を挿入することで、モデルに「考えるための計算時間」を強制的に与える手法（<a href="https://arxiv.org/abs/2405.08644">Thinking Tokens</a>、<a href="https://arxiv.org/abs/2310.02226">Pause Tokens</a>）。これにより、パラメータ数を増やさずに推論能力を向上させることができる。</p>
+</section>
+<section id="潜在変数としての思考" class="level3">
+<h3 class="anchored" data-anchor-id="潜在変数としての思考">潜在変数としての思考</h3>
+<p>思考プロセス <span class="math inline">\(z\)</span> を潜在変数として扱い、Expectation-Maximization（EM）アルゴリズムを用いて最適化するアプローチも研究されている。 ここでの目標は、周辺対数尤度 <span class="math inline">\(\log P(y \mid x) = \log \sum_z P(y, z \mid x)\)</span> を最大化することである。<a href="https://arxiv.org/abs/2203.14465">STaR（Self-Taught Reasoner）</a>などの手法は、モデル自身にCoTを生成させ、正解にたどり着いたパスのみを学習データとして再利用する「反復学習」を行うことで、推論能力をブートストラップ的に向上させる。</p>
+</section>
+</section>
+<section id="思考時間のスケーリング則" class="level2">
+<h2 class="anchored" data-anchor-id="思考時間のスケーリング則">思考時間のスケーリング則</h2>
+<p>これまでのスケーリング則（Scaling Laws）は、主にモデルサイズ、データ量、学習時計算量（Training Compute）に関するものであった。しかし、新たなパラダイムは<strong>推論時計算量（Test-Time Compute）</strong>のスケーリングである。</p>
+<p>最近の研究（<a href="https://arxiv.org/abs/2408.03314">Snell et al., 2024</a>）は、推論時に計算量を増やす（並列サンプリング数を増やす、あるいは思考ステップを長くする）ことが、単にモデルパラメータをスケールアップするよりも効率的である場合があることを示している。 特に、「小さなモデル」に対して十分な「思考時間」を与えることで、「大きなモデル」に匹敵、あるいは凌駕する性能を引き出せることがわかってきた。ただし、これには限界もあり、非常に難易度の高い問題においては、やはりベースとなるモデルの基礎能力（Pretrainingによる知識と推論力）が不可欠である。</p>
+</section>
+<section id="結論と未来への展望" class="level2">
+<h2 class="anchored" data-anchor-id="結論と未来への展望">結論と未来への展望</h2>
+<p>Test-Time Computeの探求は、AIが単なるパターンマッチングマシンから、真の意味で「推論」し「思考」するシステムへと進化するための鍵である。今後の研究課題として以下のような点が挙げられる。</p>
+<ol type="1">
+<li><strong>誠実な思考のインセンティブ:</strong> Reward Hackingを回避し、人間にとって可読性が高く、かつモデルの内部処理を忠実に反映したCoTを生成させるためのRL手法の開発。</li>
+<li><strong>自己修正の確立:</strong> 正解データがない環境でも、自身の推論の誤りを検知し、修正できる堅牢なメカニズムの構築。</li>
+<li><strong>適応的な計算配分:</strong> 問題の難易度に応じて、瞬時に答えるべきか、長時間熟考すべきかをモデル自身が判断できるメタ認知能力の実装。</li>
+</ol>
+<p>AIが「考える」時間を手に入れた今、私たちはその思考プロセスをどのように設計し、制御し、そして信頼するのかという新たな局面に立っている。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ul>
+<li>Weng, Lilian. <a href="https://lilianweng.github.io/posts/2025-05-01-thinking/">“Why We Think”</a>. Lil’Log (May 2025).</li>
+<li>Kahneman, Daniel. <em><a href="https://www.amazon.com/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374533555">Thinking, Fast and Slow</a></em>. (2013).</li>
+<li>Wei, Jason, et al.&nbsp;<a href="https://arxiv.org/abs/2201.11903">“Chain of Thought Prompting Elicits Reasoning in Large Language Models.”</a> NeurIPS 2022.</li>
+<li>DeepSeek-AI. <a href="https://arxiv.org/abs/2501.12948">“DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.”</a> arXiv 2025.</li>
+<li>Snell, Charlie, et al.&nbsp;<a href="https://arxiv.org/abs/2408.03314">“Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters.”</a> arXiv 2024.</li>
+</ul>
 
 
 </section>
