@@ -1,0 +1,101 @@
+---
+title: "動画生成のための拡散モデル：技術的フロンティアと課題"
+description: "Lilian Weng氏のブログ記事を基に、動画生成における拡散モデルの課題、ゼロからのモデル構築や画像モデルの適応といった主要アプローチ、そしてSoraやLumiereなどのアーキテクチャを詳細に解説する。"
+author: "Junichiro Iwasawa"
+date: "2025-04-19"
+categories: [Machine Learning, Diffusion models]
+image: https://picsum.photos/id/39/200
+---
+
+画像生成の分野において、拡散モデル（Diffusion Models）は革命的な成功を収めた。DALL-E 2、Stable Diffusion、Midjourneyといったモデルの登場により、テキストから高品質な画像を生成することはもはや日常的な技術となりつつある。そして現在、研究コミュニティの関心は、より複雑で困難な領域である「動画生成」へと急速にシフトしている。
+
+本稿では、[Lilian Weng氏の技術ブログ](https://lilianweng.github.io/posts/2024-04-12-diffusion-video/)および最近の研究成果に基づき、動画生成における拡散モデルの課題、主要なアプローチ、そして最近のモデル（SoraやLumiereなど）について詳細に解説する。
+
+## 動画生成における固有の課題
+
+静止画から動画へと次元を拡張することは、単に計算量が増えるだけではない。そこには動画特有の根本的なハードルが存在する。
+
+1.  **時間的一貫性（Temporal Consistency）:** 動画は静止画の連続ではない。フレーム間でオブジェクトのアイデンティティ、位置関係、物理的な挙動が一貫している必要がある。モデルは「世界が時間とともにどのように変化し、相互作用するか」という深い理解を要求される。
+2.  **データの希少性（Data Scarcity）:** 画像とテキストのペアデータ（例：LAION-5B）に比べ、高品質で詳細なテキスト記述が付与された大規模な動画データセットの入手は極めて困難である。
+3.  **計算コスト:** 時間次元が加わることで、学習および推論に必要な計算リソースは爆発的に増加する。
+
+## アプローチ1：ゼロからの動画生成モデル構築（Training from Scratch）
+
+既存の画像生成モデルに頼らず、動画生成のために設計されたアーキテクチャをゼロから学習させるアプローチである。
+
+### パラメータ化とサンプリングの最適化
+
+動画生成においては、標準的なノイズ予測（$\boldsymbol{\epsilon}$-prediction）ではなく、**v-prediction** [[Salimans & Ho, 2022](https://arxiv.org/abs/2202.00512)] の有効性が示されている。$\mathbf{v} \equiv \alpha_t \boldsymbol{\epsilon} - \sigma_t \mathbf{x}$ と定義されるこのパラメータ化は、特に高解像度化やフレームレート補間の際に発生しやすい色のシフト（Color Shift）を抑制する効果がある。
+
+また、サンプリングにおいてはDDIM [[Song et al., 2020](https://arxiv.org/abs/2010.02502)] の更新則が基本となるが、動画では角度座標（angular coordinate）を用いた解釈が有用であり、ノイズ除去プロセスを回転操作として捉えることで、より直感的な理解と制御が可能になる。
+
+### モデルアーキテクチャの進化
+
+*   **3D U-Nets:**
+    従来の2D U-Netを時間方向に拡張した手法である。**VDM (Video Diffusion Models)** [[Ho et al., 2022](https://arxiv.org/abs/2204.03458)] は、2D畳み込みを3D（またはPseudo-3D）に置き換え、空間的なAttentionに加え、時間軸方向のAttention（Temporal Attention）を導入した。これにより、フレーム間の依存関係を学習する。
+    Googleの [**Imagen Video**](https://arxiv.org/abs/2210.02303) は、この3D U-Netをカスケード接続（Cascaded Diffusion Models）し、空間解像度と時間解像度を段階的に引き上げることで、高精細な動画生成を実現している。
+
+*   **Diffusion Transformers (DiT):**
+    近年、U-Netの代わりにTransformerを採用する動きが加速している。OpenAIの [**Sora**](https://openai.com/research/video-generation-models-as-world-simulators) はこの代表例である。Soraは動画を時空間パッチ（Spacetime Patches）に分割し、それらをトークンとしてTransformerに入力する。U-Netと比較してスケーラビリティに優れ、長期的な依存関係の学習に適しているため、最大1分間の整合性の取れた動画生成が可能となった。
+
+## アプローチ2：事前学習済み画像モデルの適応（Adapting Image Models）
+
+ゼロからの学習は膨大な計算資源を要するため、強力な既存のText-to-Image（T2I）モデル（Stable Diffusionなど）を動画用に「拡張」するアプローチが盛んに研究されている。
+
+### ファインチューニング（Fine-tuning）
+
+T2Iモデルに時間方向のレイヤー（Temporal Layers）を挿入し、動画データを用いてその部分のみ、あるいは全体を微調整する手法である。
+
+*   **Make-A-Video:** Metaが提案したモデル。[**Make-A-Video**](https://arxiv.org/abs/2209.14792) はT2Iモデルに時空間畳み込み（Pseudo-3D Convolution）とAttention層を追加し、動画データで学習させる。興味深いのは、教師なし動画データで時間的ダイナミクスを学習させる点である。
+*   **Tune-A-Video:** 「One-Shot Tuning」と呼ばれる手法。[**Tune-A-Video**](https://arxiv.org/abs/2212.11565) はたった1本の動画でモデルを微調整し、その動画の動きや構造を保ったまま、プロンプトで対象物を変更（例：男性がスキー → スパイダーマンがスキー）することを可能にする。
+
+### 訓練不要のアダプテーション（Training-Free Adaptation）
+
+驚くべきことに、追加学習を一切行わずに動画を生成する手法も提案されている。
+
+*   **Text2Video-Zero:** [**Text2Video-Zero**](https://arxiv.org/abs/2303.13439) は既存のT2IモデルのAttentionメカニズムを変更し、**Cross-Frame Attention**を導入することで、フレーム間の一貫性を強制する。また、潜在空間上でモーションダイナミクスを制御することで、背景やオブジェクトの整合性を保つ。
+*   **ControlVideo:** [**ControlVideo**](https://arxiv.org/abs/2305.13077) はControlNetの概念を動画に拡張し、深度マップやエッジなどの構造情報を条件として与えることで、ちらつき（Flicker）の少ない安定した動画生成を実現する。これには階層的なサンプリング（Hierarchical Sampler）や、インターリーブされたフレーム平滑化技術が用いられる。
+
+### 潜在拡散モデル（Latent Diffusion Models for Video）
+
+**Stable Video Diffusion (SVD)** [[Blattmann et al., 2023](https://arxiv.org/abs/2311.15127)] は、画像生成で成功したLDMを動画に拡張したものである。ここで特に強調されるべきは**データセットのキュレーション**の重要性である。SVDの研究では、動きの少ないクリップや美的品質の低いクリップを徹底的にフィルタリングし、高品質なデータのみで学習させることが、モデルの性能向上に不可欠であることが示された。
+
+### 統合された時空間アーキテクチャ
+
+Googleの **Lumiere** [[Bar-Tal et al., 2024](https://arxiv.org/abs/2401.12945)] は、従来の「キーフレーム生成＋超解像（カスケード）」というパイプラインに伴う不整合の問題を解決するために、**Space-Time U-Net (STUNet)** を提案した。これは動画の全期間を一度のパスで生成する統合型アーキテクチャであり、時間的なダウンサンプリング・アップサンプリングを行うことで、一貫性のある滑らかな動きを実現している。
+
+## ベンチマークと評価指標
+
+動画生成モデルの評価は、画像よりもはるかに複雑である。現在の研究では、以下のような定量的・定性的指標が用いられている。
+
+*   **FVD (Fréchet Video Distance):** 画像におけるFIDの動画版。生成された動画の分布と実際の動画の分布との距離を測る。全体的な品質評価に使われるが、時間的一貫性を完全には捉えきれない場合がある。
+*   **CLIP Score:** テキストプロンプトと生成された動画（の各フレーム）との意味的な類似度を測定し、Text-Video Alignment（テキスト整合性）を評価する。
+*   **時間的一貫性の評価:** モーションの自然さや、フレーム間でのオブジェクトの変形などを評価するための特定の指標や、人手による評価（Human Evaluation）が依然として重要である。
+
+## 倫理的配慮と社会的影響
+
+技術の進歩に伴い、**倫理的な課題**も浮き彫りになっている。
+
+*   **誤情報の拡散:** 高精細な動画生成は、ディープフェイクやフェイクニュースの作成を容易にし、真実と虚構の境界を曖昧にするリスクがある。
+*   **著作権とバイアス:** 学習データに含まれる著作物の扱いや、データセットのバイアス（人種や性別など）が生成物に反映される問題は、画像生成と同様、あるいはそれ以上に深刻な課題である。
+*   **透かし（Watermarking）技術:** AI生成コンテンツであることを明示するための技術的対策や、法的な枠組みの整備が急務とされている。
+
+## まとめ
+
+動画生成のための拡散モデルは、3D U-NetやTransformer (DiT) といったアーキテクチャの進化、そして既存の画像モデルからの知識転移技術によって急速に発展している。[Sora](https://openai.com/research/video-generation-models-as-world-simulators)や[Lumiere](https://arxiv.org/abs/2401.12945)のようなモデルは、私たちが想像する「世界シミュレータ」への第一歩を踏み出していると言えるだろう。
+
+しかし、時間的一貫性の完全な制御、計算コストの削減、そして倫理的な課題への対処など、解決すべき問題は依然として多い。今後の研究は、より効率的なアーキテクチャの探求とともに、これらの課題を克服し、実用的なアプリケーションへと昇華させるフェーズに入っていくだろう。
+
+## 参考文献
+
+1.  Weng, Lilian. (Apr 2024). Diffusion Models Video Generation. Lil’Log. [https://lilianweng.github.io/posts/2024-04-12-diffusion-video/](https://lilianweng.github.io/posts/2024-04-12-diffusion-video/)
+2.  Salimans, Tim, and Jonathan Ho. "[Progressive distillation for fast sampling of diffusion models](https://arxiv.org/abs/2202.00512)." ICLR 2022.
+3.  Ho, Jonathan, et al. "[Video Diffusion Models](https://arxiv.org/abs/2204.03458)." NeurIPS 2022. (VDM)
+4.  Ho, Jonathan, et al. "[Imagen Video: High Definition Video Generation with Diffusion Models](https://arxiv.org/abs/2210.02303)." arXiv 2022.
+5.  Brooks, Tim, et al. "[Video generation models as world simulators](https://openai.com/research/video-generation-models-as-world-simulators)." OpenAI 2024. (Sora)
+6.  Singer, Uriel, et al. "[Make-A-Video: Text-to-Video Generation without Text-Video Data](https://arxiv.org/abs/2209.14792)." ICLR 2023.
+7.  Wu, Jay Zhangjie, et al. "[Tune-A-Video: One-Shot Tuning of Image Diffusion Models for Text-to-Video Generation](https://arxiv.org/abs/2212.11565)." ICCV 2023.
+8.  Khachatryan, Levon, et al. "[Text2Video-Zero: Text-to-Image Diffusion Models are Zero-Shot Video Generators](https://arxiv.org/abs/2303.13439)." ICCV 2023.
+9.  Zhang, Bowman, et al. "[ControlVideo: Training-free Controllable Text-to-Video Generation](https://arxiv.org/abs/2305.13077)." arXiv 2023.
+10. Blattmann, Andreas, et al. "[Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets](https://arxiv.org/abs/2311.15127)." arXiv 2023.
+11. Bar-Tal, Omer, et al. "[Lumiere: A Space-Time Diffusion Model for Video Generation](https://arxiv.org/abs/2401.12945)." arXiv 2024.

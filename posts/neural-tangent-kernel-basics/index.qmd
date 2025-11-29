@@ -1,0 +1,124 @@
+---
+title: "Neural Tangent Kernel (NTK) 解説：深層学習の学習ダイナミクスを解き明かす数学的枠組み"
+description: "Neural Tangent Kernel (NTK) を解説し、深層学習における過剰パラメータ化されたネットワークの学習ダイナミクス、特に無限幅極限での収束メカニズムを数学的に解き明かす。"
+author: "Junichiro Iwasawa"
+date: "2025-04-23"
+categories: [Machine Learning]
+image: https://picsum.photos/id/34/200
+---
+
+深層学習において、パラメータ数が学習データ数を遥かに上回る「過剰パラメータ化（Over-parameterization）」されたニューラルネットワークが、過学習を起こさずに訓練データに対してほぼゼロの損失を達成し、かつ高い汎化性能を示す現象は長年の謎であった。
+
+2018年、Jacotらによって提唱された **[Neural Tangent Kernel (NTK)](https://arxiv.org/abs/1806.07572)** は、この現象を数学的に記述するための画期的な理論的枠組みである。NTKは、勾配降下法（Gradient Descent）によるニューラルネットワークの学習ダイナミクスを、カーネル法（Kernel Methods）の視点から説明する。特に、ネットワークの幅（width）が無限大に近づく極限において、ニューラルネットワークが大域的最小値（Global Minimum）に収束する理由を強固な数学的基盤の上で明らかにした。
+
+本稿では、Lilian Weng氏の[技術ブログ記事](https://lilianweng.github.io/posts/2022-09-08-ntk/)を基に、NTKの数学的定義から、無限幅ネットワークにおける挙動、そして近年の研究における応用と限界について、詳細に解説する。
+
+## 基礎概念
+
+NTKの理論に踏み込む前に、理解の前提となる基本的な数学的概念を整理する。
+
+*   **Vector-to-vector Derivative:** ベクトル値関数を入力ベクトルで微分したものは、Jacobian Matrix（ヤコビ行列）として表現される。
+*   **Differential Equations (微分方程式):** 関数とその導関数の関係を記述する方程式。ここでは特に、時間の経過に伴うパラメータの変化を記述する Ordinary Differential Equations (ODEs) が重要となる。
+*   **Central Limit Theorem (CLT):** 独立同一分布（i.i.d.）に従う多数の確率変数の和（または平均）は、変数の数が増えるにつれてガウス分布（正規分布）に近づく。
+*   **Taylor Expansion:** 関数をある点の周りで導関数の無限和として近似する手法。一次近似は線形化モデルの基礎となる。
+*   **Kernel & Kernel Methods:** カーネルは2つのデータポイント間の類似度を測る関数である。カーネル法は、この類似度を用いて非線形な予測を行う手法であり、SVMなどが代表例である。
+*   **[Gaussian Processes (GPs)](https://distill.pub/2019/visual-exploration-gaussian-processes/):** 関数上の確率分布モデル。任意の点集合における関数値が多変量ガウス分布に従うと仮定する。
+
+## 表記法と設定
+
+$L$ 層の全結合ニューラルネットワークを考える。入力次元を $n_0$、出力次元を $n_L$、総パラメータ数を $P$ とする。訓練データセットは $N$ 個のペア $(\mathbf{x}^{(i)}, y^{(i)})$ で構成される。
+
+各層 $l$ における順伝播（Forward Pass）は、アフィン変換とそれに続く非線形活性化関数 $\sigma$ で定義される。ここで、無限幅の極限での発散を防ぐため、NTKパラメータ化と呼ばれるスケーリング係数 $\frac{1}{\sqrt{n_l}}$ を導入する。
+
+$$ \tilde{A}^{(l+1)}(\mathbf{x}) = \frac{1}{\sqrt{n_l}} \mathbf{w}^{(l) \top} A^{(l)} + \beta \mathbf{b}^{(l)} $$
+$$ A^{(l+1)}(\mathbf{x}) = \sigma(\tilde{A}^{(l+1)}(\mathbf{x})) $$
+
+パラメータ $\theta$（重み $\mathbf{w}$ とバイアス $\mathbf{b}$）は、i.i.d. ガウス分布 $\mathcal{N}(0, 1)$ で初期化されるものとする。
+
+## Neural Tangent Kernel (NTK) の定義
+
+NTKは、学習中のネットワーク出力の変化を記述するために導出される。
+経験損失関数 $\mathcal{L}(\theta)$ を以下のように定義する。
+
+$$ \mathcal{L}(\theta) = \frac{1}{N} \sum_{i=1}^N \ell(f(\mathbf{x}^{(i)}; \theta), y^{(i)}) $$
+
+パラメータ $\theta$ の Gradient Descent による更新則（時間連続極限）は以下の通りである。
+
+$$ \frac{d\theta}{dt} = -\nabla_\theta \mathcal{L}(\theta) $$
+
+このパラメータの変化に伴う、ネットワーク出力 $f(\mathbf{x}; \theta)$ の時間変化（進化）は、連鎖律（Chain Rule）を用いて次のように記述できる。
+
+$$ \frac{df(\mathbf{x}; \theta)}{dt} = \nabla_\theta f(\mathbf{x}; \theta)^\top \frac{d\theta}{dt} = -\frac{1}{N} \sum_{i=1}^N \underbrace{\nabla_\theta f(\mathbf{x}; \theta)^\top \nabla_\theta f(\mathbf{x}^{(i)}; \theta)}_{\text{Neural Tangent Kernel}} \nabla_f \ell(f, y^{(i)}) $$
+
+この式中の青字部分が **Neural Tangent Kernel (NTK)** と定義される。
+
+$$ K(\mathbf{x}, \mathbf{x}'; \theta) = \nabla_\theta f(\mathbf{x}; \theta)^\top \nabla_\theta f(\mathbf{x}'; \theta) $$
+
+NTK $K(\mathbf{x}, \mathbf{x}'; \theta)$ は、データ点 $\mathbf{x}'$ におけるパラメータ更新が、別の点 $\mathbf{x}$ における出力にどのような影響（感度）を与えるかを表す内積カーネルである。
+
+## 無限幅ネットワークにおける挙動
+
+NTK理論の最も重要な貢献は、中間層の幅 $n_1, \dots, n_{L-1}$ が無限大（$n \to \infty$）に近づくとき、ニューラルネットワークが極めて単純かつ予測可能な挙動を示すことを証明した点にある。
+
+### 1. Gaussian Processes との関連
+
+無限幅のニューラルネットワークは、初期化時点において Gaussian Processes (GPs) と見なすことができる（[Neal, 1994](https://www.cs.toronto.edu/~radford/ftp/pin.pdf); [Lee et al., 2018](https://arxiv.org/abs/1711.00165)）。
+ランダムに初期化された重みを持つネットワークの各層の出力は、CLTによりガウス分布に収束する。その共分散行列はネットワークのアーキテクチャと初期化によって決定され、層を重ねるごとの帰納法によって計算可能である。この初期化時のGPカーネルはしばしばNNGP (Neural Network Gaussian Process) カーネルと呼ばれる。
+
+### 2. 決定論的かつ一定なカーネル
+
+Jacotらはさらに、無限幅極限において以下の2つの驚くべき性質を証明した。
+
+1.  **初期化時の決定論性:** 無限幅極限では、NTKはランダムな初期化の影響を受けず、ネットワーク構造のみに依存する決定論的なカーネル $K_\infty$ に収束する。
+2.  **学習中の不変性:** 学習（Gradient Descent）が進行しても、NTKの値は変化せず、初期化時の値 $K_\infty$ のまま一定に保たれる。
+
+これは、無限幅ネットワークの学習ダイナミクスが、固定されたカーネル $K_\infty$ を持つ線形微分方程式によって完全に記述できることを意味する。
+
+### 線形化モデル (Linearized Models)
+
+NTKが定数であるということは、ネットワーク出力 $f(\mathbf{x}; \theta)$ の変化がパラメータの変化に対して線形であることを示唆している。これを **Linearized Model** と呼ぶ。
+具体的に、平均二乗誤差（MSE）損失を用いた場合、出力のダイナミクスは解析的に解くことができ、訓練誤差は指数関数的にゼロへ減衰する。
+
+$$ \frac{df(\theta)}{dt} = -\eta K_\infty (f(\theta) - \mathcal{Y}) $$
+$$ f(t) - \mathcal{Y} = e^{-\eta K_\infty t} (f(0) - \mathcal{Y}) $$
+
+これにより、十分な幅を持つネットワークは、初期化の状態に関わらず大域的最小値へ確実に収束することが保証される。
+
+### Lazy Training
+
+過剰パラメータ化されたネットワークでは、訓練損失が劇的に減少しているにもかかわらず、個々のパラメータ自体は初期値からほとんど動かないという現象が観測される。これは **[Lazy Training](https://arxiv.org/abs/1812.07956)** と呼ばれる。
+NTKの視点からは、これは「パラメータ空間での微小な変化が、出力空間での大きな変化をもたらす」状態として説明される。無限幅極限では、パラメータの変化量 $\theta(t) - \theta(0)$ はゼロに近づく一方で、モデルは完全に学習を行うことができる。これは、モデルが特徴表現を学習しているのではなく、初期化時のランダムな特徴を用いたカーネル回帰を行っていることに等しい。
+
+## 応用と限界
+
+NTKは理論的に美しい枠組みを提供するが、実用的な深層学習モデルとの乖離や限界も指摘されている。
+
+### NTKの応用範囲
+
+NTK理論は、単なる収束証明にとどまらず、様々な分野へ応用されている。
+
+*   **汎化性能の予測:** NTKのスペクトル特性を解析することで、ネットワークの汎化能力をある程度予測可能である。
+*   **アーキテクチャの分析:** Convolutional Neural Networks (CNNs) や Transformers、Graph Neural Networks (GNNs) など、様々なアーキテクチャに対応するNTKを導出することで、それぞれの帰納的バイアス（Inductive Bias）を解析する研究が進められている。
+*   **Generative Adversarial Networks (GANs) や強化学習:** これらの分野における学習の安定性や収束性の解析にもNTKの枠組みが拡張されている。
+
+### 有限幅ネットワークにおける限界
+
+現実のニューラルネットワークは無限幅ではないため、NTK理論にはいくつかの限界が存在する。
+
+1.  **特徴学習（Feature Learning）の欠如:** 無限幅NTK（Lazy Training領域）では、カーネルが固定されるため、深層学習の醍醐味である「データに応じた特徴表現の獲得」が行われない。現実の高性能なモデルは、学習中にカーネル（特徴）自体が変化する "Rich Training" 領域で動作していると考えられており、NTKはこの挙動を完全には捉えきれていない。
+2.  **計算コスト:** 有限幅ネットワークに対する正確なNTKの計算は、データ数やパラメータ数に対して計算コストが非常に高く、大規模なデータセットへの適用は困難である。
+3.  **深さと汎化:** ネットワークが深くなるにつれ、無限幅NTKはデータ依存性を失い、汎化性能の予測精度が低下する場合があることが報告されている。また、有限幅ネットワークの方がNTK極限よりも優れたスケーリング則を示すケースも確認されている。
+
+## 結論
+
+Neural Tangent Kernel は、深層学習というブラックボックスを解明するための強力な数学的レンズである。特に過剰パラメータ化された領域において、なぜモデルが最適解に収束するのか、そのメカニズムをカーネル法やガウス過程と結びつけることで明確にした功績は大きい。
+
+一方で、NTKが記述する「特徴学習を行わない」ダイナミクスは、深層学習の成功の全てを説明するものではない。現在の研究トレンドは、NTKを出発点としつつ、有限幅補正や特徴学習を取り込んだ、より現実のモデルに近い理論構築へと進んでいる。NTKを理解することは、深層学習の理論的最前線を追うための不可欠なステップであると言えるだろう。
+
+## 参考文献
+
+1. Jacot, A., Gabriel, F., & Hongler, C. (2018). "[Neural Tangent Kernel: Convergence and Generalization in Neural Networks.](https://arxiv.org/abs/1806.07572)" NeurIPS.
+2. Lee, J., et al. (2019). "[Wide Neural Networks of Any Depth Evolve as Linear Models Under Gradient Descent.](https://arxiv.org/abs/1902.06720)" NeurIPS.
+3. Arora, S., et al. (2019). "[On Exact Computation with an Infinitely Wide Neural Net.](https://arxiv.org/abs/1904.11955)" NeurIPS.
+4. Chizat, L., et al. (2019). "[On Lazy Training in Differentiable Programming.](https://arxiv.org/abs/1812.07956)" NeurIPS.
+5. Weng, Lilian. (Sep 2022). [Some math behind neural tangent kernel.](https://lilianweng.github.io/posts/2022-09-08-ntk/) Lil'Log.

@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-11-20">
-<meta name="description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
+<meta name="dcterms.date" content="2025-04-20">
+<meta name="description" content="Neural Tangent Kernel (NTK) を解説し、深層学習における過剰パラメータ化されたネットワークの学習ダイナミクス、特に無限幅極限での収束メカニズムを数学的に解き明かす。">
 
-<title>Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</title>
+<title>Neural Tangent Kernel (NTK) 解説：深層学習の学習ダイナミクスを解き明かす数学的枠組み</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,15 +80,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
-<meta property="og:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
-<meta property="og:image" content="https://picsum.photos/id/117/200">
+<meta property="og:title" content="Neural Tangent Kernel (NTK) 解説：深層学習の学習ダイナミクスを解き明かす数学的枠組み – jiwasawaのブログ">
+<meta property="og:description" content="Neural Tangent Kernel (NTK) を解説し、深層学習における過剰パラメータ化されたネットワークの学習ダイナミクス、特に無限幅極限での収束メカニズムを数学的に解き明かす。">
+<meta property="og:image" content="https://picsum.photos/id/34/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算 – jiwasawaのブログ">
-<meta name="twitter:description" content="Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する">
-<meta name="twitter:image" content="https://picsum.photos/id/117/200">
+<meta name="twitter:title" content="Neural Tangent Kernel (NTK) 解説：深層学習の学習ダイナミクスを解き明かす数学的枠組み – jiwasawaのブログ">
+<meta name="twitter:description" content="Neural Tangent Kernel (NTK) を解説し、深層学習における過剰パラメータ化されたネットワークの学習ダイナミクス、特に無限幅極限での収束メカニズムを数学的に解き明かす。">
+<meta name="twitter:image" content="https://picsum.photos/id/34/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,17 +173,14 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Satya Nadellaの「全方位外交」とハイパースケーラーの冷徹な計算</h1>
+      <h1 class="title">Neural Tangent Kernel (NTK) 解説：深層学習の学習ダイナミクスを解き明かす数学的枠組み</h1>
                   <div>
         <div class="description">
-          Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する
+          Neural Tangent Kernel (NTK) を解説し、深層学習における過剰パラメータ化されたネットワークの学習ダイナミクス、特に無限幅極限での収束メカニズムを数学的に解き明かす。
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">AI</div>
-                <div class="quarto-category">LLM</div>
-                <div class="quarto-category">Podcast</div>
-                <div class="quarto-category">Dwarkesh Podcast</div>
+                <div class="quarto-category">Machine Learning</div>
               </div>
                   </div>
   </div>
@@ -172,7 +198,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 20, 2025</p>
+        <p class="date">April 20, 2025</p>
       </div>
     </div>
     
@@ -191,44 +217,103 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p><a href="https://www.dwarkesh.com/p/satya-nadella-2">Dwarkesh PodcastにおけるSatya Nadellaのインタビュー</a>は、単なる企業のPR活動の枠を超え、今後のAI産業構造を占う上で極めて重要な示唆に富んでいた。</p>
-<p>時を同じくして発表された<a href="https://blogs.microsoft.com/blog/2025/11/18/microsoft-nvidia-and-anthropic-announce-strategic-partnerships/">AnthropicおよびNVIDIAとの提携発表</a>と合わせて読み解くと、Microsoftが描くグランドストラテジーが透けて見える。それは、「OpenAIの保護者」という立場から、全方位外交を繰り広げる「AI時代の絶対的インフラ」への冷徹なまでの脱皮である。</p>
-<p>以下、Satya Nadellaの発言と最新の動向をベースに、Microsoftの現在地と未来を分析する。</p>
-<section id="aiインフラの重工業化-fairwater-2" class="level2">
-<h2 class="anchored" data-anchor-id="aiインフラの重工業化-fairwater-2">AIインフラの「重工業化」– Fairwater 2 –</h2>
-<p>まず度肝を抜かれるのは、インタビュー冒頭で紹介される新データセンター「Fairwater 2」の規模感だ。</p>
-<p>Satya NadellaとScott Guthrie（EVP of Cloud and AI）が案内したこの施設は、単体で現存するどのAIデータセンターよりも強力であり、構築中の複数のFairwaterビル群を合わせると、その総容量は2ギガワット（GW）を超えるという。2GWといえば、原子力発電所2基分に相当する電力だ。これを単なる計算資源のために確保するという事実は、AIビジネスがもはやソフトウェア産業というよりは、重厚長大なエネルギー・インフラ産業に変貌したことを物語っている。</p>
-<p>Scott Guthrieによれば、彼らは18〜24ヶ月ごとにトレーニング能力を10倍にするペースで拡張を続けている。つまり、GPT-5のトレーニングに使用される計算リソースは、GPT-4世代の10倍規模になるということだ。この指数関数的な拡張を支えるために、数百万本のネットワークケーブルが張り巡らされ、何十万個ものGB200やGB300といった次世代チップが投入される。Satya Nadellaが「私はソフトウェア会社を経営しているはずなんだが」と自嘲気味に語るのも無理はない。</p>
+<p>深層学習において、パラメータ数が学習データ数を遥かに上回る「過剰パラメータ化（Over-parameterization）」されたニューラルネットワークが、過学習を起こさずに訓練データに対してほぼゼロの損失を達成し、かつ高い汎化性能を示す現象は長年の謎であった。</p>
+<p>2018年、Jacotらによって提唱された <strong><a href="https://arxiv.org/abs/1806.07572">Neural Tangent Kernel (NTK)</a></strong> は、この現象を数学的に記述するための画期的な理論的枠組みである。NTKは、勾配降下法（Gradient Descent）によるニューラルネットワークの学習ダイナミクスを、カーネル法（Kernel Methods）の視点から説明する。特に、ネットワークの幅（width）が無限大に近づく極限において、ニューラルネットワークが大域的最小値（Global Minimum）に収束する理由を強固な数学的基盤の上で明らかにした。</p>
+<p>本稿では、Lilian Weng氏の<a href="https://lilianweng.github.io/posts/2022-09-08-ntk/">技術ブログ記事</a>を基に、NTKの数学的定義から、無限幅ネットワークにおける挙動、そして近年の研究における応用と限界について、詳細に解説する。</p>
+<section id="基礎概念" class="level2">
+<h2 class="anchored" data-anchor-id="基礎概念">基礎概念</h2>
+<p>NTKの理論に踏み込む前に、理解の前提となる基本的な数学的概念を整理する。</p>
+<ul>
+<li><strong>Vector-to-vector Derivative:</strong> ベクトル値関数を入力ベクトルで微分したものは、Jacobian Matrix（ヤコビ行列）として表現される。</li>
+<li><strong>Differential Equations (微分方程式):</strong> 関数とその導関数の関係を記述する方程式。ここでは特に、時間の経過に伴うパラメータの変化を記述する Ordinary Differential Equations (ODEs) が重要となる。</li>
+<li><strong>Central Limit Theorem (CLT):</strong> 独立同一分布（i.i.d.）に従う多数の確率変数の和（または平均）は、変数の数が増えるにつれてガウス分布（正規分布）に近づく。</li>
+<li><strong>Taylor Expansion:</strong> 関数をある点の周りで導関数の無限和として近似する手法。一次近似は線形化モデルの基礎となる。</li>
+<li><strong>Kernel &amp; Kernel Methods:</strong> カーネルは2つのデータポイント間の類似度を測る関数である。カーネル法は、この類似度を用いて非線形な予測を行う手法であり、SVMなどが代表例である。</li>
+<li><strong><a href="https://distill.pub/2019/visual-exploration-gaussian-processes/">Gaussian Processes (GPs)</a>:</strong> 関数上の確率分布モデル。任意の点集合における関数値が多変量ガウス分布に従うと仮定する。</li>
+</ul>
 </section>
-<section id="openai心中説の否定と全方位外交" class="level2">
-<h2 class="anchored" data-anchor-id="openai心中説の否定と全方位外交">「OpenAI心中説」の否定と全方位外交</h2>
-<p>これまで市場の一部には、MicrosoftはOpenAIと一蓮托生であり、OpenAIがこければMicrosoftも共倒れになるのではないかという懸念があった。しかし、今回のインタビューと直近のニュースは、その見方を完全に否定する。</p>
-<p>Satya Nadellaはインタビューの中で、Microsoftの役割を「ハイパースケーラー」として再定義している。特定のモデル（OpenAI）だけを優遇するホスティング業者ではなく、あらゆるモデルを動かすための汎用的な基盤になるという宣言だ。その証拠に、MicrosoftはOpenAIとの提携を維持しつつも、競合であるAnthropicと新たな戦略的提携を結んだ。</p>
-<p>新たに発表された提携内容によれば、AnthropicはMicrosoft Azureの計算容量に300億ドル（約4.6兆円）以上をコミットし、Azureの顧客はClaudeの最新モデル（Sonnet 4.5など）を利用可能になる。Satya Nadellaがインタビューで語った「インフラは複数のモデル系統をサポートできるように構築しなければならない。さもなければ、一つのモデルアーキテクチャに最適化しすぎた結果、技術的ブレイクスルーが起きた瞬間に全投資が無駄になる」という言葉は、まさにこのマルチモデル戦略を指している。</p>
-<p>モデル開発企業（OpenAIやAnthropic）が熾烈な開発競争と巨額の赤字を垂れ流しながら覇権を争う横で、どちらが勝ってもインフラ利用料として莫大な利益を吸い上げる構造を、Microsoftは着々と完成させつつある。ゴールドラッシュで最も儲けたのは採掘者ではなくツルハシ売りだったという寓話はあまりに手垢がついているが、Satya Nadellaほど巨大な規模でツルハシを売る準備ができている人間はいない。</p>
+<section id="表記法と設定" class="level2">
+<h2 class="anchored" data-anchor-id="表記法と設定">表記法と設定</h2>
+<p><span class="math inline">\(L\)</span> 層の全結合ニューラルネットワークを考える。入力次元を <span class="math inline">\(n_0\)</span>、出力次元を <span class="math inline">\(n_L\)</span>、総パラメータ数を <span class="math inline">\(P\)</span> とする。訓練データセットは <span class="math inline">\(N\)</span> 個のペア <span class="math inline">\((\mathbf{x}^{(i)}, y^{(i)})\)</span> で構成される。</p>
+<p>各層 <span class="math inline">\(l\)</span> における順伝播（Forward Pass）は、アフィン変換とそれに続く非線形活性化関数 <span class="math inline">\(\sigma\)</span> で定義される。ここで、無限幅の極限での発散を防ぐため、NTKパラメータ化と呼ばれるスケーリング係数 <span class="math inline">\(\frac{1}{\sqrt{n_l}}\)</span> を導入する。</p>
+<p><span class="math display">\[ \tilde{A}^{(l+1)}(\mathbf{x}) = \frac{1}{\sqrt{n_l}} \mathbf{w}^{(l) \top} A^{(l)} + \beta \mathbf{b}^{(l)} \]</span> <span class="math display">\[ A^{(l+1)}(\mathbf{x}) = \sigma(\tilde{A}^{(l+1)}(\mathbf{x})) \]</span></p>
+<p>パラメータ <span class="math inline">\(\theta\)</span>（重み <span class="math inline">\(\mathbf{w}\)</span> とバイアス <span class="math inline">\(\mathbf{b}\)</span>）は、i.i.d. ガウス分布 <span class="math inline">\(\mathcal{N}(0, 1)\)</span> で初期化されるものとする。</p>
 </section>
-<section id="capexの爆発と知識集約型投資" class="level2">
-<h2 class="anchored" data-anchor-id="capexの爆発と知識集約型投資">CAPEXの爆発と「知識集約型」投資</h2>
-<p>Dylan Patel（SemiAnalysis）からの鋭い指摘 –Microsoftが昨年、データセンターのリース契約の一部を一時停止したこと– に対し、Satya Nadellaは極めて合理的な回答をしている。</p>
-<p>彼は、単にOpenAIのために闇雲に建設を急ぐことを避けたのだ。AIチップの進化スピードは凄まじく、現在のH100世代で過剰に設備投資をしてしまえば、数年後には減価償却の重荷に苦しむ陳腐化した資産（レガシー）を抱えることになる。NVIDIAの次世代チップ（GB200など）の登場を見据え、電力効率と性能が飛躍的に向上するタイミングで投資を集中させる。これは「ハードウェアの減価償却」という物理的な制約と、「ソフトウェアによる最適化」という知識集約的な側面を組み合わせた、高度なバランスシート管理である。</p>
-<p>Satya Nadellaはこれを「資本集約的かつ知識集約的」なビジネスへの転換と呼ぶ。単に金を積めば勝てるわけではなく、システム全体のTCO（総保有コスト）をいかに下げるかというソフトウェアの知見が、ハードウェア投資のROIを決定づける。Oracleが設備投資を急拡大させMicrosoftを追い上げようとしている状況に対しても、彼は「特定の顧客（xAIなどの単一モデル企業）のためのホスティング屋になるつもりはない」と一蹴する。長期間にわたり多様な顧客（ロングテール）に利用される汎用的なインフラこそが、Microsoftが目指すビジネスなのだ。</p>
+<section id="neural-tangent-kernel-ntk-の定義" class="level2">
+<h2 class="anchored" data-anchor-id="neural-tangent-kernel-ntk-の定義">Neural Tangent Kernel (NTK) の定義</h2>
+<p>NTKは、学習中のネットワーク出力の変化を記述するために導出される。 経験損失関数 <span class="math inline">\(\mathcal{L}(\theta)\)</span> を以下のように定義する。</p>
+<p><span class="math display">\[ \mathcal{L}(\theta) = \frac{1}{N} \sum_{i=1}^N \ell(f(\mathbf{x}^{(i)}; \theta), y^{(i)}) \]</span></p>
+<p>パラメータ <span class="math inline">\(\theta\)</span> の Gradient Descent による更新則（時間連続極限）は以下の通りである。</p>
+<p><span class="math display">\[ \frac{d\theta}{dt} = -\nabla_\theta \mathcal{L}(\theta) \]</span></p>
+<p>このパラメータの変化に伴う、ネットワーク出力 <span class="math inline">\(f(\mathbf{x}; \theta)\)</span> の時間変化（進化）は、連鎖律（Chain Rule）を用いて次のように記述できる。</p>
+<p><span class="math display">\[ \frac{df(\mathbf{x}; \theta)}{dt} = \nabla_\theta f(\mathbf{x}; \theta)^\top \frac{d\theta}{dt} = -\frac{1}{N} \sum_{i=1}^N \underbrace{\nabla_\theta f(\mathbf{x}; \theta)^\top \nabla_\theta f(\mathbf{x}^{(i)}; \theta)}_{\text{Neural Tangent Kernel}} \nabla_f \ell(f, y^{(i)}) \]</span></p>
+<p>この式中の青字部分が <strong>Neural Tangent Kernel (NTK)</strong> と定義される。</p>
+<p><span class="math display">\[ K(\mathbf{x}, \mathbf{x}'; \theta) = \nabla_\theta f(\mathbf{x}; \theta)^\top \nabla_\theta f(\mathbf{x}'; \theta) \]</span></p>
+<p>NTK <span class="math inline">\(K(\mathbf{x}, \mathbf{x}'; \theta)\)</span> は、データ点 <span class="math inline">\(\mathbf{x}'\)</span> におけるパラメータ更新が、別の点 <span class="math inline">\(\mathbf{x}\)</span> における出力にどのような影響（感度）を与えるかを表す内積カーネルである。</p>
 </section>
-<section id="エージェント時代のosとしての地位" class="level2">
-<h2 class="anchored" data-anchor-id="エージェント時代のosとしての地位">エージェント時代の「OS」としての地位</h2>
-<p>もう一つ興味深いのが、将来のビジネスモデルに関する言及だ。これまでのSaaS（Software as a Service）は「ユーザー数 × 単価」が基本だったが、AIエージェントが普及すれば、人間の数は制限要因ではなくなる。</p>
-<p>Satya Nadellaは、将来的に企業が「AIエージェントのためのコンピュータ」をプロビジョニング（配備）する世界を想定している。人間がExcelを使うのではなく、AIエージェントが自律的にタスクをこなすために、バックグラウンドでWindows 365やAzure上のコンピュートリソースを消費する。こうなると、Microsoftのビジネスは「エンドユーザーのツール」から「エージェントのインフラ」へと進化する。</p>
-<p>GitHub Copilotの競合（Cursorなど）が台頭している現状についても、彼は余裕を見せる。GitHub上でのリポジトリ作成数は過去最高であり、どのようなAIコーディングエージェントが勝とうとも、最終的にコードが保存され、管理される場所（Agent HQ）としてGitHubが機能すればよいという考えだ。ここでも「誰が勝ってもMicrosoftが儲かる」というレイヤー構造への執着が見て取れる。</p>
+<section id="無限幅ネットワークにおける挙動" class="level2">
+<h2 class="anchored" data-anchor-id="無限幅ネットワークにおける挙動">無限幅ネットワークにおける挙動</h2>
+<p>NTK理論の最も重要な貢献は、中間層の幅 <span class="math inline">\(n_1, \dots, n_{L-1}\)</span> が無限大（<span class="math inline">\(n \to \infty\)</span>）に近づくとき、ニューラルネットワークが極めて単純かつ予測可能な挙動を示すことを証明した点にある。</p>
+<section id="gaussian-processes-との関連" class="level3">
+<h3 class="anchored" data-anchor-id="gaussian-processes-との関連">1. Gaussian Processes との関連</h3>
+<p>無限幅のニューラルネットワークは、初期化時点において Gaussian Processes (GPs) と見なすことができる（<a href="https://www.cs.toronto.edu/~radford/ftp/pin.pdf">Neal, 1994</a>; <a href="https://arxiv.org/abs/1711.00165">Lee et al., 2018</a>）。 ランダムに初期化された重みを持つネットワークの各層の出力は、CLTによりガウス分布に収束する。その共分散行列はネットワークのアーキテクチャと初期化によって決定され、層を重ねるごとの帰納法によって計算可能である。この初期化時のGPカーネルはしばしばNNGP (Neural Network Gaussian Process) カーネルと呼ばれる。</p>
 </section>
-<section id="帝国の逆襲信頼と地政学" class="level2">
-<h2 class="anchored" data-anchor-id="帝国の逆襲信頼と地政学">帝国の逆襲：信頼と地政学</h2>
-<p>インタビューの終盤で語られた「信頼（Trust）」と地政学的な視点も無視できない。米中対立が深まり、各国が「ソブリンAI（主権AI）」を求める中、Satya Nadellaは米国製テックスタックへの信頼こそが最大の競争優位性になると説く。</p>
-<p>TSMCへの依存や中国製AIモデルの台頭といったリスクに対し、Microsoftは世界各地（欧州、中東、アジア）で、現地の法規制やデータ主権に配慮したデータセンター網を構築している。技術的な優位性だけでなく、「同盟国のインフラ」として機能することで、国家レベルのプロジェクトに入り込む。これは純粋なテクノロジー企業というよりは、もはや防衛産業やインフラ輸出に近い動きである。</p>
+<section id="決定論的かつ一定なカーネル" class="level3">
+<h3 class="anchored" data-anchor-id="決定論的かつ一定なカーネル">2. 決定論的かつ一定なカーネル</h3>
+<p>Jacotらはさらに、無限幅極限において以下の2つの驚くべき性質を証明した。</p>
+<ol type="1">
+<li><strong>初期化時の決定論性:</strong> 無限幅極限では、NTKはランダムな初期化の影響を受けず、ネットワーク構造のみに依存する決定論的なカーネル <span class="math inline">\(K_\infty\)</span> に収束する。</li>
+<li><strong>学習中の不変性:</strong> 学習（Gradient Descent）が進行しても、NTKの値は変化せず、初期化時の値 <span class="math inline">\(K_\infty\)</span> のまま一定に保たれる。</li>
+</ol>
+<p>これは、無限幅ネットワークの学習ダイナミクスが、固定されたカーネル <span class="math inline">\(K_\infty\)</span> を持つ線形微分方程式によって完全に記述できることを意味する。</p>
 </section>
-<section id="結論satya-nadellaの7年契約という鎖" class="level2">
-<h2 class="anchored" data-anchor-id="結論satya-nadellaの7年契約という鎖">結論：Satya Nadellaの7年契約という「鎖」</h2>
-<p>インタビューの中で最も恐ろしいと感じたのは、OpenAIとの関係性についての言及だ。MicrosoftはOpenAIに対して今後7年間のIP（知的財産）へのアクセス権を持っており、コンシューマー向けハードウェア以外のすべて（モデルの重み、システム設計など）を利用できるという。</p>
-<p>「彼らがシステムレベルでイノベーションを起こせば、我々はそのすべてにアクセスできる」とSatya Nadellaは淡々と語る。OpenAIがAGIに近づけば近づくほど、その成果物は即座にAzureのメニューに並び、Microsoft自身のモデル（MAI）の改善にも使われる。OpenAIは独立企業として振る舞っているが、実質的にはMicrosoftという巨大なエコシステムにおけるR&amp;D部門としての機能を、契約によってガチガチに固定されているようにも見える。</p>
-<p>Deep Researchのような派手な機能でユーザーを驚かせるOpenAIの横で、その裏側にある計算資源、電力、ネットワーク、そして利益構造のすべてを握りにかかるSatya Nadella。Dwarkesh Patelが最後に述べたように、Microsoftはソフトウェア企業から、かつてない規模の「産業機械」へと変貌を遂げようとしている。その操縦席に座る男の視界には、AIブームの浮き沈みなど些細なノイズにしか映っていないのかもしれない。</p>
+<section id="線形化モデル-linearized-models" class="level3">
+<h3 class="anchored" data-anchor-id="線形化モデル-linearized-models">線形化モデル (Linearized Models)</h3>
+<p>NTKが定数であるということは、ネットワーク出力 <span class="math inline">\(f(\mathbf{x}; \theta)\)</span> の変化がパラメータの変化に対して線形であることを示唆している。これを <strong>Linearized Model</strong> と呼ぶ。 具体的に、平均二乗誤差（MSE）損失を用いた場合、出力のダイナミクスは解析的に解くことができ、訓練誤差は指数関数的にゼロへ減衰する。</p>
+<p><span class="math display">\[ \frac{df(\theta)}{dt} = -\eta K_\infty (f(\theta) - \mathcal{Y}) \]</span> <span class="math display">\[ f(t) - \mathcal{Y} = e^{-\eta K_\infty t} (f(0) - \mathcal{Y}) \]</span></p>
+<p>これにより、十分な幅を持つネットワークは、初期化の状態に関わらず大域的最小値へ確実に収束することが保証される。</p>
+</section>
+<section id="lazy-training" class="level3">
+<h3 class="anchored" data-anchor-id="lazy-training">Lazy Training</h3>
+<p>過剰パラメータ化されたネットワークでは、訓練損失が劇的に減少しているにもかかわらず、個々のパラメータ自体は初期値からほとんど動かないという現象が観測される。これは <strong><a href="https://arxiv.org/abs/1812.07956">Lazy Training</a></strong> と呼ばれる。 NTKの視点からは、これは「パラメータ空間での微小な変化が、出力空間での大きな変化をもたらす」状態として説明される。無限幅極限では、パラメータの変化量 <span class="math inline">\(\theta(t) - \theta(0)\)</span> はゼロに近づく一方で、モデルは完全に学習を行うことができる。これは、モデルが特徴表現を学習しているのではなく、初期化時のランダムな特徴を用いたカーネル回帰を行っていることに等しい。</p>
+</section>
+</section>
+<section id="応用と限界" class="level2">
+<h2 class="anchored" data-anchor-id="応用と限界">応用と限界</h2>
+<p>NTKは理論的に美しい枠組みを提供するが、実用的な深層学習モデルとの乖離や限界も指摘されている。</p>
+<section id="ntkの応用範囲" class="level3">
+<h3 class="anchored" data-anchor-id="ntkの応用範囲">NTKの応用範囲</h3>
+<p>NTK理論は、単なる収束証明にとどまらず、様々な分野へ応用されている。</p>
+<ul>
+<li><strong>汎化性能の予測:</strong> NTKのスペクトル特性を解析することで、ネットワークの汎化能力をある程度予測可能である。</li>
+<li><strong>アーキテクチャの分析:</strong> Convolutional Neural Networks (CNNs) や Transformers、Graph Neural Networks (GNNs) など、様々なアーキテクチャに対応するNTKを導出することで、それぞれの帰納的バイアス（Inductive Bias）を解析する研究が進められている。</li>
+<li><strong>Generative Adversarial Networks (GANs) や強化学習:</strong> これらの分野における学習の安定性や収束性の解析にもNTKの枠組みが拡張されている。</li>
+</ul>
+</section>
+<section id="有限幅ネットワークにおける限界" class="level3">
+<h3 class="anchored" data-anchor-id="有限幅ネットワークにおける限界">有限幅ネットワークにおける限界</h3>
+<p>現実のニューラルネットワークは無限幅ではないため、NTK理論にはいくつかの限界が存在する。</p>
+<ol type="1">
+<li><strong>特徴学習（Feature Learning）の欠如:</strong> 無限幅NTK（Lazy Training領域）では、カーネルが固定されるため、深層学習の醍醐味である「データに応じた特徴表現の獲得」が行われない。現実の高性能なモデルは、学習中にカーネル（特徴）自体が変化する “Rich Training” 領域で動作していると考えられており、NTKはこの挙動を完全には捉えきれていない。</li>
+<li><strong>計算コスト:</strong> 有限幅ネットワークに対する正確なNTKの計算は、データ数やパラメータ数に対して計算コストが非常に高く、大規模なデータセットへの適用は困難である。</li>
+<li><strong>深さと汎化:</strong> ネットワークが深くなるにつれ、無限幅NTKはデータ依存性を失い、汎化性能の予測精度が低下する場合があることが報告されている。また、有限幅ネットワークの方がNTK極限よりも優れたスケーリング則を示すケースも確認されている。</li>
+</ol>
+</section>
+</section>
+<section id="結論" class="level2">
+<h2 class="anchored" data-anchor-id="結論">結論</h2>
+<p>Neural Tangent Kernel は、深層学習というブラックボックスを解明するための強力な数学的レンズである。特に過剰パラメータ化された領域において、なぜモデルが最適解に収束するのか、そのメカニズムをカーネル法やガウス過程と結びつけることで明確にした功績は大きい。</p>
+<p>一方で、NTKが記述する「特徴学習を行わない」ダイナミクスは、深層学習の成功の全てを説明するものではない。現在の研究トレンドは、NTKを出発点としつつ、有限幅補正や特徴学習を取り込んだ、より現実のモデルに近い理論構築へと進んでいる。NTKを理解することは、深層学習の理論的最前線を追うための不可欠なステップであると言えるだろう。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Jacot, A., Gabriel, F., &amp; Hongler, C. (2018). “<a href="https://arxiv.org/abs/1806.07572">Neural Tangent Kernel: Convergence and Generalization in Neural Networks.</a>” NeurIPS.</li>
+<li>Lee, J., et al.&nbsp;(2019). “<a href="https://arxiv.org/abs/1902.06720">Wide Neural Networks of Any Depth Evolve as Linear Models Under Gradient Descent.</a>” NeurIPS.</li>
+<li>Arora, S., et al.&nbsp;(2019). “<a href="https://arxiv.org/abs/1904.11955">On Exact Computation with an Infinitely Wide Neural Net.</a>” NeurIPS.</li>
+<li>Chizat, L., et al.&nbsp;(2019). “<a href="https://arxiv.org/abs/1812.07956">On Lazy Training in Differentiable Programming.</a>” NeurIPS.</li>
+<li>Weng, Lilian. (Sep 2022). <a href="https://lilianweng.github.io/posts/2022-09-08-ntk/">Some math behind neural tangent kernel.</a> Lil’Log.</li>
+</ol>
 
 
 </section>

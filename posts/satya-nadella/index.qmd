@@ -3,7 +3,7 @@ title: "Satya Nadellaの「全方位外交」とハイパースケーラーの�
 description: "Satya Nadellaのインタビューを読み解き、OpenAIへの依存を脱して全方位的な「AIインフラ」として君臨しようとするマイクロソフトの冷徹なグランドストラテジーを分析する"
 author: "Junichiro Iwasawa"
 date: "2025-11-20"
-categories: [AI,LLM,Podcast]
+categories: [AI,LLM,Podcast,Dwarkesh Podcast]
 image: https://picsum.photos/id/117/200
 ---
 
