@@ -23,6 +23,15 @@
   <media:content url="https://picsum.photos/id/122/200" medium="image"/>
 </item>
 <item>
+  <title>TSMC海外展開の真実：モリス・チャンが予見した「徒労」と地政学的必然の狭間で</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/tsmc-overseas/</link>
+  <description><![CDATA[ Morris Changが「徒労」と評したTSMCの海外展開は、地政学的な必然と高コスト体質の狭間で、経済合理性を超えた成功を目指す壮大な挑戦である。 ]]></description>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/tsmc-overseas/</guid>
+  <pubDate>Mon, 01 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/123/200" medium="image"/>
+</item>
+<item>
   <title>Nick Laneの冷徹な熱力学：生命は「必然」だが、我々は「孤独」である</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/nick-lane-dwarkesh/</link>
@@ -114,16 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/llm-d-anatomy/</guid>
   <pubDate>Tue, 04 Nov 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/114/200" medium="image"/>
-</item>
-<item>
-  <title>OpenAI「宮廷クーデター」の全貌</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition/</link>
-  <description><![CDATA[ Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」 ]]></description>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition/</guid>
-  <pubDate>Mon, 03 Nov 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/113/200" medium="image"/>
 </item>
 </channel>
 </rss>
