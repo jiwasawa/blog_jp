@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/claude-soul-document/index.html",
       "/posts/google-tpu-v7/index.html",
       "/posts/tsmc-overseas/index.html",
       "/posts/nick-lane-dwarkesh/index.html",
