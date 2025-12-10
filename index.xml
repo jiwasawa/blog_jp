@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Thu, 04 Dec 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 09 Dec 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>ポストLLM時代の「空間知能」：World Labsが描く脱・言語偏重の未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/</link>
+  <description><![CDATA[ World LabsのFei-Fei LiとJustin Johnsonの対談から、LLMの言語偏重から脱却し、物理世界を理解する「空間知能」へと進化するAIの未来と、その先駆者たるMarbleについて解説する。 ]]></description>
+  <category>AI</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/</guid>
+  <pubDate>Tue, 09 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/125/200" medium="image"/>
+</item>
 <item>
   <title>Claudeの「魂」と資本主義の写し鏡：Anthropicの”Soul Document”が示唆する未来</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/composer-sasha-rush/</guid>
   <pubDate>Tue, 11 Nov 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/116/200" medium="image"/>
-</item>
-<item>
-  <title>スケール化された数学的探求と発見：GoogleのAI「AlphaEvolve」の挑戦と成果</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/alphaevolve-terence-tao/</link>
-  <description><![CDATA[ Googleの「AlphaEvolve」が67の数学問題群に挑んだ成果からAIによる数学研究の新たな可能性を考える ]]></description>
-  <category>AI</category>
-  <category>LLM</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/alphaevolve-terence-tao/</guid>
-  <pubDate>Sat, 08 Nov 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/115/200" medium="image"/>
 </item>
 </channel>
 </rss>
