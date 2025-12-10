@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/world-labs-marble/index.html",
       "/posts/claude-soul-document/index.html",
       "/posts/google-tpu-v7/index.html",
       "/posts/tsmc-overseas/index.html",
