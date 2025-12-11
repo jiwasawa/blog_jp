@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/zhang-interplay-rl-mid-pretraining/index.html",
       "/posts/anthropic-interviewer/index.html",
       "/posts/world-labs-marble/index.html",
       "/posts/claude-soul-document/index.html",
