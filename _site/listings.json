@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/just-image-transformers/index.html",
       "/posts/science-agent-systems/index.html",
       "/posts/nemotron-3-nano/index.html",
       "/posts/zhang-interplay-rl-mid-pretraining/index.html",

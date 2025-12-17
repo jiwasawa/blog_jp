@@ -1,0 +1,112 @@
+---
+title: "Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰"
+description: "MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。"
+author: "Junichiro Iwasawa"
+date: "2025-12-18"
+categories: [AI, Transformers]
+image: https://picsum.photos/id/131/200
+---
+
+近年、生成AIの分野、特に画像生成においては「拡散モデル（Diffusion Models）」が圧倒的な成功を収めている。Stable DiffusionやDALL-E 3といった最先端モデルの多くは、ノイズ予測（$\epsilon$-prediction）または速度予測（$v$-prediction）というアプローチを採用している。しかし、Kaiming Heらによる最新の論文「[Back to Basics: Let Denoising Generative Models Denoise](https://arxiv.org/html/2511.13720v1)」は、この支配的なパラダイムに根本的な疑問を投げかけた。
+
+彼らの主張はシンプルかつ強力である。「**デノイジングモデルなのだから、ノイズではなくクリーンなデータを直接予測させるべきだ**」というものだ。
+
+本記事では、この論文が提唱する「$x$-prediction（データ予測）」の理論的背景である多様体仮説（Manifold Hypothesis）と、それを実装した極めてシンプルなアーキテクチャ「Just image Transformers (JiT)」について、その技術的詳細と意義を解説する。
+
+## なぜ「ノイズ予測」が標準だったのか？
+
+拡散モデルの基本原理は、データに徐々にノイズを加えていく順方向プロセスと、そのノイズを除去してデータを復元する逆方向プロセス（デノイジング）にある。
+
+DDPM（Denoising Diffusion Probabilistic Models）[Ho et al., 2020] 以降、多くのモデルは学習目標として「加えられたノイズ $\epsilon$ を予測すること」を採用してきた。ニューラルネットワークは、時刻 $t$ におけるノイズ付き画像 $x_t$ を入力とし、そこに含まれるノイズ成分 $\epsilon_\theta(x_t, t)$ を出力するように訓練される。
+
+$$L_{\text{simple}} = \mathbb{E}_{t, x_0, \epsilon} [ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 ]$$
+
+このアプローチが普及した理由は、初期の研究において、クリーンな画像 $x_0$ を直接予測するよりも、ノイズ $\epsilon$ を予測する方が実験的に良好な結果が得られたためである。しかし、この論文の著者らは、その常識が高次元データにおいては破綻すると指摘する。
+
+## 多様体仮説と「次元の呪い」
+
+本論文の核心的な洞察は、機械学習における古典的な概念である**多様体仮説（Manifold Hypothesis）**に立ち返る点にある。
+
+### データは低次元、ノイズは高次元
+
+多様体仮説とは、「高次元空間にある自然データ（画像など）は、実際にはその空間内に埋め込まれた低次元の多様体（Manifold）上に分布している」という仮定である。
+
+*   **クリーンなデータ ($x$):** 低次元の多様体上に存在する。構造化されており、規則性がある。
+*   **ノイズ ($\epsilon$):** 高次元空間全体に均一に広がる。ランダムであり、構造を持たない。
+
+従来の手法のようにネットワークに「ノイズ」を予測させようとすると、ネットワークは高次元空間全体に広がる複雑なランダム情報を表現しなければならない。これには極めて高いモデル容量（Capacity）が必要となる。
+
+一方で、「クリーンなデータ」を予測させる（$x$-prediction）場合、ネットワークは入力からノイズを「捨て」、低次元の多様体へ射影することを目指せばよい。これは、モデルの容量が限られていても達成しやすいタスクである。
+
+### 高次元パッチにおける破綻
+
+現在のVision Transformer (ViT) ベースの拡散モデルでは、画像をパッチに分割して処理する。パッチサイズを大きくすると（例: $16 \times 16$ や $32 \times 32$ ピクセル）、1つのトークンが持つ次元数は数百から数千（例: $32 \times 32 \times 3 = 3072$次元）に達する。
+
+論文の実験によると、このような高次元トークン空間において、従来の $\epsilon$-prediction や $v$-prediction は壊滅的な失敗（Catastrophic Failure）を起こすことが判明した。これは、モデルがノイズの高次元な情報を捉えきれないためである。対照的に、$x$-prediction はこの高次元環境下でも安定して学習し、高品質な生成が可能であることが示された。
+
+## Just image Transformers (JiT)：極限まで単純化されたモデル
+
+この理論的洞察に基づき、著者らは「JiT (Just image Transformers)」と名付けた極めてシンプルなモデルを提案している。
+
+### JiTのアーキテクチャ
+
+JiTの設計思想は「余計なものを一切排除する」点にある。
+
+*   **Plain Vision Transformer:** 特殊な改良を加えない、標準的なViTを使用。
+*   **ピクセル空間での直接動作:** Stable DiffusionのようにVAE（Variational Autoencoder）を用いて潜在空間（Latent Space）に圧縮することをしない。
+*   **トークナイザーなし:** VQ-VAEのような離散トークナイザーも使用しない。
+*   **補助損失なし:** Adversarial Loss（GAN的損失）やPerceptual Loss（知覚的損失）も使用しない。
+*   **$x$-predictionの採用:** ネットワークの最終出力層から、クリーンな画像パッチを直接予測する。
+
+これは、近年の「Latent Diffusion」や複雑な「U-Net」構造へのアンチテーゼとも言えるアプローチである。
+
+### ボトルネックの意外な効用
+
+JiTにおける特筆すべき発見の一つは、ネットワーク内の**ボトルネック（Bottleneck）**の有効性である。
+
+通常、ディープラーニングではモデルの幅（Hidden Size）を広げることが性能向上につながると考えられがちである。しかし、JiTにおいては、パッチ埋め込み層（Patch Embedding）などで次元を意図的に削減するボトルネック構造を導入しても、性能が劣化しないどころか、むしろ向上する場合があることが確認された。
+
+これは多様体仮説と整合する。データの本質的な次元が低いため、ネットワークの内部表現を低次元に制約することで、モデルはノイズ成分を無視し、重要なデータ構造（多様体）の学習に集中できるようになるためであると考えられる。
+
+## 実験結果とスケーラビリティ
+
+論文では、ImageNetデータセットを用いた実験により、JiTの有効性が実証されている。
+
+1.  **高解像度への適応:** $256 \times 256$、$512 \times 512$、さらには $1024 \times 1024$ の解像度において、JiTは安定して動作した。特に高解像度化に伴ってパッチサイズを大きくしても（例: $32$ や $64$）、$x$-predictionのおかげで計算コストを爆発させずに学習が可能であった。
+2.  **既存手法との比較:** VAEや高度な正則化を用いた複雑なSOTAモデルと比較しても、JiTは事前学習なし（Training from Scratch）で競争力のあるFIDスコアを達成している。
+3.  **$\epsilon$-predの失敗:** パッチサイズを大きくしてトークンの次元数が上がると、$\epsilon$-prediction を用いたモデルは学習が進まなくなる現象が明確に示された（下図の概念的な対比を参照）。
+
+| 予測対象 | 低次元データでの挙動 | 高次元データ（大パッチ）での挙動 |
+| :--- | :--- | :--- |
+| **$\epsilon$-prediction (ノイズ)** | 良好（現在の標準） | **破綻 (Catastrophic Failure)** |
+| **$x$-prediction (データ)** | 良好 | **良好 (Robust)** |
+
+## 議論：なぜ今「原点回帰」なのか
+
+この研究は、生成AIの設計思想における重要な転換点を示唆している。
+
+### 1. トークナイザー依存からの脱却
+現在の画像生成の主流であるLatent Diffusion Models (LDM) は、強力な画像圧縮器（VAE）に依存している。しかし、画像以外のドメイン（気象データ、天体観測データ、タンパク質構造など）では、必ずしも適切なトークナイザーや圧縮器が存在するとは限らない。JiTのアプローチは、生のデータ（Raw Data）に対して直接Transformerを適用できるため、他分野への応用可能性が極めて高い。
+
+### 2. 「予測すべきもの」の再定義
+ニューラルネットワークは万能ではない。容量には限界がある。本研究は、モデルに何を予測させるか（Inductive Biasの設計）が、アーキテクチャの複雑さを増すこと以上に重要である可能性を示している。
+
+### 3. シンプルさの勝利
+「Back to Basics」というタイトルが示す通り、複雑怪奇になりがちな最新のモデルに対し、基礎的な原理（多様体仮説）に忠実であれば、標準的なTransformerだけで十分高度な生成が可能であることを示した点は、エンジニアリング的にも示唆に富む。
+
+## まとめ
+
+「[Back to Basics: Let Denoising Generative Models Denoise](https://arxiv.org/html/2511.13720v1)」は、拡散モデルにおける「常識」を覆す研究である。
+
+*   **ノイズ予測からデータ予測へ:** 高次元データにおいては、ノイズ（$\epsilon$）ではなくクリーンデータ（$x$）を予測することが、多様体仮説の観点から合理的であり、実際に不可欠である。
+*   **JiTの提案:** 素のVision Transformerを用いたシンプルなモデルで、高解像度画像の生成に成功した。
+*   **自己完結性:** 外部のトークナイザーや事前学習済みモデルに依存しないため、多様なデータドメインへ適用できるポテンシャルを持つ。
+
+拡散モデルの研究は、より複雑なアーキテクチャや損失関数の組み合わせへと進む傾向があったが、本研究は「何を学習させるか」という根本的な問いに立ち返ることで、新たな突破口を開いたと言えるだろう。
+
+## 参考文献
+
+1. Li, T., & He, K. (2025). [Back to Basics: Let Denoising Generative Models Denoise](https://arxiv.org/html/2511.13720v1). arXiv preprint arXiv:2511.13720.
+2. Ho, J., Jain, A., & Abbeel, P. (2020). [Denoising diffusion probabilistic models](https://proceedings.neurips.cc/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf). *NeurIPS 2020*.
+3. Peebles, W., & Xie, S. (2023). [Scalable diffusion models with transformers](https://openaccess.thecvf.com/content/ICCV2023/papers/Peebles_Scalable_Diffusion_Models_with_Transformers_ICCV_2023_paper.pdf). *ICCV 2023*. (DiT)
+4. Rombach, R., et al. (2022). [High-resolution image synthesis with latent diffusion models](https://openaccess.thecvf.com/content/CVPR2022/papers/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.pdf). *CVPR 2022*. (Stable Diffusion)
