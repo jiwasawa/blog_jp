@@ -24,6 +24,18 @@
   <media:content url="https://picsum.photos/id/129/200" medium="image"/>
 </item>
 <item>
+  <title>NVIDIA Nemotron 3 Nano：MoEとMambaの融合が拓くエージェント推論の新時代</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/nemotron-3-nano/</link>
+  <description><![CDATA[ NVIDIAが発表したNemotron 3 Nanoは、Mamba-TransformerとMixture-of-Experts (MoE)を融合したハイブリッドアーキテクチャにより、1Mトークンの長文脈対応と高度なエージェント推論能力を効率的に実現し、AIの新たな地平を切り開く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Agentic Systems</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/nemotron-3-nano/</guid>
+  <pubDate>Tue, 16 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/130/200" medium="image"/>
+</item>
+<item>
   <title>言語モデルの推論能力はどこから来るのか：Pre-Training、Mid-Training、RLの相互作用を解明する</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/zhang-interplay-rl-mid-pretraining/</link>
@@ -108,17 +120,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/nick-lane-dwarkesh/</guid>
   <pubDate>Sun, 30 Nov 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/121/200" medium="image"/>
-</item>
-<item>
-  <title>長時間稼働エージェントの「記憶喪失」と、Anthropicが提唱する泥臭い解決策</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/claude-harness/</link>
-  <description><![CDATA[ Anthropicが提唱する、AIエージェントの「記憶喪失」問題を解決するための、GitやJSONといった枯れた技術を組み合わせた泥臭くも実用的なエンジニアリング・プラクティスを分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-harness/</guid>
-  <pubDate>Sat, 29 Nov 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/120/200" medium="image"/>
 </item>
 </channel>
 </rss>
