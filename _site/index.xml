@@ -17,7 +17,7 @@
   <link>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/</link>
   <description><![CDATA[ MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。 ]]></description>
   <category>AI</category>
-  <category>Transformers</category>
+  <category>Transformer</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/</guid>
   <pubDate>Wed, 17 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/131/200" medium="image"/>

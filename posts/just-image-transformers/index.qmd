@@ -3,7 +3,7 @@ title: "Back to Basics: 拡散モデルは「ノイズ」ではなく「デー�
 description: "MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。"
 author: "Junichiro Iwasawa"
 date: "2025-12-18"
-categories: [AI, Transformers]
+categories: [AI, Transformer]
 image: https://picsum.photos/id/131/200
 ---
 
