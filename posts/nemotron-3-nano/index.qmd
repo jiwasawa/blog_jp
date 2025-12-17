@@ -1,0 +1,96 @@
+---
+title: "NVIDIA Nemotron 3 Nano：MoEとMambaの融合が拓くエージェント推論の新時代"
+description: "NVIDIAが発表したNemotron 3 Nanoは、Mamba-TransformerとMixture-of-Experts (MoE)を融合したハイブリッドアーキテクチャにより、1Mトークンの長文脈対応と高度なエージェント推論能力を効率的に実現し、AIの新たな地平を切り開く。"
+author: "Junichiro Iwasawa"
+date: "2025-12-16"
+categories: [LLM, AI, Agentic Systems]
+image: https://picsum.photos/id/130/200
+---
+
+NVIDIAは2025年12月、最新の言語モデル「**[Nemotron 3 Nano](https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Nano-Technical-Report.pdf)**」を発表した。このモデルは、31.6B（316億）というパラメータ規模を持ちながら、推論時にはその約10分の1にあたる3.2Bパラメータのみをアクティブにするという、極めて効率的な**Mixture-of-Experts (MoE)** アーキテクチャを採用している。
+
+さらに特筆すべきは、TransformerとMamba（状態空間モデル）を組み合わせたハイブリッドアーキテクチャである点だ。これにより、従来のTransformerモデルが抱えていた推論コストの課題を克服しつつ、1M（100万）トークンという長大なコンテキスト長への対応と、高度なエージェント推論（Agentic Reasoning）能力を実現している。
+
+本記事では、公開された[テクニカルレポート](https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Nano-Technical-Report.pdf)に基づき、Nemotron 3 Nanoのアーキテクチャ上の革新、独自の学習手法、そしてベンチマークにおける性能について詳細に解説する。
+
+## ハイブリッドアーキテクチャ：Mamba-2とMoEの融合
+
+Nemotron 3 Nanoの核心は、計算効率と表現力のトレードオフを打破するために設計されたアーキテクチャにある。
+
+### Mamba-2とTransformerのハイブリッド構成
+従来のLLM（Large Language Model）の多くはTransformerのみで構成されているが、Nemotron 3 Nanoは**[Mamba-2](https://arxiv.org/abs/2405.21060)**（Dao & Gu, 2024）と**Grouped-Query-Attention (GQA)** を組み合わせたハイブリッド構成を採用している。
+
+*   **Mamba-2レイヤー:** 線形計算量でシーケンスを処理できる状態空間モデル（SSM）。長い文脈においてもKVキャッシュ（Key-Value Cache）のメモリ消費を抑え、高速な生成を可能にする。
+*   **Attentionレイヤー:** 複雑な依存関係の学習に長けたTransformerのAttention機構。
+
+このハイブリッド構成により、Mambaの推論効率とTransformerの高品質な生成能力の両立を図っている。
+
+### 粒度の細かいMoE（Granular Mixture-of-Experts）
+さらに、モデルのスケーリングには**[Mixture-of-Experts (MoE)](https://arxiv.org/abs/1701.06538)** が導入されている。通常のFeed-Forward Network (FFN) レイヤーの代わりにMoEレイヤーを使用することで、パラメータ数を増やしながらも計算コストを抑制している。
+
+*   **総パラメータ数:** 31.6B
+*   **アクティブパラメータ数:** 3.2B（エンベディング込みで3.6B）
+
+具体的には、学習可能なMLPルーターが、128個の専門家（Experts）の中からトークンごとにわずか6個のExpertを選択してアクティブにする。また、常にアクティブな「共有エキスパート（Shared Experts）」も2個配置されており、共通の知識と専門的な知識の処理を分離している。
+
+このスパース（疎）な活性化により、同規模のモデルと比較して圧倒的な推論スループットを実現している。例えば、同じH200 GPU上で比較した場合、**[GPT-OSS-20B](https://arxiv.org/abs/2508.10925)の2.2倍、[Qwen3-30B-A3B-Thinking-2507](https://arxiv.org/abs/2505.09388)の3.3倍**という高速な推論が可能である。
+
+## 25兆トークンによる事前学習（Pre-training）
+
+Nemotron 3 Nanoの基盤となる学習データセットは、25兆（25T）トークンという膨大な規模に及ぶ。これは前世代のNemotron 2と比較して3兆以上の新規ユニークトークンを含んでいる。
+
+### 2段階の学習フェーズ
+事前学習は、データの「多様性」と「品質」のバランスを最適化するために2つのフェーズに分けて実施された。
+
+1.  **フェーズ1（多様性重視）:** 学習の94%（23.5Tトークン）を占める。Webクロールデータ、コード、多言語データなど、広範なドメインをカバーし、モデルの知識の幅を広げる。
+2.  **フェーズ2（品質重視）:** 残りの6%（1.5Tトークン）。Wikipediaや厳選された高品質データに絞り込み、知識の精緻化を行う。
+
+### 特化型データセットの構築
+NVIDIAは、高品質なデータセット構築のために「[NeMo Data Designer](https://github.com/NVIDIA-NeMo/DataDesigner)」等のツールを活用し、以下のような独自のデータセットを生成・採用している。
+
+*   **Nemotron-CC-Code-v1:** Common Crawlから抽出したコードに対し、LLMによるクリーニングと品質フィルタリングを施した428Bトークンのコードデータセット。
+*   **Synthetic STEM Reasoning:** 科学技術（STEM）領域における複雑な推論能力を強化するため、教科書スタイルのデータや、LLMを用いて生成した高度な推論トレースを含む合成データ。
+*   **InfiniByte:** 異なる分野（例：物理学とプログラミング）の概念を交配させ、全く新しい問題を生成する合成データ生成パイプライン。これにより、既存のデータセットにはない境界領域の推論能力を強化している。
+
+### 1Mトークンの長文脈対応
+事前学習の最終段階として、長文脈対応のための継続学習（Continuous Pretraining）が行われた。ここでは、シーケンス長を段階的に拡張し、最大1Mトークンまでのコンテキストを処理能力を獲得した。これにより、RULERベンチマークなどの長文脈タスクにおいて、競合モデルを凌駕する性能を示している。
+
+## 高度な事後学習：エージェント能力の開花
+
+Nemotron 3 Nanoが「Agentic Reasoning（エージェント推論）」において卓越している理由は、その徹底的な事後学習（Post-Training）プロセスにある。
+
+### 検証可能な報酬による強化学習 (RLVR)
+SFT（教師ありファインチューニング）の後、モデルは**Multi-environment Reinforcement Learning from Verifiable Rewards (RLVR)** と呼ばれる手法で鍛え上げられた。
+
+従来のRLHF（人間からのフィードバックによる強化学習）が人間の好みを学習するのに対し、RLVRでは「正解が明確に検証できる」タスク（数学、コーディング、JSONスキーマ準拠など）を用いて、全環境で同時に強化学習を行う。これにより、特定のタスクに過学習することなく、推論能力と指示追従能力を均一に向上させている。
+
+### Generative Reward Model (GenRM) によるRLHF
+チャット能力や主観的な品質が問われるタスクに対しては、Bradley-Terryモデルのような従来の報酬モデルではなく、**Generative Reward Model (GenRM)** を採用している。GenRMは、単にスコアを出力するだけでなく、「なぜその回答が良いのか／悪いのか」という理由（Reasoning trace）を生成した上で採点を行うため、より精度の高い報酬信号をモデルに与えることができる。
+
+### 推論コントロールとツール利用
+本モデルは、推論プロセス（Chain of Thought）を出力するか否かを制御する機能や、推論に使用するトークン予算（Budget）を制御する機能を持つ。また、エージェントとして外部ツール（Pythonインタプリタや検索エンジンなど）を自律的に呼び出し、その結果を元に回答を修正する「Tool-integrated Reasoning」の能力もSFTおよびRL段階で深く学習されている。
+
+## 性能評価と量子化による最適化
+
+### ベンチマーク結果
+テクニカルレポートによると、Nemotron 3 Nanoは、数学（MATH, GSM8K）、コーディング（HumanEval, LiveCodeBench）、エージェントタスク（SWE-Bench, TauBench）など、多岐にわたるベンチマークにおいて、同規模の**Qwen3-30B**や**GPT-OSS-20B**と同等以上の精度を達成している。特に、エージェントとしてのツール利用能力や長文脈理解（Long Context）においては、顕著な優位性を示している。
+
+### FP8量子化による高速化
+さらにNVIDIAは、モデルの重みとアクティベーションをFP8（8ビット浮動小数点）に量子化する**Post-Training Quantization (PTQ)** を適用している。
+感度分析に基づき、Attentionレイヤーと一部のMambaレイヤーのみをBF16（BFloat16）で保持し、それ以外をFP8化する「選択的量子化」を行うことで、精度低下を1%未満に抑えつつ、推論スループットを劇的に向上させることに成功した。
+
+## まとめ：オープンなAI開発への貢献
+
+Nemotron 3 Nanoは、単に高性能なモデルというだけでなく、AIコミュニティへの貢献という点でも大きな意味を持つ。NVIDIAは以下のリソースをHugging Face等で公開している。
+
+1.  **モデルチェックポイント:** BaseモデルおよびInstruct（チャット向け）モデル。
+2.  **トレーニングレシピとコード:** モデルの再現性を担保するための[コードベース](https://github.com/NVIDIA-NeMo/Nemotron)。
+3.  **データセット:** Nemotron-CC-Code-v1や合成データセットを含む、学習に使用されたデータの大部分。
+
+「Mamba + MoE」という先進的なアーキテクチャと、RLVRをはじめとする高度な学習手法の組み合わせは、次世代の効率的なAIモデルの設計指針となるだろう。特に、エージェントとして複雑なタスクをこなす能力と、実運用に耐えうる推論効率を両立させた点は、産業応用においても極めて魅力的である。
+
+## 参考文献
+
+*   NVIDIA. (2025). *[Nemotron 3 Nano: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning](https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Nano-Technical-Report.pdf)*. NVIDIA Technical Report.
+*   Dao, T., & Gu, A. (2024). *[Transformers are SSMs: Generalized Models and Efficient Algorithms Through Structured State Space Duality](https://arxiv.org/abs/2405.21060)*.
+*   Shazeer, N., et al. (2017). *[Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)*.
