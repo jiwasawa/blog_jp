@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Thu, 11 Dec 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 17 Dec 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>エージェント・スケーリングの科学と、「More Agents」という幻想</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/</link>
+  <description><![CDATA[ Google ResearchとMITの研究により、AIエージェントの性能はエージェント数ではなく、タスク構造、アーキテクチャ、そしてLLMの能力といった要素の相互作用に依存するという科学的原則が明らかにされ、単なる「More Agents」という幻想を打ち破る。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Agentic Systems</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/</guid>
+  <pubDate>Wed, 17 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/129/200" medium="image"/>
+</item>
 <item>
   <title>言語モデルの推論能力はどこから来るのか：Pre-Training、Mid-Training、RLの相互作用を解明する</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -107,18 +119,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/claude-harness/</guid>
   <pubDate>Sat, 29 Nov 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/120/200" medium="image"/>
-</item>
-<item>
-  <title>Biohubの「全疾患治療」という大博打：AI x Biologyが描くSF的現実</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/chan-zuckerberg/</link>
-  <description><![CDATA[ Chan Zuckerberg BiohubがAI x Biologyの力で「全疾患治療」を目指す壮大な実験に挑み、Virtual CellからVirtual Immune System構築、そしてPrecision Medicine実現への道筋を描く。 ]]></description>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/chan-zuckerberg/</guid>
-  <pubDate>Fri, 28 Nov 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/119/200" medium="image"/>
 </item>
 </channel>
 </rss>
