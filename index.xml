@@ -23,10 +23,10 @@
   <media:content url="https://picsum.photos/id/131/200" medium="image"/>
 </item>
 <item>
-  <title>エージェント・スケーリングの科学と、「More Agents」という幻想</title>
+  <title>エージェントシステムの科学的スケーリング則：マルチエージェント性能を支配する原理の解明</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/</link>
-  <description><![CDATA[ Google ResearchとMITの研究により、AIエージェントの性能はエージェント数ではなく、タスク構造、アーキテクチャ、そしてLLMの能力といった要素の相互作用に依存するという科学的原則が明らかにされ、単なる「More Agents」という幻想を打ち破る。 ]]></description>
+  <description><![CDATA[ MITやGoogle Researchの研究が、エージェントシステムの性能がタスク構造と調整コストのトレードオフによって決まることを定量的に解明し、単純なエージェント数増加が必ずしも性能向上に繋がらないことを示唆している。 ]]></description>
   <category>LLM</category>
   <category>AI</category>
   <category>Agentic Systems</category>
