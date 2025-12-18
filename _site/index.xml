@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Wed, 17 Dec 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 18 Dec 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIエージェントが科学研究を自律的に行う未来：「Virtual Lab」によるSARS-CoV-2ナノボディ設計</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/virtual-lab-sars-cov/</link>
+  <description><![CDATA[ AIエージェントが複数の専門家として協調し、SARS-CoV-2変異株に対応するナノボディを自律的に設計する「Virtual Lab」の画期的なアプローチとその科学研究の未来を解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Agentic Systems</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/virtual-lab-sars-cov/</guid>
+  <pubDate>Thu, 18 Dec 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/132/200" medium="image"/>
+</item>
 <item>
   <title>Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -111,15 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/google-tpu-v7/</guid>
   <pubDate>Mon, 01 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/122/200" medium="image"/>
-</item>
-<item>
-  <title>TSMC海外展開の真実：モリス・チャンが予見した「徒労」と地政学的必然の狭間で</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/tsmc-overseas/</link>
-  <description><![CDATA[ Morris Changが「徒労」と評したTSMCの海外展開は、地政学的な必然と高コスト体質の狭間で、経済合理性を超えた成功を目指す壮大な挑戦である。 ]]></description>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/tsmc-overseas/</guid>
-  <pubDate>Sun, 30 Nov 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/123/200" medium="image"/>
 </item>
 </channel>
 </rss>

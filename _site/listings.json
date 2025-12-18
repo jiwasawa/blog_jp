@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/virtual-lab-sars-cov/index.html",
       "/posts/just-image-transformers/index.html",
       "/posts/science-agent-systems/index.html",
       "/posts/nemotron-3-nano/index.html",
