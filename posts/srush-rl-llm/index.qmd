@@ -1,0 +1,73 @@
+---
+title: "RLはLLMの推論を「研磨」するだけなのか：pass@N劣化の正体とPOPEによる探索の再定義"
+description: "RLによるpass@N劣化の真因と疑われる「Interference」を解き明かし、人間の知恵を探索のガイドとして活用するPOPEがいかにしてLLMの推論能力を真にスケールさせるのかを分析する"
+author: "Junichiro Iwasawa"
+date: "2025-12-20"
+categories: [LLM, AI]
+image: https://picsum.photos/id/133/200
+---
+
+Sasha Rush氏（Cursor / ex-Cornell）の[ポスト](https://x.com/srush_nlp/status/2001805373343162774?s=20)を端緒に、Reinforcement Learning (RL) がLarge Language Model (LLM) に何をもたらすのかという議論が再燃している。
+
+「RLはモデルをpass@1で強くするが、pass@N（多様な試行における成功率）ではかえって悪化させる」という学術的な主張に対し、現場の最前線でRLを回し続ける実務家が「我々の環境ではそんなことは起きていない」と異を唱えたのだ。
+
+本稿では、この「RLによる性能劣化」の正体と、CMUの研究者らが提唱する解決策 **Privileged On-Policy Exploration (POPE)** について、最新の知見を整理しつつ分析したい。
+
+## RLは単なる「研磨（Sharpening）」に過ぎないのか？
+
+事の発端は、Tsinghua University（清華大学）の「[Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?](https://arxiv.org/abs/2504.13837)」に代表される論文群だ。
+
+上の論文の主張は極めて刺激的である。
+彼らによれば、Reinforcement Learning with Verifiable Rewards (RLVR) は、Base Modelがもともと持っていた能力を「研磨」してpass@1（一発目の正解率）を上げているだけであり、本質的な推論能力の限界（pass@kにおける上限値）を押し上げているわけではないという。
+
+> **Abstractの要旨：**
+> RLVRで訓練されたモデルは、小さな  ではBase Modelを凌駕するが、 が大きくなるとBase Modelの方が高いスコアを出す。つまり、RLはBase Modelが「すでに知っていること」を確実に出せるようにしているだけで、未知の推論パターンを学習しているわけではない。
+
+これに対し、CursorのSasha Rush氏は「我々がCursorで行っている膨大なRLの試行では、そのような系統的な劣化は見られない。何か別の要因があるはずだ (We run a lot of RL runs at Cursor and don't see this issue systematically. Not doubting it occurs, but something else might be going on.)」と応じた。
+
+## 真の犯人は「Ray Interference」
+
+この議論に重要な視座を提供したのが、CMU（カーネギーメロン大学）のAviral Kumar氏だ。彼は、pass@Nの低下はRLの本質的な欠陥ではなく、**「Ray Interference」**と呼ばれるマルチタスク学習における負の転移（Negative Transfer）が原因であると[指摘](https://x.com/aviral_kumar2/status/2001855734485582239?s=20)している。
+
+RLの訓練プロセスにおいて、簡単な問題（モデルが既に得意なもの）と難しい問題（正解率がほぼゼロのもの）が混在していると、以下の現象が起きる。
+
+* **簡単な問題での最適化：** モデルは簡単な問題で素早く報酬を得ることを学び、その解法に「確信」を持つ（Entropyの減少）。
+* **難しい問題への干渉：** 簡単な問題での急激な更新が、難しい問題に対する探索を阻害する。結果として、難しい問題での多様な試行（pass@N）が失われ、全体のパフォーマンスがプラトーに達してしまう。
+
+つまり、pass@Nの低下はRLそのものの限界ではなく、**「データ混合と学習プロセスの管理ミス」**から生じる症状に過ぎないというわけだ。
+
+## POPE：人間の知恵を「探索のガイド」にする
+
+では、どうすればRLで「本当に難しい問題」を解けるようになるのか。CMUのチームが提案するのが [**Privileged On-Policy Exploration (POPE)**](https://blog.ml.cmu.edu/2025/11/26/how-to-explore-to-scale-rl-training-of-llms-on-hard-problems/) というアプローチだ。
+
+従来のRL（On-policy RL）の最大の弱点は、**「一度も正解にたどり着けない問題からは何も学べない」**という点にある。128回試行して1度も正解が出なければ、モデルはどの方向へ進めば報酬が得られるのか全く分からない。
+
+POPEの仕組みはシンプルだが強力だ。
+
+1. **Guided Exploration：** 人間が書いた模範解答の一部（Prefix）をプロンプトに混ぜる。
+2. **Teleportation：** これにより、モデルは正解に近い「状態」へ強制的にワープさせられる。
+3. **On-policy Learning：** その「有利な地点」から自力で推論を完結させ、報酬を得る体験をさせる。
+
+重要なのは、人間の回答をそのまま教師データとして学習（SFT）するのではなく、あくまで**「探索の出発点」**として利用する点だ。
+
+### なぜ「Stitching（つなぎ合わせ）」が起きるのか
+
+POPEの真髄は、ガイド付きで学んだ内容が、ガイドなし（Unguided）の通常プロンプトにも転移する点にある。
+
+モデルはガイドがある状態で「後半の解法」をマスターする。同時に、LLMの持つ高い **Instruction Following** 能力と **Reasoning** 能力（自己修正やバックトラッキング）によって、初期状態から「ガイドされた状態」へと自力で到達する経路を見つけ出す。これが、断片的な知識を繋ぎ合わせる **Stitching** 効果だ。
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sorry, I forgot to put the cartoon I mention above, here it is: <a href="https://t.co/ldFSYNwWOC">pic.twitter.com/ldFSYNwWOC</a></p>&mdash; Aviral Kumar (@aviral_kumar2) <a href="https://twitter.com/aviral_kumar2/status/2001858924501438861?ref_src=twsrc%5Etfw">December 19, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+## 実務家への示唆：RLはまだスケーリングできる
+
+今回の議論から得られる教訓は、**「RLの限界を嘆く前に、探索のボトルネックを疑え」**ということだ。
+
+* **Classical Explorationの限界：** Entropy BonusやPPOのClipping調整といった古典的な手法は、LLMのような巨大な行動空間では最適化を不安定にするだけで、真に難しい問題の解決には寄与しにくい。
+* **データ混合の重要性：** EasyデータとHardデータの干渉を避けるためのカリキュラム設計、あるいはPOPEのようなガイド付き学習が、今後のRL Scalingの鍵となる。
+
+RLは単なる「研磨」の道具ではない。適切なガイドと干渉の制御があれば、Base Modelの限界を超えて、より深い推論の地平へとモデルを導くことができるはずだ。
+
+Cursorのような実務の現場で「劣化が見られない」のは、彼らが無意識に、あるいは経験的に、この干渉を避けるための洗練されたレシピ（適切なPrompt MixtureやCurriculum）を運用しているからかもしれない。
+
+今後のLLM開発において、RLは単なる「仕上げ」の工程から、未知の推論を「発見」するためのコア・プロセスへと進化していくだろう。

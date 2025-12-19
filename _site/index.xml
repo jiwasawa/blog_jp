@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Thu, 18 Dec 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 19 Dec 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>RLはLLMの推論を「研磨」するだけなのか：pass@N劣化の正体とPOPEによる探索の再定義</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/srush-rl-llm/</link>
+  <description><![CDATA[ RLによるpass@N劣化の真因と疑われる「Interference」を解き明かし、人間の知恵を探索のガイドとして活用するPOPEがいかにしてLLMの推論能力を真にスケールさせるのかを分析する ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/srush-rl-llm/</guid>
+  <pubDate>Fri, 19 Dec 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/133/200" medium="image"/>
+</item>
 <item>
   <title>AIエージェントが科学研究を自律的に行う未来：「Virtual Lab」によるSARS-CoV-2ナノボディ設計</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/claude-soul-document/</guid>
   <pubDate>Wed, 03 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/124/200" medium="image"/>
-</item>
-<item>
-  <title>Nvidiaの牙城を崩す「鉄の木」：Google TPUv7とAnthropicの1GW爆買い</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/google-tpu-v7/</link>
-  <description><![CDATA[ Google TPUv7の外部販売開始は、Anthropicの1GW超の大量導入を筆頭に、NvidiaのAIハードウェア市場における独占体制に揺さぶりをかける、コストとシステムアーキテクチャの両面から仕掛けられた大胆な挑戦である。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/google-tpu-v7/</guid>
-  <pubDate>Mon, 01 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/122/200" medium="image"/>
 </item>
 </channel>
 </rss>
