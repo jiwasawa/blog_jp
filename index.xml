@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Sat, 20 Dec 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 21 Dec 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/john-schulman-truell-interview/</link>
+  <description><![CDATA[ OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/john-schulman-truell-interview/</guid>
+  <pubDate>Sun, 21 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/134/200" medium="image"/>
+</item>
 <item>
   <title>RLはLLMの推論を「研磨」するだけなのか：pass@N劣化の正体とPOPEによる探索の再定義</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/openrouter-state-of-ai-2025/</guid>
   <pubDate>Mon, 08 Dec 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/128/200" medium="image"/>
-</item>
-<item>
-  <title>Claudeの「魂」と資本主義の写し鏡：Anthropicの”Soul Document”が示唆する未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/claude-soul-document/</link>
-  <description><![CDATA[ 流出したAnthropicの”Soul Document”を分析し、Constitutional AIにおける「thoughtful, senior Anthropic employee」というペルソナ、収益への言及、そしてNovel EntityとしてのAI像に透ける資本主義的現実主義とAI倫理の交錯を描き出す。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-soul-document/</guid>
-  <pubDate>Thu, 04 Dec 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/124/200" medium="image"/>
 </item>
 </channel>
 </rss>
