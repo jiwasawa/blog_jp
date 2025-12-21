@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Sat, 20 Dec 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 21 Dec 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>NitroGen：汎用ゲーミングエージェントのための基盤モデル</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/nitrogen/</link>
+  <description><![CDATA[ 40,000時間以上のゲームプレイ動画から学習した行動ラベル付きデータとTransformerベースの基盤モデルにより、未知のゲーム環境でも適応可能な汎用ゲーミングエージェントの実現を目指すNVIDIAのNitroGenを紹介する ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/nitrogen/</guid>
+  <pubDate>Sun, 21 Dec 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/135/200" medium="image"/>
+</item>
 <item>
   <title>John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/</guid>
   <pubDate>Mon, 08 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/125/200" medium="image"/>
-</item>
-<item>
-  <title>100兆トークンの真実：OpenRouter “State of AI” レポート分析</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/openrouter-state-of-ai-2025/</link>
-  <description><![CDATA[ OpenRouterの100兆トークン分析レポートは、LLM利用が「チャット」から「Agentic Inference」へとシフトし、プログラミングとRoleplayの二極化、そして「Cinderella Glass Slipper」現象が示唆する適材適所のマルチモデルエコシステムへの不可逆的な変化を明らかにしている。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/openrouter-state-of-ai-2025/</guid>
-  <pubDate>Sun, 07 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/128/200" medium="image"/>
 </item>
 </channel>
 </rss>
