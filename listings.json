@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/deedy-das/index.html",
       "/posts/nitrogen/index.html",
       "/posts/john-schulman-truell-interview/index.html",
       "/posts/srush-rl-llm/index.html",

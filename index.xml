@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Mon, 22 Dec 2025 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 23 Dec 2025 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Anthropic初期投資家Deedy Dasが語る、知能の爆発とエンジニアの危機</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/deedy-das/</link>
+  <description><![CDATA[ 史上最速で成長するAnthropicの舞台裏から、GoodfireやOpenRouterなどの次世代インフラへの投資哲学、そして「Vibe Coding」が変質させるエンジニアリングの未来まで、Deedy Dasの鋭い洞察を詳説する ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/deedy-das/</guid>
+  <pubDate>Tue, 23 Dec 2025 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/136/200" medium="image"/>
+</item>
 <item>
   <title>NitroGen：汎用ゲーミングエージェントのための基盤モデル</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-interviewer/</guid>
   <pubDate>Wed, 10 Dec 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/126/200" medium="image"/>
-</item>
-<item>
-  <title>ポストLLM時代の「空間知能」：World Labsが描く脱・言語偏重の未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/</link>
-  <description><![CDATA[ World LabsのFei-Fei LiとJustin Johnsonの対談から、LLMの言語偏重から脱却し、物理世界を理解する「空間知能」へと進化するAIの未来と、その先駆者たるMarbleについて解説する。 ]]></description>
-  <category>AI</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/</guid>
-  <pubDate>Tue, 09 Dec 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/125/200" medium="image"/>
 </item>
 </channel>
 </rss>
