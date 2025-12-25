@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2025-12-25">
+<meta name="description" content="NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。">
+
+<title>NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト – jiwasawaのブログ">
+<meta property="og:description" content="NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。">
+<meta property="og:image" content="https://picsum.photos/id/137/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト – jiwasawaのブログ">
+<meta name="twitter:description" content="NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。">
+<meta name="twitter:image" content="https://picsum.photos/id/137/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト</h1>
+                  <div>
+        <div class="description">
+          NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Computer Vision</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 25, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>コンピュータビジョンの分野において、自己教師あり学習（Self-Supervised Learning, SSL）は、ラベル付きデータへの依存を脱却するための核心技術として定着している。これまで、SSLの主流は大きく分けて二つの潮流――DINOやMoCoに代表される「対照学習（Contrastive Learning）」と、MAE（Masked Autoencoders）やBEiTに代表される「マスク復元（Masked Image Modeling）」――が存在した。これらは共に、下流タスクで利用可能な「良質な表現（Representation）」を獲得することを主目的としてきた。</p>
+<p>しかし、最近発表された論文 <strong><a href="https://sihanxu.me/nepa">“Next-Embedding Prediction Makes Strong Vision Learners”</a></strong> は、この定石に一石を投じている。提案された手法 <strong>NEPA (Next-Embedding Predictive Autoregression)</strong> は、「表現を学ぶ」のではなく「予測モデルを学ぶ」ことこそが、強力な視覚学習器への近道であると主張する。</p>
+<p>本稿では、NLP（自然言語処理）におけるGPTの成功を視覚分野に持ち込み、離散トークン化や画素復元を行わずにSOTA（State-of-the-Art）級の性能を達成したNEPAのメカニズムと、その技術的含意について詳細に解説する。</p>
+<blockquote class="twitter-tweet blockquote">
+<p lang="en" dir="ltr">
+NEPA: Next-Embedding Predictive Autoregression<br><br>A simple objective for visual SSL and generative pretraining. Instead of reconstructing pixels or predicting discrete tokens, we train an autoregressive model to predict the next embedding given all previous embeddings.<br><br>Key ideas:… <a href="https://t.co/WKwyvYxksx">pic.twitter.com/WKwyvYxksx</a>
+</p>
+— Martin Ziqiao Ma (<span class="citation" data-cites="ziqiao_ma">@ziqiao_ma</span>) <a href="https://twitter.com/ziqiao_ma/status/2002096476437295392?ref_src=twsrc%5Etfw">December 19, 2025</a>
+</blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<section id="視覚における次単語予測の実現" class="level2">
+<h2 class="anchored" data-anchor-id="視覚における次単語予測の実現">視覚における「次単語予測」の実現</h2>
+<p>Large Language Model (LLM) の飛躍的な進歩は、「次のトークンを予測する」という単純かつ強力な自己回帰（Autoregressive）タスクによって支えられている。NEPAの核心的なアイデアは、このパラダイムを画像ドメインに適用することにある。</p>
+<p>従来の画像における自己回帰モデル（iGPTなど）やマスク学習（BEiT）は、画像を離散的なトークン（Visual Tokens）に変換するか、あるいは生のピクセル値を直接予測対象としていた。しかし、NEPAはこれらとは異なるアプローチを取る。</p>
+<section id="連続埋め込み空間での予測" class="level3">
+<h3 class="anchored" data-anchor-id="連続埋め込み空間での予測">連続埋め込み空間での予測</h3>
+<p>NEPAは、画像をパッチに分割し、それをEncoderによって埋め込み（Embedding）ベクトルに変換した後、<strong>「過去のパッチ埋め込みから、次のパッチ埋め込みを予測する」</strong> ようにTransformerを訓練する。</p>
+<p>ここでの重要なポイントは、予測が<strong>連続的な埋め込み空間（Continuous Embedding Space）</strong> 内で完結している点である。</p>
+<ol type="1">
+<li><strong>Pixel Reconstructionの排除:</strong> MAEのようにピクセルレベルでの復元を行わないため、高周波成分のノイズやテクスチャの細部にモデルのリソースが割かれることを防ぎ、意味的な構造の学習に集中できる。</li>
+<li><strong>Discrete Tokenizerの排除:</strong> BEiTやVQ-VAEベースの手法のように、事前に学習されたTokenizerやCodebookを必要としない。これにより、量子化に伴う情報損失や、Tokenizerの品質への依存を回避できる。</li>
+<li><strong>Contrastive Lossの排除:</strong> 負例（Negative Pairs）のサンプリングや、大規模なバッチサイズ、複雑なデータ拡張に依存しない。</li>
+</ol>
+</section>
+</section>
+<section id="nepaのアーキテクチャと学習メカニズム" class="level2">
+<h2 class="anchored" data-anchor-id="nepaのアーキテクチャと学習メカニズム">NEPAのアーキテクチャと学習メカニズム</h2>
+<p>NEPAの設計思想は「ミニマリズム」にある。複雑なDecoderやタスク固有のHeadを事前学習時には一切使用しない。</p>
+<section id="学習プロセス" class="level3">
+<h3 class="anchored" data-anchor-id="学習プロセス">学習プロセス</h3>
+<p>画像 <span class="math inline">\(x\)</span> をパッチシーケンスに分割し、Encoder <span class="math inline">\(f\)</span> を通して埋め込み列 <span class="math inline">\(z = \{z_1, z_2, ..., z_T\}\)</span> を得る。Transformerモデル <span class="math inline">\(h_\theta\)</span> は、因果的マスキング（Causal Masking）を適用された状態で、位置 <span class="math inline">\(t\)</span> までの情報から <span class="math inline">\(t+1\)</span> の埋め込みを予測する。</p>
+<p><span class="math display">\[ \hat{z}_{t+1} = h_\theta(z_{\le t}) \]</span></p>
+<p>損失関数には、予測された埋め込み <span class="math inline">\(\hat{z}_{t+1}\)</span> と、Encoderから得られるターゲット埋め込み <span class="math inline">\(z_{t+1}\)</span> との間のコサイン類似度が用いられる。ここで、崩壊（Collapse）を防ぐための重要なテクニックとして、ターゲット側には<strong>Stop-Gradient（勾配停止）</strong> 操作が適用される。これはSimSiamなどの非対照学習手法から着想を得たものであり、教師信号が動的に変動するのを防ぎつつ、予測モデルを安定化させる。</p>
+<p><span class="math display">\[ L = D(\text{stopgrad}(z), \hat{z}) \]</span></p>
+</section>
+<section id="安定性とスケーラビリティのための現代的コンポーネント" class="level3">
+<h3 class="anchored" data-anchor-id="安定性とスケーラビリティのための現代的コンポーネント">安定性とスケーラビリティのための現代的コンポーネント</h3>
+<p>シンプルな目的関数ゆえに、学習の安定性が課題となる場合がある。NEPAでは、最新のLLMやViT研究で培われた以下のコンポーネントを導入することで、これを解決している。</p>
+<ul>
+<li><strong>Rotary Position Embedding (RoPE):</strong> 相対的な位置情報をより効果的にエンコードし、シーケンス長への汎化性能を高める。</li>
+<li><strong>LayerScale:</strong> 残差接続に学習可能なスケーリング係数を導入し、深層モデルの収束を安定させる。</li>
+<li><strong>SwiGLU:</strong> FFN（Feed-Forward Network）の活性化関数として採用。</li>
+<li><strong>QK-Norm:</strong> Attention層におけるQueryとKeyに正規化を適用し、学習の安定化を図る。</li>
+</ul>
+<p>これらのコンポーネントの組み合わせにより、NEPAはViT-B（Base）からViT-L（Large）へのスケーリングにおいても安定した学習を実現している。</p>
+</section>
+</section>
+<section id="性能評価単純さが生む強力な表現" class="level2">
+<h2 class="anchored" data-anchor-id="性能評価単純さが生む強力な表現">性能評価：単純さが生む強力な表現</h2>
+<p>NEPAの驚くべき点は、その単純さにもかかわらず、非常に高い性能を達成していることだ。</p>
+<ul>
+<li><strong>ImageNet-1K 分類:</strong> ViT-BバックボーンでTop-1 Accuracy <strong>83.8%</strong>、ViT-Lでは <strong>85.3%</strong> を達成。これはMAEやBEiTといった既存の強力なSSL手法と肩を並べる、あるいは凌駕するスコアである。</li>
+<li><strong>セマンティックセグメンテーション:</strong> ADE20Kデータセットへの転移学習においても高い性能を示しており、モデルが単なる画像の「識別」だけでなく、空間的な「理解」を獲得していることを示唆している。</li>
+</ul>
+<p>特筆すべきは、NEPAがMAEのようにピクセル復元を行わないにもかかわらず、局所的な詳細さと大局的な意味情報の両方をバランスよく学習できている点だ。これは、埋め込み空間での予測というタスクが、画像の構造的理解をモデルに強制しているためと考えられる。</p>
+</section>
+<section id="視覚aiの未来への示唆" class="level2">
+<h2 class="anchored" data-anchor-id="視覚aiの未来への示唆">視覚AIの未来への示唆</h2>
+<p>NEPAの登場は、単なる新しいSSL手法の提案以上の意味を持っている。</p>
+<section id="モダリティ間の統一" class="level3">
+<h3 class="anchored" data-anchor-id="モダリティ間の統一">1. モダリティ間の統一</h3>
+<p>これまで、NLPは「次トークン予測」、Visionは「マスク復元」や「対照学習」と、学習パラダイムが異なっていた。NEPAは、Visionにおいても（連続空間とはいえ）「次トークン予測」が極めて有効であることを示した。これは、マルチモーダル学習において、テキストと画像を統一的な目的関数（Generative Objective）の下で学習させる道を開くものである。</p>
+</section>
+<section id="生成モデルとしての可能性" class="level3">
+<h3 class="anchored" data-anchor-id="生成モデルとしての可能性">2. 生成モデルとしての可能性</h3>
+<p>NEPAは本質的に生成モデルである。現在は表現学習器として評価されているが、この「埋め込み空間での予測」能力は、高品質な画像生成や編集に応用できる潜在能力を秘めている。Diffusion Modelsがピクセル空間（またはLatent空間）でのノイズ除去を行うのに対し、NEPAは自己回帰的に意味表現を生成するアプローチであり、両者の統合も今後の研究課題となるだろう。</p>
+</section>
+<section id="スケーラビリティと効率" class="level3">
+<h3 class="anchored" data-anchor-id="スケーラビリティと効率">3. スケーラビリティと効率</h3>
+<p>DecoderやTokenizerを必要としないNEPAの設計は、計算資源の観点からも効率的である。モデルの大規模化が進む中、シンプルでスケーラブルな学習手法の価値は計り知れない。</p>
+</section>
+</section>
+<section id="結論" class="level2">
+<h2 class="anchored" data-anchor-id="結論">結論</h2>
+<p>“Next-Embedding Prediction Makes Strong Vision Learners” は、視覚学習におけるパラダイムを「表現の学習」から「予測の学習」へとシフトさせる重要な研究である。ピクセルレベルの制約から解き放たれ、純粋に埋め込み空間内での未来予測を行うことで、モデルはより抽象度が高く、かつ汎用的な視覚表現を獲得することに成功した。</p>
+<p>NEPAのアプローチは、LLMとVision Modelの境界をさらに曖昧にし、より一般的で強力なAIシステムの構築に向けた確かな一歩となるだろう。今後の視覚AI研究において、この「埋め込み空間での自己回帰」という方向性がどのように発展していくのか、注視する必要がある。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
