@@ -1,0 +1,85 @@
+---
+title: "NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト"
+description: "NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。"
+author: "Junichiro Iwasawa"
+date: "2025-12-25"
+categories: [Computer Vision, AI]
+image: https://picsum.photos/id/137/200
+---
+
+コンピュータビジョンの分野において、自己教師あり学習（Self-Supervised Learning, SSL）は、ラベル付きデータへの依存を脱却するための核心技術として定着している。これまで、SSLの主流は大きく分けて二つの潮流――DINOやMoCoに代表される「対照学習（Contrastive Learning）」と、MAE（Masked Autoencoders）やBEiTに代表される「マスク復元（Masked Image Modeling）」――が存在した。これらは共に、下流タスクで利用可能な「良質な表現（Representation）」を獲得することを主目的としてきた。
+
+しかし、最近発表された論文 **["Next-Embedding Prediction Makes Strong Vision Learners"](https://sihanxu.me/nepa)** は、この定石に一石を投じている。提案された手法 **NEPA (Next-Embedding Predictive Autoregression)** は、「表現を学ぶ」のではなく「予測モデルを学ぶ」ことこそが、強力な視覚学習器への近道であると主張する。
+
+本稿では、NLP（自然言語処理）におけるGPTの成功を視覚分野に持ち込み、離散トークン化や画素復元を行わずにSOTA（State-of-the-Art）級の性能を達成したNEPAのメカニズムと、その技術的含意について詳細に解説する。
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">NEPA: Next-Embedding Predictive Autoregression<br><br>A simple objective for visual SSL and generative pretraining. Instead of reconstructing pixels or predicting discrete tokens, we train an autoregressive model to predict the next embedding given all previous embeddings.<br><br>Key ideas:… <a href="https://t.co/WKwyvYxksx">pic.twitter.com/WKwyvYxksx</a></p>&mdash; Martin Ziqiao Ma (@ziqiao_ma) <a href="https://twitter.com/ziqiao_ma/status/2002096476437295392?ref_src=twsrc%5Etfw">December 19, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+## 視覚における「次単語予測」の実現
+
+Large Language Model (LLM) の飛躍的な進歩は、「次のトークンを予測する」という単純かつ強力な自己回帰（Autoregressive）タスクによって支えられている。NEPAの核心的なアイデアは、このパラダイムを画像ドメインに適用することにある。
+
+従来の画像における自己回帰モデル（iGPTなど）やマスク学習（BEiT）は、画像を離散的なトークン（Visual Tokens）に変換するか、あるいは生のピクセル値を直接予測対象としていた。しかし、NEPAはこれらとは異なるアプローチを取る。
+
+### 連続埋め込み空間での予測
+
+NEPAは、画像をパッチに分割し、それをEncoderによって埋め込み（Embedding）ベクトルに変換した後、**「過去のパッチ埋め込みから、次のパッチ埋め込みを予測する」** ようにTransformerを訓練する。
+
+ここでの重要なポイントは、予測が**連続的な埋め込み空間（Continuous Embedding Space）** 内で完結している点である。
+
+1.  **Pixel Reconstructionの排除:** MAEのようにピクセルレベルでの復元を行わないため、高周波成分のノイズやテクスチャの細部にモデルのリソースが割かれることを防ぎ、意味的な構造の学習に集中できる。
+2.  **Discrete Tokenizerの排除:** BEiTやVQ-VAEベースの手法のように、事前に学習されたTokenizerやCodebookを必要としない。これにより、量子化に伴う情報損失や、Tokenizerの品質への依存を回避できる。
+3.  **Contrastive Lossの排除:** 負例（Negative Pairs）のサンプリングや、大規模なバッチサイズ、複雑なデータ拡張に依存しない。
+
+## NEPAのアーキテクチャと学習メカニズム
+
+NEPAの設計思想は「ミニマリズム」にある。複雑なDecoderやタスク固有のHeadを事前学習時には一切使用しない。
+
+### 学習プロセス
+
+画像 $x$ をパッチシーケンスに分割し、Encoder $f$ を通して埋め込み列 $z = \{z_1, z_2, ..., z_T\}$ を得る。Transformerモデル $h_\theta$ は、因果的マスキング（Causal Masking）を適用された状態で、位置 $t$ までの情報から $t+1$ の埋め込みを予測する。
+
+$$ \hat{z}_{t+1} = h_\theta(z_{\le t}) $$
+
+損失関数には、予測された埋め込み $\hat{z}_{t+1}$ と、Encoderから得られるターゲット埋め込み $z_{t+1}$ との間のコサイン類似度が用いられる。ここで、崩壊（Collapse）を防ぐための重要なテクニックとして、ターゲット側には**Stop-Gradient（勾配停止）** 操作が適用される。これはSimSiamなどの非対照学習手法から着想を得たものであり、教師信号が動的に変動するのを防ぎつつ、予測モデルを安定化させる。
+
+$$ L = D(\text{stopgrad}(z), \hat{z}) $$
+
+### 安定性とスケーラビリティのための現代的コンポーネント
+
+シンプルな目的関数ゆえに、学習の安定性が課題となる場合がある。NEPAでは、最新のLLMやViT研究で培われた以下のコンポーネントを導入することで、これを解決している。
+
+*   **Rotary Position Embedding (RoPE):** 相対的な位置情報をより効果的にエンコードし、シーケンス長への汎化性能を高める。
+*   **LayerScale:** 残差接続に学習可能なスケーリング係数を導入し、深層モデルの収束を安定させる。
+*   **SwiGLU:** FFN（Feed-Forward Network）の活性化関数として採用。
+*   **QK-Norm:** Attention層におけるQueryとKeyに正規化を適用し、学習の安定化を図る。
+
+これらのコンポーネントの組み合わせにより、NEPAはViT-B（Base）からViT-L（Large）へのスケーリングにおいても安定した学習を実現している。
+
+## 性能評価：単純さが生む強力な表現
+
+NEPAの驚くべき点は、その単純さにもかかわらず、非常に高い性能を達成していることだ。
+
+*   **ImageNet-1K 分類:** ViT-BバックボーンでTop-1 Accuracy **83.8%**、ViT-Lでは **85.3%** を達成。これはMAEやBEiTといった既存の強力なSSL手法と肩を並べる、あるいは凌駕するスコアである。
+*   **セマンティックセグメンテーション:** ADE20Kデータセットへの転移学習においても高い性能を示しており、モデルが単なる画像の「識別」だけでなく、空間的な「理解」を獲得していることを示唆している。
+
+特筆すべきは、NEPAがMAEのようにピクセル復元を行わないにもかかわらず、局所的な詳細さと大局的な意味情報の両方をバランスよく学習できている点だ。これは、埋め込み空間での予測というタスクが、画像の構造的理解をモデルに強制しているためと考えられる。
+
+## 視覚AIの未来への示唆
+
+NEPAの登場は、単なる新しいSSL手法の提案以上の意味を持っている。
+
+### 1. モダリティ間の統一
+これまで、NLPは「次トークン予測」、Visionは「マスク復元」や「対照学習」と、学習パラダイムが異なっていた。NEPAは、Visionにおいても（連続空間とはいえ）「次トークン予測」が極めて有効であることを示した。これは、マルチモーダル学習において、テキストと画像を統一的な目的関数（Generative Objective）の下で学習させる道を開くものである。
+
+### 2. 生成モデルとしての可能性
+NEPAは本質的に生成モデルである。現在は表現学習器として評価されているが、この「埋め込み空間での予測」能力は、高品質な画像生成や編集に応用できる潜在能力を秘めている。Diffusion Modelsがピクセル空間（またはLatent空間）でのノイズ除去を行うのに対し、NEPAは自己回帰的に意味表現を生成するアプローチであり、両者の統合も今後の研究課題となるだろう。
+
+### 3. スケーラビリティと効率
+DecoderやTokenizerを必要としないNEPAの設計は、計算資源の観点からも効率的である。モデルの大規模化が進む中、シンプルでスケーラブルな学習手法の価値は計り知れない。
+
+## 結論
+
+"Next-Embedding Prediction Makes Strong Vision Learners" は、視覚学習におけるパラダイムを「表現の学習」から「予測の学習」へとシフトさせる重要な研究である。ピクセルレベルの制約から解き放たれ、純粋に埋め込み空間内での未来予測を行うことで、モデルはより抽象度が高く、かつ汎用的な視覚表現を獲得することに成功した。
+
+NEPAのアプローチは、LLMとVision Modelの境界をさらに曖昧にし、より一般的で強力なAIシステムの構築に向けた確かな一歩となるだろう。今後の視覚AI研究において、この「埋め込み空間での自己回帰」という方向性がどのように発展していくのか、注視する必要がある。

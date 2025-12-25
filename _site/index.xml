@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Mon, 22 Dec 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 24 Dec 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/nepa/</link>
+  <description><![CDATA[ NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。 ]]></description>
+  <category>Computer Vision</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/nepa/</guid>
+  <pubDate>Wed, 24 Dec 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/137/200" medium="image"/>
+</item>
 <item>
   <title>Anthropic初期投資家Deedy Dasが語る、知能の爆発とエンジニアの危機</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/zhang-interplay-rl-mid-pretraining/</guid>
   <pubDate>Wed, 10 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/127/200" medium="image"/>
-</item>
-<item>
-  <title>Anthropic Interviewerが拓く定性調査の産業革命</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-interviewer/</link>
-  <description><![CDATA[ Anthropic Interviewerが定性調査の産業革命を起こし、AIの進化に必要な「人類の価値観データ」を大規模に収集する一方で、自己申告と実態の乖離やAI開発における倫理的課題を浮き彫りにする。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-interviewer/</guid>
-  <pubDate>Tue, 09 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/126/200" medium="image"/>
 </item>
 </channel>
 </rss>
