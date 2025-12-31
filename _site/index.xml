@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Wed, 24 Dec 2025 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 30 Dec 2025 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>OpenAIの「研究の意志」を司る男、Mark Chenの解剖録</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/mark-chen/</link>
+  <description><![CDATA[ ウォール街から転身しOpenAIの研究部門を率いるMark Chenが、300ものプロジェクトを動かす意思決定の裏側や熾烈なタレント争奪戦、そしてAGI実現に向けた組織戦略の真髄を語った ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/mark-chen/</guid>
+  <pubDate>Tue, 30 Dec 2025 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/139/200" medium="image"/>
+</item>
 <item>
   <title>NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/nemotron-3-nano/</guid>
   <pubDate>Mon, 15 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/130/200" medium="image"/>
-</item>
-<item>
-  <title>言語モデルの推論能力はどこから来るのか：Pre-Training、Mid-Training、RLの相互作用を解明する</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/zhang-interplay-rl-mid-pretraining/</link>
-  <description><![CDATA[ 合成データと制御された実験により、LLMの推論能力におけるPre-Training、Mid-Training、RLの役割分担と相互作用を解明した研究を紹介。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/zhang-interplay-rl-mid-pretraining/</guid>
-  <pubDate>Wed, 10 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/127/200" medium="image"/>
 </item>
 </channel>
 </rss>
