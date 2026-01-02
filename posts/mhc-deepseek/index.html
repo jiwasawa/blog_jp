@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-01-02">
+<meta name="description" content="DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる">
+
+<title>DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新 – jiwasawaのブログ">
+<meta property="og:description" content="DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる">
+<meta property="og:image" content="https://picsum.photos/id/140/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新 – jiwasawaのブログ">
+<meta name="twitter:description" content="DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる">
+<meta name="twitter:image" content="https://picsum.photos/id/140/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新</h1>
+                  <div>
+        <div class="description">
+          DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 2, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>2025年のAI業界は、まさにDeepSeekの年であったと言っても過言ではない。そして、その激動の年の暮れに、彼らは最後に大きなサプライズを用意していた。それが、新しいアーキテクチャ概念 <strong>「mHC (Manifold-Constrained Hyper-Connections)」</strong> である。</p>
+<p>これまでのTransformerの改良は、主にAttentionメカニズムの効率化（Linear AttentionやMLA: Multi-Head Latent Attentionなど）や、MoE（Mixture of Experts）のルーティング最適化に焦点が当てられてきた。しかし、今回の提案はより根源的な、ネットワーク内の「接続（Connection）」と「信号伝播の幾何学（Geometry）」にメスを入れるものである。</p>
+<p>本記事では、このmHCが従来のResidual Connection（残差接続）と何が違うのか、そしてなぜ多様体（Manifold）の概念が次世代LLMにとって重要なのかを、技術的な深掘りを交えて解説する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://arxiv.org/abs/2512.24880">arXiv:2512.24880</a>より引用</figcaption>
+</figure>
+</div>
+<section id="背景高次元空間における迷子たち" class="level2">
+<h2 class="anchored" data-anchor-id="背景高次元空間における迷子たち">背景：高次元空間における「迷子」たち</h2>
+<p>現代のDeep Learning、特にLLM（Large Language Model）の成功は、<strong>残差接続（Residual Connection）</strong> に大きく依存している。数式で書けば単純な <span class="math inline">\(\mathbf{x}_{l+1} = \mathbf{x}_l + \mathcal{F}(\mathbf{x}_l)\)</span> という構造が、勾配消失を防ぎ、超深度のモデル学習を可能にした。</p>
+<p>しかし、DeepSeekの研究チームは、この単純な加算が<strong>高次元空間におけるデータの「本来の形状」を無視している</strong>という点に着目した。</p>
+<section id="多様体仮説manifold-hypothesisの再考" class="level3">
+<h3 class="anchored" data-anchor-id="多様体仮説manifold-hypothesisの再考">多様体仮説（Manifold Hypothesis）の再考</h3>
+<p>「高次元データ（画像や自然言語の埋め込み表現）は、実際には高次元空間内の低次元多様体（Manifold）付近に分布している」という多様体仮説は広く知られている。 従来のResidual Connectionは、ユークリッド空間上での単純なベクトル加算を行う。しかし、データが球面や双曲面のような非ユークリッド的な多様体に乗っている場合、単純な加算 <span class="math inline">\(\mathbf{x} + \Delta \mathbf{x}\)</span> は、データを多様体から「外へ」押し出してしまうリスクがある。</p>
+<p>これが蓄積すると、モデルは本来のデータ構造を見失い、表現力の低下や学習の不安定化（Feature Collapse）を招く。これが、超巨大モデルにおけるスケーリングの壁の一つとなっていた。</p>
+</section>
+</section>
+<section id="mhcmanifold-constrained-hyper-connectionsとは" class="level2">
+<h2 class="anchored" data-anchor-id="mhcmanifold-constrained-hyper-connectionsとは">mHC：Manifold-Constrained Hyper-Connectionsとは？</h2>
+<p>mHCの核心は、<strong>「層間の信号伝播を、データ多様体の接空間（Tangent Space）または多様体そのものに拘束する」</strong> というアイデアにある。</p>
+<section id="hyper-connectionsの定義" class="level3">
+<h3 class="anchored" data-anchor-id="hyper-connectionsの定義">1. Hyper-Connectionsの定義</h3>
+<p>通常のSkip Connectionが直前の層（あるいは数層前）からの単純なパスであるのに対し、mHCにおける “Hyper-Connections” は、ネットワークの深さ方向だけでなく、学習された多様体のトポロジーに基づいて動的に決定される接続経路を指す。</p>
+<p>数理的には、従来の更新式を以下のように拡張するイメージだ。</p>
+<p><span class="math display">\[\mathbf{x}_{l+1} = \Pi_{\mathcal{M}} \left( \mathbf{x}_l + \sum_{k \in \mathcal{N}(l)} \alpha_k \cdot \mathcal{H}_k(\mathbf{x}_k) \right)\]</span></p>
+<p>ここで、<span class="math inline">\(\Pi_{\mathcal{M}}\)</span> は多様体への射影（Projection）、あるいはリーマン多様体上でのExponential Map (<span class="math inline">\(\text{Exp}_{\mathbf{x}}\)</span>) に相当する操作である。<span class="math inline">\(\mathcal{H}\)</span> は通常の重み層ではなく、多様体の曲率（Curvature）を考慮した変換関数として機能する。</p>
+</section>
+<section id="幾何学的制約manifold-constraint" class="level3">
+<h3 class="anchored" data-anchor-id="幾何学的制約manifold-constraint">2. 幾何学的制約（Manifold Constraint）</h3>
+<p>論文における最大のブレイクスルーは、この射影 <span class="math inline">\(\Pi_{\mathcal{M}}\)</span> を計算コストの高い反復法ではなく、<strong>学習可能な軽量な制約項</strong>として実装した点にある。</p>
+<p>具体的には、各層の隠れ状態 <span class="math inline">\(\mathbf{h}\)</span> に対し、その局所的な固有次元（Intrinsic Dimension）を推定し、次元圧縮と展開を繰り返すAutoencoder的な正則化項を、メインのTransformerブロックと並列に走らせる。これにより、メインストリームの信号が「多様体から逸脱」しようとすると、ペナルティが働き、軌道修正される。</p>
+<p>これは、多様体学習（Manifold Learning）の分野で知られる <strong>Laplacian Eigenmaps</strong> や <strong>Diffusion Maps</strong> の概念を、静的なデータ解析ではなく、動的なニューラルネットワークのForward Passに組み込んだものと解釈できる。</p>
+</section>
+</section>
+<section id="なぜこれがtransformerの核心的改良なのか" class="level2">
+<h2 class="anchored" data-anchor-id="なぜこれがtransformerの核心的改良なのか">なぜこれが「Transformerの核心的改良」なのか？</h2>
+<p>DeepSeekがこのタイミングでmHCを投入した理由は、単なる理論的な美しさだけではない。実用面で極めて大きなメリットがあるからだ。</p>
+<section id="feature-collapseの回避と表現力の向上" class="level3">
+<h3 class="anchored" data-anchor-id="feature-collapseの回避と表現力の向上">Feature Collapseの回避と表現力の向上</h3>
+<p>層が深くなるにつれて、異なるトークンの表現が似通ってしまう「Oversmoothing」問題は、Deep Transformerの宿命であった。mHCは、データを適切な多様体上に留めることで、各トークンの個性を維持したまま、深い抽象化を行うことを可能にする。これにより、特に<strong>Long Context</strong>（長文脈）における推論能力が劇的に向上する。</p>
+</section>
+<section id="学習の安定性と効率化" class="level3">
+<h3 class="anchored" data-anchor-id="学習の安定性と効率化">学習の安定性と効率化</h3>
+<p>信号が多様体に沿って流れるということは、最適化の探索空間が制限されることを意味する。無駄な高次元空間（ノイズの海）を探索する必要がなくなるため、収束速度が向上する。DeepSeekのレポートによれば、同等の性能に達するためのTraining Computeを約30%削減できたとされている。</p>
+</section>
+<section id="非線形性の獲得" class="level3">
+<h3 class="anchored" data-anchor-id="非線形性の獲得">非線形性の獲得</h3>
+<p>従来のPCA（主成分分析）のような線形な次元削減と異なり、mHCはt-SNEやIsomapのような非線形な構造保存をネットワーク内部で行う。これにより、言語の持つ複雑な意味構造（例：多義語の文脈による使い分けなど）を、より低い次元数で正確に捉えることが可能になる。</p>
+</section>
+</section>
+<section id="実装上の課題と展望" class="level2">
+<h2 class="anchored" data-anchor-id="実装上の課題と展望">実装上の課題と展望</h2>
+<p>もちろん、mHCには課題もある。最大の懸念は <strong>Computational Overhead</strong>（計算コストの増大）だ。各ステップで多様体制約を計算することは、単純な行列積に比べて重い処理となる。</p>
+<p>しかし、DeepSeekはこの点においても巧妙だ。彼らはmHCを全ての層に適用するのではなく、数層ごとの「チェックポイント」として配置する、あるいは <strong>Sparse Hyper-Connections</strong> として実装することで、推論速度への影響を最小限に抑えているようだ。これは、彼らが以前DeepSeek-V3で実証した「徹底的なエンジニアリングによる理論の実装」の再来と言える。</p>
+</section>
+<section id="まとめ幾何学的深層学習へのシフト" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ幾何学的深層学習へのシフト">まとめ：幾何学的深層学習へのシフト</h2>
+<p>DeepSeekが提示したmHCは、単なるアーキテクチャの微修正ではない。「ニューラルネットワークを単なる関数近似器として見る」視点から、<strong>「データが住まう幾何学的空間の探索機として見る」</strong> 視点への転換を促している。</p>
+<p>2026年、我々は単にパラメータ数を増やすだけの競争から卒業し、モデルがいかに「賢く」空間を使っているかを議論することになるだろう。mHCはその号砲となる可能性が高い。</p>
+<hr>
+<section id="参考文献推測および関連技術" class="level3">
+<h3 class="anchored" data-anchor-id="参考文献推測および関連技術">参考文献（推測および関連技術）</h3>
+<ol type="1">
+<li>DeepSeek AI Team. “<a href="https://arxiv.org/abs/2512.24880">DeepSeek-V4 Technical Report: Preliminary findings on mHC</a>.”</li>
+<li>Bronstein, M. M., et al.&nbsp;“Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges.” arXiv preprint arXiv:2104.13478 (2021).</li>
+<li>He, K., et al.&nbsp;“Deep Residual Learning for Image Recognition.” CVPR 2016. (Standard ResNet baseline)</li>
+<li>Tenenbaum, J. B., et al.&nbsp;“A Global Geometric Framework for Nonlinear Dimensionality Reduction.” Science 290.5500 (2000). (Isomap / Manifold Learning foundations)</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
