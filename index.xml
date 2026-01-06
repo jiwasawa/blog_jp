@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Tue, 06 Jan 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 07 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Agent Harnessの台頭と、2026年のAI開発者が直面する「Bitter Lesson」</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/agent-harness/</link>
+  <description><![CDATA[ Agent HarnessがAI開発のOSとなり、モデルの耐久性重視へとシフトする中で、Rich Suttonの「Bitter Lesson」をAI開発現場でどのように活かすべきかを分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/agent-harness/</guid>
+  <pubDate>Wed, 07 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/142/200" medium="image"/>
+</item>
 <item>
   <title>MiniMax M2.1が突きつける「SWE-Bench至上主義」の終焉</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/virtual-lab-sars-cov/</guid>
   <pubDate>Fri, 19 Dec 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/132/200" medium="image"/>
-</item>
-<item>
-  <title>Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/</link>
-  <description><![CDATA[ MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。 ]]></description>
-  <category>AI</category>
-  <category>Transformer</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/</guid>
-  <pubDate>Thu, 18 Dec 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/131/200" medium="image"/>
 </item>
 </channel>
 </rss>
