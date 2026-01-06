@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Thu, 01 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 05 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>MiniMax M2.1が突きつける「SWE-Bench至上主義」の終焉</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/</link>
+  <description><![CDATA[ MiniMax-M2.1がSWE-Benchの限界を超え、現実世界の開発現場で通用する多言語・マルチタスク能力と汎用性を実現し、AIコーディングの未来を切り拓くロードマップを示す ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/</guid>
+  <pubDate>Mon, 05 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/141/200" medium="image"/>
+</item>
 <item>
   <title>DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,18 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/</guid>
   <pubDate>Wed, 17 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/131/200" medium="image"/>
-</item>
-<item>
-  <title>エージェントシステムの科学的スケーリング則：マルチエージェント性能を支配する原理の解明</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/</link>
-  <description><![CDATA[ MITやGoogle Researchの研究が、エージェントシステムの性能がタスク構造と調整コストのトレードオフによって決まることを定量的に解明し、単純なエージェント数増加が必ずしも性能向上に繋がらないことを示唆している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Agentic Systems</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/</guid>
-  <pubDate>Tue, 16 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/129/200" medium="image"/>
 </item>
 </channel>
 </rss>
