@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Wed, 07 Jan 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 08 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/grpopp-cameron/</link>
+  <description><![CDATA[ Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr. GRPO、TISなどの最新技術による改善手法を解説する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/grpopp-cameron/</guid>
+  <pubDate>Thu, 08 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/143/200" medium="image"/>
+</item>
 <item>
   <title>Agent Harnessの台頭と、2026年のAI開発者が直面する「Bitter Lesson」</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -40,7 +51,6 @@
   <description><![CDATA[ DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる ]]></description>
   <category>LLM</category>
   <category>AI</category>
-  <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/</guid>
   <pubDate>Fri, 02 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/140/200" medium="image"/>
@@ -111,18 +121,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/srush-rl-llm/</guid>
   <pubDate>Sat, 20 Dec 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/133/200" medium="image"/>
-</item>
-<item>
-  <title>AIエージェントが科学研究を自律的に行う未来：「Virtual Lab」によるSARS-CoV-2ナノボディ設計</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/virtual-lab-sars-cov/</link>
-  <description><![CDATA[ AIエージェントが複数の専門家として協調し、SARS-CoV-2変異株に対応するナノボディを自律的に設計する「Virtual Lab」の画期的なアプローチとその科学研究の未来を解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Agentic Systems</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/virtual-lab-sars-cov/</guid>
-  <pubDate>Fri, 19 Dec 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/132/200" medium="image"/>
 </item>
 </channel>
 </rss>

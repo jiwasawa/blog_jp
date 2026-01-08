@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2026-01-02">
-<meta name="description" content="DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる">
+<meta name="dcterms.date" content="2026-01-08">
+<meta name="description" content="Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。">
 
-<title>DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新</title>
+<title>GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,13 +112,13 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新 – jiwasawaのブログ">
-<meta property="og:description" content="DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる">
-<meta property="og:image" content="https://picsum.photos/id/140/200">
+<meta property="og:title" content="GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック – jiwasawaのブログ">
+<meta property="og:description" content="Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。">
+<meta property="og:image" content="https://picsum.photos/id/143/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新 – jiwasawaのブログ">
-<meta name="twitter:description" content="DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる">
-<meta name="twitter:image" content="https://picsum.photos/id/140/200">
+<meta name="twitter:title" content="GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック – jiwasawaのブログ">
+<meta name="twitter:description" content="Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/143/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -174,10 +174,10 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新</h1>
+      <h1 class="title">GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</h1>
                   <div>
         <div class="description">
-          DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる
+          Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -200,7 +200,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 2, 2026</p>
+        <p class="date">January 8, 2026</p>
       </div>
     </div>
     
@@ -219,79 +219,81 @@ window.Quarto = {
 
 
 
-<p>2025年のAI業界は、まさにDeepSeekの年であったと言っても過言ではない。そして、その激動の年の暮れに、彼らは最後に大きなサプライズを用意していた。それが、新しいアーキテクチャ概念 <strong>「mHC (Manifold-Constrained Hyper-Connections)」</strong> である。</p>
-<p>これまでのTransformerの改良は、主にAttentionメカニズムの効率化（Linear AttentionやMLA: Multi-Head Latent Attentionなど）や、MoE（Mixture of Experts）のルーティング最適化に焦点が当てられてきた。しかし、今回の提案はより根源的な、ネットワーク内の「接続（Connection）」と「信号伝播の幾何学（Geometry）」にメスを入れるものである。</p>
-<p>本記事では、このmHCが従来のResidual Connection（残差接続）と何が違うのか、そしてなぜ多様体（Manifold）の概念が次世代LLMにとって重要なのかを、技術的な深掘りを交えて解説する。</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fig1.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption><a href="https://arxiv.org/abs/2512.24880">arXiv:2512.24880</a>より引用</figcaption>
-</figure>
-</div>
-<section id="背景高次元空間における迷子たち" class="level2">
-<h2 class="anchored" data-anchor-id="背景高次元空間における迷子たち">背景：高次元空間における「迷子」たち</h2>
-<p>現代のDeep Learning、特にLLM（Large Language Model）の成功は、<strong>残差接続（Residual Connection）</strong> に大きく依存している。数式で書けば単純な <span class="math inline">\(\mathbf{x}_{l+1} = \mathbf{x}_l + \mathcal{F}(\mathbf{x}_l)\)</span> という構造が、勾配消失を防ぎ、超深度のモデル学習を可能にした。</p>
-<p>しかし、DeepSeekの研究チームは、この単純な加算が<strong>高次元空間におけるデータの「本来の形状」を無視している</strong>という点に着目した。</p>
-<section id="多様体仮説manifold-hypothesisの再考" class="level3">
-<h3 class="anchored" data-anchor-id="多様体仮説manifold-hypothesisの再考">多様体仮説（Manifold Hypothesis）の再考</h3>
-<p>「高次元データ（画像や自然言語の埋め込み表現）は、実際には高次元空間内の低次元多様体（Manifold）付近に分布している」という多様体仮説は広く知られている。 従来のResidual Connectionは、ユークリッド空間上での単純なベクトル加算を行う。しかし、データが球面や双曲面のような非ユークリッド的な多様体に乗っている場合、単純な加算 <span class="math inline">\(\mathbf{x} + \Delta \mathbf{x}\)</span> は、データを多様体から「外へ」押し出してしまうリスクがある。</p>
-<p>これが蓄積すると、モデルは本来のデータ構造を見失い、表現力の低下や学習の不安定化（Feature Collapse）を招く。これが、超巨大モデルにおけるスケーリングの壁の一つとなっていた。</p>
+<p>NetflixのシニアリサーチサイエンティストであるCameron R. Wolfe氏による優れたブログ記事 <a href="https://cameronrwolfe.substack.com/p/grpo-tricks">GRPO Tricks</a> を基に、Large Language Model (LLM) の推論能力を飛躍させる強化学習（RL）の最新動向と、Group Relative Policy Optimization (GRPO) の実践的な改善手法について解説する。</p>
+<p><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> の登場以来、推論モデル（Reasoning Models）の開発において強化学習は中心的な役割を果たしている。その核心にあるのがGRPOアルゴリズムだ。概念的にはシンプルで計算効率に優れたGRPOだが、大規模な学習において「素朴な（Vanilla）」GRPOをそのまま適用すると、学習の不安定化や予期せぬ挙動に直面することが多い。</p>
+<p>本稿では、GRPOが抱える本質的な課題と、それを克服するために提案された「DAPO」「Dr.&nbsp;GRPO」「TIS」といった最新のテクニックを詳細に掘り下げる。</p>
+<section id="grpoの基礎とvanilla版の限界" class="level2">
+<h2 class="anchored" data-anchor-id="grpoの基礎とvanilla版の限界">GRPOの基礎と「Vanilla」版の限界</h2>
+<p>詳細なテクニックに入る前に、基本をおさらいしておこう。近年のLLMにおける強化学習は、主にReinforcement Learning from Human Feedback (RLHF) か、Reinforcement Learning with Verifiable Rewards (RLVR) のいずれかのアプローチをとる。特に数学やコーディングといった「正解」が検証可能な領域（RLVR）において、GRPOは標準的な選択肢となっている。</p>
+<section id="ppoからgrpoへ" class="level3">
+<h3 class="anchored" data-anchor-id="ppoからgrpoへ">PPOからGRPOへ</h3>
+<p>GRPOは、Proximal Policy Optimization (PPO) の進化系と位置付けられる。PPOは、ポリシーの更新幅を制限するクリッピング機構と、価値関数（Critic）を用いたアドバンテージ推定により学習を安定化させてきた。</p>
+<p>対してGRPOは、<strong>Criticモデル（価値関数）を排除</strong>することで計算コストを大幅に削減する。代わりに、同一のプロンプトに対して複数の出力をサンプリングし（これを「グループ」と呼ぶ）、グループ内での相対的な報酬に基づいてベースラインを推定する。</p>
 </section>
-</section>
-<section id="mhcmanifold-constrained-hyper-connectionsとは" class="level2">
-<h2 class="anchored" data-anchor-id="mhcmanifold-constrained-hyper-connectionsとは">mHC：Manifold-Constrained Hyper-Connectionsとは？</h2>
-<p>mHCの核心は、<strong>「層間の信号伝播を、データ多様体の接空間（Tangent Space）または多様体そのものに拘束する」</strong> というアイデアにある。</p>
-<section id="hyper-connectionsの定義" class="level3">
-<h3 class="anchored" data-anchor-id="hyper-connectionsの定義">1. Hyper-Connectionsの定義</h3>
-<p>通常のSkip Connectionが直前の層（あるいは数層前）からの単純なパスであるのに対し、mHCにおける “Hyper-Connections” は、ネットワークの深さ方向だけでなく、学習された多様体のトポロジーに基づいて動的に決定される接続経路を指す。</p>
-<p>数理的には、従来の更新式を以下のように拡張するイメージだ。</p>
-<p><span class="math display">\[\mathbf{x}_{l+1} = \Pi_{\mathcal{M}} \left( \mathbf{x}_l + \sum_{k \in \mathcal{N}(l)} \alpha_k \cdot \mathcal{H}_k(\mathbf{x}_k) \right)\]</span></p>
-<p>ここで、<span class="math inline">\(\Pi_{\mathcal{M}}\)</span> は多様体への射影（Projection）、あるいはリーマン多様体上でのExponential Map (<span class="math inline">\(\text{Exp}_{\mathbf{x}}\)</span>) に相当する操作である。<span class="math inline">\(\mathcal{H}\)</span> は通常の重み層ではなく、多様体の曲率（Curvature）を考慮した変換関数として機能する。</p>
-</section>
-<section id="幾何学的制約manifold-constraint" class="level3">
-<h3 class="anchored" data-anchor-id="幾何学的制約manifold-constraint">2. 幾何学的制約（Manifold Constraint）</h3>
-<p>論文における最大のブレイクスルーは、この射影 <span class="math inline">\(\Pi_{\mathcal{M}}\)</span> を計算コストの高い反復法ではなく、<strong>学習可能な軽量な制約項</strong>として実装した点にある。</p>
-<p>具体的には、各層の隠れ状態 <span class="math inline">\(\mathbf{h}\)</span> に対し、その局所的な固有次元（Intrinsic Dimension）を推定し、次元圧縮と展開を繰り返すAutoencoder的な正則化項を、メインのTransformerブロックと並列に走らせる。これにより、メインストリームの信号が「多様体から逸脱」しようとすると、ペナルティが働き、軌道修正される。</p>
-<p>これは、多様体学習（Manifold Learning）の分野で知られる <strong>Laplacian Eigenmaps</strong> や <strong>Diffusion Maps</strong> の概念を、静的なデータ解析ではなく、動的なニューラルネットワークのForward Passに組み込んだものと解釈できる。</p>
-</section>
-</section>
-<section id="なぜこれがtransformerの核心的改良なのか" class="level2">
-<h2 class="anchored" data-anchor-id="なぜこれがtransformerの核心的改良なのか">なぜこれが「Transformerの核心的改良」なのか？</h2>
-<p>DeepSeekがこのタイミングでmHCを投入した理由は、単なる理論的な美しさだけではない。実用面で極めて大きなメリットがあるからだ。</p>
-<section id="feature-collapseの回避と表現力の向上" class="level3">
-<h3 class="anchored" data-anchor-id="feature-collapseの回避と表現力の向上">Feature Collapseの回避と表現力の向上</h3>
-<p>層が深くなるにつれて、異なるトークンの表現が似通ってしまう「Oversmoothing」問題は、Deep Transformerの宿命であった。mHCは、データを適切な多様体上に留めることで、各トークンの個性を維持したまま、深い抽象化を行うことを可能にする。これにより、特に<strong>Long Context</strong>（長文脈）における推論能力が劇的に向上する。</p>
-</section>
-<section id="学習の安定性と効率化" class="level3">
-<h3 class="anchored" data-anchor-id="学習の安定性と効率化">学習の安定性と効率化</h3>
-<p>信号が多様体に沿って流れるということは、最適化の探索空間が制限されることを意味する。無駄な高次元空間（ノイズの海）を探索する必要がなくなるため、収束速度が向上する。DeepSeekのレポートによれば、同等の性能に達するためのTraining Computeを約30%削減できたとされている。</p>
-</section>
-<section id="非線形性の獲得" class="level3">
-<h3 class="anchored" data-anchor-id="非線形性の獲得">非線形性の獲得</h3>
-<p>従来のPCA（主成分分析）のような線形な次元削減と異なり、mHCはt-SNEやIsomapのような非線形な構造保存をネットワーク内部で行う。これにより、言語の持つ複雑な意味構造（例：多義語の文脈による使い分けなど）を、より低い次元数で正確に捉えることが可能になる。</p>
-</section>
-</section>
-<section id="実装上の課題と展望" class="level2">
-<h2 class="anchored" data-anchor-id="実装上の課題と展望">実装上の課題と展望</h2>
-<p>もちろん、mHCには課題もある。最大の懸念は <strong>Computational Overhead</strong>（計算コストの増大）だ。各ステップで多様体制約を計算することは、単純な行列積に比べて重い処理となる。</p>
-<p>しかし、DeepSeekはこの点においても巧妙だ。彼らはmHCを全ての層に適用するのではなく、数層ごとの「チェックポイント」として配置する、あるいは <strong>Sparse Hyper-Connections</strong> として実装することで、推論速度への影響を最小限に抑えているようだ。これは、彼らが以前DeepSeek-V3で実証した「徹底的なエンジニアリングによる理論の実装」の再来と言える。</p>
-</section>
-<section id="まとめ幾何学的深層学習へのシフト" class="level2">
-<h2 class="anchored" data-anchor-id="まとめ幾何学的深層学習へのシフト">まとめ：幾何学的深層学習へのシフト</h2>
-<p>DeepSeekが提示したmHCは、単なるアーキテクチャの微修正ではない。「ニューラルネットワークを単なる関数近似器として見る」視点から、<strong>「データが住まう幾何学的空間の探索機として見る」</strong> 視点への転換を促している。</p>
-<p>2026年、我々は単にパラメータ数を増やすだけの競争から卒業し、モデルがいかに「賢く」空間を使っているかを議論することになるだろう。mHCはその号砲となる可能性が高い。</p>
-<hr>
-<section id="参考文献推測および関連技術" class="level3">
-<h3 class="anchored" data-anchor-id="参考文献推測および関連技術">参考文献（推測および関連技術）</h3>
+<section id="vanilla-grpoが直面する壁" class="level3">
+<h3 class="anchored" data-anchor-id="vanilla-grpoが直面する壁">Vanilla GRPOが直面する壁</h3>
+<p>DeepSeek-R1の成功を受けて多くの研究者がGRPOの再現を試みたが、単純な実装（Vanilla GRPO）では以下のような問題が頻発した。</p>
 <ol type="1">
-<li>DeepSeek AI Team. “<a href="https://arxiv.org/abs/2512.24880">DeepSeek-V4 Technical Report: Preliminary findings on mHC</a>.”</li>
-<li>Bronstein, M. M., et al.&nbsp;“Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges.” arXiv preprint arXiv:2104.13478 (2021).</li>
-<li>He, K., et al.&nbsp;“Deep Residual Learning for Image Recognition.” CVPR 2016. (Standard ResNet baseline)</li>
-<li>Tenenbaum, J. B., et al.&nbsp;“A Global Geometric Framework for Nonlinear Dimensionality Reduction.” Science 290.5500 (2000). (Isomap / Manifold Learning foundations)</li>
+<li><strong>学習の不安定性とノイズ:</strong> 報酬曲線が安定せず、激しく変動する。</li>
+<li><strong>エントロピーの崩壊（Entropy Collapse）:</strong> モデルの出力分布が決定的になりすぎ、探索能力が失われる。</li>
+<li><strong>過剰な応答長:</strong> 不正解であっても、とにかく長く出力すれば損失が下がるという抜け道をモデルが学習してしまう。</li>
+<li><strong>低いサンプル効率:</strong> 学習の収束に膨大なイテレーションを要する。</li>
+</ol>
+<p>これらの問題は、オリジナルの論文では語られなかった「実装上の詳細（Tricks）」が極めて重要であることを示唆している。</p>
+</section>
+</section>
+<section id="grpoを進化させる主要なイノベーション" class="level2">
+<h2 class="anchored" data-anchor-id="grpoを進化させる主要なイノベーション">GRPOを進化させる主要なイノベーション</h2>
+<p>これらの課題に対処するため、DAPO、Dr.&nbsp;GRPO、TISといった改良手法が提案されている。これらは単なるパラメータ調整ではなく、目的関数やシステム設計の根本的な見直しを含んでいる。</p>
+<section id="dapo-探索と効率の最適化" class="level3">
+<h3 class="anchored" data-anchor-id="dapo-探索と効率の最適化">1. DAPO: 探索と効率の最適化</h3>
+<p><a href="https://arxiv.org/abs/2503.14476">[Yu et al., 2025]</a> で提案された <strong>DAPO (Decoupled Clip and Dynamic Sampling Policy Optimization)</strong> は、以下の4つの重要な変更を加えることで、GRPOのパフォーマンスを劇的に向上させた。</p>
+<ul>
+<li><p><strong>Clip Higher（クリッピング上限の緩和）:</strong> PPO/GRPOではポリシー比（Policy Ratio）を <span class="math inline">\([1-\epsilon, 1+\epsilon]\)</span> の範囲にクリッピングする。しかし、DAPOの研究では、この上限（<span class="math inline">\(1+\epsilon\)</span>）が、確率の低いトークン（探索的トークン）の採用を不当に阻害していることが判明した。そこで、上限側のクリッピング幅を広げる（例：<span class="math inline">\(\epsilon=0.2\)</span>から<span class="math inline">\(0.28\)</span>へ）ことで、探索を促進し、エントロピーの崩壊を防ぐ手法が提案された。</p></li>
+<li><p><strong>Dynamic Sampling（動的サンプリング）:</strong> 学習が進むと、グループ内のすべての出力が正解（報酬が全て1）になるケースが増える。GRPOは相対評価であるため、全員が正解だとアドバンテージがゼロになり、勾配が発生しない（学習が進まない）。DAPOでは、このような「完全に解けてしまったプロンプト」を動的にフィルタリングし、常に学習効果のある難易度の高いサンプルを供給し続けることで、サンプル効率を向上させる。</p></li>
+<li><p><strong>Token-Level Loss（トークンレベル損失）:</strong> Vanilla GRPOでは、シーケンス全体の平均損失を用いていたが、これは長い応答に対してトークンあたりの寄与を薄めてしまうバイアスを生む。DAPOは損失をトークンレベルで集計し直すことで、応答の長さに依存しない公平な学習を実現した。</p></li>
+<li><p><strong>Overlong Reward Shaping（長大出力への対処）:</strong> 最大トークン数で打ち切られた（Truncated）サンプルに対して、一律に負の報酬を与えるだけでは学習が不安定になる。DAPOでは、打ち切られたサンプルをマスク（無視）するか、長さに基づいてソフトなペナルティを与えることで、モデルが「適切な長さ」を学習できるよう誘導する。</p></li>
+</ul>
+</section>
+<section id="dr.-grpo-バイアスの是正" class="level3">
+<h3 class="anchored" data-anchor-id="dr.-grpo-バイアスの是正">2. Dr.&nbsp;GRPO: バイアスの是正</h3>
+<p><a href="https://arxiv.org/abs/2503.20783">[Liu et al., 2025]</a> による <strong>GRPO Done Right (Dr.&nbsp;GRPO)</strong> は、GRPOの数式に潜む統計的なバイアスを指摘し、修正案を提示した。</p>
+<ul>
+<li><p><strong>正規化定数の固定:</strong> 通常のGRPOは、シーケンスの損失をそのシーケンスのトークン数で割って正規化する。しかし、これは「長く喋れば喋るほど、分母が大きくなり損失が小さくなる」という誤ったインセンティブ（Length Bias）をモデルに与えてしまう。Dr.&nbsp;GRPOでは、トークン数ではなく<strong>固定定数</strong>で正規化を行うことで、このバイアスを排除した。これにより、無駄に長いだけの不正解な回答が減少し、真に必要な推論のみが行われるようになる。</p></li>
+<li><p><strong>アドバンテージ計算における標準偏差の削除:</strong> GRPOのアドバンテージ計算では、グループ報酬の標準偏差で除算を行う。しかし、問題が極端に簡単（全員正解）または極端に難しい（全員不正解）場合、標準偏差が極小になり、アドバンテージが爆発的に大きくなる不安定性を招く。Dr.&nbsp;GRPOではこの標準偏差項を削除し、単に平均との差分のみを用いることで学習を安定化させた。</p></li>
+</ul>
+</section>
+<section id="tis-エンジニアリングギャップの解消" class="level3">
+<h3 class="anchored" data-anchor-id="tis-エンジニアリングギャップの解消">3. TIS: エンジニアリングギャップの解消</h3>
+<p><a href="https://fengyao.notion.site/off-policy-rl">[Yao et al., 2025]</a> は、<strong>Truncated Importance Sampling (TIS)</strong> を用いて、システム実装上の課題に切り込んだ。</p>
+<p>現代のRL学習フレームワークでは、推論（Rollout）を行うエンジン（例：vLLM）と、学習（Policy Update）を行うエンジン（例：FSDP/Megatron）が分離していることが多い。たとえ同じ重みを持っていても、これら二つのエンジンが出力する確率は、浮動小数点の精度やカーネル実装の違いにより微妙に異なる（Engine Gap）。</p>
+<p>この差異は、本来「On-Policy」であるはずの学習を、意図せず「Off-Policy」にしてしまい、学習効率を低下させる。TISは、重要度サンプリング（Importance Sampling）の考え方を導入し、推論エンジンと学習エンジンの確率比を用いて勾配を補正する。これにより、システムレベルの不一致を数学的に吸収し、真にOn-Policyな学習を保証する。</p>
+</section>
+<section id="その他の派生形gspoとgmpo" class="level3">
+<h3 class="anchored" data-anchor-id="その他の派生形gspoとgmpo">4. その他の派生形：GSPOとGMPO</h3>
+<ul>
+<li><p><strong><a href="https://arxiv.org/abs/2507.18071">GSPO (Group Sequence Policy Optimization)</a>:</strong> Mixture-of-Experts (MoE) モデルにおいて、トークンレベルの重要度比率を使用すると、エキスパートの選択が不安定になる問題がある。GSPOは重要度比率をシーケンスレベルで計算することで、特にQwen 3のような大規模MoEモデルのRL学習を安定化させることに成功している。</p></li>
+<li><p><strong><a href="https://arxiv.org/abs/2507.20673">GMPO (Geometric Mean Policy Optimization)</a>:</strong> 外れ値となる極端な重要度比率による不安定性を防ぐため、算術平均の代わりに<strong>幾何平均</strong>を用いてトークンレベルの損失を集約する手法。これにより、数学的推論タスクにおいて一貫した性能向上が確認されている。</p></li>
+</ul>
+</section>
+</section>
+<section id="結論最先端のrlパイプラインの構築に向けて" class="level2">
+<h2 class="anchored" data-anchor-id="結論最先端のrlパイプラインの構築に向けて">結論：最先端のRLパイプラインの構築に向けて</h2>
+<p>GRPOは強力なアルゴリズムだが、それを大規模かつ安定して動作させるためには、上記のような数多くの工夫が必要となる。</p>
+<p>実際、最新の <strong><a href="https://arxiv.org/abs/2512.13961">Olmo 3</a></strong> モデルの学習パイプラインでは、これらのテクニックが複合的に採用されている。具体的には、ゼロ勾配サンプルのフィルタリング（DAPO）、トークンレベル損失、KLペナルティの削除、クリッピング上限の緩和、TISによるエンジン間ギャップの補正、そしてアドバンテージ計算からの標準偏差の削除（Dr.&nbsp;GRPO）などが組み込まれている。</p>
+<p>LLMの推論能力を高めるための強化学習（RL）は、単なるアルゴリズムの適用から、複雑なシステムエンジニアリングの領域へと進化している。今後も新たな論文や実装上のトリック（秘伝のタレ）が次々と公開されるだろう。我々実践者は、理論的な理解と実験的な検証の両輪で、最適な学習レシピを模索し続ける必要がある。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Yu, Qiying, et al.&nbsp;“<a href="https://arxiv.org/abs/2503.14476">Dapo: An open-source llm reinforcement learning system at scale.</a>” arXiv preprint arXiv:2503.14476 (2025).</li>
+<li>Liu, Zichen, et al.&nbsp;“<a href="https://arxiv.org/abs/2503.20783">Understanding r1-zero-like training: A critical perspective.</a>” arXiv preprint arXiv:2503.20783 (2025).</li>
+<li>F. Yao, et al.&nbsp;“<a href="https://fengyao.notion.site/off-policy-rl">Your efficient rl framework secretly brings you off-policy rl training.</a>” (2025).</li>
+<li>Zheng, Chujie, et al.&nbsp;“<a href="https://arxiv.org/abs/2507.18071">Group sequence policy optimization.</a>” arXiv preprint arXiv:2507.18071 (2025).</li>
+<li>Zhao, Yuzhong, et al.&nbsp;“<a href="https://arxiv.org/abs/2507.20673">Geometric-mean policy optimization.</a>” arXiv preprint arXiv:2507.20673 (2025).</li>
 </ol>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

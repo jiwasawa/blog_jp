@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/grpopp-cameron/index.html",
       "/posts/agent-harness/index.html",
       "/posts/minimax-m2-1/index.html",
       "/posts/mhc-deepseek/index.html",
