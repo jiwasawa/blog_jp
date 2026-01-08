@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Thu, 08 Jan 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 09 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude Codeの生みの親、Boris Chernyが語る「エンジニアのレバレッジ」と「AI時代の生存戦略」</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/</link>
+  <description><![CDATA[ Metaの元Principal EngineerでClaude Codeの生みの親、Boris Chernyが、自身のキャリアの軌跡から導き出したプロダクト哲学と、AIがソフトウェア開発の常識を塗り替える未来について語った。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/</guid>
+  <pubDate>Fri, 09 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/144/200" medium="image"/>
+</item>
 <item>
   <title>GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -110,17 +122,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/john-schulman-truell-interview/</guid>
   <pubDate>Sun, 21 Dec 2025 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/134/200" medium="image"/>
-</item>
-<item>
-  <title>RLはLLMの推論を「研磨」するだけなのか：pass@N劣化の正体とPOPEによる探索の再定義</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/srush-rl-llm/</link>
-  <description><![CDATA[ RLによるpass@N劣化の真因と疑われる「Interference」を解き明かし、人間の知恵を探索のガイドとして活用するPOPEがいかにしてLLMの推論能力を真にスケールさせるのかを分析する ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/srush-rl-llm/</guid>
-  <pubDate>Sat, 20 Dec 2025 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/133/200" medium="image"/>
 </item>
 </channel>
 </rss>
