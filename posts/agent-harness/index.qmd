@@ -11,7 +11,7 @@ image: https://picsum.photos/id/142/200
 
 2026年現在、AI業界の焦点は「モデルの知能（Intelligence）」から「システムの耐久性（Durability）」へと完全にシフトした。静的なリーダーボード上でModel AがModel Bを0.5%上回ったところで、実務においてそれが何を意味するだろうか？数百ステップに及ぶ複雑なタスクを、エラーなく、指示を逸脱せずに完遂できなければ、その知能はただの「賢い役立たず」に過ぎない。
 
-これまで我々は、モデル単体のベンチマークスコアに一喜一憂してきた。しかし、トップティアのモデル間の差が誤差範囲に縮小した今、真の差別化要因として浮上してきたのが「Agent Harness」である。今回は、Google DeepMindの[Phillip Schmid氏の論考](https://www.philschmid.de/agent-harness-2026)をベースに、このAgent HarnessがなぜAI開発のOS（オペレーティングシステム）となり得るのか、そしてRich Suttonが提唱した「Bitter Lesson（苦い教訓）」がどのように現在のエージェント開発に突き刺さるのかを分析する。
+これまで我々は、モデル単体のベンチマークスコアに一喜一憂してきた。しかし、トップティアのモデル間の差が誤差範囲に縮小した今、真の差別化要因として浮上してきたのが「Agent Harness」である。今回は、Google DeepMindの[Phillipp Schmid氏の論考](https://www.philschmid.de/agent-harness-2026)をベースに、このAgent HarnessがなぜAI開発のOS（オペレーティングシステム）となり得るのか、そしてRich Suttonが提唱した「Bitter Lesson（苦い教訓）」がどのように現在のエージェント開発に突き刺さるのかを分析する。
 
 ## Agent Harnessとは何か：FrameworkからOSへ
 

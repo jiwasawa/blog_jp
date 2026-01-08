@@ -3,7 +3,7 @@ title: "DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Co
 description: "DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる"
 author: "Junichiro Iwasawa"
 date: "2026-01-02"
-categories: [LLM, AI, Podcast]
+categories: [LLM, AI]
 image: https://picsum.photos/id/140/200
 ---
 

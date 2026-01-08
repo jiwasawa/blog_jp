@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2026-01-07">
-<meta name="description" content="Agent HarnessがAI開発のOSとなり、モデルの耐久性重視へとシフトする中で、Rich Suttonの「Bitter Lesson」をAI開発現場でどのように活かすべきかを分析する。">
+<meta name="dcterms.date" content="2026-01-08">
+<meta name="description" content="Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。">
 
-<title>Agent Harnessの台頭と、2026年のAI開発者が直面する「Bitter Lesson」</title>
+<title>GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,15 +80,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Agent Harnessの台頭と、2026年のAI開発者が直面する「Bitter Lesson」 – jiwasawaのブログ">
-<meta property="og:description" content="Agent HarnessがAI開発のOSとなり、モデルの耐久性重視へとシフトする中で、Rich Suttonの「Bitter Lesson」をAI開発現場でどのように活かすべきかを分析する。">
-<meta property="og:image" content="https://picsum.photos/id/142/200">
+<meta property="og:title" content="GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック – jiwasawaのブログ">
+<meta property="og:description" content="Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。">
+<meta property="og:image" content="https://picsum.photos/id/143/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Agent Harnessの台頭と、2026年のAI開発者が直面する「Bitter Lesson」 – jiwasawaのブログ">
-<meta name="twitter:description" content="Agent HarnessがAI開発のOSとなり、モデルの耐久性重視へとシフトする中で、Rich Suttonの「Bitter Lesson」をAI開発現場でどのように活かすべきかを分析する。">
-<meta name="twitter:image" content="https://picsum.photos/id/142/200">
+<meta name="twitter:title" content="GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック – jiwasawaのブログ">
+<meta name="twitter:description" content="Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/143/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,10 +173,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Agent Harnessの台頭と、2026年のAI開発者が直面する「Bitter Lesson」</h1>
+      <h1 class="title">GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</h1>
                   <div>
         <div class="description">
-          Agent HarnessがAI開発のOSとなり、モデルの耐久性重視へとシフトする中で、Rich Suttonの「Bitter Lesson」をAI開発現場でどのように活かすべきかを分析する。
+          Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr.&nbsp;GRPO、TISなどの最新技術による改善手法を解説する。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -170,7 +199,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 7, 2026</p>
+        <p class="date">January 8, 2026</p>
       </div>
     </div>
     
@@ -189,47 +218,79 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>モデルの賢さを競う時代は、終わりを告げようとしている。</p>
-<p>2026年現在、AI業界の焦点は「モデルの知能（Intelligence）」から「システムの耐久性（Durability）」へと完全にシフトした。静的なリーダーボード上でModel AがModel Bを0.5%上回ったところで、実務においてそれが何を意味するだろうか？数百ステップに及ぶ複雑なタスクを、エラーなく、指示を逸脱せずに完遂できなければ、その知能はただの「賢い役立たず」に過ぎない。</p>
-<p>これまで我々は、モデル単体のベンチマークスコアに一喜一憂してきた。しかし、トップティアのモデル間の差が誤差範囲に縮小した今、真の差別化要因として浮上してきたのが「Agent Harness」である。今回は、Google DeepMindの<a href="https://www.philschmid.de/agent-harness-2026">Phillipp Schmid氏の論考</a>をベースに、このAgent HarnessがなぜAI開発のOS（オペレーティングシステム）となり得るのか、そしてRich Suttonが提唱した「Bitter Lesson（苦い教訓）」がどのように現在のエージェント開発に突き刺さるのかを分析する。</p>
-<section id="agent-harnessとは何かframeworkからosへ" class="level2">
-<h2 class="anchored" data-anchor-id="agent-harnessとは何かframeworkからosへ">Agent Harnessとは何か：FrameworkからOSへ</h2>
-<p>まず言葉の定義を明確にしておく必要がある。Agent Harnessとは、AIモデルを取り囲み、長時間実行されるタスクを管理するためのインフラストラクチャである。LangChainやLlamaIndexといったAgent Frameworkが「ツールを作るためのビルディングブロック」を提供するものだとすれば、Agent Harnessはそれらを統括する「オペレーティングシステム（OS）」に近い。</p>
-<p>この概念をコンピュータ・アーキテクチャに例えると非常に分かりやすい。</p>
-<ul>
-<li><strong>Model:</strong> CPU（純粋な演算処理能力）</li>
-<li><strong>Context Window:</strong> RAM（限られた揮発性の作業メモリ）</li>
-<li><strong>Agent Harness:</strong> OS（コンテキストやツールを管理し、標準ドライバを提供する基盤）</li>
-<li><strong>Agent:</strong> Application（OS上で動作する固有のユーザーロジック）</li>
-</ul>
-<p>開発者が個別に実装していたプロンプト管理、ツール呼び出しのハンドリング、ライフサイクル管理といった「面倒だが必須な機能」は、すべてHarnessが引き受ける。これにより、開発者はOSを一から作るという苦行から解放され、アプリケーション（Agent）独自のロジック構築に専念できるというわけだ。</p>
-<p>H&amp;Mのバーチャルアシスタントが自律的に70%のクエリを解決したり、シンガポール政府の「Ask Jamie」がコールセンター業務を半減させたりといった成功事例の裏側には、単に賢いモデルがあるだけではない。長期的な文脈を維持し、確実にツールを行使させるための堅牢なHarnessが存在している。</p>
+<p>NetflixのシニアリサーチサイエンティストであるCameron R. Wolfe氏による優れたブログ記事 <a href="https://cameronrwolfe.substack.com/p/grpo-tricks">GRPO Tricks</a> を基に、Large Language Model (LLM) の推論能力を飛躍させる強化学習（RL）の最新動向と、Group Relative Policy Optimization (GRPO) の実践的な改善手法について解説する。</p>
+<p><a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1</a> の登場以来、推論モデル（Reasoning Models）の開発において強化学習は中心的な役割を果たしている。その核心にあるのがGRPOアルゴリズムだ。概念的にはシンプルで計算効率に優れたGRPOだが、大規模な学習において「素朴な（Vanilla）」GRPOをそのまま適用すると、学習の不安定化や予期せぬ挙動に直面することが多い。</p>
+<p>本稿では、GRPOが抱える本質的な課題と、それを克服するために提案された「DAPO」「Dr.&nbsp;GRPO」「TIS」といった最新のテクニックを詳細に掘り下げる。</p>
+<section id="grpoの基礎とvanilla版の限界" class="level2">
+<h2 class="anchored" data-anchor-id="grpoの基礎とvanilla版の限界">GRPOの基礎と「Vanilla」版の限界</h2>
+<p>詳細なテクニックに入る前に、基本をおさらいしておこう。近年のLLMにおける強化学習は、主にReinforcement Learning from Human Feedback (RLHF) か、Reinforcement Learning with Verifiable Rewards (RLVR) のいずれかのアプローチをとる。特に数学やコーディングといった「正解」が検証可能な領域（RLVR）において、GRPOは標準的な選択肢となっている。</p>
+<section id="ppoからgrpoへ" class="level3">
+<h3 class="anchored" data-anchor-id="ppoからgrpoへ">PPOからGRPOへ</h3>
+<p>GRPOは、Proximal Policy Optimization (PPO) の進化系と位置付けられる。PPOは、ポリシーの更新幅を制限するクリッピング機構と、価値関数（Critic）を用いたアドバンテージ推定により学習を安定化させてきた。</p>
+<p>対してGRPOは、<strong>Criticモデル（価値関数）を排除</strong>することで計算コストを大幅に削減する。代わりに、同一のプロンプトに対して複数の出力をサンプリングし（これを「グループ」と呼ぶ）、グループ内での相対的な報酬に基づいてベースラインを推定する。</p>
 </section>
-<section id="context-engineeringという名のメモリ管理" class="level2">
-<h2 class="anchored" data-anchor-id="context-engineeringという名のメモリ管理">Context Engineeringという名のメモリ管理</h2>
-<p>Agent Harnessの最大の役割の一つは「<a href="https://www.philschmid.de/context-engineering">Context Engineering</a>」である。どれだけContext Windowが拡大しようとも、エージェントが生成する膨大なログやツール出力ですぐに溢れかえってしまう。無尽蔵にメモリがあるという幻想は捨て去るべきだ。</p>
-<p>ここでHarnessは、熟練のOSのようにメモリ管理を行う。</p>
+<section id="vanilla-grpoが直面する壁" class="level3">
+<h3 class="anchored" data-anchor-id="vanilla-grpoが直面する壁">Vanilla GRPOが直面する壁</h3>
+<p>DeepSeek-R1の成功を受けて多くの研究者がGRPOの再現を試みたが、単純な実装（Vanilla GRPO）では以下のような問題が頻発した。</p>
 <ol type="1">
-<li><strong>Offloading &amp; Filesystem:</strong> すべての会話履歴をContextに乗せるのではなく、ファイルシステムに逃がす。</li>
-<li><strong>Compaction &amp; Summarization:</strong> 冗長なログを圧縮し、重要な決定事項だけを要約して残す。</li>
-<li><strong>Isolation:</strong> サブエージェントにタスクを切り出し、親エージェントのコンテキスト汚染を防ぐ。</li>
+<li><strong>学習の不安定性とノイズ:</strong> 報酬曲線が安定せず、激しく変動する。</li>
+<li><strong>エントロピーの崩壊（Entropy Collapse）:</strong> モデルの出力分布が決定的になりすぎ、探索能力が失われる。</li>
+<li><strong>過剰な応答長:</strong> 不正解であっても、とにかく長く出力すれば損失が下がるという抜け道をモデルが学習してしまう。</li>
+<li><strong>低いサンプル効率:</strong> 学習の収束に膨大なイテレーションを要する。</li>
 </ol>
-<p>これらの戦略は、いわば現代版のガベージコレクションや仮想メモリ管理だ。Claude Codeのような汎用Harnessが登場しつつあるが、特定の垂直領域においては、高度に最適化されたCLIツール自体がHarness化していく流れは不可避だろう。</p>
+<p>これらの問題は、オリジナルの論文では語られなかった「実装上の詳細（Tricks）」が極めて重要であることを示唆している。</p>
 </section>
-<section id="ベンチマークの崩壊とbitter-lesson" class="level2">
-<h2 class="anchored" data-anchor-id="ベンチマークの崩壊とbitter-lesson">ベンチマークの崩壊と「Bitter Lesson」</h2>
-<p>従来のベンチマーク（SWE-Benchなど）は、短距離走のタイムを計測するには適していたが、マラソンの完走能力を測るには無力だった。50回目のツール呼び出しの後に、モデルが当初の指示を覚えているか？論理的な整合性を保てているか？今のリーダーボードは、この「<a href="https://www.philschmid.de/agents-pass-at-k-pass-power-k">信頼性（Reliability）</a>」をスコアリングできていない。</p>
-<p>ここで、AI研究者Rich Suttonの<a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html">「Bitter Lesson（苦い教訓）」</a>が重くのしかかる。「計算能力を活用する一般的な手法は、長期的には人間が手作りした知識やルールを常に凌駕する」という教訓だ。</p>
-<p>エージェント開発の現場では、まさにこのBitter Lessonが繰り返されている。 <a href="https://www.youtube.com/watch?v=2Muxy3wE-E0">LangChainは1年で3回もアーキテクチャを再構築し</a>、<a href="https://vercel.com/blog/we-removed-80-percent-of-our-agents-tools">Vercelはエージェントツールの80%を削除することで</a>逆に性能を向上させた。これは何を意味するか？モデルが賢くなるたびに、我々が苦労して作り込んだ複雑な制御フロー（Human-coded knowledge）は不要になり、むしろ邪魔になるということだ。</p>
-<p>2024年に複雑なパイプラインが必要だったタスクも、2026年にはシンプルなプロンプト一つで解決できるかもしれない。故に、Harnessに求められるのは「重厚長大さ」ではなく、昨日のロジックを今日捨てられる「可動性」である。</p>
-<p>開発者へのアドバイスは明確だ。 <strong>“Build to Delete”（捨てるために作れ）。</strong></p>
 </section>
-<section id="harnessが学習データになる未来" class="level2">
-<h2 class="anchored" data-anchor-id="harnessが学習データになる未来">Harnessが「学習データ」になる未来</h2>
-<p>今後の展望として、推論環境（Harness）と学習環境の融合が進むだろう。Harnessは単なる実行環境ではなく、最強のデータ収集装置となる。</p>
-<p>モデルが長時間のタスク中にいつ指示から逸脱したか（Model Drift）、どこで推論を誤ったか。Harnessはこの「失敗の軌跡」を詳細に記録できる。このデータを次のモデルのトレーニングにフィードバックすることで、より「疲れない」「飽きない」モデルを作ることが可能になる。</p>
-<p>つまり、今後の競争優位性は、どれだけ巧みなプロンプトを書けるかではなく、Harnessを通じてどれだけ質の高い「実世界の実行ログ」を蓄積できるかにかかっている。GoogleやOpenAIといった巨大プレイヤーだけでなく、独自のHarnessを持つ企業だけが、このデータ・フライホイールを回すことができるのだ。</p>
-<p>開発者は、複雑なコントロールフロー構築という「小細工」に囚われるべきではない。堅牢なAtomicなツールを用意し、あとはモデルとHarnessに計画を委ねる。そして、新しいモデルが出たら、古いコードを躊躇なく削除する。その潔さこそが、2026年のAI開発における生存戦略となるだろう。</p>
+<section id="grpoを進化させる主要なイノベーション" class="level2">
+<h2 class="anchored" data-anchor-id="grpoを進化させる主要なイノベーション">GRPOを進化させる主要なイノベーション</h2>
+<p>これらの課題に対処するため、DAPO、Dr.&nbsp;GRPO、TISといった改良手法が提案されている。これらは単なるパラメータ調整ではなく、目的関数やシステム設計の根本的な見直しを含んでいる。</p>
+<section id="dapo-探索と効率の最適化" class="level3">
+<h3 class="anchored" data-anchor-id="dapo-探索と効率の最適化">1. DAPO: 探索と効率の最適化</h3>
+<p><a href="https://arxiv.org/abs/2503.14476">[Yu et al., 2025]</a> で提案された <strong>DAPO (Decoupled Clip and Dynamic Sampling Policy Optimization)</strong> は、以下の4つの重要な変更を加えることで、GRPOのパフォーマンスを劇的に向上させた。</p>
+<ul>
+<li><p><strong>Clip Higher（クリッピング上限の緩和）:</strong> PPO/GRPOではポリシー比（Policy Ratio）を <span class="math inline">\([1-\epsilon, 1+\epsilon]\)</span> の範囲にクリッピングする。しかし、DAPOの研究では、この上限（<span class="math inline">\(1+\epsilon\)</span>）が、確率の低いトークン（探索的トークン）の採用を不当に阻害していることが判明した。そこで、上限側のクリッピング幅を広げる（例：<span class="math inline">\(\epsilon=0.2\)</span>から<span class="math inline">\(0.28\)</span>へ）ことで、探索を促進し、エントロピーの崩壊を防ぐ手法が提案された。</p></li>
+<li><p><strong>Dynamic Sampling（動的サンプリング）:</strong> 学習が進むと、グループ内のすべての出力が正解（報酬が全て1）になるケースが増える。GRPOは相対評価であるため、全員が正解だとアドバンテージがゼロになり、勾配が発生しない（学習が進まない）。DAPOでは、このような「完全に解けてしまったプロンプト」を動的にフィルタリングし、常に学習効果のある難易度の高いサンプルを供給し続けることで、サンプル効率を向上させる。</p></li>
+<li><p><strong>Token-Level Loss（トークンレベル損失）:</strong> Vanilla GRPOでは、シーケンス全体の平均損失を用いていたが、これは長い応答に対してトークンあたりの寄与を薄めてしまうバイアスを生む。DAPOは損失をトークンレベルで集計し直すことで、応答の長さに依存しない公平な学習を実現した。</p></li>
+<li><p><strong>Overlong Reward Shaping（長大出力への対処）:</strong> 最大トークン数で打ち切られた（Truncated）サンプルに対して、一律に負の報酬を与えるだけでは学習が不安定になる。DAPOでは、打ち切られたサンプルをマスク（無視）するか、長さに基づいてソフトなペナルティを与えることで、モデルが「適切な長さ」を学習できるよう誘導する。</p></li>
+</ul>
+</section>
+<section id="dr.-grpo-バイアスの是正" class="level3">
+<h3 class="anchored" data-anchor-id="dr.-grpo-バイアスの是正">2. Dr.&nbsp;GRPO: バイアスの是正</h3>
+<p><a href="https://arxiv.org/abs/2503.20783">[Liu et al., 2025]</a> による <strong>GRPO Done Right (Dr.&nbsp;GRPO)</strong> は、GRPOの数式に潜む統計的なバイアスを指摘し、修正案を提示した。</p>
+<ul>
+<li><p><strong>正規化定数の固定:</strong> 通常のGRPOは、シーケンスの損失をそのシーケンスのトークン数で割って正規化する。しかし、これは「長く喋れば喋るほど、分母が大きくなり損失が小さくなる」という誤ったインセンティブ（Length Bias）をモデルに与えてしまう。Dr.&nbsp;GRPOでは、トークン数ではなく<strong>固定定数</strong>で正規化を行うことで、このバイアスを排除した。これにより、無駄に長いだけの不正解な回答が減少し、真に必要な推論のみが行われるようになる。</p></li>
+<li><p><strong>アドバンテージ計算における標準偏差の削除:</strong> GRPOのアドバンテージ計算では、グループ報酬の標準偏差で除算を行う。しかし、問題が極端に簡単（全員正解）または極端に難しい（全員不正解）場合、標準偏差が極小になり、アドバンテージが爆発的に大きくなる不安定性を招く。Dr.&nbsp;GRPOではこの標準偏差項を削除し、単に平均との差分のみを用いることで学習を安定化させた。</p></li>
+</ul>
+</section>
+<section id="tis-エンジニアリングギャップの解消" class="level3">
+<h3 class="anchored" data-anchor-id="tis-エンジニアリングギャップの解消">3. TIS: エンジニアリングギャップの解消</h3>
+<p><a href="https://fengyao.notion.site/off-policy-rl">[Yao et al., 2025]</a> は、<strong>Truncated Importance Sampling (TIS)</strong> を用いて、システム実装上の課題に切り込んだ。</p>
+<p>現代のRL学習フレームワークでは、推論（Rollout）を行うエンジン（例：vLLM）と、学習（Policy Update）を行うエンジン（例：FSDP/Megatron）が分離していることが多い。たとえ同じ重みを持っていても、これら二つのエンジンが出力する確率は、浮動小数点の精度やカーネル実装の違いにより微妙に異なる（Engine Gap）。</p>
+<p>この差異は、本来「On-Policy」であるはずの学習を、意図せず「Off-Policy」にしてしまい、学習効率を低下させる。TISは、重要度サンプリング（Importance Sampling）の考え方を導入し、推論エンジンと学習エンジンの確率比を用いて勾配を補正する。これにより、システムレベルの不一致を数学的に吸収し、真にOn-Policyな学習を保証する。</p>
+</section>
+<section id="その他の派生形gspoとgmpo" class="level3">
+<h3 class="anchored" data-anchor-id="その他の派生形gspoとgmpo">4. その他の派生形：GSPOとGMPO</h3>
+<ul>
+<li><p><strong><a href="https://arxiv.org/abs/2507.18071">GSPO (Group Sequence Policy Optimization)</a>:</strong> Mixture-of-Experts (MoE) モデルにおいて、トークンレベルの重要度比率を使用すると、エキスパートの選択が不安定になる問題がある。GSPOは重要度比率をシーケンスレベルで計算することで、特にQwen 3のような大規模MoEモデルのRL学習を安定化させることに成功している。</p></li>
+<li><p><strong><a href="https://arxiv.org/abs/2507.20673">GMPO (Geometric Mean Policy Optimization)</a>:</strong> 外れ値となる極端な重要度比率による不安定性を防ぐため、算術平均の代わりに<strong>幾何平均</strong>を用いてトークンレベルの損失を集約する手法。これにより、数学的推論タスクにおいて一貫した性能向上が確認されている。</p></li>
+</ul>
+</section>
+</section>
+<section id="結論最先端のrlパイプラインの構築に向けて" class="level2">
+<h2 class="anchored" data-anchor-id="結論最先端のrlパイプラインの構築に向けて">結論：最先端のRLパイプラインの構築に向けて</h2>
+<p>GRPOは強力なアルゴリズムだが、それを大規模かつ安定して動作させるためには、上記のような数多くの工夫が必要となる。</p>
+<p>実際、最新の <strong><a href="https://arxiv.org/abs/2512.13961">Olmo 3</a></strong> モデルの学習パイプラインでは、これらのテクニックが複合的に採用されている。具体的には、ゼロ勾配サンプルのフィルタリング（DAPO）、トークンレベル損失、KLペナルティの削除、クリッピング上限の緩和、TISによるエンジン間ギャップの補正、そしてアドバンテージ計算からの標準偏差の削除（Dr.&nbsp;GRPO）などが組み込まれている。</p>
+<p>LLMの推論能力を高めるための強化学習（RL）は、単なるアルゴリズムの適用から、複雑なシステムエンジニアリングの領域へと進化している。今後も新たな論文や実装上のトリック（秘伝のタレ）が次々と公開されるだろう。我々実践者は、理論的な理解と実験的な検証の両輪で、最適な学習レシピを模索し続ける必要がある。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Yu, Qiying, et al.&nbsp;“<a href="https://arxiv.org/abs/2503.14476">Dapo: An open-source llm reinforcement learning system at scale.</a>” arXiv preprint arXiv:2503.14476 (2025).</li>
+<li>Liu, Zichen, et al.&nbsp;“<a href="https://arxiv.org/abs/2503.20783">Understanding r1-zero-like training: A critical perspective.</a>” arXiv preprint arXiv:2503.20783 (2025).</li>
+<li>F. Yao, et al.&nbsp;“<a href="https://fengyao.notion.site/off-policy-rl">Your efficient rl framework secretly brings you off-policy rl training.</a>” (2025).</li>
+<li>Zheng, Chujie, et al.&nbsp;“<a href="https://arxiv.org/abs/2507.18071">Group sequence policy optimization.</a>” arXiv preprint arXiv:2507.18071 (2025).</li>
+<li>Zhao, Yuzhong, et al.&nbsp;“<a href="https://arxiv.org/abs/2507.20673">Geometric-mean policy optimization.</a>” arXiv preprint arXiv:2507.20673 (2025).</li>
+</ol>
 
 
 </section>
