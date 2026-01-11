@@ -23,6 +23,18 @@
   <media:content url="https://picsum.photos/id/145/200" medium="image"/>
 </item>
 <item>
+  <title>SETA: 端末操作エージェントのためのスケーラブルな環境構築とLLM能力の拡張</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/seta/</link>
+  <description><![CDATA[ SETAプロジェクトは、LLMがターミナル操作エージェントとしてSOTA性能を達成するための高度なツールキット設計とスケーラブルなRL学習パイプラインを提案し、LLMの応用可能性を大きく広げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/seta/</guid>
+  <pubDate>Sat, 10 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/146/200" medium="image"/>
+</item>
+<item>
   <title>Claude Codeの生みの親、Boris Chernyが語る「エンジニアのレバレッジ」と「AI時代の生存戦略」</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/</link>
@@ -111,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/deedy-das/</guid>
   <pubDate>Mon, 22 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/136/200" medium="image"/>
-</item>
-<item>
-  <title>NitroGen：汎用ゲーミングエージェントのための基盤モデル</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/nitrogen/</link>
-  <description><![CDATA[ 40,000時間以上のゲームプレイ動画から学習した行動ラベル付きデータとTransformerベースの基盤モデルにより、未知のゲーム環境でも適応可能な汎用ゲーミングエージェントの実現を目指すNVIDIAのNitroGenを紹介する ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/nitrogen/</guid>
-  <pubDate>Sun, 21 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/135/200" medium="image"/>
 </item>
 </channel>
 </rss>

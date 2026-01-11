@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/recursive-language-models/index.html",
+      "/posts/seta/index.html",
       "/posts/boris-cherny/index.html",
       "/posts/grpopp-cameron/index.html",
       "/posts/agent-harness/index.html",
