@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Sat, 10 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 11 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>LLMベンチマークの「ミステリーショッパー」：Artificial Analysisが暴くAIの真の実力</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/artificial-analysis/</link>
+  <description><![CDATA[ Artificial AnalysisのGeorge CameronとMicah-Hill Smithが、LLMベンチマークの「ミステリーショッパー」として、AIの真の実力と「コストと知能のパラドックス」を独自の手法で暴き出す。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Latent Space Podcast</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/artificial-analysis/</guid>
+  <pubDate>Sun, 11 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/147/200" medium="image"/>
+</item>
 <item>
   <title>Recursive Language Models (RLM): コンテキスト制限の壁を越える新たな推論パラダイム</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -111,18 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/nepa/</guid>
   <pubDate>Wed, 24 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/137/200" medium="image"/>
-</item>
-<item>
-  <title>Anthropic初期投資家Deedy Dasが語る、知能の爆発とエンジニアの危機</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/deedy-das/</link>
-  <description><![CDATA[ 史上最速で成長するAnthropicの舞台裏から、GoodfireやOpenRouterなどの次世代インフラへの投資哲学、そして「Vibe Coding」が変質させるエンジニアリングの未来まで、Deedy Dasの鋭い洞察を詳説する ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/deedy-das/</guid>
-  <pubDate>Mon, 22 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/136/200" medium="image"/>
 </item>
 </channel>
 </rss>

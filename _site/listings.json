@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/artificial-analysis/index.html",
       "/posts/recursive-language-models/index.html",
       "/posts/seta/index.html",
       "/posts/boris-cherny/index.html",
