@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-01-16">
+<meta name="description" content="DeepSeek-AIの論文「Engram」は、LLMに条件付きメモリを導入することで、MoEモデルの計算能力と静的知識の検索を最適に組み合わせ、推論能力とシステム効率を飛躍的に向上させる新たなスパース性軸を提案する。">
+
+<title>Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸 – jiwasawaのブログ">
+<meta property="og:description" content="DeepSeek-AIの論文「Engram」は、LLMに条件付きメモリを導入することで、MoEモデルの計算能力と静的知識の検索を最適に組み合わせ、推論能力とシステム効率を飛躍的に向上させる新たなスパース性軸を提案する。">
+<meta property="og:image" content="https://picsum.photos/id/149/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸 – jiwasawaのブログ">
+<meta name="twitter:description" content="DeepSeek-AIの論文「Engram」は、LLMに条件付きメモリを導入することで、MoEモデルの計算能力と静的知識の検索を最適に組み合わせ、推論能力とシステム効率を飛躍的に向上させる新たなスパース性軸を提案する。">
+<meta name="twitter:image" content="https://picsum.photos/id/149/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸</h1>
+                  <div>
+        <div class="description">
+          DeepSeek-AIの論文「Engram」は、LLMに条件付きメモリを導入することで、MoEモデルの計算能力と静的知識の検索を最適に組み合わせ、推論能力とシステム効率を飛躍的に向上させる新たなスパース性軸を提案する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 16, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>2026年1月、DeepSeekの研究チーム（DeepSeek-AI）は、Large Language Model (LLM) のアーキテクチャにおける新たなパラダイムを提唱する論文「<strong><a href="https://www.arxiv.org/pdf/2601.07372">Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models</a></strong>」を発表した。</p>
+<p>これまでのLLMのスケーリング則は、主にMixture-of-Experts (MoE) による「条件付き計算（Conditional Computation）」が牽引してきた。しかし、本論文はそこに「条件付きメモリ（Conditional Memory）」という新たな軸を導入することで、モデルの効率と性能を劇的に向上させる手法「<strong>Engram</strong>」を提案している。</p>
+<p>本記事では、Engramの基本概念からアーキテクチャの詳細、そしてなぜこの構造が推論能力やシステム効率を向上させるのかについて、論文の内容に基づき技術的に深掘りして解説する。</p>
+<section id="transformerが抱える検索の課題" class="level2">
+<h2 class="anchored" data-anchor-id="transformerが抱える検索の課題">1. Transformerが抱える「検索」の課題</h2>
+<p>現在のTransformerベースのLLMは、膨大な知識を保持しているが、その知識へのアクセス方法には本質的な非効率性が存在する。</p>
+<p>論文では、既存のモデルが「<strong>知識の検索（Retrieval）を、高価な計算（Computation）によってシミュレートしている</strong>」と指摘している。例えば、「Alexander the Great（アレクサンドロス大王）」というエンティティを認識する場合、Transformerは複数のAttention層とFFN（Feed-Forward Networks）を経て、文脈からその意味表現を動的に再構築する必要がある。これは、静的なルックアップテーブルがあれば<span class="math inline">\(O(1)\)</span>で済むはずの処理に、貴重な計算リソースを浪費していることを意味する。</p>
+<p>DeepSeekの研究チームは、この「計算によるシミュレーション」を「<strong>条件付きメモリによるルックアップ</strong>」に置き換えることで、計算資源をより高度な推論（Reasoning）に集中させるべきだと提唱している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://www.arxiv.org/abs/2601.07372">arXiv:2601.07372</a> より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="engramアーキテクチャn-gramの現代的再解釈" class="level2">
+<h2 class="anchored" data-anchor-id="engramアーキテクチャn-gramの現代的再解釈">2. Engramアーキテクチャ：N-gramの現代的再解釈</h2>
+<p>Engramは、古典的なNLP技術である<span class="math inline">\(N\)</span>-gramモデルの概念を現代的なニューラルネットワークに統合したモジュールである。その中核となるのは、入力トークン列に基づいて静的な埋め込みベクトルを定数時間で検索し、それを文脈に応じて動的に統合する仕組みだ。</p>
+<section id="スパース検索とハッシュ化" class="level3">
+<h3 class="anchored" data-anchor-id="スパース検索とハッシュ化">2.1 スパース検索とハッシュ化</h3>
+<p>Engramの第一段階は、トークン列からパターンを検索することである。しかし、単純な<span class="math inline">\(N\)</span>-gramテーブルは語彙数に対して爆発的に増大するため、以下の工夫が凝らされている。</p>
+<ol type="1">
+<li><strong>Tokenizer Compression (トークナイザ圧縮):</strong> 通常のサブワードトークナイザでは、“Apple”と” apple”（スペースあり）は別のIDを持つ。Engramでは、これらを正規化して同一視する射影層を導入し、実効的な語彙サイズを約23%削減することで、意味的な密度を高めている。</li>
+<li><strong>Multi-Head Hashing:</strong> 全ての<span class="math inline">\(N\)</span>-gramを保持するのは不可能なため、ハッシュ化を採用している。衝突（Collision）の影響を緩和するため、<span class="math inline">\(K\)</span>個の異なるハッシュヘッドを使用し、複数の埋め込みテーブルからベクトルを検索して連結する。</li>
+</ol>
+<p><span class="math display">\[ \mathbf{e}_t = \Concat_{n=2}^{N} \Concat_{k=1}^{K} \mathbf{e}_{t,n,k} \]</span></p>
+<p>ここで、<span class="math inline">\(\mathbf{e}_{t,n,k}\)</span>は、位置<span class="math inline">\(t\)</span>における<span class="math inline">\(n\)</span>-gramに対応する<span class="math inline">\(k\)</span>番目のハッシュヘッドから取得された埋め込みベクトルである。</p>
+</section>
+<section id="context-aware-gating-文脈認識ゲーティング" class="level3">
+<h3 class="anchored" data-anchor-id="context-aware-gating-文脈認識ゲーティング">2.2 Context-Aware Gating (文脈認識ゲーティング)</h3>
+<p>単に<span class="math inline">\(N\)</span>-gram埋め込みを取得しただけでは、文脈を無視した静的な情報に過ぎない（例：「bank」が「銀行」か「土手」か区別できない）。そこでEngramは、現在の隠れ状態<span class="math inline">\(\mathbf{h}_t\)</span>を用いたゲーティング機構を導入している。</p>
+<p>取得されたメモリベクトル<span class="math inline">\(\mathbf{e}_t\)</span>は、Key (<span class="math inline">\(\mathbf{k}_t\)</span>) とValue (<span class="math inline">\(\mathbf{v}_t\)</span>) に射影され、現在の隠れ状態（Queryとして機能）との内積によってゲート値<span class="math inline">\(\alpha_t\)</span>が計算される。</p>
+<p><span class="math display">\[ \alpha_t = \sigma \left( \frac{\text{RMSNorm}(\mathbf{h}_t)^\top \text{RMSNorm}(\mathbf{k}_t)}{\sqrt{d}} \right) \]</span></p>
+<p><span class="math display">\[ \tilde{\mathbf{v}}_t = \alpha_t \cdot \mathbf{v}_t \]</span></p>
+<p>この<span class="math inline">\(\alpha_t\)</span>により、現在の文脈に合致する知識のみが取り込まれ、ノイズ（ハッシュ衝突や無関係な<span class="math inline">\(N\)</span>-gram）は抑制される。この設計はAttention機構に似ているが、動的なトークン間の相互作用ではなく、静的メモリへのアクセスを行う点が異なる。</p>
+<p>さらに、DeepSeekが以前発表した「mHC (Manifold-Constrained Hyper-Connections)」などのマルチブランチアーキテクチャとの統合においても、ブランチごとに異なるKey射影を用いることで、効率的に各ブランチ固有の情報を注入する工夫がなされている。</p>
+</section>
+</section>
+<section id="sparsity-allocation計算とメモリの最適配分" class="level2">
+<h2 class="anchored" data-anchor-id="sparsity-allocation計算とメモリの最適配分">3. Sparsity Allocation：計算とメモリの最適配分</h2>
+<p>本研究の最も重要な貢献の一つは、「<strong>Sparsity Allocation（スパース性の配分）</strong>」という問題を定式化した点にある。</p>
+<p>MoEモデルにおいて、パラメータ総数と計算量（FLOPs）を固定した場合、リソースを「MoEのエキスパート（計算）」に割くべきか、「Engramのメモリスロット（記憶）」に割くべきか？</p>
+<section id="u字型のスケーリング則" class="level3">
+<h3 class="anchored" data-anchor-id="u字型のスケーリング則">U字型のスケーリング則</h3>
+<p>実験の結果、このトレードオフには明確な<strong>U字型のスケーリング則</strong>が存在することが判明した。</p>
+<ul>
+<li><strong>Pure MoE (<span class="math inline">\(\rho=100\%\)</span>):</strong> 全てのリソースをMoEに割くと、静的なパターンの再構築に計算能力が奪われ、非効率となる。</li>
+<li><strong>Optimal Mix (<span class="math inline">\(\rho \approx 75\%-80\%\)</span>):</strong> スパースパラメータの約20〜25%をEngramメモリに割り当て、残りをMoEエキスパートに割り当てる構成が、損失（Loss）を最小化する。</li>
+</ul>
+<p>つまり、MoEとEngramは競合するものではなく、<strong>相互補完的</strong>な関係にある。MoEは動的な論理・推論を担当し、Engramは静的な知識・パターンのルックアップを担当することで、全体としての効率が最大化されるのである。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig3.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://www.arxiv.org/abs/2601.07372">arXiv:2601.07372</a> より引用</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="engram-27bの性能とメカニズム分析" class="level2">
+<h2 class="anchored" data-anchor-id="engram-27bの性能とメカニズム分析">4. Engram-27Bの性能とメカニズム分析</h2>
+<p>この配分則に基づいて構築された<strong>Engram-27B</strong>は、同等のパラメータ数・FLOPsを持つMoEベースライン（MoE-27B）と比較して、驚くべき結果を示した。</p>
+<section id="知識タスクを超えた推論能力の向上" class="level3">
+<h3 class="anchored" data-anchor-id="知識タスクを超えた推論能力の向上">4.1 知識タスクを超えた推論能力の向上</h3>
+<p>直感的には、メモリの追加は「知識集約型タスク（MMLU, TriviaQAなど）」に効くと予想される。実際、MMLUで+3.4pt、CMMLUで+4.0ptの向上が見られた。</p>
+<p>しかし、より興味深いのは、<strong>一般的な推論（Reasoning）、コード、数学</strong>といったタスクにおいても大幅な向上が確認された点である。</p>
+<ul>
+<li><strong>BBH (Big-Bench Hard):</strong> +5.0</li>
+<li><strong>ARC-Challenge:</strong> +3.7</li>
+<li><strong>HumanEval (Code):</strong> +3.0</li>
+<li><strong>MATH:</strong> +2.4</li>
+</ul>
+<p>なぜ静的なメモリが推論能力を向上させるのか？</p>
+</section>
+<section id="実効的な深さの向上とattentionの解放" class="level3">
+<h3 class="anchored" data-anchor-id="実効的な深さの向上とattentionの解放">4.2 「実効的な深さ」の向上とAttentionの解放</h3>
+<p>論文では、LogitLensとCKA (Centered Kernel Alignment) を用いた解析により、このメカニズムを解明している。</p>
+<ol type="1">
+<li><strong>浅い層での予測収束:</strong> Engramを導入すると、モデルの浅い層（初期レイヤー）における予測分布が、最終的な出力分布に急速に近づくことが確認された。</li>
+<li><strong>実効的な深さの深化:</strong> CKAによる類似度解析では、Engramモデルの「層5」の表現が、MoEベースラインの「層12」の表現に相当することが示された。</li>
+</ol>
+<p>これは、<strong>Engramが初期レイヤーにおける「静的な知識の再構築」という負荷を肩代わり（オフロード）している</strong>ことを示唆している。結果として、Transformerの層（特にAttention機構）は、単純な知識検索から解放され、より複雑な推論や長距離の文脈理解に専念できるようになる。</p>
+<p>実際、長文脈タスク（Long Context）においても、Engram-27BはRULERやNIAH（Needle In A Haystack）ベンチマークでベースラインを圧倒しており（Multi-Query NIAH: 84.2 <span class="math inline">\(\to\)</span> 97.0）、Attentionの容量がグローバルな文脈処理のために温存されていることが裏付けられている。</p>
+</section>
+</section>
+<section id="インフラストラクチャを意識した効率性" class="level2">
+<h2 class="anchored" data-anchor-id="インフラストラクチャを意識した効率性">5. インフラストラクチャを意識した効率性</h2>
+<p>Engramは、純粋なモデル性能だけでなく、システム実装の観点からも極めて合理的に設計されている。</p>
+<section id="計算とメモリの分離-decoupling" class="level3">
+<h3 class="anchored" data-anchor-id="計算とメモリの分離-decoupling">計算とメモリの分離 (Decoupling)</h3>
+<p>MoEのルーティングは実行時の隠れ状態に依存するため、事前の予測が難しく、通信と計算のオーバーラップが複雑になる。対して、Engramのアクセス先は<strong>入力トークン列のみによって決定（決定的）</strong>される。</p>
+<p>これにより、以下のシステム最適化が可能になる：</p>
+<ul>
+<li><strong>プリフェッチ:</strong> 推論時、実際に層の計算が始まる前に、CPU（ホストメモリ）から必要な埋め込みベクトルをGPUに転送（Prefetch）できる。</li>
+<li><strong>通信の隠蔽:</strong> 前段のTransformerブロックの計算中に、次段のEngramのメモリ転送を行うことで、通信レイテンシをほぼ完全に隠蔽できる。</li>
+</ul>
+<p>実験では、<strong>100B（1000億）パラメータ</strong>規模の巨大なEngramテーブルをホストメモリ（CPU側）に配置し、推論を行った場合でも、スループットの低下は<strong>3%未満</strong>に抑えられた。これは、GPUメモリ（HBM）の制約を超えて、モデルの「記憶容量」を実質的に無限にスケールさせることが可能であることを示している。</p>
+</section>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>DeepSeekによる「<a href="https://github.com/deepseek-ai/Engram">Engram</a>」は、LLMの設計において長らく支配的だった「全てをニューラルネットワークの重みで表現する」というアプローチに対し、「条件付きメモリ」という古典的かつ新しいプリミティブを再導入した。</p>
+<ul>
+<li><strong>構造的補完性:</strong> MoE（動的計算）とEngram（静的メモリ）は最適なバランスで共存すべきである。</li>
+<li><strong>推論能力への寄与:</strong> 単なる知識ベースではなく、初期層の負荷をオフロードすることで、モデル全体の実効的な深さと推論能力を向上させる。</li>
+<li><strong>システム優位性:</strong> 決定的なアクセスパターンにより、GPUメモリの壁を超えたスケーリングを可能にする。</li>
+</ul>
+<p>今後、数千億、数兆パラメータを目指す次世代のスパースモデルにおいて、Engramのような「計算と記憶の分離」は、不可欠な標準技術となっていく可能性が高い。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ul>
+<li>Cheng, X., et al.&nbsp;(2026). “<a href="https://www.arxiv.org/pdf/2601.07372">Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models</a>”. arXiv preprint arXiv:2601.07372.</li>
+<li>DeepSeek-AI. (2024). DeepSeek-V3 Technical Report.</li>
+<li>Xie, Z., et al.&nbsp;(2025). mHC: Manifold-Constrained Hyper-Connections.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

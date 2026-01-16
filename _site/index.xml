@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Sun, 11 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 15 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/engram-deepseek/</link>
+  <description><![CDATA[ DeepSeek-AIの論文「Engram」は、LLMに条件付きメモリを導入することで、MoEモデルの計算能力と静的知識の検索を最適に組み合わせ、推論能力とシステム効率を飛躍的に向上させる新たなスパース性軸を提案する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/engram-deepseek/</guid>
+  <pubDate>Thu, 15 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/149/200" medium="image"/>
+</item>
 <item>
   <title>LLMベンチマークの「ミステリーショッパー」：Artificial Analysisが暴くAIの真の実力</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/mark-chen/</guid>
   <pubDate>Tue, 30 Dec 2025 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/139/200" medium="image"/>
-</item>
-<item>
-  <title>NEPA：視覚学習における「次トークン予測」の革命 ー 表現学習から予測モデルへのパラダイムシフト</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/nepa/</link>
-  <description><![CDATA[ NLPの「次トークン予測」を視覚分野に応用し、ピクセル復元や離散トークン化なしに強力な表現学習器を構築するNEPAの革新的なアプローチを解説します。 ]]></description>
-  <category>Computer Vision</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/nepa/</guid>
-  <pubDate>Wed, 24 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/137/200" medium="image"/>
 </item>
 </channel>
 </rss>
