@@ -253,7 +253,6 @@ window.Quarto = {
 <p><span class="math display">\[ \alpha_t = \sigma \left( \frac{\text{RMSNorm}(\mathbf{h}_t)^\top \text{RMSNorm}(\mathbf{k}_t)}{\sqrt{d}} \right) \]</span></p>
 <p><span class="math display">\[ \tilde{\mathbf{v}}_t = \alpha_t \cdot \mathbf{v}_t \]</span></p>
 <p>この<span class="math inline">\(\alpha_t\)</span>により、現在の文脈に合致する知識のみが取り込まれ、ノイズ（ハッシュ衝突や無関係な<span class="math inline">\(N\)</span>-gram）は抑制される。この設計はAttention機構に似ているが、動的なトークン間の相互作用ではなく、静的メモリへのアクセスを行う点が異なる。</p>
-<p>さらに、DeepSeekが以前発表した「mHC (Manifold-Constrained Hyper-Connections)」などのマルチブランチアーキテクチャとの統合においても、ブランチごとに異なるKey射影を用いることで、効率的に各ブランチ固有の情報を注入する工夫がなされている。</p>
 </section>
 </section>
 <section id="sparsity-allocation計算とメモリの最適配分" class="level2">

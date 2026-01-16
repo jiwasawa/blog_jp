@@ -52,8 +52,6 @@ $$ \tilde{\mathbf{v}}_t = \alpha_t \cdot \mathbf{v}_t $$
 
 この$\alpha_t$により、現在の文脈に合致する知識のみが取り込まれ、ノイズ（ハッシュ衝突や無関係な$N$-gram）は抑制される。この設計はAttention機構に似ているが、動的なトークン間の相互作用ではなく、静的メモリへのアクセスを行う点が異なる。
 
-さらに、DeepSeekが以前発表した「mHC (Manifold-Constrained Hyper-Connections)」などのマルチブランチアーキテクチャとの統合においても、ブランチごとに異なるKey射影を用いることで、効率的に各ブランチ固有の情報を注入する工夫がなされている。
-
 ## 3. Sparsity Allocation：計算とメモリの最適配分
 
 本研究の最も重要な貢献の一つは、「**Sparsity Allocation（スパース性の配分）**」という問題を定式化した点にある。
