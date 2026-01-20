@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Thu, 15 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 19 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>xAIの狂気と「Human Emulator」の正体：解雇されたエンジニアが語ったこと</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/xai-sulaiman/</link>
+  <description><![CDATA[ xAIの元エンジニアが語った「Macro hard」プロジェクト、Tesla分散コンピューティング構想、そして「Human Emulator」の衝撃的な実態から、Elon Musk率いるxAIの狂気的なエンジニアリングと野望を紐解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/xai-sulaiman/</guid>
+  <pubDate>Mon, 19 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/151/200" medium="image"/>
+</item>
 <item>
   <title>Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/</guid>
   <pubDate>Thu, 01 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/140/200" medium="image"/>
-</item>
-<item>
-  <title>OpenAIの「研究の意志」を司る男、Mark Chenの解剖録</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/mark-chen/</link>
-  <description><![CDATA[ ウォール街から転身しOpenAIの研究部門を率いるMark Chenが、300ものプロジェクトを動かす意思決定の裏側や熾烈なタレント争奪戦、そしてAGI実現に向けた組織戦略の真髄を語った ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/mark-chen/</guid>
-  <pubDate>Tue, 30 Dec 2025 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/139/200" medium="image"/>
 </item>
 </channel>
 </rss>
