@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-01-20">
+<meta name="description" content="xAIの元エンジニアが語った「Macro hard」プロジェクト、Tesla分散コンピューティング構想、そして「Human Emulator」の衝撃的な実態から、Elon Musk率いるxAIの狂気的なエンジニアリングと野望を紐解く。">
 
-<title>Junichiro Iwasawa</title>
+<title>xAIの狂気と「Human Emulator」の正体：解雇されたエンジニアが語ったこと</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +26,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -78,25 +82,25 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Junichiro Iwasawa – jiwasawaのブログ">
-<meta property="og:description" content="機械学習・AIに関する話題を中心に書いています">
-<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/profile.jpg">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="xAIの狂気と「Human Emulator」の正体：解雇されたエンジニアが語ったこと – jiwasawaのブログ">
+<meta property="og:description" content="xAIの元エンジニアが語った「Macro hard」プロジェクト、Tesla分散コンピューティング構想、そして「Human Emulator」の衝撃的な実態から、Elon Musk率いるxAIの狂気的なエンジニアリングと野望を紐解く。">
+<meta property="og:image" content="https://picsum.photos/id/151/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Junichiro Iwasawa – jiwasawaのブログ">
-<meta name="twitter:description" content="機械学習・AIに関する話題を中心に書いています">
-<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/profile.jpg">
+<meta name="twitter:title" content="xAIの狂気と「Human Emulator」の正体：解雇されたエンジニアが語ったこと – jiwasawaのブログ">
+<meta name="twitter:description" content="xAIの元エンジニアが語った「Macro hard」プロジェクト、Tesla分散コンピューティング構想、そして「Human Emulator」の衝撃的な実態から、Elon Musk率いるxAIの狂気的なエンジニアリングと野望を紐解く。">
+<meta name="twitter:image" content="https://picsum.photos/id/151/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">jiwasawaのブログ</span>
     </a>
   </div>
@@ -107,7 +111,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Junichiro Iwasawa</span></a>
   </li>  
   <li class="nav-item compact">
@@ -126,7 +130,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -138,44 +142,108 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">xAIの狂気と「Human Emulator」の正体：解雇されたエンジニアが語ったこと</h1>
+                  <div>
+        <div class="description">
+          xAIの元エンジニアが語った「Macro hard」プロジェクト、Tesla分散コンピューティング構想、そして「Human Emulator」の衝撃的な実態から、Elon Musk率いるxAIの狂気的なエンジニアリングと野望を紐解く。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 20, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-jolla">
-  <img src="profile.jpg" class="about-image
-  round " style="height: 15em; width: 15em;">
- <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Junichiro Iwasawa</h1>
-</div>
-<div class="quarto-title-meta">
-  </div>
-</header><main class="content" id="quarto-document-content">
-<p>個人ページ: <a href="https://jiwasawa.github.io/">jiwasawa.github.io/</a></p>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
-</main> 
-  <hr class="about-sep">
-   <div class="about-links">
-  <a href="https://x.com/jiwasawa" class="about-link" rel="" target="">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://github.com/jiwasawa" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-</div>
-</div>
- <!-- /main -->
+
+
+
+<p><strong>xAIの元エンジニアが語る、“Carnival”としてのデータセンターとTesla分散コンピューティング構想</strong></p>
+<p><a href="https://youtu.be/8jN60eJr4Ps?si=OI-uU5uT4H3z-5jx">Relentlessポッドキャスト</a>にて、xAIのTechnical StaffであったSulaiman Ghori氏のインタビューが公開された。しかし、このエピソードが公開されるや否や、彼がxAIを解雇されたという情報が駆け巡った。</p>
+<p>1時間のインタビューを聞けば、その理由は火を見るより明らかだ。彼は単に「開発スピードが速い」というスタートアップのクリシェを語ったのではない。xAIが水面下で進める「Macro hard」プロジェクト、デジタル労働の自動化を行う「Human Emulator」、そしてTeslaの車載コンピュータを分散クラウドとして利用するという、おそらく極秘であろう戦略的構想をペラペラと喋ってしまったからだ。</p>
+<p>本稿では、彼が残した「遺言」とも言える発言を分析し、Elon Musk率いるxAIがGoogleやOpenAIとは全く異なる次元で戦おうとしている狂気的なエンジニアリングの実態を紐解く。</p>
+<section id="macro-hardとtesla分散コンピューティングの衝撃" class="level2">
+<h2 class="anchored" data-anchor-id="macro-hardとtesla分散コンピューティングの衝撃">「Macro hard」とTesla分散コンピューティングの衝撃</h2>
+<p>インタビューの中で最も際どく、そして解雇の直接的な原因になったと思われるのが、「Macro hard」と呼ばれるプロジェクトと、そのデプロイ先としてのTesla車両の統合利用だ。</p>
+<p>Ghori氏は、xAIが「Human Emulator」なるものを開発していると明かした。これは単なるLLM（Large Language Model）ではなく、人間がPC上で行うキーボードやマウスの入力をそのままエミュレートする、いわゆるAI Agentの究極形だ。「デジタル版Optimus」とも表現されており、カスタマーサポートのような反復的なデジタル作業を、API統合などを待たずにUIベースで代替することを目的としている。</p>
+<p>ここまではAI業界のトレンドだが、驚くべきはそのスケーリング戦略だ。</p>
+<blockquote class="blockquote">
+<p>「100万人のHuman Emulatorをデプロイするには、100万台のコンピュータが必要だ。どうするか？ 答えは2日後にTeslaのコンピュータという形で現れた」</p>
+</blockquote>
+<p>Ghori氏は、北米だけで400万台存在するTesla車のうち、Hardware 4を搭載した車両が充電中にアイドル状態にあることに着目し、これを分散コンピューティングリソースとして利用する構想を暴露した。Teslaオーナーにリース料を払い、その<a href="https://www.tesla.com/AI">車載コンピュータ</a>（Edge Computingの一種）でxAIのHuman Emulatorを走らせる。これにより、AWSやOracleに依存することなく、資本効率を極限まで高めた推論インフラが瞬時に手に入るというわけだ。</p>
+<p>これは技術的には理にかなっているが、セキュリティやプライバシー、ブランドイメージの観点からTeslaが公式に発表するまでは伏せておくべき「爆弾」であったことは想像に難くない。</p>
+</section>
+<section id="データセンター建設におけるお祭りcarnivalハック" class="level2">
+<h2 class="anchored" data-anchor-id="データセンター建設におけるお祭りcarnivalハック">データセンター建設における「お祭り（Carnival）」ハック</h2>
+<p>xAIが<a href="https://www.datacenterdynamics.com/en/news/xai-brings-100k-gpu-colossus-cluster-online-in-memphis/">122日という異次元のスピード</a>で<a href="https://nvidianews.nvidia.com/news/xai-colossus-cluster">「Colossus」データセンター</a>を立ち上げたことは有名だが、その裏側にある泥臭いハックもまた興味深い。</p>
+<p>Ghori氏によれば、土地のリース契約は技術的には「一時的（temporary）」なものであり、これによって煩雑な建築許可プロセスをバイパスしたという。彼はこれを「Carnival（移動遊園地）」の許可と同じロジックだと笑いながら語った。恒久的な建造物として申請すれば数年かかるプロセスを、一時的なイベント設営のような扱いで強行突破する。まさに<a href="https://hbr.org/2023/11/elon-musks-first-principles-thinking-and-how-you-can-use-it">First Principles（第一原理）</a>思考の悪用…いや、応用である。</p>
+<p>さらに電力供給についても、グリッドの負荷が高まった瞬間に送電網から切り離し、トラックで持ち込んだ80+台のモバイル発電機とバッテリーパックにシームレスに切り替える運用を行っているという。メガワット級の負荷変動をミリ秒単位で制御し、揮発性の高いトレーニングランを止めずに電源を切り替えるこの荒技は、ソフトウェア企業というよりは重電メーカーの所業に近い。</p>
+</section>
+<section id="no-one-tells-me-noカオスという名の秩序" class="level2">
+<h2 class="anchored" data-anchor-id="no-one-tells-me-noカオスという名の秩序">“No one tells me no”：カオスという名の秩序</h2>
+<p>xAIの組織文化を表す言葉として、Ghori氏は「No one tells me no（誰もダメとは言わない）」を繰り返した。</p>
+<ul>
+<li><strong>オンボーディング不在:</strong> 入社初日に渡されるのはラップトップとバッジのみ。「チームもなければ、やることも指示されない」。自分で仕事を見つけなければならない。</li>
+<li><strong>階層の排除:</strong> マネージャー層は極限まで薄く、基本的にはElon Muskとエンジニア（Individual Contributor）しかいない。</li>
+<li><strong>権限委譲:</strong> エンジニアが良いアイデアを持っていれば、その日のうちに実装し、Elonに見せ、即座にフィードバックを得る。官僚的な承認プロセスは皆無だ。</li>
+</ul>
+<p>この「エンジニア至上主義」は、職種間の垣根すら破壊している。営業担当者がモデルのトレーニングを行い、インフラエンジニアがプロダクトのUIを触る。全員が「エンジニア」という単一のタイトルで定義され、専門性よりも「問題を解決できるか」というfundamentalな能力だけが評価される。</p>
+<p>これは、Googleのような巨大テック企業が陥っている「イノベーションのジレンマ」や縦割り行政に対する強烈なアンチテーゼだ。GoogleがGeminiのリリースにあたって安全性の確認やブランド毀損のリスクヘッジに数ヶ月を費やす間、xAIは「昨日」を期限にコードを書き、物理的なボトルネック（電力や冷却）以外の一切の制約を無視して突き進む。</p>
+</section>
+<section id="リスクとスピードのトレードオフ" class="level2">
+<h2 class="anchored" data-anchor-id="リスクとスピードのトレードオフ">リスクとスピードのトレードオフ</h2>
+<p>Ghori氏のエピソード（自宅ガレージでロケットエンジンを作り、親指を怪我し、ジャケットを燃やした話）は、そのままxAIの縮図である。</p>
+<p>彼らは文字通り「火遊び」をしている。一時的な許可でデータセンターを建て、顧客の車を計算資源として使い、深夜の「War Room」でコードを書き殴る。そのスピードは圧倒的であり、NVIDIAのJensen Huangが賞賛するのも頷ける。しかし、その代償としてGhori氏のような人材が、機密保持のラインを見誤り、ポッドキャストで内部事情を喋りすぎてしまうような脇の甘さも露呈している。</p>
+<p>Sulaiman Ghori氏は、インタビューの中で「xAIでの1日は、他社での数ヶ月に匹敵する」と語った。皮肉にも、彼自身がそのスピード感あふれる人事サイクルの犠牲となってしまったわけだが、彼が暴露した内容は、xAIが単なる「OpenAIの追随者」ではないことを証明している。</p>
+<p>彼らはAGIをソフトウェアの問題としてではなく、物理インフラ、エネルギー、そして分散ネットワークを包含した巨大なエンジニアリング課題として解こうとしている。TeslaのHardware 4と連動した「Human Emulator」が実現すれば、推論コストの競争においてxAIは他社を完全に無力化する可能性がある。</p>
+<p>今回の解雇劇は、xAIの秘密主義と、その裏にある野望の大きさを逆説的に証明する結果となった。Incrementalなリリースでお茶を濁す競合他社を尻目に、Muskは物理世界とデジタル世界を融合させた、全く新しい怪物を生み出そうとしているのかもしれない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
