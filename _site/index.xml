@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Mon, 19 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 21 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>MiniMax M2.1：事後学習におけるエージェントモデルの進化とデータ合成のフロンティア</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1-post-training/</link>
+  <description><![CDATA[ MiniMax M2.1は、GitHubデータ駆動のSWE Scaling、Expert-in-the-LoopなAppDev、探索と進化によるWebExplorerといった革新的なデータ合成戦略と、Forgeフレームワーク、CISPOアルゴリズムを駆使し、実用性と堅牢性を兼ね備えたエージェントモデルの新たなフロンティアを開拓している。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1-post-training/</guid>
+  <pubDate>Wed, 21 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/152/200" medium="image"/>
+</item>
 <item>
   <title>xAIの狂気と「Human Emulator」の正体：解雇されたエンジニアが語ったこと</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/</guid>
   <pubDate>Mon, 05 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/141/200" medium="image"/>
-</item>
-<item>
-  <title>DeepSeekからの年末の贈り物：mHC (Manifold-Constrained Hyper-Connections) によるTransformerアーキテクチャの革新</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/</link>
-  <description><![CDATA[ DeepSeekが提唱するmHC (Manifold-Constrained Hyper-Connections)は、Transformerアーキテクチャの信号伝播をデータ多様体に沿って拘束することで、Feature Collapseを回避し、Long Context推論能力と学習効率を劇的に向上させる ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/</guid>
-  <pubDate>Thu, 01 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/140/200" medium="image"/>
 </item>
 </channel>
 </rss>
