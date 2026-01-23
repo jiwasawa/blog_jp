@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/ttt-discovery/index.html",
       "/posts/vercel-malte/index.html",
       "/posts/minimax-m2-1-post-training/index.html",
       "/posts/xai-sulaiman/index.html",
