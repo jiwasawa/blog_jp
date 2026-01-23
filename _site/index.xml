@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Wed, 21 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 22 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Vercelの「謙虚な」覇権：AI SDKとWorkflowが描く実利主義的未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</link>
+  <description><![CDATA[ Vercel CTO Malte Ubl氏へのインタビューから、AI SDKの「謙虚さ」とWorkflow Development Kit (WDK)による実利主義的なインフラ構築、そしてPythonサポートとセキュリティ強化戦略まで、AI時代のVercelの野心的な全方位外交を紐解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Latent Space Podcast</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</guid>
+  <pubDate>Thu, 22 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/153/200" medium="image"/>
+</item>
 <item>
   <title>MiniMax M2.1：事後学習におけるエージェントモデルの進化とデータ合成のフロンティア</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +127,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/agent-harness/</guid>
   <pubDate>Tue, 06 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/142/200" medium="image"/>
-</item>
-<item>
-  <title>MiniMax M2.1が突きつける「SWE-Bench至上主義」の終焉</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/</link>
-  <description><![CDATA[ MiniMax-M2.1がSWE-Benchの限界を超え、現実世界の開発現場で通用する多言語・マルチタスク能力と汎用性を実現し、AIコーディングの未来を切り拓くロードマップを示す ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/</guid>
-  <pubDate>Mon, 05 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/141/200" medium="image"/>
 </item>
 </channel>
 </rss>
