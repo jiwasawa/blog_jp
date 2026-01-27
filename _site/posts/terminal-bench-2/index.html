@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.23">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-01-27">
+<meta name="description" content="Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。">
+
+<title>Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-226bd0f977fa82dfae4534cac220d79a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-2d3a5f678c659c6d9658e8627949fb9f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標 – jiwasawaのブログ">
+<meta property="og:description" content="Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。">
+<meta property="og:image" content="https://picsum.photos/id/155/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標 – jiwasawaのブログ">
+<meta name="twitter:description" content="Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。">
+<meta name="twitter:image" content="https://picsum.photos/id/155/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</h1>
+                  <div>
+        <div class="description">
+          Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 27, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、LLM（Large Language Model）を核としたAIエージェントの開発競争は熾烈を極めている。特に、チャットボットのような単純な対話を超え、現実世界の複雑なタスクを自律的に遂行する能力が求められている。その最前線となるのが、開発者やシステム管理者の主戦場であるCLI（Command-Line Interface）環境だ。</p>
+<p>本記事では、AIエージェントの能力を厳密に評価するために新しく提案されたベンチマーク<strong>「<a href="https://tbench.ai">Terminal-Bench 2.0</a>」</strong>について解説する。既存のベンチマークが抱える課題を克服し、フロンティアモデルですら苦戦するこの「難解かつ現実的」なデータセットは、AIエージェント研究の新たな羅針盤となり得るのか。その全貌と、初期実験から見えてきた最新モデルの傾向を紐解いていく。</p>
+<section id="terminal-bench-2.0とは何か" class="level2">
+<h2 class="anchored" data-anchor-id="terminal-bench-2.0とは何か">Terminal-Bench 2.0とは何か？</h2>
+<p>Terminal-Bench 2.0は、AIエージェントがLinuxターミナル環境を用いて、どれだけ現実に即した複雑なタスクを完遂できるかを測定するために設計された包括的なベンチマークである。</p>
+<p>従来のベンチマーク（例：HumanEvalやSWE-benchの簡易版など）は、比較的短期間で解決可能なタスクや、人工的に簡略化された環境に依存する傾向があった。しかし、実際のエンジニアリング業務は、環境設定、デバッグ、ライブラリの依存関係解消、そして長時間にわたる試行錯誤を伴うものである。</p>
+<p>Terminal-Bench 2.0は、こうしたギャップを埋めるために以下の特徴を備えている。</p>
+<ol type="1">
+<li><strong>現実的なタスク設定（Realistic Tasks）：</strong> 実際の専門的なワークフローから着想を得た89のタスクで構成されている。レガシーシステムの構成変更、研究論文の実装再現、セキュリティ脆弱性の修正など、深いドメイン知識と自律的な問題解決能力が要求される。</li>
+<li><strong>包括的な評価環境（Comprehensive Evaluation）：</strong> 各タスクはDockerコンテナとして完全に隔離・パッケージ化されている。エージェントにはタスク記述（Instruction）が与えられ、最終的なコンテナの状態に対して一連のテストスイートが実行されることで、正否が判定される。</li>
+<li><strong>高い難易度（Focus on Difficulty）：</strong> 意図的に難易度が高く設定されており、現在の最先端（Frontier）モデルであっても、平均スコアは65%を下回る。これにより、将来的なモデルの進歩を長期的に計測することが可能となる。</li>
+</ol>
+<p>データセットおよび評価用ハーネスは、<a href="https://tbench.ai">tbench.ai</a>にて公開されており、コミュニティによる検証と発展が期待されている。</p>
+</section>
+<section id="ベンチマークの構成とterminus-2" class="level2">
+<h2 class="anchored" data-anchor-id="ベンチマークの構成とterminus-2">ベンチマークの構成と「Terminus 2」</h2>
+<p>Terminal-Benchの評価プロセスにおける公平性を担保するために導入されたのが、<strong>「Terminus 2」</strong>と呼ばれるエージェントスカフォールド（Agent Scaffold）である。</p>
+<p>多くの商用エージェント（Claude CodeやGitHub Copilot CLIなど）は、モデルの性能だけでなく、エージェント自体の実装（プロンプトエンジニアリングやツール使用の最適化）に強く依存している。純粋なモデルごとの性能差を比較するために、Terminus 2は極めてシンプルな構造を採用している。</p>
+<ul>
+<li><strong>単一ツール:</strong> 使用できるのは「ヘッドレスなターミナル」のみ。</li>
+<li><strong>操作方法:</strong> 純粋なBashコマンドの実行のみでタスクを遂行する（ファイル編集も<code>sed</code>や<code>vim</code>などのコマンド経由で行う）。</li>
+</ul>
+<p>この「素の」環境により、モデルが本来持っている推論能力やLinuxコマンドへの習熟度が浮き彫りになる。</p>
+</section>
+<section id="最新aiモデルの性能評価" class="level2">
+<h2 class="anchored" data-anchor-id="最新aiモデルの性能評価">最新AIモデルの性能評価</h2>
+<p>Terminal-Bench 2.0を用いた初期評価の結果は、現在のAI技術の到達点と限界を明確に示している。</p>
+<section id="全体的な解決率resolution-rate" class="level3">
+<h3 class="anchored" data-anchor-id="全体的な解決率resolution-rate">1. 全体的な解決率（Resolution Rate）</h3>
+<p>最も高いスコアを記録した組み合わせは、<strong>GPT-5.2</strong>をバックエンドに用いた<strong>Codex CLI</strong>エージェントであり、解決率は<strong>63%</strong>であった。これに<strong>Claude Opus 4.5</strong>や<strong>Gemini 3 Pro</strong>（いずれもTerminus 2を使用）が50%後半台で続く。 逆に言えば、人類最高峰のAIモデルを使用しても、提示されたタスクの約4割は解決できていない。これは、単純なコード生成とは異なり、環境の状態を把握しながら長期間にわたって作業を継続することの難しさを物語っている。</p>
+</section>
+<section id="プロプライエタリ-vs-オープンウェイト" class="level3">
+<h3 class="anchored" data-anchor-id="プロプライエタリ-vs-オープンウェイト">2. プロプライエタリ vs オープンウェイト</h3>
+<p>明確な傾向として、GPT、Claude、Geminiといったプロプライエタリ（クローズド）なモデルが上位を独占している。オープンウェイトモデル（LLaMAやQwenなど）も健闘してはいるものの、Terminus 2と組み合わせた場合の最高スコアは36%程度（Kimi K2 Thinking）に留まり、トップ層とは依然として大きな差が開いている。</p>
+</section>
+<section id="モデル選択の重要性" class="level3">
+<h3 class="anchored" data-anchor-id="モデル選択の重要性">3. モデル選択の重要性</h3>
+<p>興味深い知見として、<strong>「エージェントのスカフォールド（枠組み）よりも、使用する基盤モデルの性能の方が結果に大きく影響する」</strong>という点が挙げられる。 例えば、同じCodex CLIエージェントを使用した場合でも、モデルをGPT-5.2からGPT-5-Nanoに変更すると性能は劇的に低下する。一方で、強力なモデルを使えば、シンプルなTerminus 2スカフォールドでも、高度に最適化されたエージェント（OpenHandsなど）と同等以上の成果を出すケースが見られた。</p>
+</section>
+<section id="進化の速度" class="level3">
+<h3 class="anchored" data-anchor-id="進化の速度">4. 進化の速度</h3>
+<p>モデルのリリース時期とベンチマークスコアには強い相関が見られ、新しいモデルほど高スコアを記録している。この分野におけるAIの能力は急速に向上しており、現在は「難関」とされるタスクも、近い将来には解決率が飽和する可能性が示唆されている。</p>
+</section>
+</section>
+<section id="エラー分析なぜエージェントは失敗するのか" class="level2">
+<h2 class="anchored" data-anchor-id="エラー分析なぜエージェントは失敗するのか">エラー分析：なぜエージェントは失敗するのか？</h2>
+<p>Terminal-Bench 2.0の研究チームは、エージェントの失敗パターン（Failure Modes）について詳細な分析を行っている。失敗は主に以下のカテゴリーに分類される。</p>
+<section id="実行エラーexecution-errors" class="level3">
+<h3 class="anchored" data-anchor-id="実行エラーexecution-errors">実行エラー（Execution Errors）</h3>
+<p>最も頻繁に見られるのが実行エラーである。これはエージェントが指示（Instruction）に忠実に従わない、あるいは仕様を無視した行動をとるケースを指す。 * <strong>指示違反:</strong> 「特定のファイルパスに出力せよ」という指示を無視する。 * <strong>ループ:</strong> 同じエラーを何度も繰り返す（Step repetition）。</p>
+</section>
+<section id="整合性と検証の欠如coherence-and-verification-errors" class="level3">
+<h3 class="anchored" data-anchor-id="整合性と検証の欠如coherence-and-verification-errors">整合性と検証の欠如（Coherence and Verification Errors）</h3>
+<p>エージェントが「タスク完了」を宣言したにもかかわらず、実際には要件を満たしていないケースも多い。 * <strong>幻覚（Hallucination）:</strong> テストが通っていないのに「成功しました」と報告する。 * <strong>検証不足:</strong> 変更を加えた後に、それが正しく動作しているか（例：コンパイルが通るか、スクリプトが動くか）を確認せずに終了してしまう。</p>
+</section>
+<section id="コマンドレベルの失敗" class="level3">
+<h3 class="anchored" data-anchor-id="コマンドレベルの失敗">コマンドレベルの失敗</h3>
+<p>より低レイヤーな視点では、以下のような初歩的なミスが依然として多いことが判明した。 * <strong>Command not found:</strong> 存在しないコマンドや、インストールされていないツールを呼び出そうとする。 * <strong>File not found:</strong> パス指定のミスや、ファイル生成の失敗。</p>
+<p>これらのエラーは、現在のLLMが「文脈を保持し続ける能力（Long-context reasoning）」や「自己批判・自己修正する能力（Self-correction）」において、まだ改善の余地があることを示唆している。</p>
+</section>
+</section>
+<section id="まとめと今後の展望" class="level2">
+<h2 class="anchored" data-anchor-id="まとめと今後の展望">まとめと今後の展望</h2>
+<p>Terminal-Bench 2.0は、AIエージェントにとっての「現実の壁」を可視化した。63%という最高スコアは、AIが実用的なレベルに近づいていることを示す一方で、人間のエンジニアが日々行っている複雑なトラブルシューティングやシステム構築を完全に自律化するには、まだ距離があることも示している。</p>
+<p>今後の研究開発においては、単にモデルのパラメータ数を増やすだけでなく、以下の点が重要になるだろう。</p>
+<ol type="1">
+<li><strong>指示遵守能力の向上:</strong> 複雑な要件定義を正確に読み取り、逸脱せずに行動する能力。</li>
+<li><strong>自己検証メカニズムの強化:</strong> 自分の行動結果を客観的にテストし、エラーから自律的に回復するループの確立。</li>
+<li><strong>環境認識能力:</strong> ターミナルというステートフルな環境において、現在のディレクトリ構造やインストール済みパッケージの状態を正確に把握し続ける能力。</li>
+</ol>
+<p>AIエージェントが真に信頼できるパートナーとなるために、Terminal-Benchのような厳格かつ現実的なベンチマークの存在は不可欠である。このベンチマークが飽和するその時こそ、AIエンジニアリングの新たな地平が開かれる瞬間となるだろう。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ul>
+<li>Merrill, M. A., Shaw, A. G., et al.&nbsp;(2025). <em>Terminal-Bench: Benchmarking Agents on Hard, Realistic Tasks in Command Line Interfaces</em>. <a href="file:///Users/jiwasawa/Dropbox/Papers/202504_paperpile/TERMINAL-BENCH-%20BENCHMARKING%20AGENTS%20ON%20HARD,%20REALISTIC%20TASKS%20IN%20COMMAND%20LINE%20INTERFACES.pdf">PDF</a></li>
+<li>Terminal-Bench Official Website: <a href="https://tbench.ai">tbench.ai</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
