@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/terminal-bench-2/index.html",
+      "/posts/continual-learning-wolfe/index.html",
       "/posts/ttt-discovery/index.html",
       "/posts/vercel-malte/index.html",
       "/posts/minimax-m2-1-post-training/index.html",

@@ -10,7 +10,29 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 23 Jan 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 27 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/</link>
+  <description><![CDATA[ Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/</guid>
+  <pubDate>Tue, 27 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/155/200" medium="image"/>
+</item>
+<item>
+  <title>LLMの継続学習における強化学習の優位性：そのメカニズムとAGIへの示唆</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/</link>
+  <description><![CDATA[ LLMの継続学習における強化学習（RL）の優位性を、壊滅的忘却を回避するメカニズムとAGIへの示唆に焦点を当てて、最新研究に基づき解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/</guid>
+  <pubDate>Tue, 27 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/156/200" medium="image"/>
+</item>
 <item>
   <title>TTT-Discover：テスト時学習が切り拓く科学的発見の新たな地平</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -104,29 +126,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/</guid>
   <pubDate>Sun, 11 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/145/200" medium="image"/>
-</item>
-<item>
-  <title>Claude Codeの生みの親、Boris Chernyが語る「エンジニアのレバレッジ」と「AI時代の生存戦略」</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/</link>
-  <description><![CDATA[ Metaの元Principal EngineerでClaude Codeの生みの親、Boris Chernyが、自身のキャリアの軌跡から導き出したプロダクト哲学と、AIがソフトウェア開発の常識を塗り替える未来について語った。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/</guid>
-  <pubDate>Fri, 09 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/144/200" medium="image"/>
-</item>
-<item>
-  <title>GRPO++：LLMの強化学習を成功に導くための高度なテクニックと実践的トリック</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/grpopp-cameron/</link>
-  <description><![CDATA[ Cameron R. Wolfeによるブログ記事を基に、LLMの推論能力を向上させるGroup Relative Policy Optimization (GRPO)の限界と、DAPO、Dr. GRPO、TISなどの最新技術による改善手法を解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/grpopp-cameron/</guid>
-  <pubDate>Thu, 08 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/143/200" medium="image"/>
 </item>
 </channel>
 </rss>

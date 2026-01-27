@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-01-27">
+<meta name="description" content="LLMの継続学習における強化学習（RL）の優位性を、壊滅的忘却を回避するメカニズムとAGIへの示唆に焦点を当てて、最新研究に基づき解説します。">
+
+<title>LLMの継続学習における強化学習の優位性：そのメカニズムとAGIへの示唆</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="LLMの継続学習における強化学習の優位性：そのメカニズムとAGIへの示唆 – jiwasawaのブログ">
+<meta property="og:description" content="LLMの継続学習における強化学習（RL）の優位性を、壊滅的忘却を回避するメカニズムとAGIへの示唆に焦点を当てて、最新研究に基づき解説します。">
+<meta property="og:image" content="https://picsum.photos/id/156/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="LLMの継続学習における強化学習の優位性：そのメカニズムとAGIへの示唆 – jiwasawaのブログ">
+<meta name="twitter:description" content="LLMの継続学習における強化学習（RL）の優位性を、壊滅的忘却を回避するメカニズムとAGIへの示唆に焦点を当てて、最新研究に基づき解説します。">
+<meta name="twitter:image" content="https://picsum.photos/id/156/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">LLMの継続学習における強化学習の優位性：そのメカニズムとAGIへの示唆</h1>
+                  <div>
+        <div class="description">
+          LLMの継続学習における強化学習（RL）の優位性を、壊滅的忘却を回避するメカニズムとAGIへの示唆に焦点を当てて、最新研究に基づき解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 27, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Artificial General Intelligence (AGI) の実現に向けた探求において、最も重要な要件の一つが「継続学習（Continual Learning）」である。これは、人間が日々行うように、過去に獲得した知識を忘れることなく、新しいデータやタスクから継続的に学習する能力を指す。</p>
+<p>しかし、従来のAIモデル、特にニューラルネットワークは、新しいタスクを学習する際に過去のタスクの性能が劇的に低下する「壊滅的忘却（Catastrophic Forgetting）」という現象に長年悩まされてきた。</p>
+<p>本稿では、Cameron R. Wolfe氏による解説「<a href="https://cameronrwolfe.substack.com/p/rl-continual-learning">Continual Learning with RL for LLMs</a>」を基に、Large Language Model (LLM) の継続学習に関する最新の研究成果を深掘りし、なぜ強化学習（Reinforcement Learning, RL）が教師ありファインチューニング（Supervised Fine-Tuning, SFT）と比較して、この壊滅的忘却に対して驚くべき耐性を持つのか、そのメカニズムと理論的背景を解説する。</p>
+<section id="継続学習の課題と従来の枠組み" class="level2">
+<h2 class="anchored" data-anchor-id="継続学習の課題と従来の枠組み">継続学習の課題と従来の枠組み</h2>
+<p>伝統的に、ニューラルネットワークは固定された大規模データセット上で学習される。しかし、実世界の環境は動的であり、データはストリームとして順次与えられる。継続学習における最大の障壁は、新しい情報の学習が、既存のパラメータ（＝過去の知識）を破壊的に更新してしまう点にある。</p>
+<p>LLMのような巨大なモデルにおいて、この問題はさらに深刻である。事前学習によって獲得された膨大な知識が、特定のタスクへの適応過程で失われることは、汎用性を損なうことを意味するからだ。</p>
+<section id="従来のアプローチ" class="level3">
+<h3 class="anchored" data-anchor-id="従来のアプローチ">従来のアプローチ</h3>
+<p>これまで、壊滅的忘却を防ぐために主に以下のような手法が研究されてきた。</p>
+<ol type="1">
+<li><strong>Replay Mechanisms（リプレイ機構）:</strong> 過去のデータをバッファに保存し、新しいデータと混合して再学習させる。</li>
+<li><strong>Knowledge Distillation（知識蒸留）:</strong> 学習前のモデル（Teacher）の出力を正解として、学習中のモデル（Student）が過去の挙動を模倣するように制約をかける。</li>
+<li><strong>Regularization（正則化）:</strong> パラメータの更新量や出力分布の変化を制限する（例：Elastic Weight Consolidation）。</li>
+<li><strong>Architectural Approaches（アーキテクチャ的アプローチ）:</strong> モデル構造を動的に拡張する（例：LoRAモジュールの追加やMixture-of-Expertsの活用）。</li>
+</ol>
+<p>しかし、近年の研究 [<a href="https://arxiv.org/abs/2507.05386">1</a>, <a href="https://arxiv.org/abs/2510.18874">2</a>, <a href="https://arxiv.org/abs/2509.04259">3</a>] は、特別な継続学習の手法（リプレイバッファなど）を用いずとも、<strong>学習アルゴリズムの選択そのものが忘却の度合いに決定的な影響を与える</strong>ことを明らかにしている。</p>
+</section>
+</section>
+<section id="rl対sft学習パラダイムの比較" class="level2">
+<h2 class="anchored" data-anchor-id="rl対sft学習パラダイムの比較">RL対SFT：学習パラダイムの比較</h2>
+<p>最近の研究において、RL（特にRLHFのような設定）は、SFTと比較して壊滅的忘却に対して本質的に堅牢であることが示されている。この違いを理解するためには、両者の目的関数の数学的な性質、具体的にはKLダイバージェンス（Kullback-Leibler Divergence）との関係を紐解く必要がある。</p>
+<section id="sftmode-coveringモード被覆な性質" class="level3">
+<h3 class="anchored" data-anchor-id="sftmode-coveringモード被覆な性質">SFT：Mode-Covering（モード被覆）な性質</h3>
+<p>SFTの目的関数は、データセットの負の対数尤度（Negative Log-Likelihood）を最小化することである。これは、データ分布 <span class="math inline">\(P_{data}\)</span> とモデル分布 <span class="math inline">\(P_\theta\)</span> の間の「Forward KLダイバージェンス」を最小化することと等価である。</p>
+<p><span class="math display">\[\min_\theta D_{KL}(P_{data} \| P_\theta) = \min_\theta \mathbb{E}_{x \sim P_{data}} [-\log P_\theta(x)] + \text{const.}\]</span></p>
+<p>Forward KLを最小化しようとするモデルは、データが存在するすべての領域（モード）に確率質量を割り当てようとする。これを <strong>Mode-Covering</strong> な挙動と呼ぶ。 もし、新しいデータがモデルの既存の知識（事前分布）と矛盾する場合（例えば、確信度が低いが正解とされるデータ）、SFTはモデル全体をそのデータに適合させるため、パラメータを急激に更新してしまう。これが「Confident Conflicts」[<a href="https://arxiv.org/abs/2601.02151">6</a>] と呼ばれる現象を引き起こし、破壊的な忘却につながる。</p>
+</section>
+<section id="rlmode-seekingモード探索な性質" class="level3">
+<h3 class="anchored" data-anchor-id="rlmode-seekingモード探索な性質">RL：Mode-Seeking（モード探索）な性質</h3>
+<p>一方、RLの目的は、報酬 <span class="math inline">\(R(x)\)</span> の期待値を最大化することである（多くの場合、基準モデルとのKL制約項を含む）。これは、最適解となる分布 <span class="math inline">\(P^*\)</span> とモデル分布 <span class="math inline">\(P_\theta\)</span> の間の「Reverse KLダイバージェンス」の最小化と密接に関連している。</p>
+<p><span class="math display">\[\min_\theta D_{KL}(P_\theta \| P^*) \approx \max_\theta \mathbb{E}_{x \sim P_\theta} [R(x) - \beta \log \frac{P_\theta(x)}{P_{ref}(x)}]\]</span></p>
+<p>Reverse KLを最小化する挙動は <strong>Mode-Seeking</strong> と呼ばれる。モデルは、報酬が高い主要なモード（解）に集中し、確率が低い（あるいは報酬が低い）領域を無視する傾向がある。また、学習データがモデル自身からサンプリングされる（On-Policy）ため、モデルが「すでに知っていること」と整合性が取りやすく、パラメータ更新がより保守的になる。</p>
+</section>
+</section>
+<section id="最新研究が明かす忘却しない理由" class="level2">
+<h2 class="anchored" data-anchor-id="最新研究が明かす忘却しない理由">最新研究が明かす「忘却しない」理由</h2>
+<p>なぜRLは忘却に強いのか。最近の主要な論文から得られた知見を整理する。</p>
+<section id="on-policyデータの重要性retaining-by-doing" class="level3">
+<h3 class="anchored" data-anchor-id="on-policyデータの重要性retaining-by-doing">1. On-Policyデータの重要性：Retaining by Doing</h3>
+<p>Chenら [<a href="https://arxiv.org/abs/2510.18874">2</a>] の研究は、RLの忘却耐性が「On-Policyデータ（学習中のモデル自身が生成したデータ）」の使用に大きく依存していることを示した。 SFTは通常、固定された外部データ（Offlineデータ）を使用するが、RLは自身の生成結果に基づいて更新を行う。興味深いことに、SFTであっても、自身の生成データを用いて学習を行う（反復的なRejection Samplingなど）ように変更すると、忘却が大幅に抑制されることが確認された。これは、モデル自身の分布に近いデータで学習することが、既存の知識体系を維持する上で重要であることを示唆している。</p>
+</section>
+<section id="rls-razor分布シフトの最小化" class="level3">
+<h3 class="anchored" data-anchor-id="rls-razor分布シフトの最小化">2. RL’s Razor：分布シフトの最小化</h3>
+<p>Shenfeldら [<a href="https://arxiv.org/abs/2509.04259">3</a>] は、“RL’s Razor” という概念を提唱している。彼らの実験によると、RLはベースモデルとファインチューニング後のモデルの間のKLダイバージェンス（分布シフト）を最小化するような解を本質的に選択するバイアスを持っている。 SFTは、ベースモデルからかけ離れた解に収束する可能性があるのに対し、RL（特にOn-Policy RL）は、ターゲットタスクでの性能を高めつつも、元のモデルの挙動から大きく逸脱しない「近傍の解」を見つけ出す能力が高い。この「分布シフトの小ささ」が、壊滅的忘却の少なさを予測する最も信頼できる指標であることが示されている。</p>
+</section>
+<section id="confident-conflictsの解消" class="level3">
+<h3 class="anchored" data-anchor-id="confident-conflictsの解消">3. Confident Conflictsの解消</h3>
+<p>Diaoら [<a href="https://arxiv.org/abs/2601.02151">4</a>] は、SFTにおける忘却の主因として「Confident Conflicts」を挙げている。これは、モデルにとっては低確率（ありえないと思う）かつ低エントロピー（確信度が高いはず）なトークンを無理やり学習させられる状況を指す。SFTではこのようなデータに対して巨大な勾配が発生し、既存の知識を破壊する。 一方、RLは自身の確率分布に従ってサンプリングを行うため、このような極端な矛盾に直面することが少ない。また、SFTにおいてもトークンごとのエントロピーに基づいて損失を調整する「Entropy-Adaptive Fine-Tuning (EAFT)」を導入することで、この問題を緩和し、忘却を抑制できることが示されている。</p>
+</section>
+</section>
+<section id="汎化性能とagiへの示唆" class="level2">
+<h2 class="anchored" data-anchor-id="汎化性能とagiへの示唆">汎化性能とAGIへの示唆</h2>
+<p>継続学習におけるRLの優位性は、単に「忘れない」ことだけではない。研究 [<a href="https://arxiv.org/abs/2501.17161">5</a>] によれば、SFTは特定のタスクの回答を「暗記（Memorization）」する傾向が強いのに対し、RLは基礎的な推論能力や知覚能力を向上させ、未知のタスクや分布外（Out-of-Distribution）のデータに対しても高い汎化性能（Generalization）を示すことがわかっている。</p>
+<section id="結論" class="level3">
+<h3 class="anchored" data-anchor-id="結論">結論</h3>
+<p>LLMの継続学習において、強化学習（RL）は単なるファインチューニングの一手法を超えた重要な特性を持っている。</p>
+<ol type="1">
+<li><strong>Mode-Seekingな性質</strong>により、知識の破壊的な更新を避ける。</li>
+<li><strong>On-Policyデータ</strong>の利用により、自己の分布と整合性の取れた学習を行う。</li>
+<li><strong>分布シフト（KLダイバージェンス）</strong>を自然に最小化し、既存の能力を保持する。</li>
+</ol>
+<p>これらの特性は、変化し続ける実世界に適応できるAI、すなわちAGIの構築に向けた重要なヒントを与えている。現在の研究はまだ構造化された実験環境に留まるが、RLベースのトレーニングパラダイムが、より堅牢で適応力の高い知能を生み出すための鍵となることは間違いないだろう。</p>
+</section>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Lai, Song, et al.&nbsp;“<a href="https://arxiv.org/abs/2507.05386">Reinforcement fine-tuning naturally mitigates forgetting in continual post-training</a>.” <em>arXiv preprint arXiv:2507.05386</em> (2025).</li>
+<li>Chen, Howard, et al.&nbsp;“<a href="https://arxiv.org/abs/2510.18874">Retaining by doing: The role of on-policy data in mitigating forgetting</a>.” <em>arXiv preprint arXiv:2510.18874</em> (2025).</li>
+<li>Shenfeld, Idan, Jyothish Pari, and Pulkit Agrawal. “<a href="https://arxiv.org/abs/2509.04259">Rl’s razor: Why online reinforcement learning forgets less</a>.” <em>arXiv preprint arXiv:2509.04259</em> (2025).</li>
+<li>Diao, Muxi, et al.&nbsp;“<a href="https://arxiv.org/abs/2601.02151">Entropy-Adaptive Fine-Tuning: Resolving Confident Conflicts to Mitigate Forgetting</a>.” <em>arXiv preprint arXiv:2601.02151</em> (2026).</li>
+<li>Chu, Tianzhe, et al.&nbsp;“<a href="https://arxiv.org/abs/2501.17161">Sft memorizes, rl generalizes: A comparative study of foundation model post-training</a>.” <em>arXiv preprint arXiv:2501.17161</em> (2025).</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
