@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 27 Jan 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 29 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Self-Distilled Reasoner: On-Policy Self-DistillationによるLLM推論能力の自己進化</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</link>
+  <description><![CDATA[ MetaとUCLAの研究チームが提案するOn-Policy Self-Distillation (OPSD)は、LLMが正解情報を特権情報として利用し、自身で推論能力を向上させることで、SFTやRLの課題を解決する手法である。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</guid>
+  <pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/157/200" medium="image"/>
+</item>
 <item>
   <title>Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -115,17 +126,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/seta/</guid>
   <pubDate>Sun, 11 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/146/200" medium="image"/>
-</item>
-<item>
-  <title>Recursive Language Models (RLM): コンテキスト制限の壁を越える新たな推論パラダイム</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/</link>
-  <description><![CDATA[ MIT CSAILの研究チームが発表したRecursive Language Models (RLMs)は、LLMを外部環境と対話させ、再帰的な自己呼び出しによってコンテキスト制限の壁を越え、1000万トークン超の長文脈処理で圧倒的なパフォーマンスとコスト効率を実現する新たな推論パラダイムである。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/</guid>
-  <pubDate>Sun, 11 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/145/200" medium="image"/>
 </item>
 </channel>
 </rss>
