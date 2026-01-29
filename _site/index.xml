@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Mon, 26 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 28 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Self-Distilled Reasoner: On-Policy Self-DistillationによるLLM推論能力の自己進化</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</link>
+  <description><![CDATA[ MetaとUCLAの研究チームが提案するOn-Policy Self-Distillation (OPSD)は、LLMが正解情報を特権情報として利用し、自身で推論能力を向上させることで、SFTやRLの課題を解決する手法である。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</guid>
+  <pubDate>Wed, 28 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/157/200" medium="image"/>
+</item>
 <item>
   <title>Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,18 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/</guid>
   <pubDate>Sat, 10 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/145/200" medium="image"/>
-</item>
-<item>
-  <title>SETA: 端末操作エージェントのためのスケーラブルな環境構築とLLM能力の拡張</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/seta/</link>
-  <description><![CDATA[ SETAプロジェクトは、LLMがターミナル操作エージェントとしてSOTA性能を達成するための高度なツールキット設計とスケーラブルなRL学習パイプラインを提案し、LLMの応用可能性を大きく広げる。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/seta/</guid>
-  <pubDate>Sat, 10 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/146/200" medium="image"/>
 </item>
 </channel>
 </rss>
