@@ -292,6 +292,85 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </section>
 
 </main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
