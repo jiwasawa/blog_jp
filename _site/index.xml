@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Wed, 28 Jan 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 31 Jan 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/</link>
+  <description><![CDATA[ Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/</guid>
+  <pubDate>Sat, 31 Jan 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/158/200" medium="image"/>
+</item>
 <item>
   <title>Self-Distilled Reasoner: On-Policy Self-DistillationによるLLM推論能力の自己進化</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/artificial-analysis/</guid>
   <pubDate>Sun, 11 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/147/200" medium="image"/>
-</item>
-<item>
-  <title>Recursive Language Models (RLM): コンテキスト制限の壁を越える新たな推論パラダイム</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/</link>
-  <description><![CDATA[ MIT CSAILの研究チームが発表したRecursive Language Models (RLMs)は、LLMを外部環境と対話させ、再帰的な自己呼び出しによってコンテキスト制限の壁を越え、1000万トークン超の長文脈処理で圧倒的なパフォーマンスとコスト効率を実現する新たな推論パラダイムである。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/</guid>
-  <pubDate>Sat, 10 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/145/200" medium="image"/>
 </item>
 </channel>
 </rss>

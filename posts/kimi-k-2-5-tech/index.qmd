@@ -1,0 +1,95 @@
+---
+title: "Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌"
+description: "Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。"
+author: "Junichiro Iwasawa"
+date: "2026-02-01"
+categories: [LLM, AI]
+image: https://picsum.photos/id/158/200
+---
+
+大規模言語モデル（LLM）の進化は、単なるテキスト処理能力の向上から、複雑な推論と行動を伴う「エージェント知能」へと急速にシフトしている。Kimi Teamによって新たに公開された **[Kimi K2.5](https://huggingface.co/moonshotai/Kimi-K2.5)** は、視覚と言語の境界を取り払い、さらに並列エージェント処理（Agent Swarm）を導入することで、汎用的なエージェント知能（General Agentic Intelligence）への道を切り開くオープンソースモデルである。
+
+本記事では、[Kimi K2.5の技術レポート](https://github.com/MoonshotAI/Kimi-K2.5/blob/master/tech_report.pdf)に基づき、その核となる「テキストと視覚のジョイント最適化（Joint Optimization）」と、革新的な並列実行フレームワーク「Agent Swarm」の技術的詳細について解説する。
+
+## テキストと視覚のジョイント最適化
+
+従来のマルチモーダルモデル（LMM）の開発では、学習済みの視覚エンコーダと言語モデルを、学習の後半段階で接続する「Late Fusion」アプローチが一般的であった。しかし、Kimi K2.5はこのパラダイムを刷新し、事前学習の初期段階からテキストと視覚を統合するアプローチを採用している。
+
+### Native Multimodal Pre-Training
+
+Kimi K2.5のアプローチにおいて特筆すべきは、**Early Fusion**（早期統合）の有効性である。固定されたトークン予算（Budget）の下で、「いつ視覚トークンを投入するか」という実験を行った結果、従来説（テキスト主体の学習後に視覚を大量投入する）とは異なり、**学習の初期段階から低比率（例えば10%）で視覚トークンを混合し続ける方が、最終的なマルチモーダル性能が高い**ことが判明した。
+
+この知見に基づき、Kimi K2.5は15兆トークンに及ぶ事前学習全体を通じてテキストと視覚のジョイント学習を行っている。
+
+アーキテクチャ面では、**MoonViT-3D** と呼ばれるネイティブ解像度の視覚エンコーダを採用している。これは [NaViT](https://arxiv.org/abs/2307.06304) [Dehghani et al., 2023] のパッキング戦略を取り入れ、可変解像度の画像を効率的に処理する。さらに動画処理においては、連続するフレームを4枚ごとのチャンクにグループ化し、時間方向のプーリングを行うことで、同じコンテキストウィンドウ内で4倍の長さの動画処理を可能にする「時間的圧縮（Temporal Compression）」を実現している。
+
+### Zero-Vision SFT：テキストによる視覚機能の活性化
+
+事後学習（Post-Training）段階における最大の発見の一つが、**Zero-Vision SFT** である。これは、視覚データを含まないテキストのみのSFT（Supervised Fine-Tuning）データであっても、モデルの視覚的推論能力やツール使用能力を活性化できるという現象である。
+
+具体的には、画像の操作（クロップや回転など）をIPython上のプログラム操作としてプロキシさせることで、視覚的なツール使用を一般化している。実験結果によると、人手で作成した視覚的な推論軌跡（Visual Trajectories）を追加するよりも、テキストのみのSFTの方が汎化性能が高まることが示されている。これは、事前学習段階での強力なジョイント学習により、すでにモダリティ間のアライメントが確立されているためと推測される。
+
+### Joint Multimodal RLによる双方向の強化
+
+強化学習（RL）フェーズにおいても、Kimi K2.5はテキストと視覚を分離せず、**Joint Multimodal RL** を適用している。ここで興味深いのは、**視覚タスクでのRLがテキストタスクの性能をも向上させる**という「クロスモーダル転移」の現象である。
+
+技術レポートによると、視覚的なRL（Visual RL）を適用した後、テキストベースのベンチマークである[MMLU-Pro](https://arxiv.org/abs/2406.01574)やGPQA-Diamondのスコアが向上した（例：MMLU-Pro 84.7% → 86.4%）。これは、視覚的なグラウンディングや構造的な情報抽出の訓練が、テキスト推論における不確実性の低減に寄与していることを示唆している。
+
+## Agent Swarm：並列エージェントオーケストレーション
+
+Kimi K2.5のもう一つの技術的ブレイクスルーは、**Agent Swarm** と呼ばれるフレームワークである。従来のエージェントモデルは、思考（Reasoning）とツール実行（Action）を逐次的（Sequential）に行うため、タスクが複雑化すると推論ステップが長くなり、レイテンシの増大やコンテキスト溢れを引き起こしていた。
+
+Agent Swarmは、タスクを動的に分解し、複数の専門化されたサブエージェント（Sub-agents）に並列実行させることで、この問題を解決する。
+
+### Parallel-Agent Reinforcement Learning (PARL)
+
+この並列動作を学習させるために、Kimi Teamは **PARL（Parallel-Agent Reinforcement Learning）** パラダイムを導入した。PARLでは、学習可能な「オーケストレーター」と、凍結された（Frozen）「サブエージェント」群という構成をとる。サブエージェントを凍結することで、マルチエージェント学習特有の「信用の割り当て（Credit Assignment）」の曖昧さや学習の不安定さを回避している。
+
+PARLにおける報酬関数 $r_{PARL}(x, y)$ は以下のように定義される。
+
+$$r_{PARL}(x,y) = \lambda_1 \cdot r_{parallel} + \lambda_2 \cdot r_{finish} + r_{perf}(x,y)$$
+
+ここで、各項の役割は以下の通りである。
+
+*   **$r_{perf}(x,y)$**: タスクの最終的な成果に対する報酬。
+*   **$r_{parallel}$**: インスタンス化報酬。オーケストレーターが安易にシングルエージェント実行（Serial Collapse）に陥るのを防ぎ、並列的なスケジューリング空間を探索することを奨励する。
+*   **$r_{finish}$**: サブエージェント完了報酬。意味のないサブタスクを大量生成する「スパリアスな並列化（Spurious Parallelism）」を防ぎ、有効なタスク分解を学習させる。
+
+ハイパーパラメータ $\lambda_1, \lambda_2$ は学習の進行とともにゼロに減衰（Annealing）させ、最終的には純粋なタスクパフォーマンス $r_{perf}$ の最適化へと収束させる。
+
+### Critical Stepsによる計算コスト制約
+
+並列処理の効率を評価・最適化するために、計算グラフにおけるクリティカルパス（Critical Path）のアナロジーを用いた **Critical Steps** という概念が導入されている。エピソード全体のCritical Stepsは以下のように定義される。
+
+$$CriticalSteps = \sum_{t=1}^{T} \left( S_{main}^{(t)} + \max_{i} S_{sub, i}^{(t)} \right)$$
+
+ここで、$S_{main}^{(t)}$ はステージ $t$ におけるメインエージェントのステップ数、$S_{sub, i}^{(t)}$ は $i$ 番目のサブエージェントのステップ数である。この指標を最小化するように学習することで、単に並列数を増やすのではなく、**エンドツーエンドのレイテンシを最小化するようなタスク分解**が可能となる。
+
+実験結果において、Agent Swarmはシングルエージェントのベースラインと比較して、推論レイテンシを最大 **4.5倍** 削減し、広範な探索（Wide-Search）タスクにおけるアイテムレベルのF1スコアを72.8%から79.0%へ向上させている。
+
+### プロアクティブなコンテキスト管理
+
+Agent Swarmは、単なる高速化だけでなく、コンテキスト管理の観点でも優れている。従来の長いコンテキストへの対処法（SummaryやDiscard-all）は受動的かつ損失を伴うものであったが、Agent Swarmは **Context Sharding（コンテキストの断片化）** を実現する。
+
+各サブエージェントは独立したワーキングメモリを持ち、局所的な推論を行う。オーケストレーターには、その最終結果や必要な情報のみが還元されるため、グローバルなコンテキストウィンドウを汚染することなく、実質的に無限に近いスケーラビリティを確保できる。
+
+## 最先端のパフォーマンス
+
+Kimi K2.5は、コーディング、推論、視覚理解、コンピュータ操作の各分野でSOTA（State-of-the-Art）またはそれに準ずる性能を示している。
+
+*   **コーディング:** [SWE-Bench Verified](https://arxiv.org/abs/2310.06770)で76.8%を記録し、Gemini 3 Proを上回る。[LiveCodeBench (v6)](https://arxiv.org/abs/2403.07974) では85.0%に達し、DeepSeek-V3.2やClaude Opus 4.5を凌駕している。
+*   **数学・推論:** [AIME 2025](https://artofproblemsolving.com/wiki/index.php/2025_AIME_I)で96.1%という驚異的なスコアを記録。これはGPT-5.2 (100%) に肉薄し、Claude Opus 4.5 (92.8%) を上回る。
+*   **エージェント・探索:** 複雑なウェブ検索タスクである[BrowseComp](https://arxiv.org/abs/2504.12516)において、Agent Swarm適用時は78.4%を記録し、GPT-5.2 Pro (77.9%) を超える性能を示した。
+*   **Computer Use:** [OSWorld-Verified](https://xlang.ai/blog/osworld-verified)において63.3%の成功率を達成。これはGUI操作のみ（外部ツールなし）の結果であり、Claude Opus 4.5 (66.3%) に匹敵する高い操作能力である。
+
+## 結論
+
+Kimi K2.5は、テキストと視覚のジョイント最適化によって「視覚的推論」と「言語的推論」の相乗効果を実証し、さらにAgent Swarmによって「逐次処理」から「並列分散処理」へのパラダイムシフトを実現した。
+
+特に、強化学習におけるサブエージェントの凍結戦略やCritical Stepsを用いた最適化は、今後のマルチエージェントシステム設計における重要な指針となるだろう。Kimi Teamはこのモデルのチェックポイントをオープンソース化しており、汎用エージェント知能（General Agentic Intelligence）の研究開発は、Kimi K2.5を基盤としてさらに加速することが予想される。
+
+## 参考文献
+
+*   Kimi Team. (2025). *[Kimi K2.5: Visual Agentic Intelligence Technical Report](https://github.com/MoonshotAI/Kimi-K2.5/blob/master/tech_report.pdf)*.
+*   Dehghani, M., et al. (2023). [Patch n’ Pack: NaViT, a Vision Transformer for any Aspect Ratio and Resolution](https://arxiv.org/abs/2307.06304). *arXiv preprint arXiv:2307.06304*.
+*   Moonshot AI. (2025). [Introducing Kimi K2 Thinking](https://moonshotai.github.io/Kimi-K2/thinking.html).
