@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/kimi-k-2-5-tech/index.html",
       "/posts/opsd-on-policy-self-distillation/index.html",
       "/posts/terminal-bench-2/index.html",
       "/posts/continual-learning-wolfe/index.html",

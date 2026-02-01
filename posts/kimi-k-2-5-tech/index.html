@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-02-01">
+<meta name="description" content="Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。">
+
+<title>Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌 – jiwasawaのブログ">
+<meta property="og:description" content="Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。">
+<meta property="og:image" content="https://picsum.photos/id/158/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌 – jiwasawaのブログ">
+<meta name="twitter:description" content="Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。">
+<meta name="twitter:image" content="https://picsum.photos/id/158/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌</h1>
+                  <div>
+        <div class="description">
+          Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 1, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>大規模言語モデル（LLM）の進化は、単なるテキスト処理能力の向上から、複雑な推論と行動を伴う「エージェント知能」へと急速にシフトしている。Kimi Teamによって新たに公開された <strong><a href="https://huggingface.co/moonshotai/Kimi-K2.5">Kimi K2.5</a></strong> は、視覚と言語の境界を取り払い、さらに並列エージェント処理（Agent Swarm）を導入することで、汎用的なエージェント知能（General Agentic Intelligence）への道を切り開くオープンソースモデルである。</p>
+<p>本記事では、<a href="https://github.com/MoonshotAI/Kimi-K2.5/blob/master/tech_report.pdf">Kimi K2.5の技術レポート</a>に基づき、その核となる「テキストと視覚のジョイント最適化（Joint Optimization）」と、革新的な並列実行フレームワーク「Agent Swarm」の技術的詳細について解説する。</p>
+<section id="テキストと視覚のジョイント最適化" class="level2">
+<h2 class="anchored" data-anchor-id="テキストと視覚のジョイント最適化">テキストと視覚のジョイント最適化</h2>
+<p>従来のマルチモーダルモデル（LMM）の開発では、学習済みの視覚エンコーダと言語モデルを、学習の後半段階で接続する「Late Fusion」アプローチが一般的であった。しかし、Kimi K2.5はこのパラダイムを刷新し、事前学習の初期段階からテキストと視覚を統合するアプローチを採用している。</p>
+<section id="native-multimodal-pre-training" class="level3">
+<h3 class="anchored" data-anchor-id="native-multimodal-pre-training">Native Multimodal Pre-Training</h3>
+<p>Kimi K2.5のアプローチにおいて特筆すべきは、<strong>Early Fusion</strong>（早期統合）の有効性である。固定されたトークン予算（Budget）の下で、「いつ視覚トークンを投入するか」という実験を行った結果、従来説（テキスト主体の学習後に視覚を大量投入する）とは異なり、<strong>学習の初期段階から低比率（例えば10%）で視覚トークンを混合し続ける方が、最終的なマルチモーダル性能が高い</strong>ことが判明した。</p>
+<p>この知見に基づき、Kimi K2.5は15兆トークンに及ぶ事前学習全体を通じてテキストと視覚のジョイント学習を行っている。</p>
+<p>アーキテクチャ面では、<strong>MoonViT-3D</strong> と呼ばれるネイティブ解像度の視覚エンコーダを採用している。これは <a href="https://arxiv.org/abs/2307.06304">NaViT</a> [Dehghani et al., 2023] のパッキング戦略を取り入れ、可変解像度の画像を効率的に処理する。さらに動画処理においては、連続するフレームを4枚ごとのチャンクにグループ化し、時間方向のプーリングを行うことで、同じコンテキストウィンドウ内で4倍の長さの動画処理を可能にする「時間的圧縮（Temporal Compression）」を実現している。</p>
+</section>
+<section id="zero-vision-sftテキストによる視覚機能の活性化" class="level3">
+<h3 class="anchored" data-anchor-id="zero-vision-sftテキストによる視覚機能の活性化">Zero-Vision SFT：テキストによる視覚機能の活性化</h3>
+<p>事後学習（Post-Training）段階における最大の発見の一つが、<strong>Zero-Vision SFT</strong> である。これは、視覚データを含まないテキストのみのSFT（Supervised Fine-Tuning）データであっても、モデルの視覚的推論能力やツール使用能力を活性化できるという現象である。</p>
+<p>具体的には、画像の操作（クロップや回転など）をIPython上のプログラム操作としてプロキシさせることで、視覚的なツール使用を一般化している。実験結果によると、人手で作成した視覚的な推論軌跡（Visual Trajectories）を追加するよりも、テキストのみのSFTの方が汎化性能が高まることが示されている。これは、事前学習段階での強力なジョイント学習により、すでにモダリティ間のアライメントが確立されているためと推測される。</p>
+</section>
+<section id="joint-multimodal-rlによる双方向の強化" class="level3">
+<h3 class="anchored" data-anchor-id="joint-multimodal-rlによる双方向の強化">Joint Multimodal RLによる双方向の強化</h3>
+<p>強化学習（RL）フェーズにおいても、Kimi K2.5はテキストと視覚を分離せず、<strong>Joint Multimodal RL</strong> を適用している。ここで興味深いのは、<strong>視覚タスクでのRLがテキストタスクの性能をも向上させる</strong>という「クロスモーダル転移」の現象である。</p>
+<p>技術レポートによると、視覚的なRL（Visual RL）を適用した後、テキストベースのベンチマークである<a href="https://arxiv.org/abs/2406.01574">MMLU-Pro</a>やGPQA-Diamondのスコアが向上した（例：MMLU-Pro 84.7% → 86.4%）。これは、視覚的なグラウンディングや構造的な情報抽出の訓練が、テキスト推論における不確実性の低減に寄与していることを示唆している。</p>
+</section>
+</section>
+<section id="agent-swarm並列エージェントオーケストレーション" class="level2">
+<h2 class="anchored" data-anchor-id="agent-swarm並列エージェントオーケストレーション">Agent Swarm：並列エージェントオーケストレーション</h2>
+<p>Kimi K2.5のもう一つの技術的ブレイクスルーは、<strong>Agent Swarm</strong> と呼ばれるフレームワークである。従来のエージェントモデルは、思考（Reasoning）とツール実行（Action）を逐次的（Sequential）に行うため、タスクが複雑化すると推論ステップが長くなり、レイテンシの増大やコンテキスト溢れを引き起こしていた。</p>
+<p>Agent Swarmは、タスクを動的に分解し、複数の専門化されたサブエージェント（Sub-agents）に並列実行させることで、この問題を解決する。</p>
+<section id="parallel-agent-reinforcement-learning-parl" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-agent-reinforcement-learning-parl">Parallel-Agent Reinforcement Learning (PARL)</h3>
+<p>この並列動作を学習させるために、Kimi Teamは <strong>PARL（Parallel-Agent Reinforcement Learning）</strong> パラダイムを導入した。PARLでは、学習可能な「オーケストレーター」と、凍結された（Frozen）「サブエージェント」群という構成をとる。サブエージェントを凍結することで、マルチエージェント学習特有の「信用の割り当て（Credit Assignment）」の曖昧さや学習の不安定さを回避している。</p>
+<p>PARLにおける報酬関数 <span class="math inline">\(r_{PARL}(x, y)\)</span> は以下のように定義される。</p>
+<p><span class="math display">\[r_{PARL}(x,y) = \lambda_1 \cdot r_{parallel} + \lambda_2 \cdot r_{finish} + r_{perf}(x,y)\]</span></p>
+<p>ここで、各項の役割は以下の通りである。</p>
+<ul>
+<li><strong><span class="math inline">\(r_{perf}(x,y)\)</span></strong>: タスクの最終的な成果に対する報酬。</li>
+<li><strong><span class="math inline">\(r_{parallel}\)</span></strong>: インスタンス化報酬。オーケストレーターが安易にシングルエージェント実行（Serial Collapse）に陥るのを防ぎ、並列的なスケジューリング空間を探索することを奨励する。</li>
+<li><strong><span class="math inline">\(r_{finish}\)</span></strong>: サブエージェント完了報酬。意味のないサブタスクを大量生成する「スパリアスな並列化（Spurious Parallelism）」を防ぎ、有効なタスク分解を学習させる。</li>
+</ul>
+<p>ハイパーパラメータ <span class="math inline">\(\lambda_1, \lambda_2\)</span> は学習の進行とともにゼロに減衰（Annealing）させ、最終的には純粋なタスクパフォーマンス <span class="math inline">\(r_{perf}\)</span> の最適化へと収束させる。</p>
+</section>
+<section id="critical-stepsによる計算コスト制約" class="level3">
+<h3 class="anchored" data-anchor-id="critical-stepsによる計算コスト制約">Critical Stepsによる計算コスト制約</h3>
+<p>並列処理の効率を評価・最適化するために、計算グラフにおけるクリティカルパス（Critical Path）のアナロジーを用いた <strong>Critical Steps</strong> という概念が導入されている。エピソード全体のCritical Stepsは以下のように定義される。</p>
+<p><span class="math display">\[CriticalSteps = \sum_{t=1}^{T} \left( S_{main}^{(t)} + \max_{i} S_{sub, i}^{(t)} \right)\]</span></p>
+<p>ここで、<span class="math inline">\(S_{main}^{(t)}\)</span> はステージ <span class="math inline">\(t\)</span> におけるメインエージェントのステップ数、<span class="math inline">\(S_{sub, i}^{(t)}\)</span> は <span class="math inline">\(i\)</span> 番目のサブエージェントのステップ数である。この指標を最小化するように学習することで、単に並列数を増やすのではなく、<strong>エンドツーエンドのレイテンシを最小化するようなタスク分解</strong>が可能となる。</p>
+<p>実験結果において、Agent Swarmはシングルエージェントのベースラインと比較して、推論レイテンシを最大 <strong>4.5倍</strong> 削減し、広範な探索（Wide-Search）タスクにおけるアイテムレベルのF1スコアを72.8%から79.0%へ向上させている。</p>
+</section>
+<section id="プロアクティブなコンテキスト管理" class="level3">
+<h3 class="anchored" data-anchor-id="プロアクティブなコンテキスト管理">プロアクティブなコンテキスト管理</h3>
+<p>Agent Swarmは、単なる高速化だけでなく、コンテキスト管理の観点でも優れている。従来の長いコンテキストへの対処法（SummaryやDiscard-all）は受動的かつ損失を伴うものであったが、Agent Swarmは <strong>Context Sharding（コンテキストの断片化）</strong> を実現する。</p>
+<p>各サブエージェントは独立したワーキングメモリを持ち、局所的な推論を行う。オーケストレーターには、その最終結果や必要な情報のみが還元されるため、グローバルなコンテキストウィンドウを汚染することなく、実質的に無限に近いスケーラビリティを確保できる。</p>
+</section>
+</section>
+<section id="最先端のパフォーマンス" class="level2">
+<h2 class="anchored" data-anchor-id="最先端のパフォーマンス">最先端のパフォーマンス</h2>
+<p>Kimi K2.5は、コーディング、推論、視覚理解、コンピュータ操作の各分野でSOTA（State-of-the-Art）またはそれに準ずる性能を示している。</p>
+<ul>
+<li><strong>コーディング:</strong> <a href="https://arxiv.org/abs/2310.06770">SWE-Bench Verified</a>で76.8%を記録し、Gemini 3 Proを上回る。<a href="https://arxiv.org/abs/2403.07974">LiveCodeBench (v6)</a> では85.0%に達し、DeepSeek-V3.2やClaude Opus 4.5を凌駕している。</li>
+<li><strong>数学・推論:</strong> <a href="https://artofproblemsolving.com/wiki/index.php/2025_AIME_I">AIME 2025</a>で96.1%という驚異的なスコアを記録。これはGPT-5.2 (100%) に肉薄し、Claude Opus 4.5 (92.8%) を上回る。</li>
+<li><strong>エージェント・探索:</strong> 複雑なウェブ検索タスクである<a href="https://arxiv.org/abs/2504.12516">BrowseComp</a>において、Agent Swarm適用時は78.4%を記録し、GPT-5.2 Pro (77.9%) を超える性能を示した。</li>
+<li><strong>Computer Use:</strong> <a href="https://xlang.ai/blog/osworld-verified">OSWorld-Verified</a>において63.3%の成功率を達成。これはGUI操作のみ（外部ツールなし）の結果であり、Claude Opus 4.5 (66.3%) に匹敵する高い操作能力である。</li>
+</ul>
+</section>
+<section id="結論" class="level2">
+<h2 class="anchored" data-anchor-id="結論">結論</h2>
+<p>Kimi K2.5は、テキストと視覚のジョイント最適化によって「視覚的推論」と「言語的推論」の相乗効果を実証し、さらにAgent Swarmによって「逐次処理」から「並列分散処理」へのパラダイムシフトを実現した。</p>
+<p>特に、強化学習におけるサブエージェントの凍結戦略やCritical Stepsを用いた最適化は、今後のマルチエージェントシステム設計における重要な指針となるだろう。Kimi Teamはこのモデルのチェックポイントをオープンソース化しており、汎用エージェント知能（General Agentic Intelligence）の研究開発は、Kimi K2.5を基盤としてさらに加速することが予想される。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ul>
+<li>Kimi Team. (2025). <em><a href="https://github.com/MoonshotAI/Kimi-K2.5/blob/master/tech_report.pdf">Kimi K2.5: Visual Agentic Intelligence Technical Report</a></em>.</li>
+<li>Dehghani, M., et al.&nbsp;(2023). <a href="https://arxiv.org/abs/2307.06304">Patch n’ Pack: NaViT, a Vision Transformer for any Aspect Ratio and Resolution</a>. <em>arXiv preprint arXiv:2307.06304</em>.</li>
+<li>Moonshot AI. (2025). <a href="https://moonshotai.github.io/Kimi-K2/thinking.html">Introducing Kimi K2 Thinking</a>.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
