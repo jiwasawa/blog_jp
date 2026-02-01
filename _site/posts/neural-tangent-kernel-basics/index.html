@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-04-20">
+<meta name="dcterms.date" content="2025-04-23">
 <meta name="description" content="Neural Tangent Kernel (NTK) を解説し、深層学習における過剰パラメータ化されたネットワークの学習ダイナミクス、特に無限幅極限での収束メカニズムを数学的に解き明かす。">
 
 <title>Neural Tangent Kernel (NTK) 解説：深層学習の学習ダイナミクスを解き明かす数学的枠組み</title>
@@ -198,7 +198,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 20, 2025</p>
+        <p class="date">April 23, 2025</p>
       </div>
     </div>
     
@@ -319,6 +319,85 @@ window.Quarto = {
 </section>
 
 </main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

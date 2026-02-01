@@ -1,315 +1,295 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/index.html</loc>
-    <lastmod>2025-06-08T08:30:09.037Z</lastmod>
-  </url>
-  <url>
     <loc>https://jiwasawa.github.io/blog_jp/about.html</loc>
     <lastmod>2025-04-25T08:31:44.593Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/index.html</loc>
-    <lastmod>2025-04-25T08:34:24.682Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/diffusion-basics/index.html</loc>
-    <lastmod>2025-04-16T12:09:30.918Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/index.html</loc>
-    <lastmod>2025-04-16T02:59:15.531Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/index.html</loc>
-    <lastmod>2025-04-16T03:28:54.843Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/index.html</loc>
-    <lastmod>2025-04-16T03:28:40.698Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/docetl/index.html</loc>
-    <lastmod>2025-04-25T08:40:04.386Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/lmarena/index.html</loc>
-    <lastmod>2025-05-01T04:04:00.078Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/sycophancy/index.html</loc>
-    <lastmod>2025-05-06T04:33:57.175Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/index.html</loc>
-    <lastmod>2025-05-09T14:50:36.273Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/ai-neocloud/index.html</loc>
-    <lastmod>2025-05-09T14:35:44.985Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/claude-biology/index.html</loc>
-    <lastmod>2025-05-18T14:38:59.154Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/index.html</loc>
-    <lastmod>2025-05-23T14:12:57.738Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/index.html</loc>
-    <lastmod>2025-05-29T14:03:08.453Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/index.html</loc>
-    <lastmod>2025-06-06T12:23:12.620Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/index.html</loc>
-    <lastmod>2025-05-31T12:55:08.825Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/index.html</loc>
-    <lastmod>2025-06-06T13:08:33.342Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/illusion-of-thinking/index.html</loc>
-    <lastmod>2025-06-08T08:27:52.796Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/noam-brown/index.html</loc>
-    <lastmod>2025-07-11T14:36:05.479Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-berman/index.html</loc>
-    <lastmod>2025-07-11T14:35:57.819Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/openai-imo-gold/index.html</loc>
-    <lastmod>2025-08-01T15:08:01.166Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/demis-hassabis-lex-podcast/index.html</loc>
-    <lastmod>2025-08-02T12:50:42.769Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/index.html</loc>
-    <lastmod>2025-08-02T13:22:31.842Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-agi/index.html</loc>
-    <lastmod>2025-11-04T10:46:16.705Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/index.html</loc>
+    <lastmod>2026-02-01T13:50:16.794Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/state-of-ai-2025/index.html</loc>
     <lastmod>2025-10-22T08:22:28.575Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/post-attention-techniques/index.html</loc>
-    <lastmod>2025-10-22T08:22:12.388Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition/index.html</loc>
-    <lastmod>2025-11-03T14:27:07.345Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/llm-d-anatomy/index.html</loc>
-    <lastmod>2025-11-04T08:56:43.873Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition copy/index.html</loc>
-    <lastmod>2025-11-07T13:10:05.238Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/alphaevolve-terence-tao/index.html</loc>
-    <lastmod>2025-11-07T13:12:14.370Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/composer-sasha-rush/index.html</loc>
-    <lastmod>2025-11-11T06:34:26.048Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/composer-sasha-rush copy/index.html</loc>
-    <lastmod>2025-11-20T14:21:39.166Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/satya-nadella/index.html</loc>
-    <lastmod>2025-11-29T14:25:42.829Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/adk-test/index.html</loc>
-    <lastmod>2025-11-21T05:47:03.502Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/ilya-dwarkesh/index.html</loc>
-    <lastmod>2025-11-29T14:35:18.367Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/chan-zuckerberg/index.html</loc>
-    <lastmod>2025-11-27T06:18:59.486Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/claude-harness/index.html</loc>
-    <lastmod>2025-11-29T13:30:43.075Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/nick-lane-dwarkesh/index.html</loc>
-    <lastmod>2025-11-29T14:25:52.352Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/llm-thinking-basics/index.html</loc>
-    <lastmod>2025-11-29T14:17:26.563Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/diffusion-video-review/index.html</loc>
-    <lastmod>2025-11-29T14:21:30.047Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/neural-tangent-kernel-basics/index.html</loc>
-    <lastmod>2025-11-29T14:33:08.568Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/google-tpu-v7/index.html</loc>
-    <lastmod>2025-12-02T03:13:32.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/google-tpu-v7 copy/index.html</loc>
-    <lastmod>2025-12-02T03:26:31.556Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/tsmc-overseas/index.html</loc>
-    <lastmod>2025-12-02T03:27:25.483Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/emergent-misalignment/index.html</loc>
+    <lastmod>2025-06-06T13:08:33.342Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/claude-soul-document/index.html</loc>
     <lastmod>2025-12-04T02:05:20.212Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/index.html</loc>
-    <lastmod>2025-12-10T07:45:04.906Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1-post-training/index.html</loc>
+    <lastmod>2026-01-22T07:49:34.554Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/anthropic-interviewer/index.html</loc>
-    <lastmod>2025-12-10T07:56:07.347Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/zhang-interplay-rl-mid-pretraining/index.html</loc>
-    <lastmod>2025-12-11T01:23:48.215Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/chan-zuckerberg/index.html</loc>
+    <lastmod>2025-11-27T06:18:59.486Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/openrouter-state-of-ai-2025/index.html</loc>
     <lastmod>2025-12-11T01:53:15.806Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/index.html</loc>
-    <lastmod>2025-12-17T06:48:54.722Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems copy/index.html</loc>
-    <lastmod>2025-12-17T06:28:23.165Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/nemotron-3-nano/index.html</loc>
-    <lastmod>2025-12-17T06:28:53.132Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/index.html</loc>
-    <lastmod>2025-12-17T06:56:14.156Z</lastmod>
-  </url>
-  <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/virtual-lab-sars-cov/index.html</loc>
     <lastmod>2025-12-17T07:25:06.610Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/openai-imo-gold/index.html</loc>
+    <lastmod>2025-08-01T15:08:01.166Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/srush-rl-llm/index.html</loc>
     <lastmod>2025-12-19T12:04:47.479Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/john-schulman-truell-interview/index.html</loc>
-    <lastmod>2025-12-20T08:02:39.405Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/zhang-interplay-rl-mid-pretraining/index.html</loc>
+    <lastmod>2025-12-11T01:23:48.215Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/nitrogen/index.html</loc>
-    <lastmod>2025-12-21T13:38:42.147Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/transformer-attention-jp/index.html</loc>
+    <lastmod>2025-04-16T03:28:54.843Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/deedy-das/index.html</loc>
-    <lastmod>2025-12-23T02:20:17.328Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/noam-brown/index.html</loc>
+    <lastmod>2025-07-11T14:36:05.479Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/nepa/index.html</loc>
-    <lastmod>2025-12-25T06:20:40.591Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/index.html</loc>
+    <lastmod>2026-02-01T13:47:48.292Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/mark-chen/index.html</loc>
-    <lastmod>2025-12-31T11:34:48.349Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/neural-tangent-kernel-basics/index.html</loc>
+    <lastmod>2025-11-29T14:33:08.568Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/index.html</loc>
-    <lastmod>2026-01-06T12:22:38.299Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/docetl/index.html</loc>
+    <lastmod>2025-04-25T08:40:04.386Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/index.html</loc>
-    <lastmod>2026-01-06T11:38:12.527Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/era-of-experience/index.html</loc>
+    <lastmod>2025-04-25T08:34:24.682Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/agent-harness/index.html</loc>
-    <lastmod>2026-01-06T11:59:48.196Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/diffusion-video-review/index.html</loc>
+    <lastmod>2025-11-29T14:21:30.047Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/grpopp-cameron/index.html</loc>
-    <lastmod>2026-01-06T11:53:27.390Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/mary-meeker-report/index.html</loc>
+    <lastmod>2025-05-31T12:55:08.825Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/index.html</loc>
-    <lastmod>2026-01-08T08:14:07.266Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/just-image-transformers/index.html</loc>
+    <lastmod>2025-12-17T06:56:14.156Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/index.html</loc>
-    <lastmod>2026-01-11T06:41:01.381Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/google-tpu-v7/index.html</loc>
+    <lastmod>2025-12-02T03:13:32.977Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/seta/index.html</loc>
-    <lastmod>2026-01-11T12:05:34.467Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/sycophancy/index.html</loc>
+    <lastmod>2025-05-06T04:33:57.175Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/artificial-analysis/index.html</loc>
-    <lastmod>2026-01-12T12:24:38.844Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/engram-deepseek/index.html</loc>
-    <lastmod>2026-01-16T06:45:08.384Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/claude-harness/index.html</loc>
+    <lastmod>2025-11-29T13:30:43.075Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/xai-sulaiman/index.html</loc>
     <lastmod>2026-01-20T01:35:09.370Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1-post-training/index.html</loc>
-    <lastmod>2026-01-22T07:49:34.554Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/world-labs-marble/index.html</loc>
+    <lastmod>2025-12-10T07:45:04.906Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/diffusion-basics/index.html</loc>
+    <lastmod>2025-04-16T12:09:30.918Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/gpt-4.1/index.html</loc>
+    <lastmod>2025-05-23T14:12:57.738Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/satya-nadella/index.html</loc>
+    <lastmod>2025-11-29T14:25:42.829Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/gemini-long-context/index.html</loc>
+    <lastmod>2025-05-09T14:50:36.273Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/index.html</loc>
     <lastmod>2026-01-23T05:00:49.792Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/index.html</loc>
-    <lastmod>2026-01-23T05:19:15.764Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/nick-lane-dwarkesh/index.html</loc>
+    <lastmod>2025-11-29T14:25:52.352Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/cognitive-aime-coscientist/index.html</loc>
+    <lastmod>2025-04-16T03:28:40.698Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/latent-dharmesh-shah/index.html</loc>
+    <lastmod>2025-04-16T02:59:15.531Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-berman/index.html</loc>
+    <lastmod>2025-07-11T14:37:47.139Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/tsmc-overseas/index.html</loc>
+    <lastmod>2025-12-02T03:27:25.483Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/nemotron-3-nano/index.html</loc>
+    <lastmod>2025-12-17T06:28:53.132Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/agent-harness/index.html</loc>
+    <lastmod>2026-01-06T11:59:48.196Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/recursive-language-models/index.html</loc>
+    <lastmod>2026-01-11T06:41:01.381Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/claude-biology/index.html</loc>
+    <lastmod>2025-05-18T14:38:59.154Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/illusion-of-thinking/index.html</loc>
+    <lastmod>2025-06-08T08:27:52.796Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-agi/index.html</loc>
+    <lastmod>2025-11-04T10:46:16.705Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/mark-chen/index.html</loc>
+    <lastmod>2026-02-01T13:49:33.266Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/index.html</loc>
+    <lastmod>2026-02-01T13:48:34.940Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/alphaevolve-terence-tao/index.html</loc>
+    <lastmod>2025-11-07T13:12:14.370Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/lmarena/index.html</loc>
+    <lastmod>2025-05-01T04:04:00.078Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/ai-neocloud/index.html</loc>
+    <lastmod>2025-05-09T14:35:44.985Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/llm-thinking-basics/index.html</loc>
+    <lastmod>2025-11-29T14:17:26.563Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/composer-sasha-rush/index.html</loc>
+    <lastmod>2025-11-11T06:34:26.048Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/nitrogen/index.html</loc>
+    <lastmod>2026-02-01T13:49:23.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/claude-4-initial-reactions/index.html</loc>
+    <lastmod>2025-05-29T14:03:08.453Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/boris-cherny/index.html</loc>
+    <lastmod>2026-01-08T11:04:18.400Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/grpopp-cameron/index.html</loc>
+    <lastmod>2026-01-06T11:53:27.390Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/spurious-rewards/index.html</loc>
+    <lastmod>2025-06-06T12:23:12.620Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1/index.html</loc>
+    <lastmod>2026-01-06T11:38:12.527Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/llm-d-anatomy/index.html</loc>
+    <lastmod>2025-11-04T08:56:43.873Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/persona-vectors/index.html</loc>
+    <lastmod>2025-08-02T13:22:31.842Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/demis-hassabis-lex-podcast/index.html</loc>
+    <lastmod>2025-08-02T12:50:42.769Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/anthropic-interviewer/index.html</loc>
+    <lastmod>2025-12-10T07:56:07.347Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/john-schulman-truell-interview/index.html</loc>
+    <lastmod>2025-12-20T08:02:39.405Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/post-attention-techniques/index.html</loc>
+    <lastmod>2025-10-22T08:22:12.388Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/science-agent-systems/index.html</loc>
+    <lastmod>2025-12-17T06:48:54.722Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/deedy-das/index.html</loc>
+    <lastmod>2026-02-01T13:49:12.065Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/ilya-dwarkesh/index.html</loc>
+    <lastmod>2025-11-29T14:35:18.367Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/seta/index.html</loc>
+    <lastmod>2026-01-11T12:05:34.467Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/ilya-deposition/index.html</loc>
+    <lastmod>2025-11-03T14:27:07.345Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/index.html</loc>
-    <lastmod>2026-01-27T04:55:53.569Z</lastmod>
+    <lastmod>2026-02-01T13:48:54.395Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/artificial-analysis/index.html</loc>
+    <lastmod>2026-01-12T12:24:38.844Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/index.html</loc>
-    <lastmod>2026-01-27T05:02:18.933Z</lastmod>
+    <lastmod>2026-02-01T13:49:43.389Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/nepa/index.html</loc>
+    <lastmod>2026-02-01T13:49:03.086Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/engram-deepseek/index.html</loc>
+    <lastmod>2026-01-16T06:45:08.384Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/index.html</loc>
     <lastmod>2026-01-29T08:05:52.787Z</lastmod>
   </url>
   <url>
-    <loc>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/index.html</loc>
-    <lastmod>2026-02-01T07:56:16.641Z</lastmod>
+    <loc>https://jiwasawa.github.io/blog_jp/index.html</loc>
+    <lastmod>2025-06-08T08:30:09.037Z</lastmod>
   </url>
 </urlset>
