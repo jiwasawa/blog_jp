@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 05 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 06 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>事前学習における「能力」の外科的切除：トークンレベルデータフィルタリングによるAI安全性</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/token-level-filtering/</link>
+  <description><![CDATA[ 事前学習段階でのトークンレベルデータフィルタリングが、AIの望ましくない能力を外科的に除去し、モデルの安全性とアライメント能力を向上させる、スケーラブルでロバストな新手法であることを解説する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/token-level-filtering/</guid>
+  <pubDate>Fri, 06 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/160/200" medium="image"/>
+</item>
 <item>
   <title>AIのアライメント問題は「体系的な反逆」か「無秩序な混乱」か：Anthropicの最新研究『The Hot Mess of AI』の全貌</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/xai-sulaiman/</guid>
   <pubDate>Tue, 20 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/151/200" medium="image"/>
-</item>
-<item>
-  <title>Engram解説：条件付きメモリが拓くLLMの新たなスパース性軸</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/engram-deepseek/</link>
-  <description><![CDATA[ DeepSeek-AIの論文「Engram」は、LLMに条件付きメモリを導入することで、MoEモデルの計算能力と静的知識の検索を最適に組み合わせ、推論能力とシステム効率を飛躍的に向上させる新たなスパース性軸を提案する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/engram-deepseek/</guid>
-  <pubDate>Fri, 16 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/149/200" medium="image"/>
 </item>
 </channel>
 </rss>
