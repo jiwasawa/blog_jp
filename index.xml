@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sat, 07 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 08 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>State of AI 2026: Post-trainingの覇権と「AGIの夢」の変質</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/lex-nathan-sebastian-2026/</link>
+  <description><![CDATA[ 2026年のAI開発は、大規模なPre-training競争からPost-trainingの効率化・洗練へとシフトし、「AGIの夢」は特化型モデル群の連携という現実解へと変質していく。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Lex Fridman Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/lex-nathan-sebastian-2026/</guid>
+  <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/162/200" medium="image"/>
+</item>
 <item>
   <title>Generative Modeling via Drifting: Kaiming Heらが提唱する「学習時の分布進化」によるワンステップ生成の新パラダイム</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -111,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</guid>
   <pubDate>Fri, 23 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/153/200" medium="image"/>
-</item>
-<item>
-  <title>MiniMax M2.1：事後学習におけるエージェントモデルの進化とデータ合成のフロンティア</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1-post-training/</link>
-  <description><![CDATA[ MiniMax M2.1は、GitHubデータ駆動のSWE Scaling、Expert-in-the-LoopなAppDev、探索と進化によるWebExplorerといった革新的なデータ合成戦略と、Forgeフレームワーク、CISPOアルゴリズムを駆使し、実用性と堅牢性を兼ね備えたエージェントモデルの新たなフロンティアを開拓している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/minimax-m2-1-post-training/</guid>
-  <pubDate>Thu, 22 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/152/200" medium="image"/>
 </item>
 </channel>
 </rss>
