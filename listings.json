@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/drifting-models/index.html",
       "/posts/token-level-filtering/index.html",
       "/posts/hot-mess-of-ai/index.html",
       "/posts/kimi-k-2-5-tech/index.html",
