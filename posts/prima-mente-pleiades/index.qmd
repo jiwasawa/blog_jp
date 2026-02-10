@@ -3,7 +3,7 @@ title: "AI解釈性が切り拓くアルツハイマー病診断の新たな地�
 description: "AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。"
 author: "Junichiro Iwasawa"
 date: "2026-02-10"
-categories: [LLM, AI]
+categories: [AI]
 image: https://picsum.photos/id/163/200
 ---
 
