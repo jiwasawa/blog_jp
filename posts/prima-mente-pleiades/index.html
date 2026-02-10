@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="dcterms.date" content="2026-02-10">
+<meta name="description" content="AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。">
+
+<title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵 – jiwasawaのブログ">
+<meta property="og:description" content="AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。">
+<meta property="og:image" content="https://picsum.photos/id/163/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵 – jiwasawaのブログ">
+<meta name="twitter:description" content="AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。">
+<meta name="twitter:image" content="https://picsum.photos/id/163/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</h1>
+                  <div>
+        <div class="description">
+          AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 10, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>アルツハイマー病（Alzheimer’s Disease: AD）の早期発見、特に血液サンプルを用いた非侵襲的な診断手法の確立は、長らく医学研究における聖杯の一つとされてきた。近年、<a href="https://primamente.com">Prima Mente</a>社が開発したエピジェネティック基盤モデル「Pleiades」を用いた<a href="https://www.goodfire.ai/research/interpretability-for-alzheimers-detection">研究</a>において、AD検出における重要なブレイクスルーがもたらされた。</p>
+<p>しかし、この研究の真の革新性は、単にAIが高い精度で疾患を予測した点にはない。<strong>Mechanistic Interpretability（機械論的解釈性）</strong> の技術を適用することで、AIが「なぜ」その結論に至ったのかを解明し、その過程で人間が見落としていた新たな生物学的バイオマーカーのクラス――<strong>フラグメントミクス（Fragmentomics）</strong>――を再発見した点にある。</p>
+<p>本稿では、AIがいかにしてブラックボックスから脱却し、科学的発見のパートナーとなり得るかについて、Pleiadesの事例を通じて解説する。</p>
+<section id="pleiadesエピジェネティクスのための基盤モデル" class="level2">
+<h2 class="anchored" data-anchor-id="pleiadesエピジェネティクスのための基盤モデル">Pleiades：エピジェネティクスのための基盤モデル</h2>
+<p>Pleiadesは、70億（7B）パラメータを持つエピジェネティック基盤モデル（Epigenetic Foundation Model）である。このモデルは、人間のメチル化データおよびゲノム配列データという膨大なコーパス（約1.9兆トークン）で事前学習されている。</p>
+<p>従来の言語モデル（LLM）がテキストの文脈を学習するように、PleiadesはDNA配列だけでなく、遺伝子制御に影響を与えるエピジェネティックなマーク（メチル化など）を含む複雑な生物学的パターンを学習している。血液中に浮遊する<strong>cfDNA（Cell-free DNA：無細胞DNA）</strong> に適用された際、Pleiadesは単なる塩基配列の情報のみならず、cfDNAの断片長（フラグメント長）にエンコードされた微細なシグナルをも捕捉する。</p>
+<section id="cfdnaとエピジェネティクス" class="level3">
+<h3 class="anchored" data-anchor-id="cfdnaとエピジェネティクス">cfDNAとエピジェネティクス</h3>
+<p>cfDNAは、細胞死に伴って血流中に放出されるDNAの断片である。この断片はランダムに切断されるわけではなく、ヌクレオソーム（ヒストンタンパク質にDNAが巻き付いた構造）の位置や、細胞死のメカニズムを反映した特定のパターンを持つ。Pleiadesはこの潜在的な情報を高次元空間の表現（Embedding）として獲得する能力を持つ。</p>
+</section>
+</section>
+<section id="解釈性が明らかにした意外な支配的シグナル" class="level2">
+<h2 class="anchored" data-anchor-id="解釈性が明らかにした意外な支配的シグナル">解釈性が明らかにした「意外な支配的シグナル」</h2>
+<p>研究チームは当初、Pleiadesを用いてcfDNAからADを検出するタスクを行い、既存のプロテオミクス（タンパク質解析）バイオマーカーに匹敵する性能を確認した。しかし、真の知見は「モデルが何を見ているか」を解析した際に得られた。</p>
+<section id="ブラックボックスを開くprobingとsparse-autoencoders" class="level3">
+<h3 class="anchored" data-anchor-id="ブラックボックスを開くprobingとsparse-autoencoders">ブラックボックスを開く：ProbingとSparse Autoencoders</h3>
+<p>研究チームは、モデルの内部表現を理解するために、以下の2つの解釈性手法を用いた。</p>
+<ol type="1">
+<li><strong>Supervised Probing（教師ありプロービング）:</strong> モデルの最終層の表現から、特定の生物学的情報（メチル化状態や断片長など）がどの程度抽出可能かを検証する。</li>
+<li><strong>Sparse Autoencoders (SAE):</strong> モデルのニューロン発火パターンを分解し、モデルが意思決定に用いている「特徴（Features）」を特定する。</li>
+</ol>
+</section>
+<section id="驚きの発見メチル化よりも長さ" class="level3">
+<h3 class="anchored" data-anchor-id="驚きの発見メチル化よりも長さ">驚きの発見：メチル化よりも「長さ」</h3>
+<p>従来の研究では、AD検出においてDNAメチル化パターンが最も重要な指標であると考えられてきた。実際、Pleiadesの内部表現にはメチル化情報も豊富に含まれていた。しかし、SAEを用いた解析の結果、AD検出の判断に最も強く寄与していた支配的なシグナルは、メチル化ではなく<strong>「cfDNAの断片長（Fragment Length）」</strong>であることが判明したのである。</p>
+<p>具体的には、Pleiadesの内部表現空間（Embedding manifold）を解析すると、断片長がきれいなU字型の軌跡を描いてマッピングされていることが分かった。さらに、この軌跡上の特定の点、特に<strong>167 base pairs (bp)</strong> 付近において、モデルは表現能力を集中させていた。167 bpという長さは、DNAがヌクレオソーム（コア＋リンカーDNA）に巻き付いている長さと一致しており、生物学的に極めて意味のある数値である。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="pleiades-fragment-manifold-extended.gif" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Pleiadesの内部表現空間. <a href="https://www.goodfire.ai/research/interpretability-for-alzheimers-detection#">goodfire.ai/research/interpretability-for-alzheimers-detection</a>より引用</figcaption>
+</figure>
+</div>
+<p>これは、AIが膨大なデータから「ヌクレオソーム構造に関連する断片長が重要である」という仮説を自力で導き出したことを意味する。</p>
+</section>
+</section>
+<section id="フラグメントミクスad検出の新たなフロンティア" class="level2">
+<h2 class="anchored" data-anchor-id="フラグメントミクスad検出の新たなフロンティア">フラグメントミクス：AD検出の新たなフロンティア</h2>
+<p>AIによる解釈から得られた「フラグメント長が重要である」という洞察に基づき、研究チームはPleiadesのような巨大なモデルを使わず、単にフラグメントミクス指標（断片長の特徴量）のみを用いたシンプルな分類器（ロジスティック回帰）を構築した。</p>
+<section id="堅牢な汎化性能" class="level3">
+<h3 class="anchored" data-anchor-id="堅牢な汎化性能">堅牢な汎化性能</h3>
+<p>このシンプルな解釈可能モデル（Interpretable Classifier）の性能は驚くべきものであった。</p>
+<ul>
+<li><strong>フラグメント長のみ:</strong> 独立したコホート（<a href="https://www.ndcn.ox.ac.uk/research/optima">OPTIMA</a>）において、AUROC 0.78を記録。</li>
+<li><strong>複合モデル:</strong> フラグメント長に加え、メチル化および細胞タイプ推定（Cell type deconvolution）の特徴量を組み合わせると、AUROCは0.84まで向上した。</li>
+</ul>
+<p>ここで特筆すべきは、<strong>メチル化情報や細胞タイプ情報のみを用いたモデルは、独立したコホートに対して汎化しなかった（性能が著しく低下した）</strong> という点である。対照的に、フラグメントミクスに基づくモデルは異なるデータセット間でも安定した性能を発揮した（ロバスト性が高い）。</p>
+<p>また、この分類器はパーキンソン病のデータセットには反応せず、AD特異的なバイオマーカーであることも示唆された。これは、cfDNAの切断パターンが、神経変性疾患ごとに異なる病理学的プロセスを反映している可能性を示している。</p>
+</section>
+</section>
+<section id="科学的発見におけるai解釈性の役割" class="level2">
+<h2 class="anchored" data-anchor-id="科学的発見におけるai解釈性の役割">科学的発見におけるAI解釈性の役割</h2>
+<p>本研究は、AIが単なる「予測器」を超え、科学的発見を加速させる「パートナー」となり得ることを実証している。Interpretability（解釈性）は、以下のようなプロセスで科学に貢献する。</p>
+<ol type="1">
+<li><strong>仮説生成（Hypothesis Generation）:</strong> 人間が見過ごしていた「フラグメント長」という特徴の重要性を、モデルの内部解析から発見した。これを「Hypothesis Triage（仮説の選別）」と呼ぶことができる。無限にある生物学的特徴の中から、有望なものをAIが提示したのである。</li>
+<li><strong>知識の検証と精緻化:</strong> メチル化の重要性を再確認しつつ、それ以上に断片長が堅牢なマーカーであることを示した。</li>
+<li><strong>モデルの蒸留（Distillation）:</strong> 巨大なブラックボックスモデルから得た知見を、人間が理解可能で、かつ臨床応用しやすいシンプルなモデルへと落とし込むことに成功した。</li>
+</ol>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>Pleiadesと<a href="https://goodfire.ai">Goodfire</a>の解釈性ツールによる今回の成果は、AIモデルが生物学的な「理解」を深めていることを示唆している。モデルはcfDNAの断片長が持つ生物学的意味（ヌクレオソーム構造など）を暗黙的に学習し、それを疾患予測に利用していた。</p>
+<p>今後、医療AIの開発においては、単にAUROCなどの予測精度を追求するだけでなく、「モデルが何を根拠にしているか」を解明するMechanistic Interpretabilityが不可欠となるだろう。AIはブラックボックスの予言者ではなく、検証可能な仮説を提供する研究者としての役割を担い始めている。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li><strong>Using Interpretability to Identify a Novel Class of Alzheimer’s Biomarkers.</strong> Goodfire &amp; Prima Mente, 2026. <a href="https://www.goodfire.ai/research/interpretability-for-alzheimers-detection">Original Blog Post</a></li>
+<li><strong><a href="https://www.biorxiv.org/content/10.1101/2025.07.16.665231v1">Human whole epigenome modelling for clinical applications with Pleiades</a>.</strong> Niki et al., 2025. bioRxiv.</li>
+<li><strong><a href="https://www.nature.com/articles/s41591-025-03735-2">Early detection of multiple cancer types using multidimensional cell-free DNA fragmentomics</a>.</strong> Bao et al., 2025. <em>Nature Medicine</em>.</li>
+<li><strong><a href="https://doi.org/10.1016/j.cell.2015.11.050">Cell-free DNA comprises an in vivo nucleosome footprint that informs its tissues-of-origin</a>.</strong> Snyder et al., 2016. <em>Cell</em>.</li>
+<li><strong><a href="https://doi.org/10.1038/s41467-022-33394-7">DNA methylation signatures of Alzheimer’s disease neuropathology in the cortex are primarily driven by variation in non-neuronal cell-types</a>.</strong> Shireby et al., 2022. <em>Nature Communications</em>.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

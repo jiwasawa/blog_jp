@@ -10,7 +10,17 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 08 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 10 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</link>
+  <description><![CDATA[ AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。 ]]></description>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</guid>
+  <pubDate>Tue, 10 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/163/200" medium="image"/>
+</item>
 <item>
   <title>State of AI 2026: Post-trainingの覇権と「AGIの夢」の変質</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -111,19 +121,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/</guid>
   <pubDate>Fri, 23 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/154/200" medium="image"/>
-</item>
-<item>
-  <title>Vercelの「謙虚な」覇権：AI SDKとWorkflowが描く実利主義的未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</link>
-  <description><![CDATA[ Vercel CTO Malte Ubl氏へのインタビューから、AI SDKの「謙虚さ」とWorkflow Development Kit (WDK)による実利主義的なインフラ構築、そしてPythonサポートとセキュリティ強化戦略まで、AI時代のVercelの野心的な全方位外交を紐解く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Latent Space Podcast</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</guid>
-  <pubDate>Fri, 23 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/153/200" medium="image"/>
 </item>
 </channel>
 </rss>
