@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.7.23</generator>
-<lastBuildDate>Sat, 07 Feb 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 09 Feb 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</link>
+  <description><![CDATA[ AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</guid>
+  <pubDate>Mon, 09 Feb 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/163/200" medium="image"/>
+</item>
 <item>
   <title>State of AI 2026: Post-trainingの覇権と「AGIの夢」の変質</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,17 +124,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</guid>
   <pubDate>Thu, 22 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/153/200" medium="image"/>
-</item>
-<item>
-  <title>TTT-Discover：テスト時学習が切り拓く科学的発見の新たな地平</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/</link>
-  <description><![CDATA[ 「Learning to Discover at Test Time」論文で提案されたTTT-Discoverは、LLMをテスト時に強化学習で継続的にトレーニングすることで、数学、GPUカーネルエンジニアリング、アルゴリズム設計、生物学といった多様な分野でSOTAを更新する画期的なアプローチを解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/</guid>
-  <pubDate>Thu, 22 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/154/200" medium="image"/>
 </item>
 </channel>
 </rss>
