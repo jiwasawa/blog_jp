@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 10 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 12 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/openclaw-steinberger/</link>
+  <description><![CDATA[ Peter Steinberger氏のOpenClawは、AIエージェントの未来を「Agentic Engineering」という新たな地平で再定義し、80%のアプリを不要にする可能性を秘めた「OSとしてのエージェント」の誕生を告げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Lex Fridman Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/openclaw-steinberger/</guid>
+  <pubDate>Thu, 12 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/164/200" medium="image"/>
+</item>
 <item>
   <title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -110,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/</guid>
   <pubDate>Tue, 27 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/156/200" medium="image"/>
-</item>
-<item>
-  <title>TTT-Discover：テスト時学習が切り拓く科学的発見の新たな地平</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/</link>
-  <description><![CDATA[ 「Learning to Discover at Test Time」論文で提案されたTTT-Discoverは、LLMをテスト時に強化学習で継続的にトレーニングすることで、数学、GPUカーネルエンジニアリング、アルゴリズム設計、生物学といった多様な分野でSOTAを更新する画期的なアプローチを解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/ttt-discovery/</guid>
-  <pubDate>Fri, 23 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/154/200" medium="image"/>
 </item>
 </channel>
 </rss>
