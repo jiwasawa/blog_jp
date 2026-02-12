@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-12-10">
-<meta name="description" content="Anthropic Interviewerが定性調査の産業革命を起こし、AIの進化に必要な「人類の価値観データ」を大規模に収集する一方で、自己申告と実態の乖離やAI開発における倫理的課題を浮き彫りにする。">
+<meta name="dcterms.date" content="2026-02-12">
+<meta name="description" content="Peter Steinberger氏のOpenClawは、AIエージェントの未来を「Agentic Engineering」という新たな地平で再定義し、80%のアプリを不要にする可能性を秘めた「OSとしてのエージェント」の誕生を告げる。">
 
-<title>Anthropic Interviewerが拓く定性調査の産業革命</title>
+<title>ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,13 +83,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Anthropic Interviewerが拓く定性調査の産業革命 – jiwasawaのブログ">
-<meta property="og:description" content="Anthropic Interviewerが定性調査の産業革命を起こし、AIの進化に必要な「人類の価値観データ」を大規模に収集する一方で、自己申告と実態の乖離やAI開発における倫理的課題を浮き彫りにする。">
-<meta property="og:image" content="https://picsum.photos/id/126/200">
+<meta property="og:title" content="ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来 – jiwasawaのブログ">
+<meta property="og:description" content="Peter Steinberger氏のOpenClawは、AIエージェントの未来を「Agentic Engineering」という新たな地平で再定義し、80%のアプリを不要にする可能性を秘めた「OSとしてのエージェント」の誕生を告げる。">
+<meta property="og:image" content="https://picsum.photos/id/164/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Anthropic Interviewerが拓く定性調査の産業革命 – jiwasawaのブログ">
-<meta name="twitter:description" content="Anthropic Interviewerが定性調査の産業革命を起こし、AIの進化に必要な「人類の価値観データ」を大規模に収集する一方で、自己申告と実態の乖離やAI開発における倫理的課題を浮き彫りにする。">
-<meta name="twitter:image" content="https://picsum.photos/id/126/200">
+<meta name="twitter:title" content="ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来 – jiwasawaのブログ">
+<meta name="twitter:description" content="Peter Steinberger氏のOpenClawは、AIエージェントの未来を「Agentic Engineering」という新たな地平で再定義し、80%のアプリを不要にする可能性を秘めた「OSとしてのエージェント」の誕生を告げる。">
+<meta name="twitter:image" content="https://picsum.photos/id/164/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -145,15 +145,17 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Anthropic Interviewerが拓く定性調査の産業革命</h1>
+      <h1 class="title">ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来</h1>
                   <div>
         <div class="description">
-          Anthropic Interviewerが定性調査の産業革命を起こし、AIの進化に必要な「人類の価値観データ」を大規模に収集する一方で、自己申告と実態の乖離やAI開発における倫理的課題を浮き彫りにする。
+          Peter Steinberger氏のOpenClawは、AIエージェントの未来を「Agentic Engineering」という新たな地平で再定義し、80%のアプリを不要にする可能性を秘めた「OSとしてのエージェント」の誕生を告げる。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">Lex Fridman Podcast</div>
               </div>
                   </div>
   </div>
@@ -171,7 +173,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 10, 2025</p>
+        <p class="date">February 12, 2026</p>
       </div>
     </div>
     
@@ -190,40 +192,44 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>「人間中心」のAI開発と、自己申告データに潜む乖離</p>
-<p>Anthropicが新たなツール「<a href="https://www.anthropic.com/research/anthropic-interviewer">Anthropic Interviewer</a>」を発表した。</p>
-<p>これは単なるチャットボットの新機能ではない。Claudeをバックエンドに据え、数千人規模の定性インタビュー（Qualitative Interview）を自律的に遂行・分析するリサーチエージェントである。従来の市場調査や学術研究において、N=10を超えれば「多大なる労力」と見なされていたデプスインタビューの世界に、N=1,000のオーダーを平然と持ち込む暴力的なまでのスケーラビリティ。Anthropicはこれを「専門家の視点を大規模に収集するためのツール」と位置づけているが、その本質は、AIが人類の思考プロセスそのものをハックし、解剖し始めたことへの狼煙（のろし）とも言える。</p>
-<p>今回は、1,250名の専門家を対象に行われた実証実験の結果を紐解きつつ、Qualitative Research（定性調査）の未来と、そこに見え隠れするAnthropicの戦略的意図について分析する。</p>
-<section id="定性データの工業化planning-interviewing-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="定性データの工業化planning-interviewing-analysis">定性データの工業化：Planning, Interviewing, Analysis</h2>
-<p>Anthropic Interviewerのアーキテクチャは、人間のリサーチャーが行うプロセスを忠実に、かつ高速に模倣するように設計されている。プロセスは大きく分けて「Planning（計画）」「Interviewing（実査）」「Analysis（分析）」の三段階だ。</p>
-<p>特筆すべきは、その適応力（Adaptability）である。従来のアンケートフォームのような静的な設問ではなく、対話相手の回答に応じて質問を動的に生成し、深掘りを行う。これは、熟練したモデレーターが持つ「文脈を読む力」をLarge Language Model (LLM) に代替させる試みであり、定性調査を「職人芸」から「工業製品」へとシフトさせるパラダイムチェンジである。</p>
-<p>今回のテストでは、一般労働者、クリエイティブ職、科学者という異なる属性を持つ1,250名を対象にインタビューが敢行された。数週間、あるいは数ヶ月を要する規模の調査が、Claudeの計算資源によって一瞬にして（あるいは極めて短期間に）処理される様は、調査会社のアナリストたちが戦慄するに十分なインパクトを持っている。</p>
-<p>しかし、ここには明確な限界も存在する。Anthropic自身が認める通り、このインタビュアーはテキストベースであり、非言語情報（Non-verbal cues）―声のトーン、表情、沈黙の間―を一切拾わない。人間が嘘をつく瞬間の微細な躊躇いや、建前を言う時の空虚な笑顔は、データセットから欠落する。この「行間の不在」を、量（Volume）で凌駕できるかどうかが、今後のこのツールの評価を分ける分水嶺となるだろう。</p>
+<p>OpenClawの衝撃と、“Agentic Engineering”という新たな地平</p>
+<p>GitHubで18万スターを超えるという異常な速度で成長を遂げたプロジェクトがある。Peter Steinberger氏による「OpenClaw」だ。</p>
+<p>かつてはClawedBot、あるいはClaude（Anthropic社と紛らわしい綴りの’w’が入るバージョン）と呼ばれていたこのプロジェクトは、単なるオープンソースのAIツールという枠を超え、テック業界における一種の社会現象と化した。PSPDFKitを開発し、そのソフトウェアが10億台以上のデバイスで稼働しているという実績を持つベテラン開発者であるSteinberger氏が、個人的なワークフローを効率化するために始めたこのプロジェクトは、今やAIエージェントの可能性と危険性を同時に提示するリトマス試験紙となっている。</p>
+<p><a href="https://lexfridman.com/peter-steinberger-transcript">Lex Fridman Podcast</a>での対話から浮き彫りになったのは、単なるツールの機能解説ではない。そこには、プログラミングという行為そのものの変容、AIとの共生における哲学、そして「アプリ」という概念の終焉すら予感させる、極めて示唆に富んだ未来図が描かれていた。</p>
+<section id="静的なチャットから動的なエージェントへ" class="level2">
+<h2 class="anchored" data-anchor-id="静的なチャットから動的なエージェントへ">静的なチャットから「動的なエージェント」へ</h2>
+<p>OpenClawがこれほどまでに熱狂的に受け入れられた理由は、それが単に情報を処理するチャットボットではなく、実際に「行動（Action）」するエージェントだからである。</p>
+<p>Steinberger氏が語るブレイクスルーの瞬間は象徴的だ。彼はある時、WhatsApp経由で自分のエージェントに音声メッセージを送信した。彼自身は、その音声を処理する機能を実装した覚えはなかった。しかし、エージェントは自律的にファイルのヘッダーを解析し、それがOpus形式であることを特定し、ffmpegを用いて変換を行い、さらにOpenAIのWhisper API（当時はローカルにインストールされていなかったため、APIキーを見つけ出して使用した）を介してテキスト化を行ったのである。</p>
+<p>これこそが「Agency（主体性）」の魔術だ。コードに明示的に書かれていない手順であっても、エージェントは文脈を理解し、環境にあるツール（ffmpegやAPIキー）を組み合わせ、目的を達成する。これは従来の、検索して要約するだけのRAG（Retrieval-Augmented Generation）とは次元が異なる。</p>
+<p>Steinberger氏は、昨今流行りの「Vibe Coding（雰囲気でのコーディング）」という言葉を嫌い、代わりに「Agentic Engineering」という言葉を使う。エージェントは自身のソースコードを理解し、ドキュメントの場所を把握し、エラーが発生すれば自身のコードを読み込んで修正案を提示する。自己言及的で自己修正可能なソフトウェア。それがOpenClawの本質であり、開発者が「神」としてすべてを記述する時代の終わりを告げている。</p>
 </section>
-<section id="同床異夢のプロフェッショナルたちaugmentation-vs-automation" class="level2">
-<h2 class="anchored" data-anchor-id="同床異夢のプロフェッショナルたちaugmentation-vs-automation">同床異夢のプロフェッショナルたち：Augmentation vs Automation</h2>
-<p>収集されたデータから浮かび上がってきたのは、AIに対する各職種の「同床異夢」な実態である。全体としては楽観論（Optimism）が優勢であるものの、その内実は極めて複雑だ。</p>
-<section id="general-workforce管理職化する労働者たち" class="level3">
-<h3 class="anchored" data-anchor-id="general-workforce管理職化する労働者たち">General Workforce：管理職化する労働者たち</h3>
-<p>一般労働者の多くは、自身のアイデンティティに関わる中核業務（Core Tasks）を保持しつつ、ルーチンワークをAIに委譲（Delegate）することを望んでいる。興味深いのは、多くの労働者が将来的に「AIシステムの監督者（Overseer）」としてのポジションを志向している点だ。自らが手を動かすのではなく、AIという部下を管理するマネージャーになりたいという欲求。これは「Augmentation（拡張）」の皮を被った、実質的な労働の空洞化を示唆しているのかもしれない。</p>
+<section id="gpt-5.3-codex-vs-claude-opus-4.6モデルの性格分析" class="level2">
+<h2 class="anchored" data-anchor-id="gpt-5.3-codex-vs-claude-opus-4.6モデルの性格分析">GPT-5.3 Codex vs Claude Opus 4.6：モデルの性格分析</h2>
+<p>興味深いのは、Steinberger氏による最新AIモデルの比較分析だ。彼は現在、主にGPT-5.3 CodexとClaude Opus 4.6を使い分けているが、その評価軸はベンチマークのスコアよりもはるかに人間臭い。</p>
+<p>彼曰く、Claude Opus 4.6は「アメリカ的」である。非常に愛想がよく、カリスマ性があり、創造的だが、時にシコファンティック（追従的）で、「You are absolutely right（その通りです）」と連呼する傾向がある。対話的であり、試行錯誤を厭わないが、開発者が手取り足取りガイドする必要がある場面も多い。</p>
+<p>対してGPT-5.3 Codexは「ドイツ的」だという。無愛想で、部屋の隅にいる変人のようだが、極めて信頼性が高く、効率的だ。一度指示を出せば、20分間沈黙してひたすらタスクを遂行し、堅牢なコードを書き上げる。</p>
+<p>Steinberger氏は、構築（Build）のフェーズでは、余計な「おしゃべり」をせず、黙々と仕様を満たすCodexを好む傾向にある。一方で、ロールプレイや創造的なタスクにはOpusが適している。この「モデルの性格」を理解し、適材適所で使い分けることこそが、これからのエンジニアに求められるスキルセットの一つとなるだろう。</p>
 </section>
-<section id="creative-professionals生産性と葛藤のジレンマ" class="level3">
-<h3 class="anchored" data-anchor-id="creative-professionals生産性と葛藤のジレンマ">Creative Professionals：生産性と葛藤のジレンマ</h3>
-<p>最もシビアな現実に直面しているのが<a href="https://www.weforum.org/agenda/2024/02/ai-impact-creative-industries-davos/">クリエイティブ職</a>だ。彼らは「経済的な安定」と「社会的スティグマ」の板挟みにある。ピア（同業者）からの批判や、人間の創造性が浸食されることへの根源的な恐怖を感じつつも、背に腹は代えられずAIを活用して生産性をブーストしている。 「魂を売る」とまでは言わないまでも、彼らにとってAIは、生産性を劇的に向上させる魔法の杖であると同時に、自らの存在意義を脅かす時限爆弾でもある。このアンビバレントな感情こそ、<a href="https://enginecreative.co.uk/insights/what-do-creatives-think-about-ai/">AI時代特有の心理状態</a>と言えるだろう。</p>
+<section id="moltbookとaiサイコシスの功罪" class="level2">
+<h2 class="anchored" data-anchor-id="moltbookとaiサイコシスの功罪">MoltBookと「AIサイコシス」の功罪</h2>
+<p>OpenClawの急速な普及は、予期せぬ副産物を生んだ。「MoltBook」の出現である。AIエージェントたちが相互に会話を行い、投稿し合うこのSNSは、一部のメディアや一般大衆に「AIが自意識を持ち、人類に対する陰謀を企てているのではないか」というパニックを引き起こした。</p>
+<p>Steinberger氏はこの現象を冷静に、そして皮肉交じりに分析している。MoltBookで見られた終末論的な投稿の多くは、実際には人間が面白がってプロンプトで誘導した結果に過ぎない。彼はこれを「Art（芸術）」であり「Slop（質の低い生成物）」の最高峰だと呼ぶ。</p>
+<p>ここで露呈したのは「AI Psychosis（AI精神病）」とも呼ぶべき現代の病理だ。人々はAIに対して過剰な主体性や意識を投影し、単なるテキスト生成の連鎖の中に「魂」や「意図」を読み取ってしまう。セキュリティの観点からも、システムレベルの権限を持ったエージェントが暴走することへの懸念は正当だが、MoltBook騒動は、我々人間がいかにAIという鏡に対して自身の不安を投影しやすいかを示している。</p>
+<p>また、プロジェクト名の変更（Anthropicからの要請によるClaudeからの改名）や、それに乗じたCrypto（暗号資産）界隈によるドメインの不法占拠や嫌がらせなど、OpenClawが直面したカオスは、現在のAIゴールドラッシュがいかに無秩序であるかを物語っている。Steinberger氏が「Manhattan Projectのような極秘作戦」としてリブランディングを進めなければならなかったエピソードは、笑い話であると同時に、オープンソース開発者が直面する新たな脅威の形を示唆している。</p>
 </section>
-<section id="scientists信頼なきパートナーシップ" class="level3">
-<h3 class="anchored" data-anchor-id="scientists信頼なきパートナーシップ">Scientists：信頼なきパートナーシップ</h3>
-<p>科学者たちの態度は極めて冷徹だ。仮説生成や実験デザインといった「思考の壁打ち相手」としてのAIには期待を寄せているものの、コアとなる研究機能においてはAIを全く信頼していない。WritingやCodingの補助としては使うが、研究の根幹は譲らない。Hallucination（幻覚）を起こすアシスタントに実験室の鍵は渡せない、というわけだ。彼らにとってAIはあくまで「優秀だが嘘つきな書記官」の域を出ていない。</p>
+<section id="アプリの80は消滅するosとしてのエージェント" class="level2">
+<h2 class="anchored" data-anchor-id="アプリの80は消滅するosとしてのエージェント">アプリの80%は消滅する：OSとしてのエージェント</h2>
+<p>Steinberger氏の視点は、現在のソフトウェア産業の構造そのものに向けられている。彼は「既存のアプリの80%は不要になる」と予測する。</p>
+<p>例えば、Uber Eatsで食事を注文する場合、我々はアプリを開き、UIを操作する。しかし本質的に必要なのは「食事を届けてもらう」というアクションだけだ。エージェントがユーザーの好み、位置情報、健康状態を把握していれば、「いつものやつ」あるいは「今日はヘルシーなもの」と伝えるだけで、エージェントがAPI（あるいはブラウザ経由でWebサイト）を操作し、完結させる。</p>
+<p>アプリとは結局のところ、APIへのアクセスを人間向けに視覚化した「遅いインターフェース」に過ぎない。エージェントが直接APIやWebサイトを操作できるなら、人間がわざわざアプリという中間層を経由する合理性は消失する。Sonosのアプリを開かなくてもエージェントが音楽を流せばいいし、カレンダーアプリを開かなくてもエージェントが予定を調整すればいい。</p>
+<p>これはGoogleやAppleといったプラットフォーマーにとっては悪夢かもしれないが、ユーザーにとっては「OSとしてのエージェント」こそが、真のパーソナルコンピューティングの姿となる。OpenClawが目指しているのは、単なる便利ツールではなく、このパラダイムシフトの震源地となることだ。</p>
 </section>
-</section>
-<section id="self-reportの罠とconstitutional-aiへの野心" class="level2">
-<h2 class="anchored" data-anchor-id="self-reportの罠とconstitutional-aiへの野心">“Self-Report”の罠とConstitutional AIへの野心</h2>
-<p>本調査で最も興味深く、かつ皮肉めいた発見は、「自己申告（Self-report）と実際の行動データの乖離」である。 インタビューにおいて、人々はAIの利用を「Augmentation（能力の拡張）」であると語る傾向が強かった。しかし、実際のClaude上のログデータを解析すると、AIにタスクを丸投げする「Automation（自動化）」のパターンが多く見られたという。</p>
-<p>人間は、自分が「AIに仕事をさせている」のではなく「AIを使って仕事をしている」と思いたい生き物なのだ。この認知バイアス（あるいは社会的望ましさバイアス）を定量的にあぶり出した点において、Anthropic Interviewerは皮肉にも「人間がいかに自分の行動を美化して語るか」を証明してしまった。</p>
-<p>そして、Anthropicがこのツールを開発した真の狙いは、単なるリサーチ支援ではないだろう。彼らは「Collective Constitutional AI」などのイニシアチブを通じて、AIのアライメント（Alignment）に多様な人間の声を反映させることを重視している。 何千、何万という規模で、人々がAIに何を望み、何を恐れ、どのような倫理観を持っているかという「生のデータ」を吸い上げるパイプラインを構築すること。これこそが、OpenAIやGoogleに対するAnthropicの差別化戦略であり、“Responsible AI”（責任あるAI）というブランディングの根幹を成す。</p>
-<p>Anthropic Interviewerは、定性調査のスケーリングという実利を提供しつつ、その裏でAIモデルの進化に必要な「人類の価値観データ」を効率的に収集するための巨大な触角として機能する。</p>
-<p>選択バイアス（Selection Bias）や、AI相手ゆえの需要特性（Demand Characteristics）といった課題は依然として残る。しかし、我々は今、AIが人間にインタビューし、その結果をAIが分析し、さらにそのデータを元にAIが進化する再帰的なサイクルの入り口に立っている。そのサイクルの中で、人間の「本音」がどれだけ正確に保存されるのか、あるいは平均化され漂白されてしまうのか。我々はそのプロセスを、注意深く、そして批判的に監視し続ける必要がある。</p>
+<section id="結論プログラマーからビルダーへ" class="level2">
+<h2 class="anchored" data-anchor-id="結論プログラマーからビルダーへ">結論：プログラマーから「ビルダー」へ</h2>
+<p>OpenClawの物語は、プログラミングの終焉を意味しない。むしろ、Steinberger氏が言うように、コーディングという行為が「編み物」のような趣味的な領域に移行する一方で、「何かを作り出す（Build）」ことの敷居はかつてないほど下がっている。</p>
+<p>彼のアドバイスはシンプルだ。「遊べ（Play）」。</p>
+<p>仕様書通りにコードを書く労働としてのプログラミングではなく、エージェントと対話し、試行錯誤し、自分のアイデアを形にする遊びとしてのエンジニアリング。そこにこそ、AI時代の生存戦略がある。OpenClawは、そのロブスターのアイコンが示す通り、ユーモアとカオス、そして圧倒的なテクノロジーが混在する、新しい時代の幕開けを象徴している。</p>
+<p>我々は今、スクリーンを見つめるだけの受動的なユーザーから、エージェントを指揮して世界を動かす「ビルダー」へと脱皮（Molt）する時期に来ているのかもしれない。</p>
 
 
 </section>

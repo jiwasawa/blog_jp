@@ -9,8 +9,21 @@
 <link>https://jiwasawa.github.io/blog_jp/</link>
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
-<generator>quarto-1.7.23</generator>
-<lastBuildDate>Mon, 09 Feb 2026 15:00:00 GMT</lastBuildDate>
+<generator>quarto-1.8.27</generator>
+<lastBuildDate>Wed, 11 Feb 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/openclaw-steinberger/</link>
+  <description><![CDATA[ Peter Steinberger氏のOpenClawは、AIエージェントの未来を「Agentic Engineering」という新たな地平で再定義し、80%のアプリを不要にする可能性を秘めた「OSとしてのエージェント」の誕生を告げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Lex Fridman Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/openclaw-steinberger/</guid>
+  <pubDate>Wed, 11 Feb 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/164/200" medium="image"/>
+</item>
 <item>
   <title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -110,19 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/</guid>
   <pubDate>Mon, 26 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/156/200" medium="image"/>
-</item>
-<item>
-  <title>Vercelの「謙虚な」覇権：AI SDKとWorkflowが描く実利主義的未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</link>
-  <description><![CDATA[ Vercel CTO Malte Ubl氏へのインタビューから、AI SDKの「謙虚さ」とWorkflow Development Kit (WDK)による実利主義的なインフラ構築、そしてPythonサポートとセキュリティ強化戦略まで、AI時代のVercelの野心的な全方位外交を紐解く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Latent Space Podcast</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/vercel-malte/</guid>
-  <pubDate>Thu, 22 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/153/200" medium="image"/>
 </item>
 </channel>
 </rss>
