@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 11 Feb 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 12 Feb 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/codex-harness/</link>
+  <description><![CDATA[ OpenAIの「Harness Engineering」の事例から、AIにコードを書かせるための環境設計やフィードバックループ構築といった、エンジニアの役割の変化と、AI時代におけるソフトウェア開発の新たな実践方法を分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/codex-harness/</guid>
+  <pubDate>Thu, 12 Feb 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/165/200" medium="image"/>
+</item>
 <item>
   <title>ロブスター革命：Peter SteinbergerのOpenClawが再定義するAIエージェントの未来</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +123,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/</guid>
   <pubDate>Mon, 26 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/155/200" medium="image"/>
-</item>
-<item>
-  <title>LLMの継続学習における強化学習の優位性：そのメカニズムとAGIへの示唆</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/</link>
-  <description><![CDATA[ LLMの継続学習における強化学習（RL）の優位性を、壊滅的忘却を回避するメカニズムとAGIへの示唆に焦点を当てて、最新研究に基づき解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/continual-learning-wolfe/</guid>
-  <pubDate>Mon, 26 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/156/200" medium="image"/>
 </item>
 </channel>
 </rss>
