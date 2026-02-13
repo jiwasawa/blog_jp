@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 13 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 14 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>36ヶ月以内にAIは宇宙へ：Elon Muskが語るエネルギーの限界と「TeraFab」構想</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-1/</link>
+  <description><![CDATA[ Elon Muskは、AIの計算能力増大に伴う地球上の電力不足を解決するため、36ヶ月以内にAIを宇宙データセンターへ移転させる構想と、それを実現する「TeraFab」や「Optimus」ロボットによる製造業の革新、そしてAIの真実探求といった壮大なビジョンを語る。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-1/</guid>
+  <pubDate>Sat, 14 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/166/200" medium="image"/>
+</item>
 <item>
   <title>Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -112,17 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</guid>
   <pubDate>Thu, 29 Jan 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/157/200" medium="image"/>
-</item>
-<item>
-  <title>Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/</link>
-  <description><![CDATA[ Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/</guid>
-  <pubDate>Tue, 27 Jan 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/155/200" medium="image"/>
 </item>
 </channel>
 </rss>
