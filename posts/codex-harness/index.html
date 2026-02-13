@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-11-03">
-<meta name="description" content="Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」">
+<meta name="dcterms.date" content="2026-02-13">
+<meta name="description" content="OpenAIの「Harness Engineering」の事例から、AIにコードを書かせるための環境設計やフィードバックループ構築といった、エンジニアの役割の変化と、AI時代におけるソフトウェア開発の新たな実践方法を分析する。">
 
-<title>OpenAI「宮廷クーデター」の全貌</title>
+<title>Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,13 +83,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="OpenAI「宮廷クーデター」の全貌 – jiwasawaのブログ">
-<meta property="og:description" content="Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」">
-<meta property="og:image" content="https://picsum.photos/id/113/200">
+<meta property="og:title" content="Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度 – jiwasawaのブログ">
+<meta property="og:description" content="OpenAIの「Harness Engineering」の事例から、AIにコードを書かせるための環境設計やフィードバックループ構築といった、エンジニアの役割の変化と、AI時代におけるソフトウェア開発の新たな実践方法を分析する。">
+<meta property="og:image" content="https://picsum.photos/id/165/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="OpenAI「宮廷クーデター」の全貌 – jiwasawaのブログ">
-<meta name="twitter:description" content="Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」">
-<meta name="twitter:image" content="https://picsum.photos/id/113/200">
+<meta name="twitter:title" content="Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度 – jiwasawaのブログ">
+<meta name="twitter:description" content="OpenAIの「Harness Engineering」の事例から、AIにコードを書かせるための環境設計やフィードバックループ構築といった、エンジニアの役割の変化と、AI時代におけるソフトウェア開発の新たな実践方法を分析する。">
+<meta name="twitter:image" content="https://picsum.photos/id/165/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -145,13 +145,14 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">OpenAI「宮廷クーデター」の全貌</h1>
+      <h1 class="title">Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度</h1>
                   <div>
         <div class="description">
-          Ilya Sutskever氏の宣誓証言が暴く、独裁への恐れ、Anthropicとの合併交渉、そして「1年越しの計画」
+          OpenAIの「Harness Engineering」の事例から、AIにコードを書かせるための環境設計やフィードバックループ構築といった、エンジニアの役割の変化と、AI時代におけるソフトウェア開発の新たな実践方法を分析する。
         </div>
       </div>
                           <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
               </div>
                   </div>
@@ -170,7 +171,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 3, 2025</p>
+        <p class="date">February 13, 2026</p>
       </div>
     </div>
     
@@ -189,46 +190,50 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>Elon Musk氏がOpenAIとSam Altman氏を相手取って起こした訴訟は、AI業界のゴシップ好きたちの格好の的となって久しい。そんな中、OpenAIの共同創業者であり、あの追放劇の中心人物の一人であるIlya Sutskever氏の宣誓証言録取書（Deposition）という、一次情報が表に出てきた。</p>
-<p>今回はこの生々しい<a href="https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.340.1.pdf">法廷文書</a>に焦点を当てる。浮かび上がってきたのは、周到に準備された追放計画と、経営陣ですら恐れるSam Altman氏の実像、そしてAnthropicによる「火事場泥棒」一歩手前の経営統合案である。</p>
-<section id="sam-altmanは嘘つきである" class="level2">
-<h2 class="anchored" data-anchor-id="sam-altmanは嘘つきである">Sam Altmanは「嘘つき」である</h2>
-<p>証言の中心にあるのは、Sutskever氏が「Exhibit 19」として提出した52ページのメモだ。これは彼が当時の独立取締役（Adam D’Angelo氏、Helen Toner氏、Tasha McCauley氏）だけに送った内部告発文書である。</p>
-<p>衝撃的なのは、彼がこのメモをSam Altman氏本人には送らなかったという事実だ。その理由について、Sutskever氏は「彼（Altman氏）がこれらの議論に気づけば、それを<strong>何らかの方法で揉み消す（make them disappear）</strong>だろうと感じたからだ」と証言している。</p>
-<p>では、その「揉み消される」可能性があったメモの冒頭には何が書かれていたのか。</p>
-<blockquote class="blockquote">
-<p>「Samは、<strong>嘘をつき、幹部を弱体化させ、幹部同士を対立させるという一貫したパターン</strong>を示している」（Sam exhibits a consistent pattern of lying, undermining his execs, and pitting his execs against one another.）</p>
-</blockquote>
-<p>Sutskever氏はこれが当時の自身の見解であったと認め、このメモによって取締役会に取ってほしかった行動は「<strong>解任（Termination）</strong>」であったと明確に述べている。</p>
-<p>文書が漏洩することを極度に恐れたSutskever氏は、このメモを「消えるメール」機能を使って送信した。さらに、Greg Brockman氏に対しても同様の批判的なメモを作成していたという。経営中枢の人間が、自社のCEOと社長を「嘘つき」と断罪し、その証拠隠滅を恐れて秘密裏に行動していた。これが2023年秋のOpenAIの偽らざる姿であった。</p>
+<p>[2026年は<a href="https://jiwasawa.github.io/blog_jp/posts/agent-harness/">「Agent Harness」の年</a>になる──]。</p>
+<p>まことしやかに囁かれてきたその予言が、OpenAIのエンジニアリングブログによって現実味を帯びてきた。彼らが公開した記事「<a href="https://openai.com/index/harness-engineering/">Harness engineering: leveraging Codex in an agent-first world</a>」は、単なる技術自慢ではない。これは、我々がこれまで信じてきた「ソフトウェアエンジニアリング」という営みが、根本から書き換わろうとしていることの宣戦布告であり、同時にそのあまりに泥臭い実態の暴露でもある。</p>
+<p>「手書きのコードは0行」。</p>
+<p>このセンセーショナルな見出しに釣られて、「ついにエンジニア不要の時代が来た」と早合点する向きもあるだろうが、それはあまりに短絡的だ。彼らが構築したのは、AIにコードを書かせるための巨大な「拘束具（Harness）」であり、人間はその手綱を握る調教師へとジョブチェンジしたに過ぎない。本稿では、OpenAIが直面した「AIにコードを書かせる苦しみ」とその解決策としてのHarness Engineeringについて、冷徹に分析していく。</p>
+<section id="行の裏にある血と汗のharness" class="level2">
+<h2 class="anchored" data-anchor-id="行の裏にある血と汗のharness">「0行」の裏にある血と汗のHarness</h2>
+<p>OpenAIの実験チームは、社内向けベータ製品をCodex（AIコーディングエージェント）のみで構築した。アプリケーションロジック、テスト、CI設定、ドキュメントに至るまで、人間は一行もコードを書いていない。結果として、開発期間は手動の場合の1/10に短縮され、エンジニア1人あたり1日3.5件のPull Request（PR）を処理するという驚異的なスループットを叩き出した。</p>
+<p>しかし、ここで注目すべきは「AIが魔法のようにアプリを作った」ことではない。人間が「コードを書く」ことをやめた代わりに、「環境を設計し、意図を定義し、フィードバックループを構築する」ことに全精力を注いだ点にある。</p>
+<p>彼らはこれを「Harness Engineering」と呼んでいる。要するに、AIという暴れ馬が正しく走れるような走路と柵を整備する仕事だ。そしてその実態は、我々が想像するキラキラしたAI開発とは程遠い、極めて厳格で規律あるシステム構築の物語だった。</p>
 </section>
-<section id="年越しの追放計画" class="level2">
-<h2 class="anchored" data-anchor-id="年越しの追放計画">「1年越しの追放計画」</h2>
-<p>この追放劇は、しばしば「経験の浅い取締役会による突発的な行動」と分析されがちだ。実際、Sutskever氏自身もプロセスが「急いでいた（rushed）」こと、「取締役会がボードマターに<strong>経験不足（inexperienced）</strong>であった」ことを認めている。</p>
-<p>しかし、Wall Street Journalの記事（Exhibit 20） に関する質疑で、より根深い事実が明らかになる。 記事には「Sutskever氏は、Altman氏をCEOから交代させることが可能な取締役会の力学が整う瞬間を待っていた」とある。</p>
-<p>Sutskever氏は、これが「正しい」と認めた。 彼が待っていた「力学」とは、「<strong>取締役会の過半数が、明らかにSamと親しい（friendly）わけではない</strong>」状態になることだった。</p>
-<p>そして、決定的な一言。 「どのくらいの期間、彼（Altman氏）の解任を検討していたのか？」という問いに対し、Sutskever氏はこう答えている。</p>
-<p>「<strong>少なくとも1年間（At least a year）</strong>」。</p>
-<p>これは突発的な行動などでは断じてない。OpenAIのチーフサイエンティストが、少なくとも1年間にわたり、自社のカリスマCEOを追放するタイミングを伺っていたということだ。</p>
+<section id="agent-legibilityaiにとっての読みやすさ" class="level2">
+<h2 class="anchored" data-anchor-id="agent-legibilityaiにとっての読みやすさ">Agent Legibility：AIにとっての「読みやすさ」</h2>
+<p>最大の課題は、AIにどうやってコンテキスト（文脈）を理解させるか、という点にあった。</p>
+<p>初期の失敗例として挙げられているのが、巨大な <code>AGENTS.md</code> という「指示書」のアプローチだ。人間でもそうだが、1,000ページのマニュアルを渡されて「これ通りにやれ」と言われても、AIは重要な制約を見落とすし、指示書自体がすぐに陳腐化してゴミと化す。いわゆる「コンテキストウィンドウの無駄遣い」であり、運用負荷だけが増える最悪のパターンだ。</p>
+<p>そこで彼らが編み出したのが、「Progressive Disclosure（段階的開示）」という手法である。</p>
+<p><code>AGENTS.md</code> はあくまで「目次」や「地図」に留め、詳細な仕様や設計思想はリポジトリ内の構造化されたドキュメント（System of Record）に分散させる。AIは必要に応じて地図を参照し、必要なドキュメントだけを読みに行く。これは人間が新しいプロジェクトに参画した際、Wikiや設計書を辿りながら徐々に全体像を把握していくプロセスと全く同じだ。</p>
+<p>さらに徹底しているのは、アプリケーションのUIやログ、メトリクスさえも「AIが読める（Legible）」ように改造した点だ。Chrome DevTools Protocolを接続し、DOMスナップショットやスクリーンショットをAIに直接扱わせることで、AI自身に「バグの再現→修正→確認」のループを回させる。</p>
+<p>ログが見づらければAIはデバッグできない。だからAIのためにログを整形する。UIが複雑すぎればAIは操作できない。だからAIのためにUI構造を整理する。これはまさに、かつてWebエンジニアが検索エンジニア（Google bot）のためにSEOを意識したように、これからは「Agent Optimization」が必須スキルになることを示唆している。</p>
 </section>
-<section id="最大の爆弾anthropicとの合併交渉" class="level2">
-<h2 class="anchored" data-anchor-id="最大の爆弾anthropicとの合併交渉">最大の爆弾：Anthropicとの合併交渉</h2>
-<p>Sutskever氏の証言で最も衝撃的なのは、Altman氏追放の直後に起こった出来事だろう。 Altman氏解任の翌日か翌々日（土曜日か日曜日）、OpenAIの取締役会は、あろうことか最大のライバルである<strong>Anthropicとの合併</strong>を協議していた 。</p>
-<p>Sutskever氏の記憶によれば、Helen Toner氏がAnthropicに連絡したか、あるいはその逆かは定かではないが、合併してOpenAIの経営権を握るという提案がなされた。 その後、AnthropicのDario Amodei氏とDaniela Amodei氏を含む経営陣と、OpenAI取締役会との電話会議が実施されたという。</p>
-<p>ここで注目すべきは、Helen Toner氏とAnthropicの奇妙な関係だ。Toner氏はOpen Philanthropyに関係しており、そこはHolden Karnofsky氏 [cite: 1149, 1152] につながる。そしてKarnofsky氏はAnthropicのDaniela Amodei氏の夫である（Daniela氏とDario氏は兄妹だ。 Toner氏は追放劇の直前（2023年10月）、OpenAIを批判しAnthropicを称賛する記事を発表し、Sutskever氏が「明らかに不適切（obviously inappropriate）」と感じるほどの行動を取っていた。</p>
-<p>この合併案に対し、Anthropic側は興奮していたが、いくつかの「現実的な障害（practical obstacles）」を提起した。 Sutskever氏自身はこの案に「<strong>非常に不満（very unhappy）</strong>」だった。 しかし、彼以外の取締役会メンバーは「<strong>はるかに協力的（a lot more supportive）</strong>」であり、「少なくとも、非協力的（unsupportive）な者はいなかった」という。特にHelen Toner氏が最も協力的だったと彼は記憶している。</p>
-<p>結局、Anthropic側が提起した「現実的な障害」が原因で、この合併案は立ち消えとなった。もしこれが実現していれば、AI業界の地図は完全に塗り替えられていただろう。</p>
+<section id="tasteの強制と技術的負債のガベージコレクション" class="level2">
+<h2 class="anchored" data-anchor-id="tasteの強制と技術的負債のガベージコレクション">Tasteの強制と「技術的負債のガベージコレクション」</h2>
+<p>AIに自律性を持たせると、必ず直面するのが「エントロピーの増大」だ。AIは動くコードを書くのは得意だが、保守性や美学（Taste）を考慮したコードを書くのは苦手だ。放っておけば、リポジトリは「動くけれど誰も読みたくないスパゲッティコード」で溢れかえる。いわゆる「AI Slop（AIが吐き出す粗悪品）」問題だ。</p>
+<p>OpenAIはこの問題に対し、人力レビューで対抗するのではなく、AI自身に掃除させるというパワープレイに出た。</p>
+<ol type="1">
+<li><strong>境界の強制:</strong> ビジネスロジックの依存方向やレイヤー構造を厳格に定義し、それを破るコードを検知するカスタムLinter（これもAIに書かせる）を配置する。</li>
+<li><strong>Golden Principles:</strong> 「YOLO（適当な）データアクセス禁止」「オレオレ実装より共有ライブラリ使用」といった黄金律を明文化し、それに違反していないかを監視する。</li>
+<li><strong>自動クリーンアップ:</strong> 定期的に「技術的負債回収エージェント」を走らせ、ドキュメントの整合性チェックやリファクタリングを自動で行う。</li>
+</ol>
+<p>これは、プログラミング言語におけるメモリ管理が、手動の <code>malloc/free</code> からガベージコレクションへと進化した歴史と重なる。技術的負債の返済という、人間が最も嫌がり、後回しにしがちなタスクこそ、AIエージェントの自律ループに組み込むべきなのだ。</p>
 </section>
-<section id="杜撰なプロセスと二手三手の情報" class="level2">
-<h2 class="anchored" data-anchor-id="杜撰なプロセスと二手三手の情報">杜撰なプロセスと二手三手の情報</h2>
-<p>この証言録取書全体を貫いているのは、Sutskever氏の行動の「杜撰さ」だ。 彼はCEOの追放という一大事を「1年越し」で計画しながら、その根拠とした「Exhibit 19」のメモの情報のほとんどを、Mira Murati氏からの<strong>又聞き（secondhand knowledge）</strong>で構成していた。</p>
-<p>Altman氏がYCを追放された理由、Brockman氏がStripeを解雇されたという噂、Jason Kwon氏との会話内容など、メモの核心部分について、Sutskever氏は「Brad Lightcap氏に話したか？」「Greg Brockman氏に確認したか？」「Jason Kwon氏に話したか？」という問いの<strong>すべてに「No」と答えている</strong> 。</p>
-<p>彼は法廷で、「この件から学んだこと」として、「<strong>直接得た知識（firsthand knowledge）の決定的な重要性</strong>」と、「又聞きは<strong>さらなる調査（further investigation）</strong>への招待状である」ことに気づいた、と殊勝な反省を述べている。</p>
-<p>開いた口が塞がらない。彼は「さらなる調査」を一切行わず、未確認の伝聞情報に基づいて数十兆円企業のCEOを解任するというクーデターを実行したのだ。まさに短絡的分析の極みである。</p>
+<section id="merge-philosophyの転換質より量そして修正速度" class="level2">
+<h2 class="anchored" data-anchor-id="merge-philosophyの転換質より量そして修正速度">Merge Philosophyの転換：質より量、そして修正速度</h2>
+<p>もう一つ興味深いのが、開発プロセスの変化だ。</p>
+<p>従来の人間中心の開発では、本番環境を壊さないために厳重なゲート（テスト、人間によるレビュー）を設け、PRのマージを慎重に行っていた。しかし、AIエージェントによる圧倒的な物量作戦（高スループット）が可能になると、この常識はボトルネックになる。</p>
+<p>彼らは「Merge Philosophy（マージの哲学）」を転換し、ブロッキングゲートを最小限にした。テストがFlaky（不安定）でも、とりあえずマージして次のループで直せばいい。修正コストが限りなくゼロに近いなら、完璧を求めて止まるよりも、高速に回転させ続けて修正する方がトータルでは速いという判断だ。</p>
+<p>これは「Move fast and break things」の再来のようにも見えるが、その裏には「壊れてもAIが即座に直せる」という確信と、それを支える堅牢なObservability（可観測性）がある点が決定的に異なる。</p>
 </section>
-<section id="結論" class="level2">
-<h2 class="anchored" data-anchor-id="結論">結論</h2>
-<p>結局、Ilya Sutskever氏はOpenAIを去り（2024年5月）、「Safe Superintelligence」という新会社を設立した。 彼は今でもOpenAIの<strong>金銭的利害関係（financial interest）を保持</strong>しており、その価値は彼が会社を去った後も「<strong>増加した（Increased）</strong>」と証言している。 おまけに、この訴訟における彼の弁護士費用は、「おそらく（probably）」OpenAIが支払っていると話す。 追放劇のさなか、Helen Toner氏は「会社が破壊されることはミッションと一致する」と語ったというが、彼らにとっての「ミッション」とは、一体何だったのだろうか。</p>
+<section id="結論エンジニアは書くことから飼いならすことへ" class="level2">
+<h2 class="anchored" data-anchor-id="結論エンジニアは書くことから飼いならすことへ">結論：エンジニアは「書く」ことから「飼いならす」ことへ</h2>
+<p>OpenAIの実験は、ソフトウェアエンジニアリングの終焉ではなく、その役割の高度化を意味している。</p>
+<p>これからのエンジニアに求められるのは、優れたアルゴリズムを実装する能力ではない。AIエージェントが迷わずに作業できる「整った箱庭」を設計し、暴走しないように監視システムを組み込み、彼らの成果物が腐らないように防腐処理を施す能力だ。</p>
+<p>Harness Engineeringとは、文字通りAIという猛獣にハーネス（手綱）をつけ、乗りこなすための技術体系である。2026年、我々はコードエディタを開く時間よりも、プロンプトとLinterの設定ファイル、そして「AIのためのドキュメント」を整備する時間に多くの人生を費やすことになるだろう。</p>
+<p>Googleへの対抗心かどうかはさておき、OpenAIはこの「Harness」のノウハウこそが、次の時代の覇権を握る鍵だと確信しているように見える。単に賢いモデル（GPT-5やo3）を持っているだけでは不十分で、それをワークフローに組み込むための「足場」の品質が、開発速度の桁違いの差を生むからだ。</p>
+<p>「AIに仕事を奪われる」と嘆く前に、さっさとそのAIを使い倒すための「ハーネス」を作り始めるのが、賢明なエンジニアの生存戦略と言えるだろう。</p>
 
 
 </section>

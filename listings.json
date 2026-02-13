@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/codex-harness/index.html",
       "/posts/openclaw-steinberger/index.html",
       "/posts/prima-mente-pleiades/index.html",
       "/posts/lex-nathan-sebastian-2026/index.html",
@@ -18,8 +19,8 @@
       "/posts/xai-sulaiman/index.html",
       "/posts/engram-deepseek/index.html",
       "/posts/artificial-analysis/index.html",
-      "/posts/seta/index.html",
       "/posts/recursive-language-models/index.html",
+      "/posts/seta/index.html",
       "/posts/boris-cherny/index.html",
       "/posts/grpopp-cameron/index.html",
       "/posts/agent-harness/index.html",
