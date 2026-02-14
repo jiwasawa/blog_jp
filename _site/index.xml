@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 13 Feb 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 14 Feb 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Elon Muskの「Limiting Factor」論：xAIの真の狙いと、物理法則だけが支配する未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-2/</link>
+  <description><![CDATA[ Elon Muskは、xAIにおける「Digital Human Emulation」戦略、AIアライメントにおける「Truth-seeking」の重要性、そしてStarship開発で培われた「Limiting Factor」を突破するエンジニアリング哲学を通じて、物理法則に基づいた未来の創造を目指している。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-2/</guid>
+  <pubDate>Sat, 14 Feb 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/167/200" medium="image"/>
+</item>
 <item>
   <title>36ヶ月以内にAIは宇宙へ：Elon Muskが語るエネルギーの限界と「TeraFab」構想</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -114,17 +127,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/</guid>
   <pubDate>Sat, 31 Jan 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/158/200" medium="image"/>
-</item>
-<item>
-  <title>Self-Distilled Reasoner: On-Policy Self-DistillationによるLLM推論能力の自己進化</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</link>
-  <description><![CDATA[ MetaとUCLAの研究チームが提案するOn-Policy Self-Distillation (OPSD)は、LLMが正解情報を特権情報として利用し、自身で推論能力を向上させることで、SFTやRLの課題を解決する手法である。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/opsd-on-policy-self-distillation/</guid>
-  <pubDate>Wed, 28 Jan 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/157/200" medium="image"/>
 </item>
 </channel>
 </rss>
