@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 15 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 18 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Jeff Deanが語る「Picojoulesの物理学」と、AI Pareto Frontierの支配</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/jeff-dean-latent-space/</link>
+  <description><![CDATA[ GoogleのJeff Deanが語るAIの物理学、すなわち「Picojoules」というエネルギーコストがモデル開発のボトルネックであり、Pareto Frontierを支配するためのFlashモデル戦略とハードウェア・ソフトウェアの共進化の重要性を分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/jeff-dean-latent-space/</guid>
+  <pubDate>Wed, 18 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/168/200" medium="image"/>
+</item>
 <item>
   <title>Elon Muskの「Limiting Factor」論：xAIの真の狙いと、物理法則だけが支配する未来</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,17 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/hot-mess-of-ai/</guid>
   <pubDate>Thu, 05 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/159/200" medium="image"/>
-</item>
-<item>
-  <title>Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/</link>
-  <description><![CDATA[ Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k-2-5-tech/</guid>
-  <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/158/200" medium="image"/>
 </item>
 </channel>
 </rss>
