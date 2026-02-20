@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/claude-c-compiler-chris-lattner/index.html",
       "/posts/jeff-dean-latent-space/index.html",
       "/posts/elon-dwarkesh-2/index.html",
       "/posts/elon-dwarkesh-1/index.html",
