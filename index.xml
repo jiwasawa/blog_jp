@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 18 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 20 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude C Compilerが示唆する「実装の終焉」とエンジニアの新たな戦場</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/claude-c-compiler-chris-lattner/</link>
+  <description><![CDATA[ Chris LattnerがClaude C Compilerを分析し、AIによる「実装の自動化」が進む中で、エンジニアは「意図の定義」や「アーキテクチャ設計」へと役割をシフトさせるべきだと説く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-c-compiler-chris-lattner/</guid>
+  <pubDate>Fri, 20 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/169/200" medium="image"/>
+</item>
 <item>
   <title>Jeff Deanが語る「Picojoulesの物理学」と、AI Pareto Frontierの支配</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -118,17 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/token-level-filtering/</guid>
   <pubDate>Fri, 06 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/160/200" medium="image"/>
-</item>
-<item>
-  <title>AIのアライメント問題は「体系的な反逆」か「無秩序な混乱」か：Anthropicの最新研究『The Hot Mess of AI』の全貌</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/hot-mess-of-ai/</link>
-  <description><![CDATA[ Anthropicの最新研究『The Hot Mess of AI』は、AIの知能とタスクの複雑性が増すにつれて、その失敗モードが一貫した悪意から予測不能な混乱へと変化する可能性を指摘し、AIリスクの捉え方に新たな視点を提供する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/hot-mess-of-ai/</guid>
-  <pubDate>Thu, 05 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/159/200" medium="image"/>
 </item>
 </channel>
 </rss>

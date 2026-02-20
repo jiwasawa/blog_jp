@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/claude-c-compiler-chris-lattner/index.html",
       "/posts/jeff-dean-latent-space/index.html",
       "/posts/elon-dwarkesh-2/index.html",
       "/posts/elon-dwarkesh-1/index.html",
@@ -22,8 +23,8 @@
       "/posts/xai-sulaiman/index.html",
       "/posts/engram-deepseek/index.html",
       "/posts/artificial-analysis/index.html",
-      "/posts/recursive-language-models/index.html",
       "/posts/seta/index.html",
+      "/posts/recursive-language-models/index.html",
       "/posts/boris-cherny/index.html",
       "/posts/grpopp-cameron/index.html",
       "/posts/agent-harness/index.html",
