@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 19 Feb 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 21 Feb 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>“指数関数の終わり”とAnthropicの冷静な狂気</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dario-dwarkesh/</link>
+  <description><![CDATA[ Dario Amodeiが語るAGI到来への「指数関数的成長の終わり」とその現実的な経済的普及のタイムラグ、そして地政学リスクへの冷静な分析。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dario-dwarkesh/</guid>
+  <pubDate>Sat, 21 Feb 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/170/200" medium="image"/>
+</item>
 <item>
   <title>Claude C Compilerが示唆する「実装の終焉」とエンジニアの新たな戦場</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -118,17 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/drifting-models/</guid>
   <pubDate>Fri, 06 Feb 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/161/200" medium="image"/>
-</item>
-<item>
-  <title>事前学習における「能力」の外科的切除：トークンレベルデータフィルタリングによるAI安全性</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/token-level-filtering/</link>
-  <description><![CDATA[ 事前学習段階でのトークンレベルデータフィルタリングが、AIの望ましくない能力を外科的に除去し、モデルの安全性とアライメント能力を向上させる、スケーラブルでロバストな新手法であることを解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/token-level-filtering/</guid>
-  <pubDate>Thu, 05 Feb 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/160/200" medium="image"/>
 </item>
 </channel>
 </rss>
