@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.8.27">
@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="dcterms.date" content="2025-10-22">
 <meta name="description" content="Stephen Diehlの記事に基づき、オリジナルの「Attention」論文以降にTransformerを劇的に進化させたGQAやFlash Attentionなど14の重要な現代的テクニックを解説する">
 
 <title>Transformerを進化させた14の現代的テクニック</title>
@@ -93,17 +92,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
@@ -168,8 +167,8 @@ window.Quarto = {
     <span class="navbar-title">jiwasawaのブログ</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -227,16 +226,16 @@ window.Quarto = {
   <div class="quarto-title-meta">
 
       <div>
-      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-heading">作者</div>
       <div class="quarto-title-meta-contents">
                <p>Junichiro Iwasawa </p>
             </div>
     </div>
       
       <div>
-      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 22, 2025</p>
+        <p class="date">2025年10月22日</p>
       </div>
     </div>
     
@@ -348,7 +347,7 @@ window.Quarto = {
 <span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力射影</span></span>
 <span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> <span class="va">self</span>.o_proj(out)</span>
 <span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> out</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="multi-head-latent-attention" class="level2">
 <h2 class="anchored" data-anchor-id="multi-head-latent-attention">2. Multi-head Latent Attention</h2>
@@ -433,7 +432,7 @@ window.Quarto = {
 <span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
 <span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.o_proj(output)</span>
 <span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="flash-attention" class="level2">
 <h2 class="anchored" data-anchor-id="flash-attention">3. Flash Attention</h2>
@@ -510,7 +509,7 @@ window.Quarto = {
 <span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
 <span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.o_proj(output)</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `flash-attn` ライブラリの実際の使用例</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (pip install flash-attn が必要)</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -547,7 +546,7 @@ window.Quarto = {
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># # Output shape: (batch_size, seq_len, num_heads, head_dim)</span></span>
 <span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"Output shape: {output.shape}")</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co"># print("FlashAttention call successful.")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co"># print("FlashAttention call successful.")</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="ring-attention" class="level2">
 <h2 class="anchored" data-anchor-id="ring-attention">4. Ring Attention</h2>
@@ -623,7 +622,7 @@ window.Quarto = {
 <span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> output.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(batch_size, seq_len, <span class="va">self</span>.num_heads <span class="op">*</span> <span class="va">self</span>.head_dim)</span>
 <span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> <span class="va">self</span>.o_proj(output)</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="pre-normalization-pre-ln" class="level2">
 <h2 class="anchored" data-anchor-id="pre-normalization-pre-ln">5. Pre-normalization (Pre-LN)</h2>
@@ -663,7 +662,7 @@ window.Quarto = {
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, <span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 最初に正規化を適用し、次に関数を適用</span></span>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># そして元の x を足し合わせる（残差接続）</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fn(<span class="va">self</span>.norm(x), <span class="op">*</span>args, <span class="op">**</span>kwargs) <span class="op">+</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fn(<span class="va">self</span>.norm(x), <span class="op">*</span>args, <span class="op">**</span>kwargs) <span class="op">+</span> x</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="rmsnorm" class="level2">
 <h2 class="anchored" data-anchor-id="rmsnorm">6. RMSNorm</h2>
@@ -694,7 +693,7 @@ window.Quarto = {
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.elementwise_affine:</span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            x_normalized <span class="op">=</span> x_normalized <span class="op">*</span> <span class="va">self</span>.weight</span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_normalized</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_normalized</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="swiglu" class="level2">
 <h2 class="anchored" data-anchor-id="swiglu">7. SwiGLU</h2>
@@ -728,7 +727,7 @@ window.Quarto = {
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> hidden1_act <span class="op">*</span> hidden2</span>
 <span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力射影</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.w3(hidden)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.w3(hidden)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="rotary-positional-embedding-rope" class="level2">
 <h2 class="anchored" data-anchor-id="rotary-positional-embedding-rope">8. Rotary Positional Embedding (RoPE)</h2>
@@ -790,7 +789,7 @@ window.Quarto = {
 <span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>        k2 <span class="op">*</span> cos[..., :half_dim] <span class="op">+</span> k1 <span class="op">*</span> sin[..., :half_dim]</span>
 <span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    ], dim<span class="op">=-</span><span class="dv">1</span>)</span>
 <span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> q_rotated, k_rotated</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> q_rotated, k_rotated</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="mixture-of-experts-moe" class="level2">
 <h2 class="anchored" data-anchor-id="mixture-of-experts-moe">9. Mixture of Experts (MoE)</h2>
@@ -891,7 +890,7 @@ window.Quarto = {
 <span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a>        balance_loss <span class="op">=</span> <span class="va">self</span>._compute_balance_loss(selected_experts, routing_weights)</span>
 <span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 出力と補助損失を返す</span></span>
-<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output, balance_loss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> output, balance_loss</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="learning-rate-warmup" class="level2">
 <h2 class="anchored" data-anchor-id="learning-rate-warmup">10. Learning Rate Warmup</h2>
@@ -912,7 +911,7 @@ window.Quarto = {
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> [base_lr <span class="op">*</span> scale <span class="cf">for</span> base_lr <span class="kw">in</span> <span class="va">self</span>.base_lrs]</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>            <span class="co"># ウォームアップ後: ベースLRを使用</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">self</span>.base_lrs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">self</span>.base_lrs</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="cosine-schedule" class="level2">
 <h2 class="anchored" data-anchor-id="cosine-schedule">11. Cosine Schedule</h2>
@@ -941,7 +940,7 @@ window.Quarto = {
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>            scale <span class="op">=</span> <span class="va">self</span>.min_lr_ratio <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> (<span class="fl">1.0</span> <span class="op">-</span> <span class="va">self</span>.min_lr_ratio) <span class="op">*</span> (</span>
 <span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>                <span class="fl">1.0</span> <span class="op">+</span> math.cos(math.pi <span class="op">*</span> progress)</span>
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> [base_lr <span class="op">*</span> scale <span class="cf">for</span> base_lr <span class="kw">in</span> <span class="va">self</span>.base_lrs]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> [base_lr <span class="op">*</span> scale <span class="cf">for</span> base_lr <span class="kw">in</span> <span class="va">self</span>.base_lrs]</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="adamw-optimizer" class="level2">
 <h2 class="anchored" data-anchor-id="adamw-optimizer">12. AdamW Optimizer</h2>
@@ -1012,7 +1011,7 @@ window.Quarto = {
 <span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>                <span class="co"># パラメータ更新</span></span>
 <span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>                p.data.addcdiv_(exp_avg, denom, value<span class="op">=-</span>step_size)</span>
 <span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="multi-token-prediction" class="level2">
 <h2 class="anchored" data-anchor-id="multi-token-prediction">13. Multi-token Prediction</h2>
@@ -1108,7 +1107,7 @@ window.Quarto = {
 <span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>                ignore_index<span class="op">=</span>ignore_index</span>
 <span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>            )</span>
 <span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss <span class="op">/</span> <span class="va">self</span>.num_predicted_tokens</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss <span class="op">/</span> <span class="va">self</span>.num_predicted_tokens</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="speculative-decoding" class="level2">
 <h2 class="anchored" data-anchor-id="speculative-decoding">14. Speculative Decoding</h2>
@@ -1192,7 +1191,7 @@ window.Quarto = {
 <span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
 <span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 生成されたトークンをデコード</span></span>
-<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.tokenizer.decode(input_ids[<span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.tokenizer.decode(input_ids[<span class="dv">0</span>])</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="まとめ" class="level2">
 <h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
@@ -1308,12 +1307,12 @@ window.Quarto = {
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "コピーしました");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "コピーしました");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
