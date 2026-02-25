@@ -1,5 +1,6 @@
 ---
 title: "miscellaneous notes"
+description: "機械学習・AIに関する話題を中心に書いています。"
 listing:
   page-size: 15
   image-lazy-loading: false

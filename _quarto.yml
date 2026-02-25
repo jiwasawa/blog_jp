@@ -19,6 +19,8 @@ website:
         href: https://github.com/jiwasawa
       - icon: rss
         href: index.xml
+lang: ja
+
 format:
   html:
     title-prefix: ""
