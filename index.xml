@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 22 Feb 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 25 Feb 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude Codeという「偶然の革命」と、“The Bitter Lesson”が示唆するエンジニアリングの終焉</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/boris-cherny-ycombinator/</link>
+  <description><![CDATA[ Claude Codeの生みの親Boris Cherny氏が語る、LLM時代の「Latent Demand」と”The Bitter Lesson”から見えてくるエンジニアリングの未来。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/boris-cherny-ycombinator/</guid>
+  <pubDate>Wed, 25 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/144/200" medium="image"/>
+</item>
 <item>
   <title>“指数関数の終わり”とAnthropicの冷静な狂気</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,17 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/lex-nathan-sebastian-2026/</guid>
   <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/162/200" medium="image"/>
-</item>
-<item>
-  <title>Generative Modeling via Drifting: Kaiming Heらが提唱する「学習時の分布進化」によるワンステップ生成の新パラダイム</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/drifting-models/</link>
-  <description><![CDATA[ Kaiming He氏らが提唱するDrifting Modelsは、学習時の分布進化に着目し、ワンステップ生成でState-of-the-Artの品質を達成する新たな生成モデルのパラダイムを提示する。 ]]></description>
-  <category>AI</category>
-  <category>Generative Model</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/drifting-models/</guid>
-  <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/161/200" medium="image"/>
 </item>
 </channel>
 </rss>
