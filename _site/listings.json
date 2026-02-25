@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/boris-cherny-ycombinator/index.html",
       "/posts/dario-dwarkesh/index.html",
       "/posts/claude-c-compiler-chris-lattner/index.html",
       "/posts/jeff-dean-latent-space/index.html",

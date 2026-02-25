@@ -1,0 +1,70 @@
+---
+title: "Claude Codeという「偶然の革命」と、\"The Bitter Lesson\"が示唆するエンジニアリングの終焉"
+description: "Claude Codeの生みの親Boris Cherny氏が語る、LLM時代の「Latent Demand」と\"The Bitter Lesson\"から見えてくるエンジニアリングの未来。"
+author: "Junichiro Iwasawa"
+date: "2026-02-25"
+categories: [LLM, AI, Podcast]
+image: https://picsum.photos/id/144/200
+---
+
+Y Combinatorの[Podcast](https://youtu.be/PQU9o_5rHC4?si=vxJ7O1JoJ-71-62n)に、今最もホットな開発ツール「Claude Code」の生みの親であるAnthropicのBoris Chernyが登場した。
+
+彼が語った内容は、単なる新機能の紹介やPRの枠を遥かに超えている。それは、LLM時代におけるソフトウェア開発の哲学そのものの再定義であり、我々エンジニアがこれまで積み上げてきた「常識」という名の足場（Scaffolding）が、AIの指数関数的な進化によっていかに無意味化していくかという、ある種残酷で、しかし抗いがたい未来への予言でもあった。
+
+本稿では、Podcastで語られた内容をベースに、Claude Codeが体現する「Latent Demand（潜在的需要）」への回答と、Borisが掲げる「半年先のモデルのために作る」という開発哲学について深掘りする。
+
+## CLIへの回帰：Latent Demandの発見
+
+AI開発ツールと言えば、CursorやWindsurfのようなリッチなGUIを持つIDE（Integrated Development Environment）が主流になりつつある中で、Claude Codeが「Terminal（ターミナル）」という、ある意味で前時代的なインターフェースを選択したことは非常に示唆的だ。
+
+Borisによれば、これは意図された戦略というよりも「偶然」から始まったという。彼が最初に作りたかったのは製品ではなく、AnthropicのAPIを理解するための個人的な実験ツールだった。「モデルはただ単にツールを使いたがっている（The model just wants to use tools）」という事実に気づいた彼が、手っ取り早く動かすために選んだのがCLIだったのだ。
+
+しかし、ここにプロダクト開発における重要な真理が隠されている。Borisが強調する「Latent Demand（潜在的需要）」だ。
+
+> "The idea isn't to force new behaviors but to make existing ones easier."
+> （新しい行動を強制するのではなく、既存の行動をより簡単にするのだ）
+
+開発者はすでにターミナルに住んでいる。Gitコマンドを打ち、サーバーログを確認し、テストを走らせる。Claude Codeは、開発者を新しいUIに誘導するのではなく、彼らが「すでにやっていること」の中にAIを滑り込ませた。これは、Borisがかつて関わったTypeScriptの成功とも重なる。TypeScriptがJavaScriptの混沌を受け入れつつ型システムを導入したように、Claude Codeは開発者のカオスなターミナル環境を受け入れつつ、そこに知性を付与したのだ。
+
+## "The Bitter Lesson"：スキャフォールディングの無常
+
+今回の対話の中で最も衝撃的であり、かつ技術者として耳が痛いのが「Scaffolding（足場）」に関する議論だ。
+
+Borisは、AnthropicのオフィスにRich Suttonの有名なエッセイ「The Bitter Lesson」を額に入れて飾っているという。このエッセイの主張は、「長期的には、人間が工夫して組み込んだ知識（ヒューリスティクス）よりも、計算量（Compute）で殴る一般的な学習手法の方が常に勝つ」というものだ。
+
+Claude Codeの開発哲学は、まさにこれを地で行く。
+
+> "We don't build for the model of today. We build for the model six months from now."
+> （我々は今日のモデルのために作らない。半年後のモデルのために作る）
+
+現在のモデルの欠点を補うために、複雑なプロンプトエンジニアリングや、人間の手による制御ロジック（Scaffolding）をコードベースに組み込むことは誘惑的だ。しかし、モデルの能力が向上すれば、そのScaffoldingは不要になるどころか、むしろ足かせになる。
+
+実際、Claude Codeのコードベースは、半年以上前のコードが一行も残っていないほど頻繁に書き換えられているという。現在のコードの80%はここ数ヶ月以内に書かれたものだ。「Plan Mode（計画モード）」という機能さえも、Borisは「あと1ヶ月で不要になるかもしれない」と予言する。モデルが賢くなれば、明示的に「計画して」と指示しなくても、内部的に思考し、勝手に計画を立てて実行するようになるからだ。
+
+これは、SaaS開発者やAIラッパーを作っているスタートアップにとって、背筋が凍るような話ではないだろうか。今日必死に実装している「AIを賢く見せるための工夫」は、未来のGPT-6やClaude 5 Opusのリリースと同時に、無価値なゴミコードへと変わる運命にあるのだ。
+
+## "Software Engineer"から"Builder"へ
+
+Claude Codeの導入により、Anthropic社内のエンジニア1人あたりの生産性は150%向上したという。Steve Yeggeが「Googleの全盛期と比較して1000倍の生産性」と表現したのは多少の誇張があるにせよ、開発の質的転換が起きていることは間違いない。
+
+Borisは、VS Code派でありVimを使わないことを告白しているが、Claude Codeの本質はツールの熟練度を問わない点にある。ターミナル操作、Gitの複雑なオプション、Kubernetesのコマンド...これらを記憶し、正確にタイプする能力（＝従来のエンジニアのスキル）は、急速にコモディティ化している。
+
+> "The model just wants to use tools."
+
+この言葉が示す通り、これからの開発主体は人間からAIエージェントへとシフトしていく。「Claude Teams」のような構想では、複数のAIエージェントが協調してタスクをこなし、人間はそのオーケストレーションを行う。
+
+そうなった時、「Software Engineer」という肩書きは消滅し、「Builder（ビルダー）」や「Product Manager」に近い存在へと統合されていくだろうとBorisは予測する。実際、Anthropicでは財務担当やデザイナーも含め、ほぼ全員がコードを書いている（あるいはAIに書かせている）。コーディングという行為自体が民主化され、専門職の特権ではなくなった世界だ。
+
+## 我々は何を捨てるべきか
+
+Boris Chernyの話を聞いて感じるのは、圧倒的なスピード感と、過去への執着のなさだ。
+
+彼は自分が作った機能（Plan Modeなど）が不要になることを歓迎し、モデルの進化に全幅の信頼を置いている。「Never bet against the model（モデルに逆張りするな）」という言葉は、AI時代の鉄則と言える。
+
+我々開発者は今、岐路に立たされている。これまで苦労して習得したVimのキーバインドや、複雑な正規表現、あるいは自慢の自作ライブラリといった「Scaffolding」に固執するのか。それとも、それらがAIの進化によって波に洗われる砂の城であることを受け入れ、より高次の「Builder」としての視座を獲得するのか。
+
+Claude Codeが提示しているのは、単なる便利なCLIツールではない。それは、"The Bitter Lesson"を咀嚼し、自己否定を繰り返しながら進化する、次世代のソフトウェア開発の在り方そのものなのだ。
+
+もしあなたがまだ「今のAIモデルの限界」に合わせてプロダクトを設計しているなら、一度手を止めて考えた方がいい。半年後、その機能は「モデルが勝手にできること」になっていないだろうか？
+
+ref: [過去のBoris Cherny のインタビュー](https://jiwasawa.github.io/blog_jp/posts/boris-cherny/)
