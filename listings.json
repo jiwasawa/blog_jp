@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/doug-semianalysis-latentspace/index.html",
       "/posts/boris-cherny-ycombinator/index.html",
       "/posts/dario-dwarkesh/index.html",
       "/posts/claude-c-compiler-chris-lattner/index.html",
@@ -25,8 +26,8 @@
       "/posts/xai-sulaiman/index.html",
       "/posts/engram-deepseek/index.html",
       "/posts/artificial-analysis/index.html",
-      "/posts/seta/index.html",
       "/posts/recursive-language-models/index.html",
+      "/posts/seta/index.html",
       "/posts/boris-cherny/index.html",
       "/posts/grpopp-cameron/index.html",
       "/posts/agent-harness/index.html",

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく">
+<meta name="description" content="SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。">
 
-<title>Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者</title>
+<title>Claude Codeの狂気とMemory Maniaの深層</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者 – jiwasawaのブログ">
-<meta property="og:description" content="半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく">
-<meta property="og:image" content="https://picsum.photos/id/106/200">
+<meta property="og:title" content="Claude Codeの狂気とMemory Maniaの深層 – jiwasawaのブログ">
+<meta property="og:description" content="SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。">
+<meta property="og:image" content="https://picsum.photos/id/171/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者 – jiwasawaのブログ">
-<meta name="twitter:description" content="半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく">
-<meta name="twitter:image" content="https://picsum.photos/id/106/200">
+<meta name="twitter:title" content="Claude Codeの狂気とMemory Maniaの深層 – jiwasawaのブログ">
+<meta name="twitter:description" content="SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。">
+<meta name="twitter:image" content="https://picsum.photos/id/171/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,10 +144,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Dylan Patelが斬るAI業界の舞台裏：Metaの焦り、Appleの蹉跌、そして超知性の勝者</h1>
+      <h1 class="title">Claude Codeの狂気とMemory Maniaの深層</h1>
                   <div>
         <div class="description">
-          半導体アナリストDylan Patel氏のインタビューをもとに、Metaの焦りやAppleの蹉跌、そしてsuperintelligence開発競争の生々しい舞台裏をみていく
+          SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -171,7 +171,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年7月12日</p>
+        <p class="date">2026年3月4日</p>
       </div>
     </div>
     
@@ -190,37 +190,49 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>半導体アナリストの権威、SemiAnalysisの創業者Dylan Patel。彼の発言一つで業界が動くと言われる重要人物が、AI業界の今を赤裸々に語った<a href="https://www.youtube.com/watch?v=cHgCbDWejIs">インタビュー</a>が7/1に公開された。</p>
-<p>GPT-4.5の失敗、Metaのなりふり構わぬ人材獲得、Appleの絶望的な状況、そして超知性（Super Intelligence）開発競争の行方。その内容は、普段我々が目にしない大手テック企業の内部事情や戦略的判断の生々しい実態を浮き彫りにしている。本稿では、この刺激的なインタビューを紐解き、AI業界の最前線で何が起きているのかを分析する。</p>
-<section id="metaの渇望と迷走なぜ彼らは勝てないのか" class="level2">
-<h2 class="anchored" data-anchor-id="metaの渇望と迷走なぜ彼らは勝てないのか">Metaの渇望と迷走：なぜ彼らは勝てないのか</h2>
-<p>まずPatel氏が指摘したのは、Metaの現状だ。鳴り物入りで登場したLlamaシリーズだが、その評価は「悪くはないが、世界を変えるほどではない」というものだった。なぜ豊富な人材と計算資源を持つMetaが、OpenAIやAnthropicに後れを取っているのか。</p>
-<p>Patel氏の分析は明快だ。<strong>問題は組織にある</strong>。Metaには優秀な研究者が多数在籍するものの、彼らの研究を評価し、どの技術的ルートを進むべきかを選択する<strong>「テイスト」を持った技術的リーダーが不在</strong>だという。素晴らしいアイデアもあれば、間違ったアイデアも生まれるのが研究の常。しかし、その取捨選択を誤り、一度「間違ったアイデア」の枝に進んでしまうと、そこから引き返すのは難しい。結果として、優秀な研究者たちが実りのない研究に時間を浪費してしまう構造的な問題がある、とPatel氏は喝破する。</p>
-<p>この状況を打開すべく、Zuckerbergはなりふり構わぬ行動に出ている。数十億ドルとも言われる巨額でScale AIを買収したのは、同社のデータや技術ではなく、創業者である<strong>Alex Wang</strong>氏とそのチームを獲得するためだった。さらに、<strong>Daniel Gross</strong>氏や<strong>Nat Friedman</strong>氏といった著名な起業家や投資家の獲得にも動いた。</p>
-<p>Patel氏によれば、これはZuckerbergの大きな戦略転換を意味する。数ヶ月前までAGI（汎用人工知能）の短期的な実現に懐疑的だった彼が、「<strong>超知性こそが全てだ。これを逃せば負け犬になる</strong>」という思考に完全にシフトしたのだ。彼らが求めているのは、金銭以上に「巨大企業のAI戦略を動かすパワー」であり、Metaはその渇望を満たすための最後の賭けに出ている。</p>
+<p>情報労働の終焉と、半導体エコシステムを脅かす次なるボトルネック</p>
+<p><a href="https://www.latent.space/p/valuemule">Latent Space podcastの最新エピソード</a>に、SemiAnalysisのDoug O’Laughlinが登場した。彼は単なる半導体アナリストの枠に収まらず、最先端のAIツールを日常のワークフローに極限まで組み込む「Bleeding-edge adopter」として知られている。</p>
+<p>本エピソードでは、彼がどのようにClaude Codeを活用して「インフォメーションワーク」を破壊的にスケールさせているかというソフトウェア的なパラダイムシフトと、それに呼応して爆発するコンピュート需要が引き起こす物理的なハードウェアの限界、すなわち「Memory Mania」の双方が語られた。</p>
+<p>AIによるリサーチ業務の自動化を語る与太話は世に溢れているが、情報の最前線で戦うプロフェッショナルがどのようにAIを「Junior Analyst」として飼い慣らし、同時にインフラストラクチャのサプライチェーン制約をどう分析しているのか。本稿ではその深淵に焦点を当てる。</p>
+<section id="terminalに棲まうjunior-analystとideの終焉" class="level2">
+<h2 class="anchored" data-anchor-id="terminalに棲まうjunior-analystとideの終焉">Terminalに棲まうJunior AnalystとIDEの終焉</h2>
+<p>O’Laughlinの分析の起点となるのは、Claude Codeの驚異的な生産性である。彼の推計によれば、現在GitHub上の全コードのおよそ4〜5%が既にClaude Codeによって書かれているという。これは単なるコーディング支援の域を超え、情報処理の抜本的なスケーリングが起きていることを意味する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="image.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://newsletter.semianalysis.com/p/claude-code-is-the-inflection-point">SemiAnalysis</a>より引用</figcaption>
+</figure>
+</div>
+<p>彼は現在、Claude Codeを単なるコードジェネレーターではなく、極めて優秀な「Junior Analyst」としてターミナル内に常駐させている。金融アナリストの仕事の大部分は、散在する情報をかき集め、データをフォーマットし、ダッシュボードを構築するという、いわゆる「pain-in-the-ass」な作業である。O’Laughlinはこれらのタスクを丸ごとAgentに丸投げし、自身は高次元の意思決定というメタレベル（meta-level）に留まることに成功している。</p>
+<p>ここで彼が提示する最も挑発的な予言が、「伝統的なIDEの死」である。 アナリストにとってのIDEとは、長年Excelであり、Bloombergターミナルであった。しかし、これらのレガシーツールはもはや情報処理のボトルネックとなりつつある。AI agentがPythonスクリプトを実行し、ウェブから動的にデータをスクレイピングし、数分でMatplotlibによる出版品質のチャートを生成できる世界において、人間が手作業でセルを埋め、Bloombergの複雑なショートカットキーを暗記する意味はどこにあるのだろうか。</p>
+<p>このパラダイムシフトにおいて最も多くのものを失うのは、皮肉なことにホリゾンタルなソフトウェアを握るMicrosoftであるとO’Laughlinは指摘する。AIインフラとしてのAzureの成長と、ホリゾンタルSaaS（ExcelやPowerPoint）を破壊しにくる「城門の蛮族」としてのOpenAIのエージェントたち。Microsoftは、自らのコアビジネスを守るための城壁工事に再投資するか、あるいは土管化するAzureビジネスに甘んじるかという、古典的かつ残酷なイノベーターのジレンマに直面しているのだ。</p>
 </section>
-<section id="gpt-4.5-orion-はなぜ失敗したのか" class="level2">
-<h2 class="anchored" data-anchor-id="gpt-4.5-orion-はなぜ失敗したのか">GPT-4.5 “Orion” はなぜ失敗したのか</h2>
-<p>次に、Patel氏が明かしたOpenAIの内部事情は非常に興味深い。当初GPT-5として期待されていたモデル、コードネーム「<strong>Orion</strong>」（後のGPT-4.5）は、なぜ期待外れに終わったのか。</p>
-<p>Patel氏によると、Orionは「<strong>賢いが、役に立たず、遅すぎる</strong>」モデルだった。その根本的な原因は「<strong>overparameterization</strong>（過剰パラメータ化）」にある。つまり、モデルの規模に対して学習データが不足していたため、物事を一般化して「理解」するのではなく、データを「記憶」することに走ってしまったのだ。学習初期にはベンチマークで驚異的なスコアを叩き出し、OpenAI内部を熱狂させたが、それは単なる暗記によるもので、その後性能の伸びは鈍化したという。</p>
-<p>さらに、学習プロセスでは数ヶ月にわたるバグや、巨大すぎるが故のインフラの不安定性など、数々の困難に見舞われた。</p>
-<p>そして決定打となったのが、Orionの開発中に、<strong>別のチームが「reasoning（推論）」に関する画期的なブレークスルー（通称 “strawberry”）を発見した</strong>ことだ。はるかに低コストで、より効率的にモデルの質を向上させるこの新技術の登場により、莫大なリソースを投じていたOrionプロジェクトは、ある意味で時代遅れの産物となってしまったのである。この一件は、AI開発の最前線が、パラメータの暴力的なスケール競争から、<strong>より質の高いデータをいかに生成・活用するか</strong>という新たなフェーズに移行したことを象徴している。</p>
+<section id="context-rationingとagent-swarmの現在地" class="level2">
+<h2 class="anchored" data-anchor-id="context-rationingとagent-swarmの現在地">Context RationingとAgent Swarmの現在地</h2>
+<p>とはいえ、Agentにタスクを投げ続ければ魔法のように結果が出るわけではない。Claude Codeを極限まで使い倒す中でO’Laughlinがたどり着いた実践的なアプローチが、「Context Rationing（コンテキストの配給・節約）」である。</p>
+<p>現在のLLMは1 Million tokensという広大なコンテキストウィンドウを誇るが、それらは決して無限ではなく、また完璧でもない。巨大なプロンプトを単一のセッションに詰め込みすぎると、AIは過去の指示を忘れ、出力が次第に破綻していく「Context rot（コンテキストの腐敗）」を引き起こす。</p>
+<p>この問題に対処するため、彼は大規模で複雑なリサーチプロジェクトを小さなタスクに分割し、それぞれ独立した「Agent Swarms（エージェントの群れ）」に処理させる手法をとっている。Anthropicの実験的なAgent機能にはまだRL（強化学習）が十分に効いていない部分もあるが、Kimiなどの新興モデルのSwarmベンチマークが示すように、複数のサブエージェントにクリーンなコンテキストを与え、並列処理させるアーキテクチャこそが現在のベストプラクティスである。コンテキストを意識的に分割・管理することで、単一の巨大なプロンプトにすべてを託すよりも、はるかに高精度な出力が得られるのだ。</p>
 </section>
-<section id="appleの絶望的なai戦略" class="level2">
-<h2 class="anchored" data-anchor-id="appleの絶望的なai戦略">Appleの絶望的なAI戦略</h2>
-<p>Patel氏は、AppleのAI戦略に対して極めて手厳しい。一言で言えば「<strong>完全に乗り遅れている</strong>」。その理由は複合的だ。</p>
-<ol type="1">
-<li><strong>保守的な企業文化</strong>: Appleは秘密主義で、研究成果の公開を好むトップクラスのAI研究者にとって魅力的な職場ではない。結果として最高の人材を集められずにいる。</li>
-<li><strong>Nvidiaへの嫌悪感</strong>: 過去の「Bumpgate」と呼ばれるGPUの欠陥問題や、特許訴訟を巡る対立から、AppleはNvidiaを極度に嫌っている。そのため、AI開発に不可欠なNvidia製ハードウェアの導入に消極的だ。</li>
-<li><strong>オンデバイスAIへの固執</strong>: Appleはプライバシーやセキュリティを大義名分にオンデバイスAIを推進しているが、Patel氏はこれをバッサリ切り捨てる。ユーザーにとって最も価値のあるAI機能（検索、エージェント機能など）は、どうせクラウド上のデータにアクセスする必要がある。また、最先端の巨大モデルはスマホ上では動作せず、クラウドで動かした方が速くて高性能な体験を提供できる。「<strong>結局、Apple自身もクラウドが重要だと分かっているからこそ、自社製チップで巨大なデータセンターを建設している</strong>」とPatel氏は指摘する。</li>
-</ol>
-<p>これらの要因が重なり、AppleはAI開発競争において絶望的な周回遅れの状況にある、というのがPatel氏の見立てだ。</p>
+<section id="moores-lawの死とhbmが引き起こすmemory-mania" class="level2">
+<h2 class="anchored" data-anchor-id="moores-lawの死とhbmが引き起こすmemory-mania">Moore’s Lawの死とHBMが引き起こすMemory Mania</h2>
+<p>ソフトウェア側での情報労働の爆発は、必然的にハードウェア側の物理的な制約という壁に激突する。エピソードの後半でO’Laughlinが強調するのは、彼自身のコアテーゼである「Moore’s Law is Dead（ムーアの法則は死んだ）」という現実と、そこから派生する現在の「Memory Mania」である。</p>
+<p>Moore’s Lawが停滞し、伝統的なスケーリングが物理的限界を迎えた今、半導体の古いプレイブックは完全に破棄された。もはや「単にチップを小さくする」だけでは勝てない。高度なパッケージング、並列コンピューティング、そしてネットワーク全体を「一つの巨大なコンピュータ」として機能させるエコシステムを構築できるNVIDIAのような企業が、世界で最も価値のある企業へと変貌した。</p>
+<p>そして2025年現在、AIインフラの首を最も強烈に絞めている究極のボトルネックが、<a href="https://www.aicerts.ai/news/ai-memory-shortage-supply-chain-pressures-through-2027/">High Bandwidth Memory (HBM)</a> である。</p>
+<p>HBMの製造は極めて複雑であり、標準的なDRAMと比較して1ギガバイトあたり約3倍から4倍のウェハー容量を消費する（Multiplier Effect）。データセンターからのとめどない需要に応えるため、Samsung、SK Hynix、Micronといった主要メモリメーカーは、利益率の低いコンシューマー向けDRAMやNANDの生産ラインをHBMへと強引に振り向けている。</p>
+<p>このリソースの再配分は、スマートフォンやPC向けの標準メモリの深刻な供給不足と価格高騰を引き起こす「Memory Supercycle」の引き金となった。過去の市場低迷期にCapEx（資本的支出）を抑制し、クリーンルームの建設を怠ったツケが、数年単位のリードタイムを伴う「Surprise Squeeze（予期せぬ供給逼迫）」として業界全体を襲っているのである。</p>
+<p>このメモリの枯渇を凌ぐための「絆創膏（Band-Aid）」として、一度は死んだと思われていたCompute Express Link (CXL) 技術が劇的な復活を遂げている。古いDDR4などの未使用DRAMをプールし、コンピュート需要に対して動的に割り当てるCXLは、高騰するHBMの隙間を埋める必須のインフラとして、現在急速にデータセンターへの導入が進められている。</p>
 </section>
-<section id="superintelligence競争の勝者は" class="level2">
-<h2 class="anchored" data-anchor-id="superintelligence競争の勝者は">Superintelligence競争の勝者は</h2>
-<p>最後に、Patel氏はAI開発競争の究極的な勝者について言及する。数々の企業が名乗りを上げる中、彼が「超知性に最初に到達するのは誰か」という問いに、ためらうことなく名前を挙げたのは<strong>OpenAI</strong>だ。</p>
-<p>その理由はシンプルで、「<strong>これまでの主要なブレークスルーの全てにおいて、彼らが最初だったから</strong>」だ。推論技術においても彼らが先行していた。2番手には、最近は保守的な姿勢を緩めつつあるAnthropic。3番手はGoogle、xAI、そして前述の大型補強を進めるMetaによる混戦になるだろうと予測する。</p>
-<p>Patel氏の分析は、現代のAI開発が、単なる技術力だけでなく、それを率いるリーダーの「テイスト」、組織構造、そして戦略的な人材獲得によって大きく左右される、生々しい人間ドラマであることを教えてくれる。そして、このゲームの勝者は、いつの時代も最も早くブレークスルーを起こし続けた者なのかもしれない。</p>
+<section id="狂乱のcapexと鉄道建設ラッシュのアナロジー" class="level2">
+<h2 class="anchored" data-anchor-id="狂乱のcapexと鉄道建設ラッシュのアナロジー">狂乱のCapExと鉄道建設ラッシュのアナロジー</h2>
+<p>このような未曾有のハードウェア投資を、O’Laughlinは19世紀の「鉄道建設ラッシュ（Railroad CapEx）」に例えている。当時、鉄道インフラへの投資は長期間にわたりGNPの数パーセントを占め続け、結果として現代の金融システム（銀行業）を確固たるものにした。</p>
+<p>現在のAIインフラ投資も、かつてのインターネット・バブルを遥かに凌駕する規模で進行している。Stargateプロジェクトのような超巨大インフラ構想は、米国のGDPの2%にも達する規模になり得る。しかし、資本主義の胃袋にも限界がある。Oracleが市場の流動性を無視して過剰な債務（Debt）を発行し、TMTセクター全体のクレジットスプレッドを歪めたエピソードは、この狂乱のCapExがマクロ経済全体にいかに強い歪みをもたらしているかを示す好例である。</p>
+<p>同時に、NVIDIAのJensen Huangが台湾に飛んでTSMCやSK Hynixのトップと酒を酌み交わし、泥臭くサプライチェーンの確保に奔走している一方で、GoogleのTPUチームがコンピュートの外部提供（Anthropic等への開放）を通じてシェア拡大を狙う構図は、最先端の技術闘争が極めて人間臭いロジスティクスの奪い合いの上に成り立っていることを浮き彫りにしている。</p>
+</section>
+<section id="人間的エッジと最後の5" class="level2">
+<h2 class="anchored" data-anchor-id="人間的エッジと最後の5">人間的エッジと最後の5%</h2>
+<p>AIの進化とインフラの巨大化を語り尽くしたO’Laughlinだが、彼は同時に極めて現実的な視座も持ち合わせている。「このガラクタ（AI）は、常にミスをする（this crap makes mistakes all the time）」と彼は笑う。</p>
+<p>AIがどれほど疲れを知らないJunior Analystとして機能しようとも、あるいは100個のAgentを並列に走らせることができようとも、出力されたスロップ（slop）を精査し、文脈に沿った「最後の5%の判断（last 5% of judgment）」を下すのは、深い専門知識とパターン認識能力を培ってきた人間（エキスパート）の役割である。情報のスピードがかつてないほど加速する中、情報をただ消費するだけの傍観者は取り残され、自らの手でツールを組み立て、AIとともに「Just do things」を実践できるBleeding-edge adopterだけが、次なる時代のアルファを独占する。</p>
+<p>Continental Divide Trailという2,800マイルの過酷な単独ハイキングを踏破した経験を持つ彼は、極限の環境下での「Self-mastery」こそが、人間にとって最も重要なツールであると語った。果てしなく広がるAIのコンテキストウィンドウと、枯渇していくシリコンのメモリ。その間で最も試されているのは、我々自身の認知の解像度と、世界を抽象化し続ける意志そのものなのかもしれない。</p>
 
 
 </section>
