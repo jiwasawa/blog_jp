@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 24 Feb 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 03 Mar 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude Codeの狂気とMemory Maniaの深層</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/doug-semianalysis-latentspace/</link>
+  <description><![CDATA[ SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/doug-semianalysis-latentspace/</guid>
+  <pubDate>Tue, 03 Mar 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/171/200" medium="image"/>
+</item>
 <item>
   <title>Claude Codeという「偶然の革命」と、“The Bitter Lesson”が示唆するエンジニアリングの終焉</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,19 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</guid>
   <pubDate>Mon, 09 Feb 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/163/200" medium="image"/>
-</item>
-<item>
-  <title>State of AI 2026: Post-trainingの覇権と「AGIの夢」の変質</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/lex-nathan-sebastian-2026/</link>
-  <description><![CDATA[ 2026年のAI開発は、大規模なPre-training競争からPost-trainingの効率化・洗練へとシフトし、「AGIの夢」は特化型モデル群の連携という現実解へと変質していく。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Lex Fridman Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/lex-nathan-sebastian-2026/</guid>
-  <pubDate>Sat, 07 Feb 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/162/200" medium="image"/>
 </item>
 </channel>
 </rss>

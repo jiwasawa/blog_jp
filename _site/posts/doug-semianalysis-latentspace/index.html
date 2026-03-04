@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。">
+
+<title>Claude Codeの狂気とMemory Maniaの深層</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Claude Codeの狂気とMemory Maniaの深層 – jiwasawaのブログ">
+<meta property="og:description" content="SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。">
+<meta property="og:image" content="https://picsum.photos/id/171/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Claude Codeの狂気とMemory Maniaの深層 – jiwasawaのブログ">
+<meta name="twitter:description" content="SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。">
+<meta name="twitter:image" content="https://picsum.photos/id/171/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Claude Codeの狂気とMemory Maniaの深層</h1>
+                  <div>
+        <div class="description">
+          SemiAnalysisのDoug O’Laughlinを迎え、Claude Codeが引き起こす情報労働のパラダイムシフトと、半導体市場を圧迫するHigh Bandwidth Memoryの供給制約が及ぼす物理的・経済的な影響を深く掘り下げる。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年3月4日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>情報労働の終焉と、半導体エコシステムを脅かす次なるボトルネック</p>
+<p><a href="https://www.latent.space/p/valuemule">Latent Space podcastの最新エピソード</a>に、SemiAnalysisのDoug O’Laughlinが登場した。彼は単なる半導体アナリストの枠に収まらず、最先端のAIツールを日常のワークフローに極限まで組み込む「Bleeding-edge adopter」として知られている。</p>
+<p>本エピソードでは、彼がどのようにClaude Codeを活用して「インフォメーションワーク」を破壊的にスケールさせているかというソフトウェア的なパラダイムシフトと、それに呼応して爆発するコンピュート需要が引き起こす物理的なハードウェアの限界、すなわち「Memory Mania」の双方が語られた。</p>
+<p>AIによるリサーチ業務の自動化を語る与太話は世に溢れているが、情報の最前線で戦うプロフェッショナルがどのようにAIを「Junior Analyst」として飼い慣らし、同時にインフラストラクチャのサプライチェーン制約をどう分析しているのか。本稿ではその深淵に焦点を当てる。</p>
+<section id="terminalに棲まうjunior-analystとideの終焉" class="level2">
+<h2 class="anchored" data-anchor-id="terminalに棲まうjunior-analystとideの終焉">Terminalに棲まうJunior AnalystとIDEの終焉</h2>
+<p>O’Laughlinの分析の起点となるのは、Claude Codeの驚異的な生産性である。彼の推計によれば、現在GitHub上の全コードのおよそ4〜5%が既にClaude Codeによって書かれているという。これは単なるコーディング支援の域を超え、情報処理の抜本的なスケーリングが起きていることを意味する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="image.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://newsletter.semianalysis.com/p/claude-code-is-the-inflection-point">SemiAnalysis</a>より引用</figcaption>
+</figure>
+</div>
+<p>彼は現在、Claude Codeを単なるコードジェネレーターではなく、極めて優秀な「Junior Analyst」としてターミナル内に常駐させている。金融アナリストの仕事の大部分は、散在する情報をかき集め、データをフォーマットし、ダッシュボードを構築するという、いわゆる「pain-in-the-ass」な作業である。O’Laughlinはこれらのタスクを丸ごとAgentに丸投げし、自身は高次元の意思決定というメタレベル（meta-level）に留まることに成功している。</p>
+<p>ここで彼が提示する最も挑発的な予言が、「伝統的なIDEの死」である。 アナリストにとってのIDEとは、長年Excelであり、Bloombergターミナルであった。しかし、これらのレガシーツールはもはや情報処理のボトルネックとなりつつある。AI agentがPythonスクリプトを実行し、ウェブから動的にデータをスクレイピングし、数分でMatplotlibによる出版品質のチャートを生成できる世界において、人間が手作業でセルを埋め、Bloombergの複雑なショートカットキーを暗記する意味はどこにあるのだろうか。</p>
+<p>このパラダイムシフトにおいて最も多くのものを失うのは、皮肉なことにホリゾンタルなソフトウェアを握るMicrosoftであるとO’Laughlinは指摘する。AIインフラとしてのAzureの成長と、ホリゾンタルSaaS（ExcelやPowerPoint）を破壊しにくる「城門の蛮族」としてのOpenAIのエージェントたち。Microsoftは、自らのコアビジネスを守るための城壁工事に再投資するか、あるいは土管化するAzureビジネスに甘んじるかという、古典的かつ残酷なイノベーターのジレンマに直面しているのだ。</p>
+</section>
+<section id="context-rationingとagent-swarmの現在地" class="level2">
+<h2 class="anchored" data-anchor-id="context-rationingとagent-swarmの現在地">Context RationingとAgent Swarmの現在地</h2>
+<p>とはいえ、Agentにタスクを投げ続ければ魔法のように結果が出るわけではない。Claude Codeを極限まで使い倒す中でO’Laughlinがたどり着いた実践的なアプローチが、「Context Rationing（コンテキストの配給・節約）」である。</p>
+<p>現在のLLMは1 Million tokensという広大なコンテキストウィンドウを誇るが、それらは決して無限ではなく、また完璧でもない。巨大なプロンプトを単一のセッションに詰め込みすぎると、AIは過去の指示を忘れ、出力が次第に破綻していく「Context rot（コンテキストの腐敗）」を引き起こす。</p>
+<p>この問題に対処するため、彼は大規模で複雑なリサーチプロジェクトを小さなタスクに分割し、それぞれ独立した「Agent Swarms（エージェントの群れ）」に処理させる手法をとっている。Anthropicの実験的なAgent機能にはまだRL（強化学習）が十分に効いていない部分もあるが、Kimiなどの新興モデルのSwarmベンチマークが示すように、複数のサブエージェントにクリーンなコンテキストを与え、並列処理させるアーキテクチャこそが現在のベストプラクティスである。コンテキストを意識的に分割・管理することで、単一の巨大なプロンプトにすべてを託すよりも、はるかに高精度な出力が得られるのだ。</p>
+</section>
+<section id="moores-lawの死とhbmが引き起こすmemory-mania" class="level2">
+<h2 class="anchored" data-anchor-id="moores-lawの死とhbmが引き起こすmemory-mania">Moore’s Lawの死とHBMが引き起こすMemory Mania</h2>
+<p>ソフトウェア側での情報労働の爆発は、必然的にハードウェア側の物理的な制約という壁に激突する。エピソードの後半でO’Laughlinが強調するのは、彼自身のコアテーゼである「Moore’s Law is Dead（ムーアの法則は死んだ）」という現実と、そこから派生する現在の「Memory Mania」である。</p>
+<p>Moore’s Lawが停滞し、伝統的なスケーリングが物理的限界を迎えた今、半導体の古いプレイブックは完全に破棄された。もはや「単にチップを小さくする」だけでは勝てない。高度なパッケージング、並列コンピューティング、そしてネットワーク全体を「一つの巨大なコンピュータ」として機能させるエコシステムを構築できるNVIDIAのような企業が、世界で最も価値のある企業へと変貌した。</p>
+<p>そして2025年現在、AIインフラの首を最も強烈に絞めている究極のボトルネックが、<a href="https://www.aicerts.ai/news/ai-memory-shortage-supply-chain-pressures-through-2027/">High Bandwidth Memory (HBM)</a> である。</p>
+<p>HBMの製造は極めて複雑であり、標準的なDRAMと比較して1ギガバイトあたり約3倍から4倍のウェハー容量を消費する（Multiplier Effect）。データセンターからのとめどない需要に応えるため、Samsung、SK Hynix、Micronといった主要メモリメーカーは、利益率の低いコンシューマー向けDRAMやNANDの生産ラインをHBMへと強引に振り向けている。</p>
+<p>このリソースの再配分は、スマートフォンやPC向けの標準メモリの深刻な供給不足と価格高騰を引き起こす「Memory Supercycle」の引き金となった。過去の市場低迷期にCapEx（資本的支出）を抑制し、クリーンルームの建設を怠ったツケが、数年単位のリードタイムを伴う「Surprise Squeeze（予期せぬ供給逼迫）」として業界全体を襲っているのである。</p>
+<p>このメモリの枯渇を凌ぐための「絆創膏（Band-Aid）」として、一度は死んだと思われていたCompute Express Link (CXL) 技術が劇的な復活を遂げている。古いDDR4などの未使用DRAMをプールし、コンピュート需要に対して動的に割り当てるCXLは、高騰するHBMの隙間を埋める必須のインフラとして、現在急速にデータセンターへの導入が進められている。</p>
+</section>
+<section id="狂乱のcapexと鉄道建設ラッシュのアナロジー" class="level2">
+<h2 class="anchored" data-anchor-id="狂乱のcapexと鉄道建設ラッシュのアナロジー">狂乱のCapExと鉄道建設ラッシュのアナロジー</h2>
+<p>このような未曾有のハードウェア投資を、O’Laughlinは19世紀の「鉄道建設ラッシュ（Railroad CapEx）」に例えている。当時、鉄道インフラへの投資は長期間にわたりGNPの数パーセントを占め続け、結果として現代の金融システム（銀行業）を確固たるものにした。</p>
+<p>現在のAIインフラ投資も、かつてのインターネット・バブルを遥かに凌駕する規模で進行している。Stargateプロジェクトのような超巨大インフラ構想は、米国のGDPの2%にも達する規模になり得る。しかし、資本主義の胃袋にも限界がある。Oracleが市場の流動性を無視して過剰な債務（Debt）を発行し、TMTセクター全体のクレジットスプレッドを歪めたエピソードは、この狂乱のCapExがマクロ経済全体にいかに強い歪みをもたらしているかを示す好例である。</p>
+<p>同時に、NVIDIAのJensen Huangが台湾に飛んでTSMCやSK Hynixのトップと酒を酌み交わし、泥臭くサプライチェーンの確保に奔走している一方で、GoogleのTPUチームがコンピュートの外部提供（Anthropic等への開放）を通じてシェア拡大を狙う構図は、最先端の技術闘争が極めて人間臭いロジスティクスの奪い合いの上に成り立っていることを浮き彫りにしている。</p>
+</section>
+<section id="人間的エッジと最後の5" class="level2">
+<h2 class="anchored" data-anchor-id="人間的エッジと最後の5">人間的エッジと最後の5%</h2>
+<p>AIの進化とインフラの巨大化を語り尽くしたO’Laughlinだが、彼は同時に極めて現実的な視座も持ち合わせている。「このガラクタ（AI）は、常にミスをする（this crap makes mistakes all the time）」と彼は笑う。</p>
+<p>AIがどれほど疲れを知らないJunior Analystとして機能しようとも、あるいは100個のAgentを並列に走らせることができようとも、出力されたスロップ（slop）を精査し、文脈に沿った「最後の5%の判断（last 5% of judgment）」を下すのは、深い専門知識とパターン認識能力を培ってきた人間（エキスパート）の役割である。情報のスピードがかつてないほど加速する中、情報をただ消費するだけの傍観者は取り残され、自らの手でツールを組み立て、AIとともに「Just do things」を実践できるBleeding-edge adopterだけが、次なる時代のアルファを独占する。</p>
+<p>Continental Divide Trailという2,800マイルの過酷な単独ハイキングを踏破した経験を持つ彼は、極限の環境下での「Self-mastery」こそが、人間にとって最も重要なツールであると語った。果てしなく広がるAIのコンテキストウィンドウと、枯渇していくシリコンのメモリ。その間で最も試されているのは、我々自身の認知の解像度と、世界を抽象化し続ける意志そのものなのかもしれない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
