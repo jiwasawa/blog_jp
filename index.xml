@@ -10,18 +10,7 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 05 Mar 2026 00:00:00 GMT</lastBuildDate>
-<item>
-  <title>終わらないAIスーパーサイクルとMemoryflationの深層</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/memoryflation/</link>
-  <description><![CDATA[ AIインフラの爆発的な成長が引き起こすHBMの供給逼迫と、それに伴うCommodity DRAMの構造的な供給不足「Memoryflation」が、ハードウェアエコシステム全体に及ぼす破壊的影響と今後の市場動向を分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/memoryflation/</guid>
-  <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/172/200" medium="image"/>
-</item>
+<lastBuildDate>Wed, 04 Mar 2026 00:00:00 GMT</lastBuildDate>
 <item>
   <title>Claude Codeの狂気とMemory Maniaの深層</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -132,6 +121,16 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/openclaw-steinberger/</guid>
   <pubDate>Thu, 12 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/164/200" medium="image"/>
+</item>
+<item>
+  <title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</link>
+  <description><![CDATA[ AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。 ]]></description>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</guid>
+  <pubDate>Tue, 10 Feb 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/163/200" medium="image"/>
 </item>
 </channel>
 </rss>
