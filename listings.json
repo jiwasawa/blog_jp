@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/memoryflation/index.html",
       "/posts/doug-semianalysis-latentspace/index.html",
       "/posts/boris-cherny-ycombinator/index.html",
       "/posts/dario-dwarkesh/index.html",
