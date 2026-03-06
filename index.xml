@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 04 Mar 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 06 Mar 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Speculative Speculative Decoding (SSD) 入門：非同期LLM推論の新たな地平</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/speculative-speculative-decoding/</link>
+  <description><![CDATA[ 従来のLLM推論における「ドラフトと検証」の同期的なボトルネックを解消する画期的な「Speculative Speculative Decoding (SSD)」フレームワークと、非同期実行を最適化するアルゴリズム「Saguaro」の基本原理と性能を解説する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/speculative-speculative-decoding/</guid>
+  <pubDate>Fri, 06 Mar 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/173/200" medium="image"/>
+</item>
 <item>
   <title>Claude Codeの狂気とMemory Maniaの深層</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,16 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/openclaw-steinberger/</guid>
   <pubDate>Thu, 12 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/164/200" medium="image"/>
-</item>
-<item>
-  <title>AI解釈性が切り拓くアルツハイマー病診断の新たな地平：基盤モデル「Pleiades」が発見したフラグメントミクスという鍵</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</link>
-  <description><![CDATA[ AIの機械論的解釈性（Mechanistic Interpretability）が、基盤モデルPleiadesを通じてアルツハイマー病診断における cfDNA 断片長（フラグメントミクス）という新たなバイオマーカー発見へと繋がった過程を解説します。 ]]></description>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/prima-mente-pleiades/</guid>
-  <pubDate>Tue, 10 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/163/200" medium="image"/>
 </item>
 </channel>
 </rss>
