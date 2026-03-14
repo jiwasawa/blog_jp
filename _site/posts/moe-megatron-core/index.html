@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Trillion-ParameterクラスのMoEモデル学習におけるメモリ・通信・計算の「3つの壁」を打破するために、Megatron-Coreが導入したParallel FoldingやReduced-Precision Training、専用通信カーネルといったアプローチとその成果を解説する。">
+
+<title>Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破 – jiwasawaのブログ">
+<meta property="og:description" content="Trillion-ParameterクラスのMoEモデル学習におけるメモリ・通信・計算の「3つの壁」を打破するために、Megatron-Coreが導入したParallel FoldingやReduced-Precision Training、専用通信カーネルといったアプローチとその成果を解説する。">
+<meta property="og:image" content="https://picsum.photos/id/174/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破 – jiwasawaのブログ">
+<meta name="twitter:description" content="Trillion-ParameterクラスのMoEモデル学習におけるメモリ・通信・計算の「3つの壁」を打破するために、Megatron-Coreが導入したParallel FoldingやReduced-Precision Training、専用通信カーネルといったアプローチとその成果を解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/174/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破</h1>
+                  <div>
+        <div class="description">
+          Trillion-ParameterクラスのMoEモデル学習におけるメモリ・通信・計算の「3つの壁」を打破するために、Megatron-Coreが導入したParallel FoldingやReduced-Precision Training、専用通信カーネルといったアプローチとその成果を解説する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Transformer</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年3月14日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、AIモデルのスケーリングは新たなフェーズに突入している。従来のdenseモデルでは、すべてのパラメータがすべての計算に関与するため、計算コストがモデルサイズに比例して増大するという限界（dense scalingの壁）が存在した。これに対し、入力ごとにモデルの一部（“experts”）のみをアクティベートする<strong>Mixture-of-Experts (MoE)</strong> アーキテクチャが、計算効率を保ちながらモデルサイズを飛躍的に拡大する手法として注目を集めている。</p>
+<p>しかし、Trillion-Parameter（1兆パラメータ）クラスに達するMoEモデルの学習は、決して容易ではない。NVIDIAの最新レポート「<a href="https://arxiv.org/abs/2603.07685"><em>Scalable Training of Mixture-of-Experts Models with Megatron Core</em></a>」が指摘するように、このスケールでのMoE学習は、従来のdense frameworkでは想定されていなかった複雑なシステムレベルの課題を引き起こす。</p>
+<p>本稿では、このレポートおよび関連研究に基づき、Trillion-ParameterクラスのMoEモデル学習を阻む根本的な課題と、それらを解決して高効率な学習を実現する<strong><a href="https://docs.nvidia.com/megatron-lm/">Megatron-Core</a></strong>のアプローチについて深く掘り下げる。</p>
+<section id="moe学習を阻む3つの壁" class="level2">
+<h2 class="anchored" data-anchor-id="moe学習を阻む3つの壁">MoE学習を阻む「3つの壁」</h2>
+<p>MoEモデルの最大の特徴は、パラメータ総数がトークンあたりの計算量よりもはるかに早く増大する点にある。このsparsity（スパース性）がもたらす “parameter-compute mismatch”（パラメータ数と計算量の不一致）は、以下の3つの強固な壁となって学習システムに立ちはだかる。</p>
+<section id="the-memory-wallメモリの壁" class="level3">
+<h3 class="anchored" data-anchor-id="the-memory-wallメモリの壁">1. The Memory Wall（メモリの壁）</h3>
+<p>MoEモデルでは、特定のトークンに対してアクティブになるパラメータはごく一部（例えばDeepSeek-V3の場合、総パラメータ685Bに対してアクティブなのは37B程度）である。しかし、動的なルーティングに対応するためには、学習中、すべてのexpertパラメータやOptimizer statesをGPUメモリ上に保持しておかなければならない。これにより、計算量に対するメモリ要求が異常に高くなり、巨大なメモリプレッシャーが発生する。</p>
+</section>
+<section id="the-communication-wall通信の壁" class="level3">
+<h3 class="anchored" data-anchor-id="the-communication-wall通信の壁">2. The Communication Wall（通信の壁）</h3>
+<p>トークンを適切なexpertへディスパッチするためには、GPU間での “all-to-all” 通信が不可欠となる。Expert Parallelism (EP) の規模が拡大するにつれて、この通信はノード間の相互接続帯域幅の限界に直面し、学習時間全体の大きなボトルネックとなる。場合によっては学習時間の50%以上を通信が占めることもある。</p>
+</section>
+<section id="the-compute-efficiency-wall計算効率の壁" class="level3">
+<h3 class="anchored" data-anchor-id="the-compute-efficiency-wall計算効率の壁">3. The Compute Efficiency Wall（計算効率の壁）</h3>
+<p>MoEアーキテクチャでは、計算が多数の小さなGeneral Matrix Multiplication (GEMM) に細分化される傾向がある。細分化されたGEMMは、最新のGPUが誇る巨大な計算能力（Tensor Core）を十分に飽和させることができない。また、細かな演算の連続や複雑なルーティング処理はKernel launch等のhost overheadを増大させ、GPUがアイドル状態になる隙間を生み出してしまう。</p>
+</section>
+</section>
+<section id="統合的アプローチmegatron-coreのシステム設計" class="level2">
+<h2 class="anchored" data-anchor-id="統合的アプローチmegatron-coreのシステム設計">統合的アプローチ：Megatron-Coreのシステム設計</h2>
+<p>Megatron-Coreは、これら3つの壁を個別の問題として扱うのではなく、相互に関連するシステム全体の制約として捉え、多次元的な最適化戦略を展開している。</p>
+<section id="parallel-folding並列化の再定義と最適化" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-folding並列化の再定義と最適化">Parallel Folding：並列化の再定義と最適化</h3>
+<p>従来の5D hybrid parallelism（Tensor, Expert, Context, Data, and Pipeline Parallelism）において、Transformer block内のattention層とMoE層は同じ並列化構成を共有するように制約されていた。しかし、この2つの層は根本的に異なる計算特性を持っている。</p>
+<ul>
+<li><strong>Attention層</strong>：巨大なQKV行列の計算を処理するため、高いTensor Parallelism (TP) を適用するのが最適である。</li>
+<li><strong>MoE層</strong>：各expertの計算を並列化するため、高いExpert Parallelism (EP) が必要となる。</li>
+</ul>
+<p>従来の手法では、両者に同一の構成を強要することで “dense-sparse mismatch” が発生し、attention層の並列化が不十分になるか、あるいはexpertが非効率なサイズに細分化されるというジレンマに陥っていた。</p>
+<p>Megatron-Coreは、<strong>MoE Parallel Folding</strong>という新技術によってこれらのマッピングを分離した。これにより、attention層には最適な構成（高TPなど）を適用しつつ、MoE層には独立したEP構成を適用することが可能となった。さらに、attention並列グループ内にexpert並列グループを「折りたたむ（folding）」ことで、通信を高帯域なノード内接続（NVLinkなど）に局所化し、コストの高いノード間all-to-all通信を大幅に削減している。</p>
+</section>
+<section id="the-memory-wall-と-the-compute-efficiency-wall-の打破" class="level3">
+<h3 class="anchored" data-anchor-id="the-memory-wall-と-the-compute-efficiency-wall-の打破">The Memory Wall と The Compute Efficiency Wall の打破</h3>
+<p>Trillion-Parameterモデルを現在のGPUメモリ内に収め、かつ高いModel FLOP Utilization (MFU) を実現するため、Megatron-Coreは先進的なメモリ・計算最適化手法を導入している。</p>
+<section id="reduced-precision-training-fp8-fp4-と安定性の確保" class="level4">
+<h4 class="anchored" data-anchor-id="reduced-precision-training-fp8-fp4-と安定性の確保">Reduced-Precision Training (FP8 / FP4) と安定性の確保</h4>
+<p>単なるメモリ削減にとどまらず、学習のスループットを劇的に向上させるのがReduced-Precision Trainingである。Megatron-Coreでは、FP8が安定して運用されているだけでなく、最新のBlackwellクラスのGPUでサポートされる<strong>NVFP4</strong>（4-bit floating-point）のような超低精度フォーマットでの学習も統合されている。</p>
+<p>Trillion-Parameter規模のMoEにおけるFP4学習は、量子化ノイズに起因する収束の不安定性という課題を伴うが、以下のようなアルゴリズム的工夫によって解決されている。 * <strong>Random Hadamard Transforms (RHT)</strong>: 4-bit精度で顕著かつ破壊的となるブロックレベルの外れ値（outliers）の影響を抑え込む。 * <strong>Two-Dimensional Quantization</strong>: forward passとbackward passの両方で一貫した量子化表現を確保する。 * <strong>Stochastic Rounding</strong>: 超低精度環境下で学習の破綻を招く量子化バイアスを軽減し、不偏の勾配推定を実現する。 * <strong>Selective High-Precision</strong>: ルーティングロジックなど、モデルの品質に直結する敏感な層は高精度を維持し、バルクのexpert計算のみを量子化する。</p>
+</section>
+<section id="cuda-graphs-と-sync-free-kernels" class="level4">
+<h4 class="anchored" data-anchor-id="cuda-graphs-と-sync-free-kernels">CUDA Graphs と Sync-Free Kernels</h4>
+<p>GPUの計算能力が高まるにつれ、CPU側からのKernel launchに伴うhost overheadがボトルネックとなる。通常、これを排除するためにCUDA Graphsが用いられるが、MoEのようにトークン数が動的に変動する（dropless MoE）場合、従来の静的なグラフキャプチャは適用できない。Megatron-Coreは、デバイス主導（device-initiated）のSync-Free Kernelsや、ECHO（Elastic Cloning for Hot Experts）を用いた負荷分散、Paged Stashingによる動的メモリ管理を導入し、host-device間の同期を排除することで、動的ルーティング環境下でも完全なCUDA Graphsの適用を可能にしている。</p>
+</section>
+<section id="fine-grained-activation-offloading-recomputation" class="level4">
+<h4 class="anchored" data-anchor-id="fine-grained-activation-offloading-recomputation">Fine-grained Activation Offloading &amp; Recomputation</h4>
+<p>Activationのメモリフットプリントを削減するため、モジュール単位での戦略的なアプローチを採用している。軽量なLayerNormなどは再計算（Recomputation）に回し、計算コストの高いモジュールは専用のCUDAストリームを用いてCPUメモリへ非同期に退避（Offloading）させる。これにより、計算リソースを浪費することなくGPUのピークメモリ使用量を抑え込んでいる。</p>
+</section>
+</section>
+<section id="the-communication-wall-の打破通信カーネルの革新" class="level3">
+<h3 class="anchored" data-anchor-id="the-communication-wall-の打破通信カーネルの革新">The Communication Wall の打破：通信カーネルの革新</h3>
+<p>MoE学習において、トークンをexpertに振り分けるall-to-all通信は最大のボトルネックの一つである。標準的なNCCL collectivesは汎用性が高い反面、MoE特有の動的でスパースなディスパッチパターンに最適化されておらず、ノード間の狭い帯域幅や同期のオーバーヘッドに制約されがちである。</p>
+<p>Megatron-Coreでは、この問題に対処するため、<strong><a href="https://deepep.org">DeepEP</a></strong> および <strong>HybridEP</strong> と呼ばれる専用の通信ライブラリを採用している。</p>
+<ul>
+<li><strong>Near-Hardware Bandwidth</strong>: NVLink、RDMA、Tensor Memory Accelerator (TMA)、さらにはGPU-to-NIC通信（IBGDA）といった高度なハードウェア機能を直接活用することで、ノード内・ノード間トポロジの理論上の限界に近い帯域幅を引き出す。</li>
+<li><strong>Minimal Resource Footprint</strong>: これらのカーネルはごく少数のStreaming Multiprocessors (SMs) でピーク性能を発揮するように高度に最適化されており、GPUの大部分の演算器を実際のモデル計算に専念させることができる。</li>
+<li><strong>Advanced Overlap</strong>: 単に帯域幅を使い切るだけでなく、通信と計算を並行して実行する機能（Overlap）を備えている。特に <strong>1F1B (One-Forward-One-Backward) all-to-all overlap</strong> スキームを活用することで、通信を隣接するmicro-batchの計算処理とパイプライン化し、通信レイテンシを事実上ゼロに隠蔽している。</li>
+</ul>
+</section>
+</section>
+<section id="長文脈-long-context-moe学習への適応" class="level2">
+<h2 class="anchored" data-anchor-id="長文脈-long-context-moe学習への適応">長文脈 (Long-Context) MoE学習への適応</h2>
+<p>16Kから64Kトークン、あるいはそれ以上の長文脈を扱う場合、学習のボトルネックはMoE層からScaled Dot-Product Attention (SDPA) へとシフトする。SDPAの計算量はシーケンス長の2乗 <span class="math inline">\(\mathcal{O}(s^2)\)</span> に比例するためである。</p>
+<p>Megatron-Coreはこのような環境の変化にも対応するため、Context Parallelism (CP) と Tensor Parallelism (TP) を組み合わせた階層的なアプローチを提供する。これにより、デバイスごとの部分的なシーケンス長を一定に保ちながらActivationメモリの爆発を防ぐ。さらに、Reinforcement Learning (RL) などのVariable-Length Trainingシナリオにおいてパディングの無駄を排除するPacked Sequencesや、micro-batchごとにCPサイズを動的に変更するDynamic Context Parallelism (Dynamic-CP) の導入により、複雑な長文脈ワークロードでも高効率な学習を可能にしている。</p>
+</section>
+<section id="プロダクション環境でのパフォーマンスと意義" class="level2">
+<h2 class="anchored" data-anchor-id="プロダクション環境でのパフォーマンスと意義">プロダクション環境でのパフォーマンスと意義</h2>
+<p>これらの統合的な最適化の結果は、最新のState-of-the-Artモデルの学習において明確なパフォーマンス向上として実証されている。レポートによれば、<strong>DeepSeek-V3-685B</strong> の学習において、NVIDIA GB200システム上でGPUあたり <strong>1,000 TFLOPSを超える</strong> スループットを達成したことが報告されている。また、数千基のGPUクラスタにスケールさせた場合でも、フレームワークが高い効率を維持することが確認されている。</p>
+<p>研究者やAIエンジニアにとって、このレポートは現代のAIスケーリングにおける複雑なトレードオフを管理するための実践的なブループリント（設計図）である。Megatron-Coreは、メモリ、通信、計算という3つの根本的な壁を、それぞれ独立した課題としてではなく、密接に絡み合った単一のシステムとして扱うことで、次世代のスパースなAIモデルが計算資源の持続可能性を保ちながらその能力を拡大し続けるための確固たる基盤を提供している。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>NVIDIA, “Scalable Training of Mixture-of-Experts Models with Megatron Core”, <a href="https://arxiv.org/abs/2603.07685">arXiv:2603.07685</a>, 2026.</li>
+<li>Megatron-LM Repository: <a href="https://github.com/NVIDIA/Megatron-LM">https://github.com/NVIDIA/Megatron-LM</a></li>
+<li>DeepEP Repository: <a href="https://github.com/deepseek-ai/DeepEP">https://github.com/deepseek-ai/DeepEP</a></li>
+<li>NVIDIA, “Pretraining Large Language Models with NVFP4”, 2025.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,90 @@
+---
+title: "Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破"
+description: "Trillion-ParameterクラスのMoEモデル学習におけるメモリ・通信・計算の「3つの壁」を打破するために、Megatron-Coreが導入したParallel FoldingやReduced-Precision Training、専用通信カーネルといったアプローチとその成果を解説する。"
+author: "Junichiro Iwasawa"
+date: "2026-03-14"
+categories: [LLM, AI, Transformer]
+image: https://picsum.photos/id/174/200
+---
+
+近年、AIモデルのスケーリングは新たなフェーズに突入している。従来のdenseモデルでは、すべてのパラメータがすべての計算に関与するため、計算コストがモデルサイズに比例して増大するという限界（dense scalingの壁）が存在した。これに対し、入力ごとにモデルの一部（"experts"）のみをアクティベートする**Mixture-of-Experts (MoE)** アーキテクチャが、計算効率を保ちながらモデルサイズを飛躍的に拡大する手法として注目を集めている。
+
+しかし、Trillion-Parameter（1兆パラメータ）クラスに達するMoEモデルの学習は、決して容易ではない。NVIDIAの最新レポート「[*Scalable Training of Mixture-of-Experts Models with Megatron Core*](https://arxiv.org/abs/2603.07685)」が指摘するように、このスケールでのMoE学習は、従来のdense frameworkでは想定されていなかった複雑なシステムレベルの課題を引き起こす。
+
+本稿では、このレポートおよび関連研究に基づき、Trillion-ParameterクラスのMoEモデル学習を阻む根本的な課題と、それらを解決して高効率な学習を実現する**[Megatron-Core](https://docs.nvidia.com/megatron-lm/)**のアプローチについて深く掘り下げる。
+
+## MoE学習を阻む「3つの壁」
+
+MoEモデルの最大の特徴は、パラメータ総数がトークンあたりの計算量よりもはるかに早く増大する点にある。このsparsity（スパース性）がもたらす "parameter-compute mismatch"（パラメータ数と計算量の不一致）は、以下の3つの強固な壁となって学習システムに立ちはだかる。
+
+### 1. The Memory Wall（メモリの壁）
+MoEモデルでは、特定のトークンに対してアクティブになるパラメータはごく一部（例えばDeepSeek-V3の場合、総パラメータ685Bに対してアクティブなのは37B程度）である。しかし、動的なルーティングに対応するためには、学習中、すべてのexpertパラメータやOptimizer statesをGPUメモリ上に保持しておかなければならない。これにより、計算量に対するメモリ要求が異常に高くなり、巨大なメモリプレッシャーが発生する。
+
+### 2. The Communication Wall（通信の壁）
+トークンを適切なexpertへディスパッチするためには、GPU間での "all-to-all" 通信が不可欠となる。Expert Parallelism (EP) の規模が拡大するにつれて、この通信はノード間の相互接続帯域幅の限界に直面し、学習時間全体の大きなボトルネックとなる。場合によっては学習時間の50%以上を通信が占めることもある。
+
+### 3. The Compute Efficiency Wall（計算効率の壁）
+MoEアーキテクチャでは、計算が多数の小さなGeneral Matrix Multiplication (GEMM) に細分化される傾向がある。細分化されたGEMMは、最新のGPUが誇る巨大な計算能力（Tensor Core）を十分に飽和させることができない。また、細かな演算の連続や複雑なルーティング処理はKernel launch等のhost overheadを増大させ、GPUがアイドル状態になる隙間を生み出してしまう。
+
+## 統合的アプローチ：Megatron-Coreのシステム設計
+
+Megatron-Coreは、これら3つの壁を個別の問題として扱うのではなく、相互に関連するシステム全体の制約として捉え、多次元的な最適化戦略を展開している。
+
+### Parallel Folding：並列化の再定義と最適化
+
+従来の5D hybrid parallelism（Tensor, Expert, Context, Data, and Pipeline Parallelism）において、Transformer block内のattention層とMoE層は同じ並列化構成を共有するように制約されていた。しかし、この2つの層は根本的に異なる計算特性を持っている。
+
+*   **Attention層**：巨大なQKV行列の計算を処理するため、高いTensor Parallelism (TP) を適用するのが最適である。
+*   **MoE層**：各expertの計算を並列化するため、高いExpert Parallelism (EP) が必要となる。
+
+従来の手法では、両者に同一の構成を強要することで "dense-sparse mismatch" が発生し、attention層の並列化が不十分になるか、あるいはexpertが非効率なサイズに細分化されるというジレンマに陥っていた。
+
+Megatron-Coreは、**MoE Parallel Folding**という新技術によってこれらのマッピングを分離した。これにより、attention層には最適な構成（高TPなど）を適用しつつ、MoE層には独立したEP構成を適用することが可能となった。さらに、attention並列グループ内にexpert並列グループを「折りたたむ（folding）」ことで、通信を高帯域なノード内接続（NVLinkなど）に局所化し、コストの高いノード間all-to-all通信を大幅に削減している。
+
+### The Memory Wall と The Compute Efficiency Wall の打破
+
+Trillion-Parameterモデルを現在のGPUメモリ内に収め、かつ高いModel FLOP Utilization (MFU) を実現するため、Megatron-Coreは先進的なメモリ・計算最適化手法を導入している。
+
+#### Reduced-Precision Training (FP8 / FP4) と安定性の確保
+単なるメモリ削減にとどまらず、学習のスループットを劇的に向上させるのがReduced-Precision Trainingである。Megatron-Coreでは、FP8が安定して運用されているだけでなく、最新のBlackwellクラスのGPUでサポートされる**NVFP4**（4-bit floating-point）のような超低精度フォーマットでの学習も統合されている。
+
+Trillion-Parameter規模のMoEにおけるFP4学習は、量子化ノイズに起因する収束の不安定性という課題を伴うが、以下のようなアルゴリズム的工夫によって解決されている。
+*   **Random Hadamard Transforms (RHT)**: 4-bit精度で顕著かつ破壊的となるブロックレベルの外れ値（outliers）の影響を抑え込む。
+*   **Two-Dimensional Quantization**: forward passとbackward passの両方で一貫した量子化表現を確保する。
+*   **Stochastic Rounding**: 超低精度環境下で学習の破綻を招く量子化バイアスを軽減し、不偏の勾配推定を実現する。
+*   **Selective High-Precision**: ルーティングロジックなど、モデルの品質に直結する敏感な層は高精度を維持し、バルクのexpert計算のみを量子化する。
+
+#### CUDA Graphs と Sync-Free Kernels
+GPUの計算能力が高まるにつれ、CPU側からのKernel launchに伴うhost overheadがボトルネックとなる。通常、これを排除するためにCUDA Graphsが用いられるが、MoEのようにトークン数が動的に変動する（dropless MoE）場合、従来の静的なグラフキャプチャは適用できない。Megatron-Coreは、デバイス主導（device-initiated）のSync-Free Kernelsや、ECHO（Elastic Cloning for Hot Experts）を用いた負荷分散、Paged Stashingによる動的メモリ管理を導入し、host-device間の同期を排除することで、動的ルーティング環境下でも完全なCUDA Graphsの適用を可能にしている。
+
+#### Fine-grained Activation Offloading & Recomputation
+Activationのメモリフットプリントを削減するため、モジュール単位での戦略的なアプローチを採用している。軽量なLayerNormなどは再計算（Recomputation）に回し、計算コストの高いモジュールは専用のCUDAストリームを用いてCPUメモリへ非同期に退避（Offloading）させる。これにより、計算リソースを浪費することなくGPUのピークメモリ使用量を抑え込んでいる。
+
+### The Communication Wall の打破：通信カーネルの革新
+
+MoE学習において、トークンをexpertに振り分けるall-to-all通信は最大のボトルネックの一つである。標準的なNCCL collectivesは汎用性が高い反面、MoE特有の動的でスパースなディスパッチパターンに最適化されておらず、ノード間の狭い帯域幅や同期のオーバーヘッドに制約されがちである。
+
+Megatron-Coreでは、この問題に対処するため、**[DeepEP](https://deepep.org)** および **HybridEP** と呼ばれる専用の通信ライブラリを採用している。
+
+*   **Near-Hardware Bandwidth**: NVLink、RDMA、Tensor Memory Accelerator (TMA)、さらにはGPU-to-NIC通信（IBGDA）といった高度なハードウェア機能を直接活用することで、ノード内・ノード間トポロジの理論上の限界に近い帯域幅を引き出す。
+*   **Minimal Resource Footprint**: これらのカーネルはごく少数のStreaming Multiprocessors (SMs) でピーク性能を発揮するように高度に最適化されており、GPUの大部分の演算器を実際のモデル計算に専念させることができる。
+*   **Advanced Overlap**: 単に帯域幅を使い切るだけでなく、通信と計算を並行して実行する機能（Overlap）を備えている。特に **1F1B (One-Forward-One-Backward) all-to-all overlap** スキームを活用することで、通信を隣接するmicro-batchの計算処理とパイプライン化し、通信レイテンシを事実上ゼロに隠蔽している。
+
+## 長文脈 (Long-Context) MoE学習への適応
+
+16Kから64Kトークン、あるいはそれ以上の長文脈を扱う場合、学習のボトルネックはMoE層からScaled Dot-Product Attention (SDPA) へとシフトする。SDPAの計算量はシーケンス長の2乗 $\mathcal{O}(s^2)$ に比例するためである。
+
+Megatron-Coreはこのような環境の変化にも対応するため、Context Parallelism (CP) と Tensor Parallelism (TP) を組み合わせた階層的なアプローチを提供する。これにより、デバイスごとの部分的なシーケンス長を一定に保ちながらActivationメモリの爆発を防ぐ。さらに、Reinforcement Learning (RL) などのVariable-Length Trainingシナリオにおいてパディングの無駄を排除するPacked Sequencesや、micro-batchごとにCPサイズを動的に変更するDynamic Context Parallelism (Dynamic-CP) の導入により、複雑な長文脈ワークロードでも高効率な学習を可能にしている。
+
+## プロダクション環境でのパフォーマンスと意義
+
+これらの統合的な最適化の結果は、最新のState-of-the-Artモデルの学習において明確なパフォーマンス向上として実証されている。レポートによれば、**DeepSeek-V3-685B** の学習において、NVIDIA GB200システム上でGPUあたり **1,000 TFLOPSを超える** スループットを達成したことが報告されている。また、数千基のGPUクラスタにスケールさせた場合でも、フレームワークが高い効率を維持することが確認されている。
+
+研究者やAIエンジニアにとって、このレポートは現代のAIスケーリングにおける複雑なトレードオフを管理するための実践的なブループリント（設計図）である。Megatron-Coreは、メモリ、通信、計算という3つの根本的な壁を、それぞれ独立した課題としてではなく、密接に絡み合った単一のシステムとして扱うことで、次世代のスパースなAIモデルが計算資源の持続可能性を保ちながらその能力を拡大し続けるための確固たる基盤を提供している。
+
+## 参考文献
+
+1. NVIDIA, "Scalable Training of Mixture-of-Experts Models with Megatron Core", [arXiv:2603.07685](https://arxiv.org/abs/2603.07685), 2026.
+2. Megatron-LM Repository: [https://github.com/NVIDIA/Megatron-LM](https://github.com/NVIDIA/Megatron-LM)
+3. DeepEP Repository: [https://github.com/deepseek-ai/DeepEP](https://github.com/deepseek-ai/DeepEP)
+4. NVIDIA, "Pretraining Large Language Models with NVFP4", 2025.
