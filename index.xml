@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sat, 14 Mar 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 17 Mar 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Attention Residuals：深層学習アーキテクチャの新たなパラダイム</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/attention-res/</link>
+  <description><![CDATA[ Attention Residuals (AttnRes)は、深層学習モデルの深さ方向における情報伝達を固定的な加算から動的なAttentionメカニズムへと進化させ、PreNorm dilutionを克服して学習の安定化と性能向上を実現するアーキテクチャです。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Transformer</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/attention-res/</guid>
+  <pubDate>Tue, 17 Mar 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/175/200" medium="image"/>
+</item>
 <item>
   <title>Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,17 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-1/</guid>
   <pubDate>Sat, 14 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/166/200" medium="image"/>
-</item>
-<item>
-  <title>Harness Engineeringの正体：OpenAIが描く「人間がコードを書かない」未来の解像度</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/codex-harness/</link>
-  <description><![CDATA[ OpenAIの「Harness Engineering」の事例から、AIにコードを書かせるための環境設計やフィードバックループ構築といった、エンジニアの役割の変化と、AI時代におけるソフトウェア開発の新たな実践方法を分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/codex-harness/</guid>
-  <pubDate>Fri, 13 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/165/200" medium="image"/>
 </item>
 </channel>
 </rss>

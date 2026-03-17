@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/attention-res/index.html",
       "/posts/moe-megatron-core/index.html",
       "/posts/speculative-speculative-decoding/index.html",
       "/posts/doug-semianalysis-latentspace/index.html",
