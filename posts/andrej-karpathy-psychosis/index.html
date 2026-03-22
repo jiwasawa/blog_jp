@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する">
+<meta name="description" content="Andrej Karpathyが語るAIサイコーシスと、AIエージェントがソフトウェアエンジニアリングのパラダイムを覆し、人間の役割を「Orchestrator」へと進化させる未来を分析する。">
 
-<title>John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心</title>
+<title>Andrej Karpathyが語る”AI Psychosis”と、ソフトウェアエンジニアリングの終焉</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -84,13 +84,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心 – jiwasawaのブログ">
-<meta property="og:description" content="OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する">
-<meta property="og:image" content="https://picsum.photos/id/134/200">
+<meta property="og:title" content="Andrej Karpathyが語る”AI Psychosis”と、ソフトウェアエンジニアリングの終焉 – jiwasawaのブログ">
+<meta property="og:description" content="Andrej Karpathyが語るAIサイコーシスと、AIエージェントがソフトウェアエンジニアリングのパラダイムを覆し、人間の役割を「Orchestrator」へと進化させる未来を分析する。">
+<meta property="og:image" content="https://picsum.photos/id/176/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心 – jiwasawaのブログ">
-<meta name="twitter:description" content="OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する">
-<meta name="twitter:image" content="https://picsum.photos/id/134/200">
+<meta name="twitter:title" content="Andrej Karpathyが語る”AI Psychosis”と、ソフトウェアエンジニアリングの終焉 – jiwasawaのブログ">
+<meta name="twitter:description" content="Andrej Karpathyが語るAIサイコーシスと、AIエージェントがソフトウェアエンジニアリングのパラダイムを覆し、人間の役割を「Orchestrator」へと進化させる未来を分析する。">
+<meta name="twitter:image" content="https://picsum.photos/id/176/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -146,15 +146,16 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心</h1>
+      <h1 class="title">Andrej Karpathyが語る”AI Psychosis”と、ソフトウェアエンジニアリングの終焉</h1>
                   <div>
         <div class="description">
-          OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する
+          Andrej Karpathyが語るAIサイコーシスと、AIエージェントがソフトウェアエンジニアリングのパラダイムを覆し、人間の役割を「Orchestrator」へと進化させる未来を分析する。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
               </div>
                   </div>
   </div>
@@ -172,7 +173,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年12月21日</p>
+        <p class="date">2026年3月22日</p>
       </div>
     </div>
     
@@ -191,48 +192,35 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>John SchulmanがOpenAIを去り、Anthropicを経て自らの新天地Thinking Machinesへと居を移してからしばらくが経つ。</p>
-<p>ChatGPTのリードアーキテクトであり、PPO（Proximal Policy Optimization）の生みの親でもある彼が、CursorのMichael Truellとのやりとりの中でOpenAI初期の狂乱と、現在のReinforcement Learning（RL）における「不都合な真実」を淡々と、しかし極めて高い解像度で語っている。</p>
-<p>今回のブログでは、<a href="https://youtu.be/29BYxvvF1iM?si=avB1uybraWM3DxF_">彼のインタビュー</a>から見えてくるAI開発の「泥臭い真実」と、彼が次に仕掛けるTinkerの勝算について、独自の視点で分析してみたい。</p>
-<section id="universeという正しすぎる失敗" class="level2">
-<h2 class="anchored" data-anchor-id="universeという正しすぎる失敗">「Universe」という正しすぎる失敗</h2>
-<p>OpenAIの初期がいかに「Rag-tag（寄せ集め）」な集団であったか。今や時価総額が国家予算レベルに達しようとしている巨人の、かつての姿をSchulmanは懐かしむように語る。</p>
-<p>当時は現代のような「スケーリング則への狂信」はなく、アカデミアに近い自由な雰囲気が漂っていたという。そこで生まれた大きな挫折の一つが、Universeプロジェクトだ。</p>
-<p>Universeは、あらゆるコンピューター上のタスク（ビデオゲームやウェブナビゲーション）をRLの環境として統合し、汎用エージェントを育てようという壮大な試みだった。Schulmanはこれを「深く正しいアイデア（Deeply correct idea）だったが、10年早すぎた」と評している。</p>
-<p>当時のインフラではシステムの複雑さに耐えきれず、モデルの汎化性能も追いつかなかった。結局、OpenAIはこの広すぎる野心を一旦捨て、Dota 2というスコープを絞ったプロジェクトで「大規模なエンジニアリング」の筋肉を鍛えることになる。</p>
-<p>この「正しいが早すぎるアイデア」を捨てる勇気こそが、後のOpenAIを成功に導いた。ロボティクス部門の閉鎖も同様だ。それらは「デッドエンド」だったかもしれないが、そこで培われた大規模学習のノウハウが、後のGPTシリーズの血肉となっている。</p>
+<p>かつて世界最高峰のAIリサーチャーとして名を馳せ、TeslaやOpenAIの根幹を支えてきたAndrej Karpathyが、最近の<a href="https://youtu.be/kwSVtQ7dziU?si=qqIuptDYmGwDBLCD">「No Priors」podcast</a>に出演した。そこで彼が語った内容は、単なるAIのトレンド予測などという生ぬるいものではなく、現在進行形で起きているソフトウェアエンジニアリングの崩壊と、新たなパラダイムへの移行の生々しい記録であった。</p>
+<p>「もう『コードを書く』という動詞すら適切ではない」——そう断言する彼の言葉には、旧来の手動コーディングが完全にオワコン化したという確信が漂っている。彼は12月以降、自らの手でコードを1行も書いていないという。代わりに1日16時間、AIエージェントに対して自身の「意志（will）」を伝え、タスクを委任し続けている。この熱狂的で、ある種偏執的とも言える没入状態を、彼は”AI psychosis（AIサイコーシス）“と表現した。</p>
+<p>本稿では、Karpathyの考察を起点に、Agent-drivenな開発パラダイムの正体と、彼が取り組むAutoResearchの現状、そして未来のAIエコシステムの行く末を分析する。</p>
+<section id="すべてはskill-issueという冷酷な現実" class="level2">
+<h2 class="anchored" data-anchor-id="すべてはskill-issueという冷酷な現実">すべては”Skill Issue”という冷酷な現実</h2>
+<p>Karpathyが指摘するAgent-driven時代の最大の特徴は、人間の役割が「Sole creator（単独の創作者）」から「Orchestrator（指揮者）」へと完全にシフトした点にある。</p>
+<p>AIエージェントに複雑なタスクを投げた際、期待外れの結果が返ってくることは日常茶飯事だ。ここで多くの開発者は「まだLLMの推論能力が足りない」とモデルのせいにしがちだが、Karpathyはこれを一蹴する。エージェントが機能しない場合、それはAIの限界ではなく、ひとえに人間側の「Skill Issue（スキルの問題）」であるというのだ。</p>
+<p>AIエージェントの有効性は、モデル自体のIQよりも、与えられる指示の明確さ、利用可能なツールの選定、そして基盤となるMemoryシステムの設計に大きく依存する。どのエージェントにどの粒度でタスクを分割し、どのように並列処理（Orchestration）させるか。彼が1日16時間もPCの前に座り続けているのは、コードをタイピングしているからではない。この「いかにしてAIエージェントの能力を最大限に引き出すか」という全く新しいメタ・エンジニアリングのスキルを磨き上げているからに他ならない。</p>
 </section>
-<section id="なぜ今value-functionはオワコンなのか" class="level2">
-<h2 class="anchored" data-anchor-id="なぜ今value-functionはオワコンなのか">なぜ今、Value Functionは「オワコン」なのか</h2>
-<p>インタビューの中で、筆者が最も興味を惹かれたのが、強化学習におけるValue Function（価値関数）の現状に関するSchulmanの分析だ。</p>
-<p>伝統的なRLにおいて、Value FunctionはVariance Reduction（分散低減）のために不可欠な要素だった。しかし、現在のLLMに対するRL（特にRLHFや検証可能な報酬を用いた学習）において、Value Functionはそれほど大きな役割を果たしていないという。</p>
-<blockquote class="blockquote">
-<p><strong>John Schulman:</strong> 「なぜ価値関数が現在のタスクでそれほど役立たないのか、その理由ははっきりとは分かりません。おそらく、分散低減の効果が期待したほど得られていないのでしょう。ただ、いつかValue Functionが返り咲く時は来ると予想しています。」</p>
-</blockquote>
-<p>この発言は非常に示唆に富んでいる。現在のLLMの学習が、ある種「短いタイムホライズン（時間軸）」の最適化に終始している可能性を示唆しているからだ。数万トークンをサンプリングする今のLLMは一見「長い時間軸」を扱っているように見えるが、RLの構造としてはまだ深みに欠けているのかもしれない。</p>
+<section id="clawsの台頭とpersonalityという新たなux指標" class="level2">
+<h2 class="anchored" data-anchor-id="clawsの台頭とpersonalityという新たなux指標">“Claws”の台頭と、Personalityという新たなUX指標</h2>
+<p>Karpathyのビジョンの中で特に興味深いのが、単発のチャットセッションを超えた「Claws」と呼ばれる概念だ。これは、ユーザーが明示的に操作しなくてもバックグラウンドで自律的かつ永続的に稼働し続けるAgenticなエンティティを指す。</p>
+<p>彼はその実証として、「Dobby the Elf Claw」という自作のエージェントを紹介した。このDobbyは、彼自身のスマートホーム環境に接続され、照明、HVAC（空調）、セキュリティシステムに至るまで、すべてを自然言語のコマンドで一元管理している。もはや機能ごとに分断された複数のSaaSアプリを立ち上げる必要はない。複雑なシステムを背後に隠蔽し、最も直感的なインターフェースである「自然言語」で完結させる様は、Agentが日常生活のハブとなる未来を如実に示している。</p>
+<p>そしてここで見過ごせないのが、Agentの「Personality（性格）」がもたらすUXへの甚大な影響だ。Karpathyは、AnthropicのClaudeとOpenAIのCodexを比較し、その違いを指摘した。Claudeは人間味があり、ユーザーとのインタラクションにおいてupbeat（明るく前向き）な反応を返すため、まるで優秀な同僚と共に作業しているかのような錯覚を抱かせる。一方でCodexは極めてドライであり、ただ機械的にタスクをこなすだけだ。</p>
+<p>LLMのパラメータ数やベンチマークスコアばかりが注目されがちな昨今だが、最終的なプロダクトへの定着率を左右するのは、AIが人間の微妙な意図（Nuanced human intent）を汲み取り、いかに心地よいPersonalityとして振る舞えるかという点にある。技術的素養のない一般ユーザーがAgentを日常的に使いこなすようになるためには、この「感情的なUX」の設計が不可避となるだろう。</p>
 </section>
-<section id="agiタイムラインに潜むエンジニアのバイアス" class="level2">
-<h2 class="anchored" data-anchor-id="agiタイムラインに潜むエンジニアのバイアス">AGIタイムラインに潜む「エンジニアのバイアス」</h2>
-<p>Schulmanは、巷で囁かれるAGI（人工汎用知能）のタイムラインに対しても、極めて現実的な、あるいは冷ややかな視点を持っている。</p>
-<p>彼は、エンジニアや研究者がプロジェクトの完了時間を常に見誤る「計画の錯誤」に触れ、世の中のAGI予測には「3倍の係数（3x factor）」をかけるべきだと示唆している。自動運転車（Self-driving cars）が「あと数年」と言われ続けてから久しいのと同様に、AGIもまた、最後の数パーセントの精度を埋めるために膨大な時間がかかるという見立てだ。</p>
-<p>一方で、AIがAI自身の開発を加速させる「ポジティブ・フィードバック・ループ」の存在も認めており、直感に反するスピードで進化が起こる可能性についても留保を置いている。この「慎重な楽観主義」こそが、狂騒のAI業界で彼が信頼され続ける理由だろう。</p>
+<section id="autoresearchが浮き彫りにする自律化の壁" class="level2">
+<h2 class="anchored" data-anchor-id="autoresearchが浮き彫りにする自律化の壁">AutoResearchが浮き彫りにする自律化の壁</h2>
+<p>ソフトウェアエンジニアリングの自動化が進む中、Karpathyはさらにその先、AI研究そのものをAIに行わせる「AutoResearch」というプロジェクトに取り組んでいる。</p>
+<p>仮説の生成から、膨大なデータセットの自律的な探索、モデルの学習（Training）、そして最適化評価に至るまで、研究ループ全体をAgentが自律的に回すという野心的な試みだ。これが実現すれば、AIが自らAIを改善する再帰的自己改善（Recursive self-improvement）の扉が開かれることになる。</p>
+<p>しかし、彼自身が認めているように、現在のAutoResearchには明確な限界が存在する。部分的なタスクの自動化や最適化は可能であっても、未知のバグに対する軌道修正や、大局的な研究の方向性を決定するような「深い洞察」においては、まだ完全に人間のリサーチャーをループから外すことはできていない。Agentは指定された枠組み（Sandboxes）の中では驚異的なパフォーマンスを発揮するが、枠そのものを再定義するような推論には至っていないのが現状だ。</p>
+<p>これは、Frontier Labsが巨額の資金を投じて追求している「完全自律型AI」の道のりが、我々が想像するよりも少しだけ険しいことを示唆している。</p>
 </section>
-<section id="thinking-machinesとtinkerの狙い" class="level2">
-<h2 class="anchored" data-anchor-id="thinking-machinesとtinkerの狙い">Thinking Machinesと「Tinker」の狙い</h2>
-<p>Schulmanが現在取り組んでいるThinking Machinesの旗艦プロダクトがTinkerだ。</p>
-<p>これは、低レイヤーのFine-tuning APIであり、GPUや分散システムの複雑さを意識することなく、独自のPost-trainingアルゴリズムを実装できるプラットフォームだという。</p>
-<p>OpenAIやAnthropicが、高度にパッケージ化された「推論API」を提供する「プラットフォームの巨人」へと進化する中で、Schulmanはあえて「モデルの裏側を弄りたい」という玄人志向の開発者、あるいは研究者たちのニーズに賭けている。</p>
-<blockquote class="blockquote">
-<p><strong>John Schulman:</strong> 「Tinkerは、MLの知識があり、細部にこだわりたい人たちのためのものです。GPUボックスを自前で立てる必要なく、Pythonスクリプトを書くだけで大規模なトレーニングが可能になります。」</p>
-</blockquote>
-<p>これは、前述のサンプルブログで指摘されていたOpenAIの「アンチプラットフォーム性（外部開発者の軽視）」に対する、Schulmanなりのアンサーのようにも聞こえる。</p>
-</section>
-<section id="今でも研究者に必要なのはコーヒーとノート" class="level2">
-<h2 class="anchored" data-anchor-id="今でも研究者に必要なのはコーヒーとノート">今でも研究者に必要なのは「コーヒーとノート」</h2>
-<p>最後に、Schulmanの日常が語られている。意外にも、彼は今でもノートを手に喫茶店へ行き、雑音の中で思考を巡らせることを好むという。</p>
-<p>GPT-5 Proを使って文献調査を行い、自分の曖昧なアイデアをモデルに肉付けさせる。一方で、コードの1行1行を完全に把握し、シンプルな実装を保つことの重要性を説く。</p>
-<p>AIの進化を最前線でリードしてきた男が、最終的には「コーヒーとノート」という極めてアナログな環境を思考のベースに置いている事実は、技術に溺れがちな我々への警鐘のようにも響く。</p>
-<p>Thinking Machinesが次に何を打ち出すのか。Tinkerがどこまで開発者の筋肉を加速させるのか。John Schulmanの第2章は、まだ始まったばかりだ。</p>
+<section id="aiの民主化と次なるパラダイム" class="level2">
+<h2 class="anchored" data-anchor-id="aiの民主化と次なるパラダイム">AIの民主化と、次なるパラダイム</h2>
+<p>完全な自律化にはまだ壁があるとはいえ、Agentの台頭がもたらす波は止まらない。Karpathyは、Open Sourceモデルとアクセス可能なAIツールの進化が、AIの民主化を強烈に推し進めていると強調した。</p>
+<p>一握りのFrontier Labsだけが最先端の恩恵を独占する時代は終わりつつある。Hugging FaceやGitHubに公開される無数のオープンウェイトモデルとツール群を組み合わせれば、世界中のあらゆる個人や組織が、自分専用の「Dobby」や「AutoResearchアシスタント」を構築できる。</p>
+<p>手でコードを書くという行為は、近い将来、機械語を直接記述するのと同じくらい奇骨な趣味へと変わるだろう。我々がいま直面しているのは、AIに仕事を奪われるという単純な悲観論ではない。AIという無尽蔵の知性リソースを前にして、それをいかに指揮し、自らの「意志」をシステム全体に反映させることができるかという、新しい知性の使い方のテストなのだ。</p>
+<p>Karpathyが陥った”AI psychosis”は、狂気ではない。それは、Agent-drivenな未来へ適応するための、極めて健全な進化のプロセスである。我々もまた、己の”Skill Issue”と向き合い、早急にこのサイコーシスに感染する必要があるのだろう。</p>
 
 
 </section>
