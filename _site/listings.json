@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/andrej-karpathy-psychosis/index.html",
       "/posts/attention-res/index.html",
       "/posts/moe-megatron-core/index.html",
       "/posts/speculative-speculative-decoding/index.html",
