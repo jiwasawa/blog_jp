@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.36</generator>
-<lastBuildDate>Sun, 22 Mar 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 23 Mar 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIコンピューティング拡張を阻む3つの壁：シリコンバレーの熱狂と物理的現実</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-dwarkesh/</link>
+  <description><![CDATA[ AIコンピューティングの指数関数的な進化は、Logic、Memory、Powerという物理的制約とASMLのEUV装置の供給能力によって冷酷な現実を突きつけられている。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-dwarkesh/</guid>
+  <pubDate>Mon, 23 Mar 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/177/200" medium="image"/>
+</item>
 <item>
   <title>Andrej Karpathyが語る”AI Psychosis”と、ソフトウェアエンジニアリングの終焉</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -118,19 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/jeff-dean-latent-space/</guid>
   <pubDate>Wed, 18 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/168/200" medium="image"/>
-</item>
-<item>
-  <title>Elon Muskの「Limiting Factor」論：xAIの真の狙いと、物理法則だけが支配する未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-2/</link>
-  <description><![CDATA[ Elon Muskは、xAIにおける「Digital Human Emulation」戦略、AIアライメントにおける「Truth-seeking」の重要性、そしてStarship開発で培われた「Limiting Factor」を突破するエンジニアリング哲学を通じて、物理法則に基づいた未来の創造を目指している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Dwarkesh Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/elon-dwarkesh-2/</guid>
-  <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/167/200" medium="image"/>
 </item>
 </channel>
 </rss>

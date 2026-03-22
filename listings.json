@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/dylan-patel-dwarkesh/index.html",
       "/posts/andrej-karpathy-psychosis/index.html",
       "/posts/attention-res/index.html",
       "/posts/moe-megatron-core/index.html",
