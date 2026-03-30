@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。">
+
+<title>比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然 – jiwasawaのブログ">
+<meta property="og:description" content="AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。">
+<meta property="og:image" content="https://picsum.photos/id/179/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然 – jiwasawaのブログ">
+<meta name="twitter:description" content="AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/179/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然</h1>
+                  <div>
+        <div class="description">
+          AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年3月30日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>AIが我々の仕事を奪い尽くすという終末論的な予測は、今やシリコンバレーの居酒屋談義における標準的なBGMとなっている。</p>
+<p>AI界隈で働くエンジニアやVCたちの多くは、自分たちが構築しているテクノロジーがいずれ大量の人間を失業に追いやると信じて疑わない。人類の労働を自動化すること自体が彼らの生業なのだから、その思考回路は至極当然だ。「いま自分が死神となり、雇用の破壊者となった」というOppenheimer的なメランコリーと特権意識を交えながら、労働の窮乏化は避けられないと彼らは語る。</p>
+<p>しかし、一旦そのような無責任極まりない未来観測的与太話は無視し、冷徹な経済の基本原理に立ち返ってみよう。Noah Smithが自身のブログ<a href="https://www.noahpinion.blog/p/plentiful-high-paying-jobs-in-the-ff9">「Plentiful, high-paying jobs in the age of AI」</a>で展開した議論は、AIが人間のあらゆる能力を凌駕したとしても、人間にはなお豊富で高給な仕事が残り得るという、直観に反するが極めて論理的な視点を提供している。本稿では、AIの脅威論を「Comparative advantage（比較優位）」と「Opportunity cost（機会費用）」という経済学のレンズを通して解体し、現在のLLMプラットフォーマーたちが直面しているリソース制約の現実と照らし合わせながら、AI時代の労働市場のリアルな未来観測を行う。</p>
+<section id="絶対優位と引き換えに浮かび上がるcomparative-advantage" class="level2">
+<h2 class="anchored" data-anchor-id="絶対優位と引き換えに浮かび上がるcomparative-advantage">絶対優位と引き換えに浮かび上がるComparative Advantage</h2>
+<p>AIが人間よりあらゆる面で優れているなら、人間の仕事はなくなるはずだ——この単純な誤謬は、「Competitive advantage（絶対優位）」と「Comparative advantage（比較優位）」の混同から生じている。</p>
+<p>Smithが引用しているクラシックな経済学の例がある。ある超人的にタイピングが速いVC（ベンチャーキャピタリスト）がいるとしよう。彼はタイピングにおいて絶対優位を持っているが、それでも秘書を雇ってタイピングを任せる。なぜか。彼自身の時間は、タイピングよりも高付加価値なディールメイクに費やした方が圧倒的にリターンが大きいからだ。この場合、VCのcomparative advantageはディールメイクにあり、秘書のcomparative advantageはタイピングにある。重要なのは、各々が「他の選択肢と比べて最もOpportunity costが低いタスク」に特化するということであり、「客観的に誰が一番上手いか」ではない。</p>
+<p>この原理は、そのままAI主導の経済に適用できる。仮に将来のAIが、コーディングから小説の執筆、さらには医療診断に至るまで、あらゆるタスクにおいて人間より優れていたとしよう。それでもAIには、人間にはない「Producer-specific constraints（生産者特有の制約）」が存在する。それは「Compute（計算資源）」である。</p>
+<p>地球上のcomputeの総量は、たとえ指数関数的に増加しようとも常に有限だ。したがって、AIの圧倒的な能力は、常に最も価値の高いアプリケーションへと優先的に割り当てられる。AIをあるタスクに使用するためのopportunity costは、「そのAIを他のタスクに使用した場合に生み出される価値」によって決まる。もしAIが高度なシステム設計を行うことで1時間に2000ドルの価値を生むなら、同じAIを200ドルの価値しか生み出さない一般的な診断業務に割り当てることは経済的に見合わない。結果として、AIに任せるにはopportunity costが高すぎるタスク——すなわち人間のcomparative advantageが残るタスク——は、依然として人間が担うことになる。</p>
+</section>
+<section id="inference-computeの枯渇とanthropicの冷徹な意思決定" class="level2">
+<h2 class="anchored" data-anchor-id="inference-computeの枯渇とanthropicの冷徹な意思決定">Inference Computeの枯渇とAnthropicの冷徹な意思決定</h2>
+<p>この「AIのopportunity cost」という概念は、机上の空論ではない。AI業界の最前線では、すでにこのリソースの奪い合いと経済的最適化が露骨な形で表出している。</p>
+<p>最近、AnthropicがOpenClawのAPI利用をBANした一件は、この議論を補強する非常に興味深い事例である。一見すると単なるプラットフォームの規約違反への対応やエコシステムの囲い込みに見えるかもしれないが、より深いコンテキスト——すなわちinference computeの逼迫——から読み解くべきだ。</p>
+<p>現在の最先端LLMを提供する企業にとって、推論に必要なinference computeは極めて貴重なボトルネックとなっている。限られたcomputeをどこに投資するか。Anthropicにとって、外部のサードパーティにAPIとしてcomputeを切り売りするよりも、自社の「Claude Code」のようなより高付加価値を生むであろうプロダクトにinference computeを集中投下する方が、はるかに高いリターンを見込める。つまり、Anthropicの内部において、単なるAPI提供のopportunity costが高騰しすぎたのだ。</p>
+<p>これは、有限のcomputeがどのように市場で配分されるかの縮図である。AI企業自身が自らのリソースの用途をcomparative advantageの観点からシビアに選別している以上、経済全体においても「AIのcomputeを何に使うべきか」という厳しいトリアージが行われるのは火を見るより明らかだろう。</p>
+</section>
+<section id="人間に押し付けられるaiにやらせるにはもったいない仕事" class="level2">
+<h2 class="anchored" data-anchor-id="人間に押し付けられるaiにやらせるにはもったいない仕事">人間に押し付けられる「AIにやらせるにはもったいない仕事」</h2>
+<p>では、限られたcomputeが高付加価値なタスクに吸い上げられた後、人間に残される（あるいは押し付けられる）仕事とは何だろうか。</p>
+<p>それは、共感、複雑な人間関係の調整、そして物理空間での適応力を要する領域であると予測される。医療ケア、心理カウンセリング、高度な感情知能を要する教育、あるいは配管工や電気工事士といった物理環境での即興的な問題解決能力が求められる職種だ。リーダーシップや高度なクリエイティビティ（何を作る「べき」かを決定する行為）もここに含まれる。</p>
+<p>これらが人間の手に残るのは、人間がAIよりも「上手くできるから」ではなく、「AIのcomputeを消費してまでやらせるには経済的合理性がないから」である。</p>
+<p>さらに逆説的なことに、これらの「人間の仕事」は、AI全盛時代においてむしろ高給化する可能性すらある。AIが世界のGDPを年率10%や20%で押し上げ、社会全体が想像を絶するほど豊かになった場合、富裕層は人間の手による美容院のカットや人間医師による対面診療に、躊躇なく数千ドルを支払うようになるだろう。社会の総需要が爆発する中、人間の労働力供給は物理的にスケールしないため、人間のcomparative advantageが発揮される領域での賃金は必然的に高騰する。</p>
+</section>
+<section id="ユートピアを阻む三つの懸念" class="level2">
+<h2 class="anchored" data-anchor-id="ユートピアを阻む三つの懸念">ユートピアを阻む三つの懸念</h2>
+<p>とはいえ、Noah Smithも警告するように、この「AI時代の高給で豊かな労働市場」というシナリオは決して保証されたものではない。いくつかの致命的なバグがシステムに内在している。</p>
+<p>一つ目は、強烈なリソース競争だ。人間はcomputeを消費しないが、エネルギーは消費する。AIを駆動し、訓練するためのエネルギー需要が天文学的に膨れ上がり、AIオーナーたちがエネルギー価格を吊り上げた場合、人間は生活必需品や食料、燃料を買い負ける可能性がある。かつて馬が自動車に駆逐され「接着剤工場」送りになったのは、馬のcomparative advantageが消滅したからだけではなく、馬を飼うための都市の土地と人間の時間が、他のより収益性の高い用途に奪われたからだ。人間がエネルギーという共通リソースにおいてAIと競合し敗北すれば、大規模な窮乏化は避けられない。</p>
+<p>二つ目は、絶望的なまでの不平等の拡大だ。仮に大多数の人間がcomparative advantageによって職を保ち、実質賃金が上がったとしても、AIのインフラ（物理的資本やintangibleな基盤モデル）を所有する一部の人間——Sam AltmanやJensen Huangのようなテクノロジーの覇者たち——は、文字通り天文学的な富を独占することになる。資本家と労働者の格差は、かつての金ぴか時代（Gilded Age）すら霞むレベルに到達するだろう。</p>
+<p>そして三つ目は、適応のタイムラグである。AIの進化のスピードは、人間の再教育や社会構造の変化のスピードを遥かに凌駕する。ある年まで人間のcomparative advantageであった職業が、数年後にはAIに奪われ、さらに別の制約が生じればまた人間に戻ってくる、といった急激なシフトが起きるかもしれない。このような激しいボラティリティの中で、数年がかりの教育システム（医学部など）が機能不全に陥るリスクは極めて高い。</p>
+</section>
+<section id="結びoppenheimerの憂鬱を超えて" class="level2">
+<h2 class="anchored" data-anchor-id="結びoppenheimerの憂鬱を超えて">結び：Oppenheimerの憂鬱を超えて</h2>
+<p>AIが労働市場に与える影響を論じる際、私たちは「AIに何ができるか（技術的絶対優位）」というスペックの議論に終始しがちである。しかし、経済を駆動するのはいつの時代もOpportunity costであり、資源の制約である。</p>
+<p>Claude Code/Codexのようなエージェントや、思考プロセスを模倣する高度なLLMが次々と登場し、人間の知的労働の領域を侵食しているように見える現在でも、背後にあるinference computeの逼迫という現実は揺るがない。AIがすべてをこなせる神のような存在になったとしても、我々はその神の恩恵を「どこに振り分けるべきか」という経済的選択から逃れることはできない。</p>
+<p>人間の陳腐化を過度に恐れる必要はない。しかし、AIが生み出す富の分配、エネルギーリソースの適切な管理、そして急激な労働市場のシフトに対するセーフティネットの構築という、より現実的で泥臭い政治的・経済的課題には、真剣に向き合う必要がある。未来の労働市場は、技術的特異点によって単純に消滅するのではなく、AIの制約と人間の制約が複雑に絡み合う経済原理のパッチワークの中で、新たな均衡を見出していくのだろう。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
