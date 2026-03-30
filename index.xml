@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.36</generator>
-<lastBuildDate>Tue, 24 Mar 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 30 Mar 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/ai-comparative-advantage/</link>
+  <description><![CDATA[ AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/ai-comparative-advantage/</guid>
+  <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/179/200" medium="image"/>
+</item>
 <item>
   <title>合成データ生成の実践ガイド：最高品質のトークンを兆単位で生み出す「Synthetic Data Playbook」</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -118,17 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/dario-dwarkesh/</guid>
   <pubDate>Sun, 22 Feb 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/170/200" medium="image"/>
-</item>
-<item>
-  <title>Claude C Compilerが示唆する「実装の終焉」とエンジニアの新たな戦場</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/claude-c-compiler-chris-lattner/</link>
-  <description><![CDATA[ Chris LattnerがClaude C Compilerを分析し、AIによる「実装の自動化」が進む中で、エンジニアは「意図の定義」や「アーキテクチャ設計」へと役割をシフトさせるべきだと説く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-c-compiler-chris-lattner/</guid>
-  <pubDate>Fri, 20 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/169/200" medium="image"/>
 </item>
 </channel>
 </rss>

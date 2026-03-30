@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。">
+<meta name="description" content="AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。">
 
-<title>Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌</title>
+<title>比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -82,44 +82,15 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌 – jiwasawaのブログ">
-<meta property="og:description" content="Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。">
-<meta property="og:image" content="https://picsum.photos/id/158/200">
+<meta property="og:title" content="比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然 – jiwasawaのブログ">
+<meta property="og:description" content="AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。">
+<meta property="og:image" content="https://picsum.photos/id/179/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌 – jiwasawaのブログ">
-<meta name="twitter:description" content="Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。">
-<meta name="twitter:image" content="https://picsum.photos/id/158/200">
+<meta name="twitter:title" content="比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然 – jiwasawaのブログ">
+<meta name="twitter:description" content="AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/179/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -175,10 +146,10 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Kimi K2.5：視覚的エージェント知能（Visual Agentic Intelligence）とAgent Swarmの全貌</h1>
+      <h1 class="title">比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然</h1>
                   <div>
         <div class="description">
-          Kimi K2.5は、テキストと視覚のジョイント最適化による高度なクロスモーダル能力と、Agent Swarmによる並列エージェント処理フレームワークを統合し、汎用エージェント知能の新たな地平を切り開くオープンソースモデルである。
+          AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -201,7 +172,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026年2月1日</p>
+        <p class="date">2026年3月30日</p>
       </div>
     </div>
     
@@ -220,80 +191,42 @@ window.Quarto = {
 
 
 
-<p>大規模言語モデル（LLM）の進化は、単なるテキスト処理能力の向上から、複雑な推論と行動を伴う「エージェント知能」へと急速にシフトしている。Kimi Teamによって新たに公開された <strong><a href="https://huggingface.co/moonshotai/Kimi-K2.5">Kimi K2.5</a></strong> は、視覚と言語の境界を取り払い、さらに並列エージェント処理（Agent Swarm）を導入することで、汎用的なエージェント知能（General Agentic Intelligence）への道を切り開くオープンソースモデルである。</p>
-<p>本記事では、<a href="https://github.com/MoonshotAI/Kimi-K2.5/blob/master/tech_report.pdf">Kimi K2.5の技術レポート</a>に基づき、その核となる「テキストと視覚のジョイント最適化（Joint Optimization）」と、革新的な並列実行フレームワーク「Agent Swarm」の技術的詳細について解説する。</p>
-<section id="テキストと視覚のジョイント最適化" class="level2">
-<h2 class="anchored" data-anchor-id="テキストと視覚のジョイント最適化">テキストと視覚のジョイント最適化</h2>
-<p>従来のマルチモーダルモデル（LMM）の開発では、学習済みの視覚エンコーダと言語モデルを、学習の後半段階で接続する「Late Fusion」アプローチが一般的であった。しかし、Kimi K2.5はこのパラダイムを刷新し、事前学習の初期段階からテキストと視覚を統合するアプローチを採用している。</p>
-<section id="native-multimodal-pre-training" class="level3">
-<h3 class="anchored" data-anchor-id="native-multimodal-pre-training">Native Multimodal Pre-Training</h3>
-<p>Kimi K2.5のアプローチにおいて特筆すべきは、<strong>Early Fusion</strong>（早期統合）の有効性である。固定されたトークン予算（Budget）の下で、「いつ視覚トークンを投入するか」という実験を行った結果、従来説（テキスト主体の学習後に視覚を大量投入する）とは異なり、<strong>学習の初期段階から低比率（例えば10%）で視覚トークンを混合し続ける方が、最終的なマルチモーダル性能が高い</strong>ことが判明した。</p>
-<p>この知見に基づき、Kimi K2.5は15兆トークンに及ぶ事前学習全体を通じてテキストと視覚のジョイント学習を行っている。</p>
-<p>アーキテクチャ面では、<strong>MoonViT-3D</strong> と呼ばれるネイティブ解像度の視覚エンコーダを採用している。これは <a href="https://arxiv.org/abs/2307.06304">NaViT</a> [Dehghani et al., 2023] のパッキング戦略を取り入れ、可変解像度の画像を効率的に処理する。さらに動画処理においては、連続するフレームを4枚ごとのチャンクにグループ化し、時間方向のプーリングを行うことで、同じコンテキストウィンドウ内で4倍の長さの動画処理を可能にする「時間的圧縮（Temporal Compression）」を実現している。</p>
+<p>AIが我々の仕事を奪い尽くすという終末論的な予測は、今やシリコンバレーの居酒屋談義における標準的なBGMとなっている。</p>
+<p>AI界隈で働くエンジニアやVCたちの多くは、自分たちが構築しているテクノロジーがいずれ大量の人間を失業に追いやると信じて疑わない。人類の労働を自動化すること自体が彼らの生業なのだから、その思考回路は至極当然だ。「いま自分が死神となり、雇用の破壊者となった」というOppenheimer的なメランコリーと特権意識を交えながら、労働の窮乏化は避けられないと彼らは語る。</p>
+<p>しかし、一旦そのような無責任極まりない未来観測的与太話は無視し、冷徹な経済の基本原理に立ち返ってみよう。Noah Smithが自身のブログ<a href="https://www.noahpinion.blog/p/plentiful-high-paying-jobs-in-the-ff9">「Plentiful, high-paying jobs in the age of AI」</a>で展開した議論は、AIが人間のあらゆる能力を凌駕したとしても、人間にはなお豊富で高給な仕事が残り得るという、直観に反するが極めて論理的な視点を提供している。本稿では、AIの脅威論を「Comparative advantage（比較優位）」と「Opportunity cost（機会費用）」という経済学のレンズを通して解体し、現在のLLMプラットフォーマーたちが直面しているリソース制約の現実と照らし合わせながら、AI時代の労働市場のリアルな未来観測を行う。</p>
+<section id="絶対優位と引き換えに浮かび上がるcomparative-advantage" class="level2">
+<h2 class="anchored" data-anchor-id="絶対優位と引き換えに浮かび上がるcomparative-advantage">絶対優位と引き換えに浮かび上がるComparative Advantage</h2>
+<p>AIが人間よりあらゆる面で優れているなら、人間の仕事はなくなるはずだ——この単純な誤謬は、「Competitive advantage（絶対優位）」と「Comparative advantage（比較優位）」の混同から生じている。</p>
+<p>Smithが引用しているクラシックな経済学の例がある。ある超人的にタイピングが速いVC（ベンチャーキャピタリスト）がいるとしよう。彼はタイピングにおいて絶対優位を持っているが、それでも秘書を雇ってタイピングを任せる。なぜか。彼自身の時間は、タイピングよりも高付加価値なディールメイクに費やした方が圧倒的にリターンが大きいからだ。この場合、VCのcomparative advantageはディールメイクにあり、秘書のcomparative advantageはタイピングにある。重要なのは、各々が「他の選択肢と比べて最もOpportunity costが低いタスク」に特化するということであり、「客観的に誰が一番上手いか」ではない。</p>
+<p>この原理は、そのままAI主導の経済に適用できる。仮に将来のAIが、コーディングから小説の執筆、さらには医療診断に至るまで、あらゆるタスクにおいて人間より優れていたとしよう。それでもAIには、人間にはない「Producer-specific constraints（生産者特有の制約）」が存在する。それは「Compute（計算資源）」である。</p>
+<p>地球上のcomputeの総量は、たとえ指数関数的に増加しようとも常に有限だ。したがって、AIの圧倒的な能力は、常に最も価値の高いアプリケーションへと優先的に割り当てられる。AIをあるタスクに使用するためのopportunity costは、「そのAIを他のタスクに使用した場合に生み出される価値」によって決まる。もしAIが高度なシステム設計を行うことで1時間に2000ドルの価値を生むなら、同じAIを200ドルの価値しか生み出さない一般的な診断業務に割り当てることは経済的に見合わない。結果として、AIに任せるにはopportunity costが高すぎるタスク——すなわち人間のcomparative advantageが残るタスク——は、依然として人間が担うことになる。</p>
 </section>
-<section id="zero-vision-sftテキストによる視覚機能の活性化" class="level3">
-<h3 class="anchored" data-anchor-id="zero-vision-sftテキストによる視覚機能の活性化">Zero-Vision SFT：テキストによる視覚機能の活性化</h3>
-<p>事後学習（Post-Training）段階における最大の発見の一つが、<strong>Zero-Vision SFT</strong> である。これは、視覚データを含まないテキストのみのSFT（Supervised Fine-Tuning）データであっても、モデルの視覚的推論能力やツール使用能力を活性化できるという現象である。</p>
-<p>具体的には、画像の操作（クロップや回転など）をIPython上のプログラム操作としてプロキシさせることで、視覚的なツール使用を一般化している。実験結果によると、人手で作成した視覚的な推論軌跡（Visual Trajectories）を追加するよりも、テキストのみのSFTの方が汎化性能が高まることが示されている。これは、事前学習段階での強力なジョイント学習により、すでにモダリティ間のアライメントが確立されているためと推測される。</p>
+<section id="inference-computeの枯渇とanthropicの冷徹な意思決定" class="level2">
+<h2 class="anchored" data-anchor-id="inference-computeの枯渇とanthropicの冷徹な意思決定">Inference Computeの枯渇とAnthropicの冷徹な意思決定</h2>
+<p>この「AIのopportunity cost」という概念は、机上の空論ではない。AI業界の最前線では、すでにこのリソースの奪い合いと経済的最適化が露骨な形で表出している。</p>
+<p>最近、AnthropicがOpenClawのAPI利用をBANした一件は、この議論を補強する非常に興味深い事例である。一見すると単なるプラットフォームの規約違反への対応やエコシステムの囲い込みに見えるかもしれないが、より深いコンテキスト——すなわちinference computeの逼迫——から読み解くべきだ。</p>
+<p>現在の最先端LLMを提供する企業にとって、推論に必要なinference computeは極めて貴重なボトルネックとなっている。限られたcomputeをどこに投資するか。Anthropicにとって、外部のサードパーティにAPIとしてcomputeを切り売りするよりも、自社の「Claude Code」のようなより高付加価値を生むであろうプロダクトにinference computeを集中投下する方が、はるかに高いリターンを見込める。つまり、Anthropicの内部において、単なるAPI提供のopportunity costが高騰しすぎたのだ。</p>
+<p>これは、有限のcomputeがどのように市場で配分されるかの縮図である。AI企業自身が自らのリソースの用途をcomparative advantageの観点からシビアに選別している以上、経済全体においても「AIのcomputeを何に使うべきか」という厳しいトリアージが行われるのは火を見るより明らかだろう。</p>
 </section>
-<section id="joint-multimodal-rlによる双方向の強化" class="level3">
-<h3 class="anchored" data-anchor-id="joint-multimodal-rlによる双方向の強化">Joint Multimodal RLによる双方向の強化</h3>
-<p>強化学習（RL）フェーズにおいても、Kimi K2.5はテキストと視覚を分離せず、<strong>Joint Multimodal RL</strong> を適用している。ここで興味深いのは、<strong>視覚タスクでのRLがテキストタスクの性能をも向上させる</strong>という「クロスモーダル転移」の現象である。</p>
-<p>技術レポートによると、視覚的なRL（Visual RL）を適用した後、テキストベースのベンチマークである<a href="https://arxiv.org/abs/2406.01574">MMLU-Pro</a>やGPQA-Diamondのスコアが向上した（例：MMLU-Pro 84.7% → 86.4%）。これは、視覚的なグラウンディングや構造的な情報抽出の訓練が、テキスト推論における不確実性の低減に寄与していることを示唆している。</p>
+<section id="人間に押し付けられるaiにやらせるにはもったいない仕事" class="level2">
+<h2 class="anchored" data-anchor-id="人間に押し付けられるaiにやらせるにはもったいない仕事">人間に押し付けられる「AIにやらせるにはもったいない仕事」</h2>
+<p>では、限られたcomputeが高付加価値なタスクに吸い上げられた後、人間に残される（あるいは押し付けられる）仕事とは何だろうか。</p>
+<p>それは、共感、複雑な人間関係の調整、そして物理空間での適応力を要する領域であると予測される。医療ケア、心理カウンセリング、高度な感情知能を要する教育、あるいは配管工や電気工事士といった物理環境での即興的な問題解決能力が求められる職種だ。リーダーシップや高度なクリエイティビティ（何を作る「べき」かを決定する行為）もここに含まれる。</p>
+<p>これらが人間の手に残るのは、人間がAIよりも「上手くできるから」ではなく、「AIのcomputeを消費してまでやらせるには経済的合理性がないから」である。</p>
+<p>さらに逆説的なことに、これらの「人間の仕事」は、AI全盛時代においてむしろ高給化する可能性すらある。AIが世界のGDPを年率10%や20%で押し上げ、社会全体が想像を絶するほど豊かになった場合、富裕層は人間の手による美容院のカットや人間医師による対面診療に、躊躇なく数千ドルを支払うようになるだろう。社会の総需要が爆発する中、人間の労働力供給は物理的にスケールしないため、人間のcomparative advantageが発揮される領域での賃金は必然的に高騰する。</p>
 </section>
+<section id="ユートピアを阻む三つの懸念" class="level2">
+<h2 class="anchored" data-anchor-id="ユートピアを阻む三つの懸念">ユートピアを阻む三つの懸念</h2>
+<p>とはいえ、Noah Smithも警告するように、この「AI時代の高給で豊かな労働市場」というシナリオは決して保証されたものではない。いくつかの致命的なバグがシステムに内在している。</p>
+<p>一つ目は、強烈なリソース競争だ。人間はcomputeを消費しないが、エネルギーは消費する。AIを駆動し、訓練するためのエネルギー需要が天文学的に膨れ上がり、AIオーナーたちがエネルギー価格を吊り上げた場合、人間は生活必需品や食料、燃料を買い負ける可能性がある。かつて馬が自動車に駆逐され「接着剤工場」送りになったのは、馬のcomparative advantageが消滅したからだけではなく、馬を飼うための都市の土地と人間の時間が、他のより収益性の高い用途に奪われたからだ。人間がエネルギーという共通リソースにおいてAIと競合し敗北すれば、大規模な窮乏化は避けられない。</p>
+<p>二つ目は、絶望的なまでの不平等の拡大だ。仮に大多数の人間がcomparative advantageによって職を保ち、実質賃金が上がったとしても、AIのインフラ（物理的資本やintangibleな基盤モデル）を所有する一部の人間——Sam AltmanやJensen Huangのようなテクノロジーの覇者たち——は、文字通り天文学的な富を独占することになる。資本家と労働者の格差は、かつての金ぴか時代（Gilded Age）すら霞むレベルに到達するだろう。</p>
+<p>そして三つ目は、適応のタイムラグである。AIの進化のスピードは、人間の再教育や社会構造の変化のスピードを遥かに凌駕する。ある年まで人間のcomparative advantageであった職業が、数年後にはAIに奪われ、さらに別の制約が生じればまた人間に戻ってくる、といった急激なシフトが起きるかもしれない。このような激しいボラティリティの中で、数年がかりの教育システム（医学部など）が機能不全に陥るリスクは極めて高い。</p>
 </section>
-<section id="agent-swarm並列エージェントオーケストレーション" class="level2">
-<h2 class="anchored" data-anchor-id="agent-swarm並列エージェントオーケストレーション">Agent Swarm：並列エージェントオーケストレーション</h2>
-<p>Kimi K2.5のもう一つの技術的ブレイクスルーは、<strong>Agent Swarm</strong> と呼ばれるフレームワークである。従来のエージェントモデルは、思考（Reasoning）とツール実行（Action）を逐次的（Sequential）に行うため、タスクが複雑化すると推論ステップが長くなり、レイテンシの増大やコンテキスト溢れを引き起こしていた。</p>
-<p>Agent Swarmは、タスクを動的に分解し、複数の専門化されたサブエージェント（Sub-agents）に並列実行させることで、この問題を解決する。</p>
-<section id="parallel-agent-reinforcement-learning-parl" class="level3">
-<h3 class="anchored" data-anchor-id="parallel-agent-reinforcement-learning-parl">Parallel-Agent Reinforcement Learning (PARL)</h3>
-<p>この並列動作を学習させるために、Kimi Teamは <strong>PARL（Parallel-Agent Reinforcement Learning）</strong> パラダイムを導入した。PARLでは、学習可能な「オーケストレーター」と、凍結された（Frozen）「サブエージェント」群という構成をとる。サブエージェントを凍結することで、マルチエージェント学習特有の「信用の割り当て（Credit Assignment）」の曖昧さや学習の不安定さを回避している。</p>
-<p>PARLにおける報酬関数 <span class="math inline">\(r_{PARL}(x, y)\)</span> は以下のように定義される。</p>
-<p><span class="math display">\[r_{PARL}(x,y) = \lambda_1 \cdot r_{parallel} + \lambda_2 \cdot r_{finish} + r_{perf}(x,y)\]</span></p>
-<p>ここで、各項の役割は以下の通りである。</p>
-<ul>
-<li><strong><span class="math inline">\(r_{perf}(x,y)\)</span></strong>: タスクの最終的な成果に対する報酬。</li>
-<li><strong><span class="math inline">\(r_{parallel}\)</span></strong>: インスタンス化報酬。オーケストレーターが安易にシングルエージェント実行（Serial Collapse）に陥るのを防ぎ、並列的なスケジューリング空間を探索することを奨励する。</li>
-<li><strong><span class="math inline">\(r_{finish}\)</span></strong>: サブエージェント完了報酬。意味のないサブタスクを大量生成する「スパリアスな並列化（Spurious Parallelism）」を防ぎ、有効なタスク分解を学習させる。</li>
-</ul>
-<p>ハイパーパラメータ <span class="math inline">\(\lambda_1, \lambda_2\)</span> は学習の進行とともにゼロに減衰（Annealing）させ、最終的には純粋なタスクパフォーマンス <span class="math inline">\(r_{perf}\)</span> の最適化へと収束させる。</p>
-</section>
-<section id="critical-stepsによる計算コスト制約" class="level3">
-<h3 class="anchored" data-anchor-id="critical-stepsによる計算コスト制約">Critical Stepsによる計算コスト制約</h3>
-<p>並列処理の効率を評価・最適化するために、計算グラフにおけるクリティカルパス（Critical Path）のアナロジーを用いた <strong>Critical Steps</strong> という概念が導入されている。エピソード全体のCritical Stepsは以下のように定義される。</p>
-<p><span class="math display">\[CriticalSteps = \sum_{t=1}^{T} \left( S_{main}^{(t)} + \max_{i} S_{sub, i}^{(t)} \right)\]</span></p>
-<p>ここで、<span class="math inline">\(S_{main}^{(t)}\)</span> はステージ <span class="math inline">\(t\)</span> におけるメインエージェントのステップ数、<span class="math inline">\(S_{sub, i}^{(t)}\)</span> は <span class="math inline">\(i\)</span> 番目のサブエージェントのステップ数である。この指標を最小化するように学習することで、単に並列数を増やすのではなく、<strong>エンドツーエンドのレイテンシを最小化するようなタスク分解</strong>が可能となる。</p>
-<p>実験結果において、Agent Swarmはシングルエージェントのベースラインと比較して、推論レイテンシを最大 <strong>4.5倍</strong> 削減し、広範な探索（Wide-Search）タスクにおけるアイテムレベルのF1スコアを72.8%から79.0%へ向上させている。</p>
-</section>
-<section id="プロアクティブなコンテキスト管理" class="level3">
-<h3 class="anchored" data-anchor-id="プロアクティブなコンテキスト管理">プロアクティブなコンテキスト管理</h3>
-<p>Agent Swarmは、単なる高速化だけでなく、コンテキスト管理の観点でも優れている。従来の長いコンテキストへの対処法（SummaryやDiscard-all）は受動的かつ損失を伴うものであったが、Agent Swarmは <strong>Context Sharding（コンテキストの断片化）</strong> を実現する。</p>
-<p>各サブエージェントは独立したワーキングメモリを持ち、局所的な推論を行う。オーケストレーターには、その最終結果や必要な情報のみが還元されるため、グローバルなコンテキストウィンドウを汚染することなく、実質的に無限に近いスケーラビリティを確保できる。</p>
-</section>
-</section>
-<section id="最先端のパフォーマンス" class="level2">
-<h2 class="anchored" data-anchor-id="最先端のパフォーマンス">最先端のパフォーマンス</h2>
-<p>Kimi K2.5は、コーディング、推論、視覚理解、コンピュータ操作の各分野でSOTA（State-of-the-Art）またはそれに準ずる性能を示している。</p>
-<ul>
-<li><strong>コーディング:</strong> <a href="https://arxiv.org/abs/2310.06770">SWE-Bench Verified</a>で76.8%を記録し、Gemini 3 Proを上回る。<a href="https://arxiv.org/abs/2403.07974">LiveCodeBench (v6)</a> では85.0%に達し、DeepSeek-V3.2やClaude Opus 4.5を凌駕している。</li>
-<li><strong>数学・推論:</strong> <a href="https://artofproblemsolving.com/wiki/index.php/2025_AIME_I">AIME 2025</a>で96.1%という驚異的なスコアを記録。これはGPT-5.2 (100%) に肉薄し、Claude Opus 4.5 (92.8%) を上回る。</li>
-<li><strong>エージェント・探索:</strong> 複雑なウェブ検索タスクである<a href="https://arxiv.org/abs/2504.12516">BrowseComp</a>において、Agent Swarm適用時は78.4%を記録し、GPT-5.2 Pro (77.9%) を超える性能を示した。</li>
-<li><strong>Computer Use:</strong> <a href="https://xlang.ai/blog/osworld-verified">OSWorld-Verified</a>において63.3%の成功率を達成。これはGUI操作のみ（外部ツールなし）の結果であり、Claude Opus 4.5 (66.3%) に匹敵する高い操作能力である。</li>
-</ul>
-</section>
-<section id="結論" class="level2">
-<h2 class="anchored" data-anchor-id="結論">結論</h2>
-<p>Kimi K2.5は、テキストと視覚のジョイント最適化によって「視覚的推論」と「言語的推論」の相乗効果を実証し、さらにAgent Swarmによって「逐次処理」から「並列分散処理」へのパラダイムシフトを実現した。</p>
-<p>特に、強化学習におけるサブエージェントの凍結戦略やCritical Stepsを用いた最適化は、今後のマルチエージェントシステム設計における重要な指針となるだろう。Kimi Teamはこのモデルのチェックポイントをオープンソース化しており、汎用エージェント知能（General Agentic Intelligence）の研究開発は、Kimi K2.5を基盤としてさらに加速することが予想される。</p>
-</section>
-<section id="参考文献" class="level2">
-<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
-<ul>
-<li>Kimi Team. (2025). <em><a href="https://github.com/MoonshotAI/Kimi-K2.5/blob/master/tech_report.pdf">Kimi K2.5: Visual Agentic Intelligence Technical Report</a></em>.</li>
-<li>Dehghani, M., et al.&nbsp;(2023). <a href="https://arxiv.org/abs/2307.06304">Patch n’ Pack: NaViT, a Vision Transformer for any Aspect Ratio and Resolution</a>. <em>arXiv preprint arXiv:2307.06304</em>.</li>
-<li>Moonshot AI. (2025). <a href="https://moonshotai.github.io/Kimi-K2/thinking.html">Introducing Kimi K2 Thinking</a>.</li>
-</ul>
+<section id="結びoppenheimerの憂鬱を超えて" class="level2">
+<h2 class="anchored" data-anchor-id="結びoppenheimerの憂鬱を超えて">結び：Oppenheimerの憂鬱を超えて</h2>
+<p>AIが労働市場に与える影響を論じる際、私たちは「AIに何ができるか（技術的絶対優位）」というスペックの議論に終始しがちである。しかし、経済を駆動するのはいつの時代もOpportunity costであり、資源の制約である。</p>
+<p>Claude Code/Codexのようなエージェントや、思考プロセスを模倣する高度なLLMが次々と登場し、人間の知的労働の領域を侵食しているように見える現在でも、背後にあるinference computeの逼迫という現実は揺るがない。AIがすべてをこなせる神のような存在になったとしても、我々はその神の恩恵を「どこに振り分けるべきか」という経済的選択から逃れることはできない。</p>
+<p>人間の陳腐化を過度に恐れる必要はない。しかし、AIが生み出す富の分配、エネルギーリソースの適切な管理、そして急激な労働市場のシフトに対するセーフティネットの構築という、より現実的で泥臭い政治的・経済的課題には、真剣に向き合う必要がある。未来の労働市場は、技術的特異点によって単純に消滅するのではなく、AIの制約と人間の制約が複雑に絡み合う経済原理のパッチワークの中で、新たな均衡を見出していくのだろう。</p>
 
 
 </section>

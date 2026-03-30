@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/ai-comparative-advantage/index.html",
       "/posts/finephrase/index.html",
       "/posts/dylan-patel-dwarkesh/index.html",
       "/posts/andrej-karpathy-psychosis/index.html",
@@ -24,8 +25,8 @@
       "/posts/hot-mess-of-ai/index.html",
       "/posts/kimi-k-2-5-tech/index.html",
       "/posts/opsd-on-policy-self-distillation/index.html",
-      "/posts/terminal-bench-2/index.html",
       "/posts/continual-learning-wolfe/index.html",
+      "/posts/terminal-bench-2/index.html",
       "/posts/ttt-discovery/index.html",
       "/posts/vercel-malte/index.html",
       "/posts/minimax-m2-1-post-training/index.html",
