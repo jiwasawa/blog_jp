@@ -1,6 +1,6 @@
 ---
-title: "比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的必然"
-description: "AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得るという経済学的必然性を解説する。"
+title: "比較優位とComputeの壁：AI全盛時代にも人間が高給を得る経済学的理由"
+description: "AIの能力が人間を凌駕しても、Computeというリソース制約とOpportunity costの原理により、人間には高給な仕事が残り得る理由を解説する。"
 author: "Junichiro Iwasawa"
 date: "2026-03-30"
 categories: [LLM, AI]
