@@ -9,8 +9,21 @@
 <link>https://jiwasawa.github.io/blog_jp/</link>
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
-<generator>quarto-1.9.36</generator>
-<lastBuildDate>Thu, 02 Apr 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.37</generator>
+<lastBuildDate>Tue, 14 Apr 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OpenAI Frontierの深謀遠慮とHarness Engineeringの衝撃</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/oai-harness-eng/</link>
+  <description><![CDATA[ OpenAI FrontierのRyan Lopopolo氏が語るHarness Engineeringは、AIエージェントがコード生成からレビュー、マージまでを自律的に行うことで、人間がボトルネックとなるソフトウェア開発の未来像とエンタープライズAIプラットフォームの覇権戦略を提示する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/oai-harness-eng/</guid>
+  <pubDate>Tue, 14 Apr 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/181/200" medium="image"/>
+</item>
 <item>
   <title>イーロン・マスクの「学校」が輩出するハードテック起業家たち</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -115,18 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/doug-semianalysis-latentspace/</guid>
   <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/171/200" medium="image"/>
-</item>
-<item>
-  <title>Claude Codeという「偶然の革命」と、“The Bitter Lesson”が示唆するエンジニアリングの終焉</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/boris-cherny-ycombinator/</link>
-  <description><![CDATA[ Claude Codeの生みの親Boris Cherny氏が語る、LLM時代の「Latent Demand」と”The Bitter Lesson”から見えてくるエンジニアリングの未来。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/boris-cherny-ycombinator/</guid>
-  <pubDate>Wed, 25 Feb 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/144/200" medium="image"/>
 </item>
 </channel>
 </rss>
