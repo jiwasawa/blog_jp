@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/interleaved-head-attention/index.html",
       "/posts/pi-coding-agent/index.html",
       "/posts/oai-harness-eng/index.html",
       "/posts/elon-foundary-factory/index.html",

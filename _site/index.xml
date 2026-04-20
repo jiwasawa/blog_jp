@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 15 Apr 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 19 Apr 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Interleaved Head Attention (IHA) 入門：LLMの推論能力を拡張する新たなアテンション機構</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/interleaved-head-attention/</link>
+  <description><![CDATA[ Multi-Head Attention (MHA)のヘッドの独立性という限界を克服し、LLMの多段推論能力を大幅に向上させるInterleaved Head Attention (IHA)の理論と実証結果を解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/interleaved-head-attention/</guid>
+  <pubDate>Sun, 19 Apr 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/183/200" medium="image"/>
+</item>
 <item>
   <title>AIエージェントの「宇宙船化」と、開発者の主権を取り戻す極小コア「Pi」の哲学</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -117,17 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/moe-megatron-core/</guid>
   <pubDate>Fri, 13 Mar 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/174/200" medium="image"/>
-</item>
-<item>
-  <title>Speculative Speculative Decoding (SSD) 入門：非同期LLM推論の新たな地平</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/speculative-speculative-decoding/</link>
-  <description><![CDATA[ 従来のLLM推論における「ドラフトと検証」の同期的なボトルネックを解消する画期的な「Speculative Speculative Decoding (SSD)」フレームワークと、非同期実行を最適化するアルゴリズム「Saguaro」の基本原理と性能を解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/speculative-speculative-decoding/</guid>
-  <pubDate>Thu, 05 Mar 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/173/200" medium="image"/>
 </item>
 </channel>
 </rss>
