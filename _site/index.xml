@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 19 Apr 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 21 Apr 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Terence Taoが語る、LLM時代のアイデア量産と「深さ」の消失</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/terence-tao-dwarkesh/</link>
+  <description><![CDATA[ 現代数学の大家Terence Taoが、Keplerの発見や「AI slop」といった話題を通して、AI時代における科学的発見の「幅」と「深さ」の分業、そしてserendipityの喪失というパラダイムシフトを深く分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/terence-tao-dwarkesh/</guid>
+  <pubDate>Tue, 21 Apr 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/184/200" medium="image"/>
+</item>
 <item>
   <title>Interleaved Head Attention (IHA) 入門：LLMの推論能力を拡張する新たなアテンション機構</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,18 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/attention-res/</guid>
   <pubDate>Mon, 16 Mar 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/175/200" medium="image"/>
-</item>
-<item>
-  <title>Trillion-ParameterクラスのMoEモデル学習：Megatron-Coreによるスケーリングの壁の突破</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/moe-megatron-core/</link>
-  <description><![CDATA[ Trillion-ParameterクラスのMoEモデル学習におけるメモリ・通信・計算の「3つの壁」を打破するために、Megatron-Coreが導入したParallel FoldingやReduced-Precision Training、専用通信カーネルといったアプローチとその成果を解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Transformer</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/moe-megatron-core/</guid>
-  <pubDate>Fri, 13 Mar 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/174/200" medium="image"/>
 </item>
 </channel>
 </rss>
