@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Wed, 22 Apr 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 23 Apr 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/megatron-core-moe/</link>
+  <description><![CDATA[ NVIDIAのMegatron-Core MoEフレームワークが、Memory、Communication、Compute Efficiencyの「Three Walls」を克服し、Parallel FoldingやFP8トレーニングなどの統合的最適化によって大規模Mixture-of-Expertsモデルのスケーラブルかつ高効率な学習を実現する技術的詳細を解説。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Transformer</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/megatron-core-moe/</guid>
+  <pubDate>Thu, 23 Apr 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/185/200" medium="image"/>
+</item>
 <item>
   <title>Terence Taoが語る、LLM時代のアイデア量産と「深さ」の消失</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -117,18 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-psychosis/</guid>
   <pubDate>Sun, 22 Mar 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/176/200" medium="image"/>
-</item>
-<item>
-  <title>Attention Residuals：深層学習アーキテクチャの新たなパラダイム</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/attention-res/</link>
-  <description><![CDATA[ Attention Residuals (AttnRes)は、深層学習モデルの深さ方向における情報伝達を固定的な加算から動的なAttentionメカニズムへと進化させ、PreNorm dilutionを克服して学習の安定化と性能向上を実現するアーキテクチャです。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Transformer</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/attention-res/</guid>
-  <pubDate>Tue, 17 Mar 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/175/200" medium="image"/>
 </item>
 </channel>
 </rss>

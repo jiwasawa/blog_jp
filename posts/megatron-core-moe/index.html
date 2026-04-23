@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="Anthropicが提唱する、AIエージェントの「記憶喪失」問題を解決するための、GitやJSONといった枯れた技術を組み合わせた泥臭くも実用的なエンジニアリング・プラクティスを分析する。">
+<meta name="description" content="NVIDIAのMegatron-Core MoEフレームワークが、Memory、Communication、Compute Efficiencyの「Three Walls」を克服し、Parallel FoldingやFP8トレーニングなどの統合的最適化によって大規模Mixture-of-Expertsモデルのスケーラブルかつ高効率な学習を実現する技術的詳細を解説。">
 
-<title>長時間稼働エージェントの「記憶喪失」と、Anthropicが提唱する泥臭い解決策</title>
+<title>Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -82,15 +82,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="長時間稼働エージェントの「記憶喪失」と、Anthropicが提唱する泥臭い解決策 – jiwasawaのブログ">
-<meta property="og:description" content="Anthropicが提唱する、AIエージェントの「記憶喪失」問題を解決するための、GitやJSONといった枯れた技術を組み合わせた泥臭くも実用的なエンジニアリング・プラクティスを分析する。">
-<meta property="og:image" content="https://picsum.photos/id/120/200">
+<meta property="og:title" content="Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌 – jiwasawaのブログ">
+<meta property="og:description" content="NVIDIAのMegatron-Core MoEフレームワークが、Memory、Communication、Compute Efficiencyの「Three Walls」を克服し、Parallel FoldingやFP8トレーニングなどの統合的最適化によって大規模Mixture-of-Expertsモデルのスケーラブルかつ高効率な学習を実現する技術的詳細を解説。">
+<meta property="og:image" content="https://picsum.photos/id/185/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="長時間稼働エージェントの「記憶喪失」と、Anthropicが提唱する泥臭い解決策 – jiwasawaのブログ">
-<meta name="twitter:description" content="Anthropicが提唱する、AIエージェントの「記憶喪失」問題を解決するための、GitやJSONといった枯れた技術を組み合わせた泥臭くも実用的なエンジニアリング・プラクティスを分析する。">
-<meta name="twitter:image" content="https://picsum.photos/id/120/200">
+<meta name="twitter:title" content="Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌 – jiwasawaのブログ">
+<meta name="twitter:description" content="NVIDIAのMegatron-Core MoEフレームワークが、Memory、Communication、Compute Efficiencyの「Three Walls」を克服し、Parallel FoldingやFP8トレーニングなどの統合的最適化によって大規模Mixture-of-Expertsモデルのスケーラブルかつ高効率な学習を実現する技術的詳細を解説。">
+<meta name="twitter:image" content="https://picsum.photos/id/185/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -146,15 +175,16 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">長時間稼働エージェントの「記憶喪失」と、Anthropicが提唱する泥臭い解決策</h1>
+      <h1 class="title">Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌</h1>
                   <div>
         <div class="description">
-          Anthropicが提唱する、AIエージェントの「記憶喪失」問題を解決するための、GitやJSONといった枯れた技術を組み合わせた泥臭くも実用的なエンジニアリング・プラクティスを分析する。
+          NVIDIAのMegatron-Core MoEフレームワークが、Memory、Communication、Compute Efficiencyの「Three Walls」を克服し、Parallel FoldingやFP8トレーニングなどの統合的最適化によって大規模Mixture-of-Expertsモデルのスケーラブルかつ高効率な学習を実現する技術的詳細を解説。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
+                <div class="quarto-category">Transformer</div>
               </div>
                   </div>
   </div>
@@ -172,7 +202,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年11月29日</p>
+        <p class="date">2026年4月23日</p>
       </div>
     </div>
     
@@ -191,46 +221,89 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>Anthropicが先週公開した<a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">「Effective Harnesses for Long-Running Agents」</a>という記事が、AIエンジニア界隈で静かな、しかし確かな共感を呼んでいる。</p>
-<p>LLMのコンテキストウィンドウが200k、1M、あるいはそれ以上に広がった昨今においても、AIエージェントに長時間にわたる複雑なタスク（例えば数日かけてWebアプリ全体を構築するなど）を任せることは、依然として至難の業だ。どれだけモデルが賢くなっても、セッションが切れるたびに彼らは記憶を失う。それはまるで、前任者からの引き継ぎ資料が一切ない状態で、交代制のシフトに入るエンジニアチームのようなものだ。</p>
-<p>Anthropicが自社の<a href="https://platform.claude.com/docs/en/agent-sdk/overview">Claude Agent SDK</a>のために開発したソリューションは、何か画期的なニューラルネットワークのブレイクスルーによるものではない。むしろ、人間のソフトウェア開発現場で培われてきた「運用ルール」や「開発プロセス」を、そのままAIに適用するという、極めて泥臭く、実務的なアプローチである。</p>
-<p>本稿では、AIエージェントが陥る「ワンショットの罠」と、それを回避するためのAnthropicのエンジニアリング・プラクティスについて分析する。</p>
-<section id="一発で終わらせようとするエージェントの病理" class="level2">
-<h2 class="anchored" data-anchor-id="一発で終わらせようとするエージェントの病理">「一発で終わらせようとする」エージェントの病理</h2>
-<p>Claude Sonnet 4.5 のようなSOTAモデルであっても、複雑なプロジェクトを任されると二つの典型的な失敗パターンに陥る。</p>
-<p>一つ目は「張り切りすぎ（Trying to do too much）」だ。エージェントは「<code>claude.ai</code>のクローンを作れ」という指示を受けると、優秀なインターンよろしく、たった一度のセッション（コンテキストウィンドウ）ですべてを実装しようと試みる。しかし、途中でメモリが尽きたり、出力トークン制限に引っかかったりして、実装は中途半端な状態で終わる。次のセッションで呼び出されたエージェントは、散らかったコードの山を見て途方に暮れることになる。</p>
-<p>二つ目は「早すぎる勝利宣言（Prematurely declaring victory）」だ。いくつか機能を作った段階で、全体像を見失い、「完成しました！」と高らかに宣言してしまう。テストも通っていないのに、だ。</p>
-<p>これらの問題の根源は、エージェントが「状態（State）」を適切に管理できていない点にある。人間であれば、Jiraのチケットを見たり、Gitのログを見たりして「今どこまで進んでいるか」を把握できるが、記憶喪失のエージェントにはそれがない。</p>
-</section>
-<section id="initializerとcoding-agentの分業体制" class="level2">
-<h2 class="anchored" data-anchor-id="initializerとcoding-agentの分業体制">「Initializer」と「Coding Agent」の分業体制</h2>
-<p>Anthropicが提示した解決策は、エージェントの役割を明確に二つに分割することだった。</p>
+<p>近年、パラメータ数を抑えつつ巨大なモデル容量を実現するアプローチとして、Mixture-of-Experts (MoE) アーキテクチャがLarge Language Model (LLM) の最前線を牽引している。推論時の計算コストを抑えながら性能を飛躍的に向上させるこの技術は、DeepSeek-V3やMixtralなどに代表される画期的なモデルを生み出した。しかし、数千億から数兆パラメータに達する巨大なMoEモデルを効率的にトレーニングすることは、従来のDenseモデルとは根本的に異なるシステム上の課題を伴う。</p>
+<p>本稿では、NVIDIAが発表した技術レポート「<a href="https://arxiv.org/abs/2603.07685">Scalable Training of Mixture-of-Experts Models with Megatron Core</a>」に基づき、Megatron-Core MoEフレームワークがどのようにこれらの課題を克服し、数千GPU規模での高効率な分散学習を実現しているのか、そのアーキテクチャと最適化手法の全貌を解説する。</p>
+<section id="moeトレーニングにおける根本的課題とthree-walls" class="level2">
+<h2 class="anchored" data-anchor-id="moeトレーニングにおける根本的課題とthree-walls">MoEトレーニングにおける根本的課題と「Three Walls」</h2>
+<p>MoEモデルは、各入力tokenに対してネットワーク全体（Expertの集合）の一部のみを動的にアクティベートするSparse（疎）な構造を持つ。この特性は、推論効率を高める一方で、学習システムにおいては「Parameter-Compute Mismatch（パラメータと計算量の不一致）」という根本的な非対称性を引き起こす。</p>
+<p>Denseモデルでは、パラメータ数とtokenあたりの計算量が比例するため、GPUを増やすことでメモリと計算の負荷をバランスよく分散できる。しかしMoEモデルでは、パラメータの総量に対してtokenあたりの計算量が極端に少ない。たとえば、DeepSeek-V3-685Bモデルでは、総パラメータ数が685Bであるのに対し、1つのtokenあたりにアクティブになるパラメータはわずか37Bに過ぎない。</p>
+<p>この非対称性により、MoEトレーニングには以下の3つの巨大な障壁、すなわち「Three Walls」が立ちはだかる。</p>
 <ol type="1">
-<li><strong>Initializer Agent（セットアップ担当）</strong>：最初のセッションで一度だけ動く。</li>
-<li><strong>Coding Agent（実装担当）</strong>：2回目以降のセッションで繰り返し動く。</li>
+<li><strong>Memory Wall (メモリの壁):</strong> tokenごとに使用されるExpertがごく一部であっても、全Expertのパラメータ、勾配、およびOptimizer stateを常にGPUメモリに保持しておく必要がある。</li>
+<li><strong>Communication Wall (通信の壁):</strong> Expertを複数のデバイスに分散させるExpert Parallelism (EP) を採用するため、tokenを適切なGPUに配送し、計算後に回収するall-to-all通信が大量に発生する。これはGPU間の帯域幅を激しく消費する。</li>
+<li><strong>Compute Efficiency Wall (計算効率の壁):</strong> 各Expertに割り当てられるtoken数は細かく断片化されるため、GPUのTensor Coreを十分に飽和させるだけの行列演算（GEMM）サイズを確保しにくい。さらに、細かなKernel launchがHost（CPU）側のオーバーヘッドを増大させる。</li>
 </ol>
-<p>ここで興味深いのは、Initializer Agentの仕事だ。彼はコードを書き始めない。代わりに「環境」と「ルール」を作る。具体的には、開発サーバーを立ち上げるための <code>init.sh</code>、進捗を記録するための <code>claude-progress.txt</code>、そして何より重要なのが <code>feature_list.json</code> という機能一覧ファイルを作成する。</p>
-<p>この <code>feature_list.json</code> には、プロジェクトに必要な全機能がリストアップされ、初期状態ではすべて「failing（未達成）」としてマークされる。これはまさに、アジャイル開発におけるバックログそのものである。</p>
+<p>Megatron-Core MoEは、これら3つの壁を単独のチューニングではなく、相互に連携する統合的なシステム設計によって打破する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig0.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://arxiv.org/abs/2603.07685">Scalable Training of Mixture-of-Experts Models with Megatron Core</a>より引用</figcaption>
+</figure>
+</div>
 </section>
-<section id="クリーンな状態を維持するためのgit駆動開発" class="level2">
-<h2 class="anchored" data-anchor-id="クリーンな状態を維持するためのgit駆動開発">「クリーンな状態」を維持するためのGit駆動開発</h2>
-<p>Coding Agentは、このバックログ（<code>feature_list.json</code>）から優先度の高いタスクを「一つだけ」選び、その実装に集中する。</p>
-<p>ここでのポイントは「Incremental Progress（漸進的な進捗）」と「Clean State（クリーンな状態）」の徹底だ。エージェントは一つの機能を実装し終えるたびに、Gitにコミットし、プログレスファイルを更新することが求められる。</p>
-<p>もし実装中にバグを埋め込んでしまっても、Gitさえあれば <code>git reset</code> で前の状態に戻れる。これは人間にとっては当たり前のプラクティスだが、AIエージェントにとっても「失敗しても戻れるセーブポイント」があることは、タスク完遂率を劇的に向上させる。エージェント自身に <code>git log</code> を読ませることで、前任のエージェントが何をしていたかを「文脈」としてではなく「記録」として理解させるアプローチは、コンテキストウィンドウの節約という意味でも理にかなっている。</p>
+<section id="parallel-foldingdense-sparse-mismatchの解消" class="level2">
+<h2 class="anchored" data-anchor-id="parallel-foldingdense-sparse-mismatchの解消">Parallel Folding：Dense-Sparse Mismatchの解消</h2>
+<p>巨大なモデルを学習する際、従来はTensor Parallelism (TP)、Pipeline Parallelism (PP)、Context Parallelism (CP)、Data Parallelism (DP) といった並列化戦略が用いられてきた。MoEモデルにおいては、これに加えてExpertをデバイス間で分割するExpert Parallelism (EP) が不可欠となる。</p>
+<p>ここで生じるのが「Dense-Sparse Mismatch」と呼ばれる問題である。Transformerブロック内において、Attention層（Dense）は長いSequenceや巨大なQKV行列を効率的に処理するために高いTPやCPを必要とする。一方で、MoE層（Sparse）は細分化された多数のExpertを分散させるために高いEPを必要とし、高いTPを適用すると計算効率が著しく低下する。</p>
+<p>従来のフレームワークでは、モデル全体で同一の並列化構成を強要していたため、<span class="math inline">\(EP \le DP\)</span> という制約に縛られ、最適なリソース配置が不可能であった。Megatron-Core MoEは、この問題に対して <strong>Parallel Folding</strong> というアプローチを導入した。</p>
+<p>Parallel Foldingは、Attention層とMoE層の並列化マッピングを完全にDecouple（分離）する。これにより、Attention層では高いTPやCPを設定して計算とメモリを最適化しつつ、MoE層では高いEP（および <span class="math inline">\(ETP=1\)</span>）を独立して適用することが可能となる。結果として、GPUクラスタ全体にわたる並列化の自由度が飛躍的に向上し、ハードウェアトポロジー（NVLinkやInfiniBandなど）に最適化された配置が実現されるのである。</p>
 </section>
-<section id="ブラウザ操作による人間目線のテスト" class="level2">
-<h2 class="anchored" data-anchor-id="ブラウザ操作による人間目線のテスト">ブラウザ操作による「人間目線」のテスト</h2>
-<p>もう一つの重要な構成要素が、Puppeteerなどのブラウザ自動化ツールを用いたEnd-to-End（E2E）テストだ。</p>
-<p>コード上のユニットテストが通っていても、画面上でボタンが押せなければ意味がない。Anthropicのアプローチでは、エージェントにブラウザを操作させ、ユーザーと同じようにクリックや入力をシミュレーションさせる。これにより、「コードは正しいが動かない」という、開発現場でよくある悲劇を防ぐことができる。</p>
-<p>各セッションの開始時に、エージェントは以下のルーティンを実行するようプログラムされる： 1. <code>pwd</code> で現在地を確認 2. Gitログとプログレスファイルを読み込む 3. <code>init.sh</code> でサーバーを起動 4. 基本的なE2Eテストを実行して、環境が壊れていないか確認</p>
-<p>まるで、朝出社してメールチェックとコーヒーブレイクを済ませてからコードを書き始めるエンジニアのルーティンそのものである。</p>
+<section id="three-walls-を打ち破る統合的最適化" class="level2">
+<h2 class="anchored" data-anchor-id="three-walls-を打ち破る統合的最適化">Three Walls を打ち破る統合的最適化</h2>
+<p>Megatron-Core MoEは、前述の「Three Walls」に対して包括的なソリューションを提供する。最適化の一方を追求すると他方が悪化するトレードオフの連鎖を断ち切るため、以下の技術が統合的に適用されている。</p>
+<section id="memory-wall-の克服" class="level3">
+<h3 class="anchored" data-anchor-id="memory-wall-の克服">Memory Wall の克服</h3>
+<p>アクティベーションやパラメータによる巨大なメモリ要件に対処するため、多角的なアプローチが採用されている。</p>
+<ul>
+<li><strong>Memory-Efficient Permutation:</strong> ルーティング時の確率に基づく重み付け処理を数学的に再構築し、余分な中間tensorの生成を抑える。これにより、計算オーバーヘッドをゼロに保ちながらメモリフットプリントを大幅に削減する。</li>
+<li><strong>Fine-grained Recomputation と Activation Offloading:</strong> メモリ消費の激しい処理をすべて保持するのではなく、計算コストの低いLayerNormやActivationなどを選択的に再計算（Recomputation）する。さらに、GPUメモリに収まらないActivationをバックグラウンドでCPUメモリに非同期Offloadingすることで、PCIe帯域と計算のオーバーラップを図る。</li>
+<li><strong>FSDP と Distributed Optimizer:</strong> EPと連携したFully Sharded Data Parallelism (FSDP) により、ExpertのパラメータやOptimizer stateをデバイスグループ間で分割（Shard）し、メモリを極限まで節約する。</li>
+</ul>
 </section>
-<section id="マルチエージェントへの布石となるか" class="level2">
-<h2 class="anchored" data-anchor-id="マルチエージェントへの布石となるか">マルチエージェントへの布石となるか</h2>
-<p>今回のAnthropicの発表は、単一の強力なモデルがあればすべて解決するわけではない、という現実を突きつけている。どれだけIQ（のようなもの）が高いモデルでも、適切な「Harness（馬具、転じて制御装置や枠組み）」がなければ、その力を発揮し続けることはできない。</p>
-<p>記事の最後で触れられている「Future Directions」も示唆に富んでいる。現在は汎用的な「Coding Agent」がすべての実装を行っているが、将来的には「テスト専門エージェント」や「QA（品質保証）エージェント」といった、専門職（Specialized Roles）による分業体制の方が効率的かもしれないという点だ。</p>
-<p>これは、AI開発のトレンドが「モデルの性能向上」から「エージェント・アーキテクチャの設計」へとシフトしていることを如実に表している。OpenAIのo1やo3が高い推論能力を持つ一方で、それをどう社会実装可能なワークフローに落とし込むか。その答えの一つが、GitやJSON、シェルスクリプトといった、枯れた技術を組み合わせた泥臭いエンジニアリングにあるというのは、なんとも皮肉であり、同時に希望を感じさせる結論である。</p>
-<p>Web開発だけでなく、科学研究や金融モデリングといった長期的なタスクにおいても、この「記録を残し、少しずつ進み、常に立ち戻れる場所を作る」というアプローチは、AIエージェント活用の定石となっていくだろう。</p>
+<section id="communication-wall-の突破" class="level3">
+<h3 class="anchored" data-anchor-id="communication-wall-の突破">Communication Wall の突破</h3>
+<p>EPによるall-to-all通信の遅延は、そのままGPUのアイドル時間につながる。これを防ぐための技術が以下である。</p>
+<ul>
+<li><strong>Optimized Token Dispatchers:</strong> 従来のNCCLベースの通信ではなく、ハードウェアプリミティブを極限まで活用する <strong>DeepEP</strong> や <strong>HybridEP</strong> といった最適化されたDispatcherを利用し、帯域幅の利用効率を最大化する。</li>
+<li><strong>Communication-Computation Overlap:</strong> 1F1B（One Forward, One Backward）のパイスプラインスケジュールにおいて、隣接するMicro-batchの計算とall-to-all通信を並行して実行する。これにより、巨大な通信レイテンシを計算処理の裏側に完全に隠蔽（Overlap）することが可能となる。</li>
+</ul>
+</section>
+<section id="compute-efficiency-wall-の解消" class="level3">
+<h3 class="anchored" data-anchor-id="compute-efficiency-wall-の解消">Compute Efficiency Wall の解消</h3>
+<p>GPUの計算能力を最大化し、Hostのボトルネックを解消するため、以下の手法が実装されている。</p>
+<ul>
+<li><strong>Grouped GEMM と Kernel Fusion:</strong> 断片化した多数のExpertの計算を1つの巨大な演算としてまとめるGrouped GEMMを採用。また、Routerの計算やtokenのPermutation処理など、細かい処理をKernel Fusionによって結合し、Kernel数を劇的に削減する。</li>
+<li><strong>CUDA Graphs と Sync-Free Execution:</strong> GPU実行におけるCPUからのLaunchオーバーヘッドを排除するため、静的な実行グラフを構築するCUDA Graphsを活用する。さらに、Dropless MoE（tokenを破棄しない厳密なルーティング）特有の動的なtensor形状に対応するため、ホスト・デバイス間の同期を不要にする <strong>Sync-Free</strong> モードを実現している。</li>
+</ul>
+</section>
+</section>
+<section id="reduced-precision-training-低精度トレーニング-の戦略" class="level2">
+<h2 class="anchored" data-anchor-id="reduced-precision-training-低精度トレーニング-の戦略">Reduced-Precision Training (低精度トレーニング) の戦略</h2>
+<p>Megatron-Core MoEにおいて、FP8やNVFP4といった低精度フォーマットの活用は、Memory、Communication、Compute Efficiencyのすべての壁に同時にアプローチするクロス・カッティングな最適化である。データのサイズを半減させることでメモリを節約し、通信量を減らし、Tensor Coreによる演算スループットを最大化する。</p>
+<p>しかし、MoE特有の課題として、過度な量子化（Quantization）はルーティングの決定にノイズを与え、学習の不安定化やExpertの崩壊（Expert Collapse）を招く危険性がある。</p>
+<p>この課題に対し、Megatron-Core MoEは <strong>Selective Precision（選択的精度）</strong> 戦略を採用している。数値的な敏感さが要求されるRouter、Embedding、出力層、およびOptimizer stateはFP32またはBF16の高精度に保ちつつ、計算の大部分を占めるExpert GEMMに対して強力なQuantization（HopperでのBlockwise FP8、BlackwellでのMXFP8/NVFP4など）を適用する。これにより、モデルの収束性を一切損なうことなく、極めて高いスループットを達成している。</p>
+</section>
+<section id="現代的課題long-context-と-reinforcement-learning-への対応" class="level2">
+<h2 class="anchored" data-anchor-id="現代的課題long-context-と-reinforcement-learning-への対応">現代的課題：Long-Context と Reinforcement Learning への対応</h2>
+<p>LLMの進化に伴い、数万から数十万tokenに及ぶLong-Contextの処理と、Reinforcement Learning (RL) による事後学習（Post-training）が不可欠となっている。Megatron-Core MoEはこれらの新しいワークロードにも適応している。</p>
+<section id="long-context-trainingにおけるパラダイムシフト" class="level3">
+<h3 class="anchored" data-anchor-id="long-context-trainingにおけるパラダイムシフト">Long-Context Trainingにおけるパラダイムシフト</h3>
+<p>Sequence長が32K tokenを超えると、計算の支配要因はMoE層（計算量が <span class="math inline">\(\mathcal{O}(s)\)</span>）からAttention層（計算量が <span class="math inline">\(\mathcal{O}(s^2)\)</span>）へと移行する。このとき、最大の課題はActivation memoryの爆発である。Megatron-Core MoEは、Context Parallelism (CP) とTensor Parallelism (TP) を最適に組み合わせることでデバイスあたりのSequence長を一定に保ち、長文脈であっても効率的な学習を可能にしている。</p>
+</section>
+<section id="reinforcement-learning-rl-サポート" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-learning-rl-サポート">Reinforcement Learning (RL) サポート</h3>
+<p>RLにおいては、生成されるTrajectory（応答）の長さが極端にばらつくため、固定長のバッチ処理では大量のPaddingによる無駄が発生する。これを解決するため、Megatron-CoreはPaddingを排除する <strong>Packed Sequences</strong> に対応している。 さらに、可変長Sequenceに起因する負荷の不均衡を是正するため、Micro-batchごとに最適なCPを動的に割り当てる <strong>Dynamic CP</strong> 機能を提供している。また、InferenceとTraining間で発生する微小なルーティングの差異による不安定性を排除するため、推論時のルーティング結果を学習時に再現する <strong>Router Replay</strong> などのProduction Featuresも実装されている。</p>
+</section>
+</section>
+<section id="実証された驚異的なパフォーマンス" class="level2">
+<h2 class="anchored" data-anchor-id="実証された驚異的なパフォーマンス">実証された驚異的なパフォーマンス</h2>
+<p>これらすべての最適化を統合した結果、Megatron-Core MoEは最新のNVIDIA GPU上で驚異的なスループットを実証している。</p>
+<p>DeepSeek-V3-685Bモデルを用いた検証では、GB300プラットフォーム上で最大 <strong>1,233 TFLOPS/GPU</strong>、GB200上で <strong>1,048 TFLOPS/GPU</strong> を達成した。また、H100を用いた1024 GPUのクラスタにおいても強固なスケーラビリティを示しており、アーキテクチャの特性に合わせたハードウェアとソフトウェアの高度なCo-design（協調設計）の威力を証明している。</p>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>Mixture-of-Expertsは、未来のAIモデルにおける標準的なアーキテクチャとしての地位を確立しつつある。しかし、そのポテンシャルを完全に引き出すためには、Memory、Communication、Compute Efficiencyという強固なシステム上の壁を打ち破る必要がある。</p>
+<p>Megatron-Core MoEは、Parallel Foldingによる並列化の分離、DeepEP/HybridEPによる通信の最適化、Grouped GEMMやCUDA Graphsによる計算効率の極大化、そしてFP8/FP4による低精度トレーニングを統合することで、この壁を乗り越えた。さらにLong-ContextやRLに向けた最新の機能を提供することで、Megatron-Core MoEは最先端のLLM開発を支える不可欠なインフラストラクチャとなっている。大規模なAIシステムの未来は、こうした精緻なシステム最適化のうえに構築されていくのである。</p>
 
 
 </section>
