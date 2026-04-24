@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Anthropic Claude Codeの品質低下ポストモーテムから、AIエージェント開発におけるコンテキストエンジニアリングの脆さと、過剰な最適化が招くジレンマを分析する。">
 
-<title>Junichiro Iwasawa</title>
+<title>Claude Code品質低下のポストモーテムに見る、AIエージェント開発のジレンマ</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,22 +28,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -80,25 +83,25 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Junichiro Iwasawa – jiwasawaのブログ">
-<meta property="og:description" content="機械学習・AIに関する話題を中心に書いています">
-<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/profile.jpg">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Claude Code品質低下のポストモーテムに見る、AIエージェント開発のジレンマ – jiwasawaのブログ">
+<meta property="og:description" content="Anthropic Claude Codeの品質低下ポストモーテムから、AIエージェント開発におけるコンテキストエンジニアリングの脆さと、過剰な最適化が招くジレンマを分析する。">
+<meta property="og:image" content="https://picsum.photos/id/186/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Junichiro Iwasawa – jiwasawaのブログ">
-<meta name="twitter:description" content="機械学習・AIに関する話題を中心に書いています">
-<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/profile.jpg">
+<meta name="twitter:title" content="Claude Code品質低下のポストモーテムに見る、AIエージェント開発のジレンマ – jiwasawaのブログ">
+<meta name="twitter:description" content="Anthropic Claude Codeの品質低下ポストモーテムから、AIエージェント開発におけるコンテキストエンジニアリングの脆さと、過剰な最適化が招くジレンマを分析する。">
+<meta name="twitter:image" content="https://picsum.photos/id/186/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">jiwasawaのブログ</span>
     </a>
   </div>
@@ -109,7 +112,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Junichiro Iwasawa</span></a>
   </li>  
   <li class="nav-item compact">
@@ -128,7 +131,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -140,44 +143,173 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Claude Code品質低下のポストモーテムに見る、AIエージェント開発のジレンマ</h1>
+                  <div>
+        <div class="description">
+          Anthropic Claude Codeの品質低下ポストモーテムから、AIエージェント開発におけるコンテキストエンジニアリングの脆さと、過剰な最適化が招くジレンマを分析する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年4月24日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-jolla">
-  <img src="profile.jpg" class="about-image
-  round " style="height: 15em; width: 15em;">
- <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Junichiro Iwasawa</h1>
-</div>
-<div class="quarto-title-meta">
-  </div>
-</header><main class="content" id="quarto-document-content">
-<p>個人ページ: <a href="https://jiwasawa.github.io/">jiwasawa.github.io/</a></p>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
-</main> 
-  <hr class="about-sep">
-   <div class="about-links">
-  <a href="https://x.com/jiwasawa" class="about-link" rel="" target="">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://github.com/jiwasawa" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-</div>
-</div>
- <!-- /main -->
+
+
+
+<p>ここ一ヶ月ほど、SNSや開発者コミュニティにおいて「Claude Codeが急に馬鹿になった」「同じことを何度も繰り返す認知症エージェントと化した」という怨嗟の声が散見されていた。LLM（Large Language Model）界隈では日常茶飯事の「プラシーボ効果的な劣化報告」として処理されがちな話題だが、今回ばかりは気のせいではなかったようだ。</p>
+<p>先日、AnthropicはClaude Codeの品質低下に関する詳細な<a href="https://www.anthropic.com/engineering/april-23-postmortem">ポストモーテム（事後検証報告）</a>を発表した。結論から言えば、彼らのAPIレイヤーそのものが劣化したわけではなく、Claude Codeや関連ツール（Claude Agent SDK、Claude Cowork）の裏側で行われていた「良かれと思った」アップデートが三つ連鎖し、見事なまでにユーザー体験を破壊していたという、まさに人災と呼ぶべきインシデントであった。過度なコンテキストエンジニアリングがはらむリスクが最悪の形で表面化した形だ。</p>
+<p>本稿では、このポストモーテムから読み取れる技術的背景を整理しつつ、AIエージェントを安定したプロダクトとして運用することの困難さ、そして開発プラットフォームとしてのAnthropicの姿勢について分析していく。</p>
+<section id="三つの余計なお世話が招いたuxの崩壊" class="level2">
+<h2 class="anchored" data-anchor-id="三つの余計なお世話が招いたuxの崩壊">三つの「余計なお世話」が招いたUXの崩壊</h2>
+<p>Anthropicの報告によれば、事の発端から収束までの期間（3月4日から4月16日）において、独立した三つの変更が悪魔的なシナリオを描いて重なり合っていた。それぞれの変更は、レイテンシ改善やコスト削減といった真っ当な動機に基づくものだったが、結果として見事に裏目に出ている。</p>
+<p>一つ目は、<strong>Reasoning effort（推論エフォート）のデフォルト値引き下げ</strong>である。今年2月にOpus 4.6がリリースされた際、Claude Codeのデフォルト推論エフォートは<code>high</code>に設定されていた。しかし、推論に時間がかかりすぎてUIがフリーズしたように見えるという報告を受け、Anthropicは3月4日にデフォルトを<code>medium</code>へと引き下げた。確かにレイテンシは改善されただろうが、複雑なコーディングタスクにおける知性は明確に低下した。結局、ユーザーの不満を受けて4月7日にはこの決定を覆し、大多数のモデルで<code>high</code>を、Opus 4.7に至っては<code>xhigh</code>をデフォルトに戻すという迷走ぶりを見せている。推論エフォートを上げれば精度は10〜30%向上する一方で、コストとレイテンシが跳ね上がるというトレードオフの舵取りを見誤った典型例である。</p>
+<p>二つ目は、致命的とも言える<strong>Prompt cachingの最適化バグ</strong>だ。Claudeが推論過程（thinking）を保持し続けるとコンテキスト長が膨張するため、Anthropicは3月26日に「1時間以上放置されたセッションを再開する際、過去のthinking履歴をクリアしてAPI呼び出しの無駄を省く」という効率化パッチを当てた。ここまでは良い。しかし、実装されたコードには、一度セッションがアイドル状態になると、その後は<strong>毎ターン</strong>thinking履歴を消去し続けるという致命的なバグが潜んでいたのだ。結果としてClaudeは直前の推論すら忘却し、なぜそのツールを呼び出したのか分からないまま同じ動作を繰り返すという、鳥頭な振る舞いを連発することになった。さらに最悪なことに、この履歴の連続消去によってPrompt cachingの恩恵が受けられなくなり、キャッシュミスが頻発。ユーザーのUsage limits（利用枠）を猛烈な勢いで溶かすという二次災害まで引き起こしている。</p>
+<p>そして三つ目が、<strong>System promptによる冗長性の抑制</strong>である。最新モデルであるOpus 4.7は非常に雄弁な性格（verbosity）を持っており、これが賢さの源泉であると同時に、出力トークン数の増大を招いていた。これを抑え込むため、Anthropicは4月16日のリリースに合わせてSystem promptに「ツール呼び出し間のテキストは25 words以内、最終回答は100 words以内に収めよ」という指示を追加した。これがトドメを刺した。他のプロンプト変更と組み合わさった結果、文字数制限に引っ張られてコーディングの思考プロセスそのものが劣化し、わずか数日後の4月20日にロールバックされる事態となった。</p>
+<p>これら三つの事象は、それぞれ異なるトラフィックとスケジュールで展開されたため、結果として「全体的に一貫性がなく、なんとも言えない品質低下」としてユーザーの目に映ることになったのである。</p>
+</section>
+<section id="コンテキストエンジニアリングの泥沼化と失われた信頼性" class="level2">
+<h2 class="anchored" data-anchor-id="コンテキストエンジニアリングの泥沼化と失われた信頼性">コンテキストエンジニアリングの泥沼化と失われた信頼性</h2>
+<p>今回のポストモーテムを読んで、Pi coding agentの生みの親であるMario Zechnerが自身のYouTube動画で発していた警告を思い出した読者も多いだろう。当ブログでも「<a href="https://jiwasawa.github.io/blog_jp/posts/pi-coding-agent/">Pi coding agentの考察</a>」で言及した通り、Zechnerは「Claude Codeの裏側は複雑化しすぎており、開発陣が頻繁にコンテキストエンジニアリングの実験を繰り返すせいで、ユーザーとしては一貫して信頼できる挙動を期待できなくなっている」と喝破していた。今回のインシデントは、まさに彼の指摘が100%正しかったことを裏付けるものである。</p>
+<p>LLMを用いたエージェント開発において、context engineeringはかつてのソースコードと同等の重みを持つ。System promptのわずかな変更はモデルの出力に非線形な影響を与え、思いもよらないバグ（今回のような知性の劣化や挙動の不安定化）を引き起こす。本来であれば、System promptは厳密なEvals（評価データセット）を用いた自動テストによる品質担保が不可欠だ。</p>
+<p>Anthropicも社内でEvalsを回し、Code Reviewを行い、ドッグフーディング（自社製品を社内で使うこと）を実施していたと弁明している。しかし、特定のCLIセッションでの表示バグや内部のサーバーサイド実験が影響し、本番環境でユーザーが遭遇している問題をすぐには再現できなかったという。これは言い換えれば、彼らのテスト環境と評価指標が、現実の複雑なエージェント・ワークフローにおける動的な振る舞いをカバーしきれていなかった証左である。</p>
+<p>「APIレイヤーには影響がなかった」と胸を張る姿勢も、視点を変えれば恐ろしい事実を示唆している。我々が叩いているAPIの裏にいる素のClaudeモデルは賢いままだったが、その手前に被せられたClaude Codeという「皮」の内部で、AnthropicのエンジニアがSystem promptやパラメータをこねくり回した結果、ユーザー体験が崩壊したということだ。プロダクトとしての手軽さを提供する対価として、我々はいつの間にかAnthropicの過剰最適化A/Bテストの被験者にされていたのである。</p>
+</section>
+<section id="透明性の向上は免罪符となるか" class="level2">
+<h2 class="anchored" data-anchor-id="透明性の向上は免罪符となるか">透明性の向上は免罪符となるか</h2>
+<p>もちろん、Anthropicをただ批判して終わるつもりはない。問題を隠蔽せず、詳細なポストモーテムを公開した透明性そのものは高く評価されるべきだ。</p>
+<p>彼らは今後の対策として、社内スタッフの公開ビルド使用割合の引き上げ、Code Reviewツールの改善、そして何よりSystem prompt変更に対する厳格な統制（広範なモデル別Evalsの実行、Soak periods（評価期間）の確保、段階的なロールアウト）を約束している。また、<code>CLAUDE.md</code>のガイダンスを改善し、モデル固有の変更が適切に管理されるようにもするという。</p>
+<p>さらに、X上で <code>@ClaudeDevs</code> アカウントを開設し、プロダクトの意思決定背景をより深く説明していく方針を打ち出し、全サブスクライバーのUsage limitsをリセットするという実利的な補填にも踏み切った。これらは、プラットフォーム企業として信頼を取り戻すための正しい第一歩と言える。</p>
+<p>しかし、B2Bの開発者やヘビーユーザーの視点からすれば、一抹の不安は拭えない。我々が求めているのは、最先端のモデルを用いた派手なデモンストレーション以上に、Predictable（予測可能）で安定したツールである。裏側でこっそりと推論エフォートを下げられたり、System promptに文字数制限を仕込まれたりしては、自社のワークフローにClaude Codeを深く組み込むことを躊躇せざるを得ない。</p>
+<p>AIエージェントのプロダクト化競争は熾烈を極めている。その中で、ユーザーの手間を省くための「自動化されたコンテキスト最適化」は必須の武器となるが、それは諸刃の剣でもある。今回のインシデントは、どれだけ賢い基盤モデルを持っていようと、その上に乗るソフトウェアエンジニアリングの実装が杜撰であれば、AIエージェントは容易に「少し頭の足りないポンコツ」へと転落するという痛烈な教訓を残した。</p>
+<p>Anthropicがこの手痛い失敗からDevOpsのベストプラクティスを真に組織へ根付かせることができるのか。それとも、再び我々を壮大なプロンプト実験のモルモットとして扱うのか。次なるアップデートの行方を見守りたい。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
