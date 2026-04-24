@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 22 Apr 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 23 Apr 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude Code品質低下のポストモーテムに見る、AIエージェント開発のジレンマ</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/claude-code-post-mortem/</link>
+  <description><![CDATA[ Anthropic Claude Codeの品質低下ポストモーテムから、AIエージェント開発におけるコンテキストエンジニアリングの脆さと、過剰な最適化が招くジレンマを分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-code-post-mortem/</guid>
+  <pubDate>Thu, 23 Apr 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/186/200" medium="image"/>
+</item>
 <item>
   <title>Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -117,18 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/dylan-patel-dwarkesh/</guid>
   <pubDate>Sun, 22 Mar 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/177/200" medium="image"/>
-</item>
-<item>
-  <title>Andrej Karpathyが語る”AI Psychosis”と、ソフトウェアエンジニアリングの終焉</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-psychosis/</link>
-  <description><![CDATA[ Andrej Karpathyが語るAIサイコーシスと、AIエージェントがソフトウェアエンジニアリングのパラダイムを覆し、人間の役割を「Orchestrator」へと進化させる未来を分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/andrej-karpathy-psychosis/</guid>
-  <pubDate>Sat, 21 Mar 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/176/200" medium="image"/>
 </item>
 </channel>
 </rss>
