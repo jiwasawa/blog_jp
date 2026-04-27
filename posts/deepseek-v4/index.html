@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="DeepSeek-V4は、CSAとHCAを組み合わせたハイブリッドAttention機構、mHC、Muon Optimizerなどの革新により、100万トークンを効率的に処理する次世代LLMアーキテクチャを詳細に解説する。">
+
+<title>DeepSeek-V4詳解：100万トークン時代のコンテキスト理解を支えるアーキテクチャの革新</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="DeepSeek-V4詳解：100万トークン時代のコンテキスト理解を支えるアーキテクチャの革新 – jiwasawaのブログ">
+<meta property="og:description" content="DeepSeek-V4は、CSAとHCAを組み合わせたハイブリッドAttention機構、mHC、Muon Optimizerなどの革新により、100万トークンを効率的に処理する次世代LLMアーキテクチャを詳細に解説する。">
+<meta property="og:image" content="https://picsum.photos/id/187/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="DeepSeek-V4詳解：100万トークン時代のコンテキスト理解を支えるアーキテクチャの革新 – jiwasawaのブログ">
+<meta name="twitter:description" content="DeepSeek-V4は、CSAとHCAを組み合わせたハイブリッドAttention機構、mHC、Muon Optimizerなどの革新により、100万トークンを効率的に処理する次世代LLMアーキテクチャを詳細に解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/187/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">DeepSeek-V4詳解：100万トークン時代のコンテキスト理解を支えるアーキテクチャの革新</h1>
+                  <div>
+        <div class="description">
+          DeepSeek-V4は、CSAとHCAを組み合わせたハイブリッドAttention機構、mHC、Muon Optimizerなどの革新により、100万トークンを効率的に処理する次世代LLMアーキテクチャを詳細に解説する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Transformer</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年4月27日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>数ヶ月の遅延と多くの憶測を経て、DeepSeekはついに待望の DeepSeek-V4をリリースした。これは DeepSeek-V3（2024年12月）および DeepSeek-R1（2025年1月）以来となるメジャーバージョンアップモデルである。このリリースにより、DeepSeekファミリーは、現在のオープンモデルのトップを走る Kimi K2.6 や、わずか2日前に公開された新鋭の Xiaomi Mimo 2.5 といった強力なモデル群と完全に肩を並べる存在となった。</p>
+<p>本記事では、<a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf">公開されたテクニカルレポート</a>を基に、単純なベンチマーク結果の比較にとどまらず、DeepSeek-V4がいかにして100万（1M）トークンという極限のコンテキスト長を効率的に処理しているのか、その根幹を成す「アーキテクチャの革新」に焦点を当てて詳細に解説する。</p>
+<section id="長大なコンテキストがもたらす課題と-deepseek-v4-の概要" class="level2">
+<h2 class="anchored" data-anchor-id="長大なコンテキストがもたらす課題と-deepseek-v4-の概要">長大なコンテキストがもたらす課題と DeepSeek-V4 の概要</h2>
+<p>Large Language Model (LLM) の応用範囲が拡大するにつれ、複雑な法的文書の分析、長大な論文の要約、あるいは巨大なコードベースの理解など、極めて長いテキスト系列を処理する能力への需要が急増している。しかしながら、従来の Transformer が採用する Attention 機構は、系列長に対して計算量が二次関数的に増加（<span class="math inline">\(O(N^2)\)</span>）するという根本的なボトルネックを抱えており、超長文のコンテキスト処理は計算コストおよびメモリ消費の観点から非現実的であった。</p>
+<p>DeepSeek-V4 シリーズは、革新的なアーキテクチャ設計と最適化戦略によってこの課題に真っ向から取り組んでいる。今回発表されたのは、以下の2つの Mixture-of-Experts (MoE) モデルである。</p>
+<ul>
+<li><strong>DeepSeek-V4-Pro:</strong> 1.6Tの総パラメータ数（トークンあたり49Bがアクティブ）を誇る巨大モデル。高度な推論と包括的なタスク処理能力を追求して設計されている。</li>
+<li><strong>DeepSeek-V4-Flash:</strong> 284Bの総パラメータ数（トークンあたり13Bがアクティブ）を持つ、よりパラメータ効率の高いモデル。速度とコストパフォーマンスに最適化されている。</li>
+</ul>
+<p>両モデルの最大の特徴は、驚異的な <strong>100万トークンのコンテキスト長</strong> をネイティブにサポートしている点である。これを可能にしたアーキテクチャ上のブレイクスルーを順に見ていこう。</p>
+</section>
+<section id="コンテキストの壁を突破するハイブリッド-attention-機構" class="level2">
+<h2 class="anchored" data-anchor-id="コンテキストの壁を突破するハイブリッド-attention-機構">コンテキストの壁を突破するハイブリッド Attention 機構</h2>
+<p>DeepSeek-V4 の中核的なイノベーションは、Compressed Sparse Attention (CSA) と Heavily Compressed Attention (HCA) を組み合わせたハイブリッド Attention アーキテクチャの採用にある。これにより、計算 FLOPs と KV cache のサイズを劇的に削減している。</p>
+<section id="compressed-sparse-attention-csa" class="level3">
+<h3 class="anchored" data-anchor-id="compressed-sparse-attention-csa">Compressed Sparse Attention (CSA)</h3>
+<p>CSA は、KV cache を系列次元に沿って圧縮した上で、スパースな（疎な）Attention を適用するアプローチである。</p>
+<ol type="1">
+<li><strong>トークンレベルの圧縮:</strong> まず、隣接する <span class="math inline">\(m\)</span> 個のトークンの KV cache を1つのエントリに圧縮する。これにより、実質的な系列長は <span class="math inline">\(1/m\)</span> に縮小される。</li>
+<li><strong>インデクサーによる動的選択:</strong> 圧縮された KV エントリに対して、各 Query トークンは軽量なインデクサー（Lightning Indexer）を用いて関連度スコアを計算する。そして、Top-<span class="math inline">\(k\)</span> セレクタにより、スコアの高い <span class="math inline">\(k\)</span> 個の圧縮 KV エントリのみを選択する（DeepSeek Sparse Attention; DSA）。</li>
+<li><strong>Shared Key-Value MQA:</strong> 選択された <span class="math inline">\(k\)</span> 個のエントリに対して Multi-Query Attention (MQA) を実行し、最終的な出力を得る。</li>
+</ol>
+</section>
+<section id="heavily-compressed-attention-hca" class="level3">
+<h3 class="anchored" data-anchor-id="heavily-compressed-attention-hca">Heavily Compressed Attention (HCA)</h3>
+<p>一方の HCA は、スパース化を行わない代わりに、さらにアグレッシブな圧縮を行う層である。ここでは <span class="math inline">\(m' \gg m\)</span> となるような大きなウィンドウサイズ <span class="math inline">\(m'\)</span> を用いて KV cache を圧縮する。系列全体の大局的なコンテキストを極めて低い計算コストで Dense（密）に捉える役割を果たす。</p>
+<p>DeepSeek-V4 では、これら CSA と HCA を Transformer ブロック間でインターリーブ（交互に配置）させている。さらに、局所的な微細な依存関係を失わないよう、直近の一定数のトークンに対しては圧縮を行わずにアテンションを計算する Sliding Window Attention (SWA) のブランチも併用している。</p>
+<p>このハイブリッド設計の結果、1Mトークンのコンテキスト設定において、巨大な DeepSeek-V4-Pro でさえ、前世代の DeepSeek-V3.2 と比較して推論 FLOPs をわずか 27%、KV cache サイズを 10% にまで抑え込むことに成功している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig0.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf">DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="表現力と学習の安定性を両立する-mhc-manifold-constrained-hyper-connections" class="level2">
+<h2 class="anchored" data-anchor-id="表現力と学習の安定性を両立する-mhc-manifold-constrained-hyper-connections">表現力と学習の安定性を両立する mHC (Manifold-Constrained Hyper-Connections)</h2>
+<p>モデルの深さを増すにつれて、Transformer ブロック間の残差接続（Residual Connections）における信号の減衰や数値的不安定性が顕著になる。近年、残差ストリームの幅を広げることでモデルの表現力を高める Hyper-Connections (HC) が提案されているが、層を深く重ねると学習が不安定になるという課題があった。</p>
+<p>DeepSeek-V4 は、この問題に対して <a href="https://arxiv.org/abs/2512.24880"><strong>Manifold-Constrained Hyper-Connections (mHC)</strong></a> を導入している。</p>
+<p>通常の HC における残差マッピング行列 <span class="math inline">\(B_l\)</span> は、制約のないパラメータとして学習される。対して mHC では、この行列 <span class="math inline">\(B_l\)</span> を二重確率行列（Doubly Stochastic Matrices、<a href="https://jiwasawa.github.io/blog_jp/posts/mhc-deepseek/">各行および各列の和が1となる非負行列）の多様体 <span class="math inline">\(\mathcal{M}\)</span> に制約</a>する。具体的には、Sinkhorn-Knopp アルゴリズムを用いて、学習プロセス中に行列をこの多様体へと射影している。</p>
+<p><span class="math display">\[ \mathcal{M} := \left\{ M \in \mathbb{R}^{n \times n} \mid M \mathbf{1}_n = \mathbf{1}_n, \mathbf{1}_n^T M = \mathbf{1}_n^T, M \ge 0 \right\} \]</span></p>
+<p>この数学的な制約により、変換行列のスペクトルノルムが厳密に 1 以下にバウンドされる。結果として、残差変換が非拡張的（non-expansive）な写像となり、順伝播および誤差逆伝播における極端な値の発散を防ぐことができる。これにより、高い表現力を維持したまま、超大規模モデルにおける深い層の学習安定性が飛躍的に向上した。</p>
+</section>
+<section id="大規模-moe-モデルを支える-muon-optimizer-とインフラストラクチャ技術" class="level2">
+<h2 class="anchored" data-anchor-id="大規模-moe-モデルを支える-muon-optimizer-とインフラストラクチャ技術">大規模 MoE モデルを支える Muon Optimizer とインフラストラクチャ技術</h2>
+<p>アーキテクチャの革新だけでなく、モデルを実際に訓練し、推論させるための基盤技術にも多大な進化が見られる。</p>
+<section id="muon-optimizer-の採用" class="level3">
+<h3 class="anchored" data-anchor-id="muon-optimizer-の採用">Muon Optimizer の採用</h3>
+<p>LLM の学習においては、長らく AdamW が標準的なオプティマイザとして君臨してきたが、DeepSeek-V4 では隠れ層の重み更新に <strong>Muon Optimizer</strong> を採用している。最近、Kimi K2 シリーズや GLM-5 などの最先端オープンモデルの学習においてもその有効性が実証されているこの手法は、高次（Higher-order）の最適化アプローチの一種である。</p>
+<p>Muon は、運動量（Momentum）バッファの蓄積に加え、Newton-Schulz イテレーションを用いたハイブリッドな直交化ステップを組み込んでいる。これにより、AdamW と比較して収束が速く、かつ大規模なパラメーター空間における学習の安定性が高い。分散学習時には通信ボトルネックが懸念される手法であるが、DeepSeek チームは ZeRO ベースの並列化戦略と組み合わせた独自のスケジューリングにより、スループットの低下を最小限に抑えつつスケーリングを可能にしている。</p>
+</section>
+<section id="限界を押し広げるインフラストラクチャの最適化" class="level3">
+<h3 class="anchored" data-anchor-id="限界を押し広げるインフラストラクチャの最適化">限界を押し広げるインフラストラクチャの最適化</h3>
+<p>さらに、以下のような多数のエンジニアリング上のブレイクスルーが実装されている。</p>
+<ol type="1">
+<li><strong>Expert Parallelism における通信と計算のオーバーラップ:</strong> MoE モデル特有の Expert Parallelism (EP) において、トークンの Dispatch および Combine の通信処理と、実際の計算（Linear 投影など）をきめ細かくオーバーラップさせる単一のメガカーネルを開発した。これにより、ネットワーク帯域幅への依存を減らし、エンドツーエンドのパフォーマンスを最大化している。</li>
+<li><strong>TileLang による柔軟なカーネル開発:</strong> 複雑なハイブリッド Attention 機構や mHC の実装にあたり、実行時効率と開発の生産性を両立する Domain-Specific Language (DSL) である TileLang を採用している。</li>
+<li><strong>決定論的カーネルの徹底:</strong> 非同期処理に伴う非決定性を排除し、ビットレベルでの再現性を保証する高パフォーマンスなカーネルライブラリを構築することで、学習時のデバッグや Post-Training における挙動の一貫性を担保している。</li>
+<li><strong>FP4 Quantization-Aware Training (QAT):</strong> MoE のエキスパート重みや、CSA におけるインデクサーの QK パスに対して FP4（4ビット浮動小数点）量子化を適用。学習段階からこの量子化のノイズを考慮する QAT を導入することで、モデルの品質を損なうことなく、推論時のメモリ消費と計算負荷を劇的に削減している。</li>
+</ol>
+</section>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>DeepSeek-V4 は、単一のモジュールの改良にとどまらず、Attention 機構のハイブリッド化（CSA / HCA）、残差接続の幾何学的制約（mHC）、高度な最適化アルゴリズム（Muon）、そして低レベルのカーネル最適化に至るまで、フルスタックのイノベーションを結集したモデルである。</p>
+<p>32兆（32T）トークン以上という膨大なデータセットで事前学習され、徹底した Post-Training を経た DeepSeek-V4-Pro-Max は、知識、推論、そして長コンテキストタスクにおいてオープンモデルの新たな State-of-the-Art を打ち立て、先行するプロプライエタリモデルの性能に肉薄している。</p>
+<p>100万トークンを効率的に処理できるという事実は、単に「長い文章が読める」という以上の意味を持つ。これは、膨大なコードベース全体を俯瞰したリファクタリング、複数ドキュメントを横断する複雑なマルチステップ推論、そして長期間にわたってコンテキストを維持し続ける高度なエージェント（Agentic AI）の構築など、新たな AI パラダイムへの扉を開くものである。オンライン学習や Test-Time Scaling のさらなる拡張といった将来の探求においても、DeepSeek-V4 のアーキテクチャはその堅牢な基盤となるだろう。</p>
+<p>モデルのチェックポイントは <a href="https://huggingface.co/collections/deepseek-ai/deepseek-v4">Hugging Face</a> にて公開されている。オープンモデルの進化がどこまでプロプライエタリの壁を押し崩していくのか、今後の展開から目が離せない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
