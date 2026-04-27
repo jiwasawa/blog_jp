@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/deepseek-v4/index.html",
       "/posts/claude-code-post-mortem/index.html",
       "/posts/megatron-core-moe/index.html",
       "/posts/terence-tao-dwarkesh/index.html",
