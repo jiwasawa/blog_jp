@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 26 Apr 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 04 May 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Anthropicの根深い歪みと、Claude劣化を巡る陰謀論</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-conspiracy-theories/</link>
+  <description><![CDATA[ Safetyの過剰補正とResearch至上主義が招いた摩擦から、AnthropicのClaudeモデルは性能劣化や不透明なBANといった問題を抱え、開発者コミュニティから厳しい目を向けられている ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-conspiracy-theories/</guid>
+  <pubDate>Mon, 04 May 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/188/200" medium="image"/>
+</item>
 <item>
   <title>DeepSeek-V4詳解：100万トークン時代のコンテキスト理解を支えるアーキテクチャの革新</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,17 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/ai-comparative-advantage/</guid>
   <pubDate>Sun, 29 Mar 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/179/200" medium="image"/>
-</item>
-<item>
-  <title>合成データ生成の実践ガイド：最高品質のトークンを兆単位で生み出す「Synthetic Data Playbook」</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/finephrase/</link>
-  <description><![CDATA[ Hugging Faceの研究チームによる「Synthetic Data Playbook」は、プロンプト設計、小規模モデルの活用、強力なMix-inデータとの組み合わせ、多様性の重視、そして効率的なインフラ構築といった体系的なアプローチにより、LLM開発のための最高品質な合成データ生成の科学的ロードマップを提示している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/finephrase/</guid>
-  <pubDate>Mon, 23 Mar 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/178/200" medium="image"/>
 </item>
 </channel>
 </rss>
