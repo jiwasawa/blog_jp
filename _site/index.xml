@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 07 May 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 12 May 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AI駆動開発の臨界点：Garry Tanの “Tokenmaxxing”と開発者の生存戦略</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/gstack/</link>
+  <description><![CDATA[ Y Combinator CEOのGarry Tanが、AIコーディングエージェントを駆使した「Tokenmaxxing」戦略と「Conductor Pattern」による開発ワークフローから、AIネイティブなソフトウェア開発のパラダイムシフトを読み解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/gstack/</guid>
+  <pubDate>Tue, 12 May 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/190/200" medium="image"/>
+</item>
 <item>
   <title>憎悪を超えた戦略的野合：AnthropicとSpaceXの提携が浮き彫りにするCompute危機の狂気</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -118,17 +130,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/oai-harness-eng/</guid>
   <pubDate>Mon, 13 Apr 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/181/200" medium="image"/>
-</item>
-<item>
-  <title>イーロン・マスクの「学校」が輩出するハードテック起業家たち</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/elon-foundary-factory/</link>
-  <description><![CDATA[ SpaceXとTeslaの経験者が語る、ハードテック起業を成功に導く「Why」の共有、Decision Velocityの最大化、戦略的垂直統合、そしてデータ駆動のオペレーションの秘訣。 ]]></description>
-  <category>a16z Podcast</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/elon-foundary-factory/</guid>
-  <pubDate>Wed, 01 Apr 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/180/200" medium="image"/>
 </item>
 </channel>
 </rss>
