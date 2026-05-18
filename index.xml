@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Wed, 13 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 18 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>SlimQwen：大規模MoEモデルの事前学習における枝刈りと蒸留の探求</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/slimqwen/</link>
+  <description><![CDATA[ SlimQwenは、大規模MoEモデルの事前学習における構造化枝刈り・部分保存エキスパートマージ・MTP Distillation・段階的スケジュールといった革新的なアプローチにより、約4倍の圧縮率で性能を維持する効率的なモデル圧縮手法を確立した。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/slimqwen/</guid>
+  <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/191/200" medium="image"/>
+</item>
 <item>
   <title>AI駆動開発の臨界点：Garry Tanの “Tokenmaxxing”と開発者の生存戦略</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -117,19 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/pi-coding-agent/</guid>
   <pubDate>Thu, 16 Apr 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/182/200" medium="image"/>
-</item>
-<item>
-  <title>OpenAI Frontierの深謀遠慮とHarness Engineeringの衝撃</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/oai-harness-eng/</link>
-  <description><![CDATA[ OpenAI FrontierのRyan Lopopolo氏が語るHarness Engineeringは、AIエージェントがコード生成からレビュー、マージまでを自律的に行うことで、人間がボトルネックとなるソフトウェア開発の未来像とエンタープライズAIプラットフォームの覇権戦略を提示する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/oai-harness-eng/</guid>
-  <pubDate>Tue, 14 Apr 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/181/200" medium="image"/>
 </item>
 </channel>
 </rss>

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/slimqwen/index.html",
       "/posts/gstack/index.html",
       "/posts/anthropic-xai-partnership/index.html",
       "/posts/anthropic-conspiracy-theories/index.html",
@@ -38,8 +39,8 @@
       "/posts/opsd-on-policy-self-distillation/index.html",
       "/posts/continual-learning-wolfe/index.html",
       "/posts/terminal-bench-2/index.html",
-      "/posts/vercel-malte/index.html",
       "/posts/ttt-discovery/index.html",
+      "/posts/vercel-malte/index.html",
       "/posts/minimax-m2-1-post-training/index.html",
       "/posts/xai-sulaiman/index.html",
       "/posts/engram-deepseek/index.html",
