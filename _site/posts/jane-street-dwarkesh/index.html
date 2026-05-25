@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Jane StreetのRon MinskyとDan Pontecorvoへのインタビューから、100ナノ秒のトレードにおける物理的制約、多様なAIモデルアーキテクチャの重要性、そしてインフラ投資と人間の判断が競争優位性を築く鍵であることを解説する。">
+
+<title>Jane StreetのGPU戦略と「AGI完全」な金融市場</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Jane StreetのGPU戦略と「AGI完全」な金融市場 – jiwasawaのブログ">
+<meta property="og:description" content="Jane StreetのRon MinskyとDan Pontecorvoへのインタビューから、100ナノ秒のトレードにおける物理的制約、多様なAIモデルアーキテクチャの重要性、そしてインフラ投資と人間の判断が競争優位性を築く鍵であることを解説する。">
+<meta property="og:image" content="https://picsum.photos/id/192/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="Jane StreetのGPU戦略と「AGI完全」な金融市場 – jiwasawaのブログ">
+<meta name="twitter:description" content="Jane StreetのRon MinskyとDan Pontecorvoへのインタビューから、100ナノ秒のトレードにおける物理的制約、多様なAIモデルアーキテクチャの重要性、そしてインフラ投資と人間の判断が競争優位性を築く鍵であることを解説する。">
+<meta name="twitter:image" content="https://picsum.photos/id/192/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Jane StreetのGPU戦略と「AGI完全」な金融市場</h1>
+                  <div>
+        <div class="description">
+          Jane StreetのRon MinskyとDan Pontecorvoへのインタビューから、100ナノ秒のトレードにおける物理的制約、多様なAIモデルアーキテクチャの重要性、そしてインフラ投資と人間の判断が競争優位性を築く鍵であることを解説する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年5月25日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>世間ではLarge Language Model (LLM) の進化により、AGI（汎用人工知能）の到達が現実味を帯びてきたと騒がれている。「AGIが完成すれば、金融市場のトレードなど一瞬でAIに最適化され、人間はマルガリータでも飲みながら不労所得を得るようになる」と、最終兵器彼女ばりの世紀末的確信をもって言い切る人が後を絶たない。</p>
+<p>しかし、一旦そのような無責任極まりない未来観測的与太話は無視しよう。現実の最前線で何が起きているのかを知るには、シリコンバレーのAIラボではなく、テキサスにあるJane Streetのデータセンターを覗くのが最も解像度が高い。</p>
+<p>先日、<a href="https://youtu.be/xKZ_8ULR91Y?si=wlVMKJjbGYmu8rCf">Dwarkesh Patelのpodcast</a>において、Jane Streetのテクノロジー部門共同トップであるRon Minskyと、物理エンジニアリングチームを率いるDan Pontecorvoが、同社のテキサス・データセンターで対談を行った。そこで語られたのは、100ナノ秒を争う狂気のインフラ構築と、CoreWeaveとの60億ドル（約9,000億円）規模の計算資源（compute）契約の裏側、そして高度に自動化された世界における「人間の価値の再定義」である。本稿では、汎用AIモデルが一律に市場を支配できない構造的理由と、Jane Streetの事業戦略に焦点を当てる。</p>
+<section id="ナノ秒の壁と計算のトレードオフ" class="level2">
+<h2 class="anchored" data-anchor-id="ナノ秒の壁と計算のトレードオフ">100ナノ秒の壁と、計算のトレードオフ</h2>
+<p>Jane Streetの戦略を読み解く上で最も重要な前提は、「トレードにおける時間軸（time horizon）は一つではない」という事実だ。</p>
+<p>一般論として、AIモデルはパラメータサイズを大きくし、計算量（compute）をかければかけるほど推論の精度（smartness）は上がる。しかし、高頻度取引（HFT）の極北においては、この「賢さ」と「スピード」のトレードオフが極限状態に達する。取引所と同じコロケーション施設にサーバーを置き、100ナノ秒（1000万分の1秒）以下でパケットを折り返さなければならない領域では、CPUやGPUに出番はない。ネットワークに直結されたFPGAが必須となる。</p>
+<p>Minskyが語った「オシロスコープを繋げば、パケットが完全に消費される前に、すでにネットワークへ出力され始めているのが見える」という表現は、この世界の異常性を端的に表している。この時間軸では、いかに最新鋭のLLMであろうと物理的に無力だ。光ファイバーのケーブルの長さをミリ単位で計測し、極めて単純な意思決定を極限の速度で実行するしかない。</p>
+<p>一方で、マイクロ秒、ミリ秒、あるいは数時間から数日といった長い時間軸のトレードにおいては、より複雑で大規模な推論モデル（GPUやCPUを活用したもの）が力を発揮する。つまり、単一の「最強のAI」が存在するわけではなく、意思決定の複雑さと実行速度の要件に応じて、多層的かつアンサンブル的な計算戦略を組むことが不可欠となる。</p>
+</section>
+<section id="億ドルのcoreweave契約とノイズだらけの金融データ" class="level2">
+<h2 class="anchored" data-anchor-id="億ドルのcoreweave契約とノイズだらけの金融データ">60億ドルのCoreWeave契約と、ノイズだらけの金融データ</h2>
+<p>AIの潮流において、OpenAIやGoogleのような基礎研究ラボ（foundation labs）は、あらゆるタスクをこなせる単一の汎用モデルの開発に心血を注いでいる。しかし、Jane Streetのアプローチはこれと真逆である。彼らが先日、クラウドプロバイダーのCoreWeaveと結んだ60億ドルという天文学的なcompute契約は、単一の巨大モデルを訓練するためではなく、「極めて多様なモデルアーキテクチャ」を並行して実験・訓練するために使われる。</p>
+<p>なぜ多様性が必要なのか。それは金融データが持つ特異な性質に起因する。インターネット上のテキストデータはある程度「意味」が詰まっているが、金融市場から吐き出される膨大なデータは、圧倒的にノイズが多く、バイト単位の情報量（bytes-to-flop ratio）が著しく低い。NASDAQのフィードから滝のように流れてくるシーケンシャルなデータを捌き、真の価値（fair value）を予測するには、そのデータレートと特性に完全に特化したカスタムモデルが無数に必要になる。</p>
+<p>一般的なAIラボが「汎用性」の獲得を目指してスケール則（scaling laws）を追い求めるのに対し、Jane Streetは金融特有のノイズの海からシグナルを抽出するため、モデルの形状からデータの読み込み（data loading）の効率化に至るまで、泥臭いカスタマイズを繰り返している。彼らにとってcomputeのボトルネックを解消することは、研究者が新たなアイデアを検証する「イテレーションの速度」を物理的に引き上げることに他ならない。</p>
+</section>
+<section id="冷却とモジュール化チップの外側にある物理的制約" class="level2">
+<h2 class="anchored" data-anchor-id="冷却とモジュール化チップの外側にある物理的制約">冷却とモジュール化：チップの外側にある物理的制約</h2>
+<p>モデルのアーキテクチャや学習データといったソフトウェア層での最適化が進むにつれ、最終的なボトルネックは物理的なインフラストラクチャへと回帰する。Dan Pontecorvoが指摘するように、現代のデータセンター運用はかつてのような「x86ベースのサーバーを並べるだけ」の牧歌的な時代をとっくに過ぎている。</p>
+<p>1ラックあたり1メガワットという桁違いの電力密度を要求される昨今のGPUインフラにおいては、冷却設備や配電システム自体がプロジェクトのクリティカルパスとなる。特筆すべきは、サプライチェーンの歪みだ。例えば、データセンターの可用性を担保するバックアップ発電機は、現在最も納品に時間がかかるコンポーネントの一つ（リードタイムが数ヶ月から1年を超えることも珍しくない）となっている。</p>
+<p>これに対しJane Streetは、「可用性を一部犠牲にしてでも、GPUを半年早く稼働させる方がビジネス上の期待値が高い」という意思決定を下すことがある。純粋なインフラ工学の観点からは邪道かもしれないが、激しい競争環境下におけるビジネス判断としては極めて合理的だ。ハードウェアの到着を待つ間に陳腐化するリスクを避けるため、モジュール式データセンター（modular data centers）や、事前に構築済みのインフラコンポーネントを活用し、プラグアンドプレイに近い形で即座にcomputeを立ち上げる体制を構築している。</p>
+<p>チップ上のパッケージ設計においてコンピューティングリソースが占める面積がごくわずかであるのと同様に、現代のAI拠点においてGPUラック本体が占める割合は小さく、その周囲を取り巻く冷却・電力インフラこそが本質的な競争優位の源泉となっているのである。</p>
+</section>
+<section id="人間の逆襲トレードはagi完全な問題か" class="level2">
+<h2 class="anchored" data-anchor-id="人間の逆襲トレードはagi完全な問題か">人間の逆襲：トレードは「AGI完全」な問題か</h2>
+<p>技術とインフラの高度化をこれでもかと見せつけられた後で、Minskyが強調した点は非常に逆説的で示唆に富んでいる。「すべてが自動化され、AIが高度化している今、人間のエンジニアやトレーダーの価値はかつてないほど高まっている」というのだ。</p>
+<p>平時の市場において、モデルは完璧に機能する。しかし、世界情勢の急変や未知のイベントによって市場が「相転移（phase transitions）」を起こした際、過去のパターンから学習したモデルは脆弱性を露呈する。今日という日が、過去のどのデータとも異なる特殊な状況であると判断し、モデルを止めるべきか、あるいはリスク許容度をどう調整すべきかという「メタな判断（meta-judgment）」においては、依然として人間の認知能力がAIを凌駕している。</p>
+<blockquote class="blockquote">
+<p>トレードというタスクは、ある意味で「AGI完全（AGI-complete）」あるいは「NP完全」な問題のように感じられる。世界のあらゆる複雑な事象が最終的に価格予測に影響を与えるからだ。自動化が進めば進むほど、まだ自動化できていない「本当に困難な部分」にこそ、競争力の源泉が集中する。</p>
+<p>Ron Minsky</p>
+</blockquote>
+<p>Jane Streetが採用において、単なる機械学習の専門家やカスタムアーキテクチャの設計者だけでなく、市場の文脈を理解し、高度な問題解決能力を持つ人材（そしてパズルを愛する文化に適合する人材）を渇望している理由はここにある。彼らは、AIを人間の代替とは見ていない。人間の理解、主体性、効率性を拡張するための「強力なツール」としてAIを捉えているのだ。</p>
+</section>
+<section id="おわりに次世代の勝者の条件" class="level2">
+<h2 class="anchored" data-anchor-id="おわりに次世代の勝者の条件">おわりに：次世代の勝者の条件</h2>
+<p>LLMのAPIを叩いてそれらしい回答を得るだけなら、個人でも数分で実装できる時代になった。しかし、実世界のノイズだらけの環境で、物理的な電力・冷却の制約と戦いながら、100ナノ秒から数日に至る複数の時間軸で競争優位性を構築することは、プロンプトエンジニアリングで解決できるほど甘い世界ではない。</p>
+<p>Jane Streetが数万基から数十万基へとGPUの規模を拡大し続ける中で見据えているのは、単なる力技のスケールではない。データのハンドリングからインフラのモジュール化、多様なアーキテクチャの並行実験、そして「人間にしかできないメタ判断」の分離に至るまで、AIライフサイクル全体の圧倒的な最適化である。</p>
+<p>「AGIができればすべてが終わる」と語る暇があるならば、まずは手元の光ファイバーの長さを測り、発電機のリードタイムを確認した方が、よほど世界の真実に近づけるのかもしれない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

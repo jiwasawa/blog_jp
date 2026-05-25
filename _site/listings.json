@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/jane-street-dwarkesh/index.html",
       "/posts/slimqwen/index.html",
       "/posts/gstack/index.html",
       "/posts/anthropic-xai-partnership/index.html",
