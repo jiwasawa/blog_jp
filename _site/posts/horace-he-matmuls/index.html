@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。">
+
+<title>行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか） – jiwasawaのブログ">
+<meta property="og:description" content="行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。">
+<meta property="og:image" content="https://picsum.photos/id/193/200">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか） – jiwasawaのブログ">
+<meta name="twitter:description" content="行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。">
+<meta name="twitter:image" content="https://picsum.photos/id/193/200">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</h1>
+                  <div>
+        <div class="description">
+          行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">GPU</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年5月26日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>機械学習やハイパフォーマンスコンピューティング（HPC）のコミュニティにおいて、「行列の形状（Shape）が行列乗算（Matmul）のパフォーマンスに極めて大きな影響を与える」という事実は、一種の暗黙知として広く共有されている。しかし、時折、非常に直感に反する現象に遭遇することがある。例えば、「行列のサイズを<strong>大きくした</strong>にもかかわらず、計算の<strong>絶対的な実行時間</strong>が短くなる」という現象である。計算量（Work）が増加しているのにもかかわらず、より速く処理が完了するのだ。</p>
+<p>この不可解な現象は、GPUがこれらの基本的な演算をどのように実行しているのか、そのアーキテクチャの深淵を覗き込むことで説明が可能である。</p>
+<p>本稿では、<a href="https://www.thonking.ai/p/what-shapes-do-matrix-multiplications">Horace He氏によるオリジナルの解説記事</a>の洞察を交えながら、行列乗算の形状がなぜこれほどまでに重要なのかを解き明かす。具体的には、パフォーマンスを支配する3つの重要な概念、すなわち<strong>計算強度と並列化（Compute Intensity and Parallelization）</strong>、<strong>タイリング（Tiling）</strong>、そして<strong>ウェーブ量子化（Wave Quantization）</strong>について詳細に解説する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="image.jpg" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://www.thonking.ai/p/what-shapes-do-matrix-multiplications">What Shapes Do Matrix Multiplications Like? [medium]</a>より引用</figcaption>
+</figure>
+</div>
+<section id="計算強度と並列性の必要性" class="level2">
+<h2 class="anchored" data-anchor-id="計算強度と並列性の必要性">1. 計算強度と並列性の必要性</h2>
+<p>グラフの全体的な傾向として、行列のサイズ <span class="math inline">\(N\)</span> が大きくなるにつれて、Matmulのパフォーマンス（FLOPs）は向上していく。これには主に2つの要因が存在する。</p>
+<p>第一に、<strong>オーバーヘッドの相対的な減少と並列性の確保</strong>である。GPU上で計算カーネルを起動（Launch）する際、Streaming Multiprocessors (SMs) のセットアップや同期処理など、一定の固定オーバーヘッドが発生する。計算すべきタスクの量が増えれば、この固定オーバーヘッドが全体の実行時間に占める割合は小さくなる。さらに重要なのは、GPUが膨大な数の並列コアを搭載しているという事実である。これらのコアを休ませることなく最大スループットを達成するには、GPUを飽和させるのに十分な「並列化可能なタスク」が必要となる。行列サイズが小さい場合、GPUのリソースを完全に使い切るだけのタスクを供給できないのである。</p>
+<p>第二に、<strong>算術強度（Arithmetic Intensity）の向上</strong>である。行列乗算には、メモリへのアクセスと実際の計算（FLOPs）の両方が含まれる。ハードウェアの特性上、メモリアクセスは計算に比べて桁違いに高コストである。サイズ <span class="math inline">\(N\)</span> の正方行列の乗算を考えた場合、計算量は <span class="math inline">\(2N^3\)</span> FLOPs であるのに対し、メモリアクセス量は <span class="math inline">\(3N^2\)</span> となる。つまり、<span class="math inline">\(N\)</span> が大きくなるにつれて、メモリアクセスに対する計算の比率（<span class="math inline">\(\mathcal{O}(N)\)</span>）が上昇する。これにより、データの到着を待つ時間が相対的に減少し、純粋な計算に費やされる時間の割合が増加する。これが算術強度の向上である。</p>
+<p>十分な計算強度と並列性が確保されていない小さな行列では、メモリアクセス律速やGPUリソースの過少利用がボトルネックとなり、低いパフォーマンスしか得られない。</p>
+</section>
+<section id="タイリングメモリレイアウトがもたらす影響" class="level2">
+<h2 class="anchored" data-anchor-id="タイリングメモリレイアウトがもたらす影響">2. タイリング：メモリレイアウトがもたらす影響</h2>
+<p>計算強度の概念は、パフォーマンスが右肩上がりになる全体的なトレンドを説明する。しかし、プロットに見られる「激しい上下の振動（Squiggly lines）」や、行列サイズによる劇的なパフォーマンスの差異を説明するには不十分である。この複雑な挙動の主たる原因は<strong>タイリング（Tiling）</strong>にある。</p>
+<p>タイリングとは、巨大な行列をGPUの高速なオンチップキャッシュ（共有メモリなど）に収まるサイズの小さなブロック（Tile）に分割して処理する最適化手法である。このタイリングプロセスの効率は、行列のデータがメモリ上でどのように配置されているか（メモリレイアウト）に決定的に依存する。</p>
+<ul>
+<li><p><strong>アライメントの取れたメモリレイアウト（Aligned Memory Layout）：</strong> 行列の次元がキャッシュラインサイズ（例えばGPUでは32要素など）の完全な倍数である場合、タイルの各行はキャッシュラインと綺麗に整列（アライン）する。この状態では、GPUは必要な要素を含むキャッシュラインだけを正確かつ無駄なくロードできるため、極めて効率的なメモリアクセスが実現する。</p></li>
+<li><p><strong>アライメントの崩れたメモリレイアウト（Unaligned Memory Layout）：</strong> 行列の次元がキャッシュラインサイズの倍数でない場合、論理的な行の境界と物理的なキャッシュラインの境界にズレが生じる。これにより、タイル内のある行を読み込む際に、本来不要な隣接するキャッシュラインのデータまで強制的にロードしなければならなくなる。この冗長なメモリアクセスは、メモリ帯域を浪費し、計算を著しく遅延させる。</p></li>
+</ul>
+<p>この現象は、時に「タイル量子化（Tile Quantization）」と混同されるが、タイル量子化が主にタイルの境界サイズにおけるタスク数の非連続な増加による効率低下を指すのに対し、メモリレイアウトの問題は、<strong>カーネルの実行開始時点で既に勝敗が決している</strong>という点でより深刻である。次元数がほんの少し（例えば数要素）変わるだけで、アライメントの取れた完璧なメモリアクセスパターンが破壊され、大幅なパフォーマンスの低下（時には半分以下になることすらある）を引き起こすのである。</p>
+</section>
+<section id="ウェーブ量子化見えざる追加ウェーブのコスト" class="level2">
+<h2 class="anchored" data-anchor-id="ウェーブ量子化見えざる追加ウェーブのコスト">3. ウェーブ量子化：見えざる「追加ウェーブ」のコスト</h2>
+<p>さらに不可解なのは、行列の次元が32などの重要なファクターで割り切れる（つまりアライメントが取れている）にもかかわらず、特定の周期で「縞模様（Striped）」のようにパフォーマンスが急落するパターンが存在することだ。この現象は<strong>ウェーブ量子化（Wave Quantization）</strong>に起因する。</p>
+<p>この概念を理解するために、単純な思考実験を行ってみよう。 あなたが並列に実行可能な <span class="math inline">\(N\)</span> 個のタスクと、<span class="math inline">\(N\)</span> 個の処理ユニット（プロセッサ）を持っているとする。すべてのタスクはちょうど1秒で完了する。 * <span class="math inline">\(N\)</span> 個のタスクを処理するのに何秒かかるか？ → 答えは1秒である。すべてのプロセッサが一斉に稼働し、1つの「ウェーブ（Wave）」で完了する。 * では、タスクが <span class="math inline">\(N+1\)</span> 個になったらどうなるか？ → 答えは2秒である。<span class="math inline">\(N\)</span> 個のプロセッサのうち1つが、2つ目のタスクを引き受けなければならず、全体のレイテンシは実質的に2倍になる。</p>
+<p>行列乗算のコンテキストにおいて、この「タスク」は計算用の「スレッドブロック（Thread Block）」または「タイル」に相当し、「処理ユニット」はGPUの Streaming Multiprocessors (SMs) である。</p>
+<p>行列サイズが大きくなると、必要なスレッドブロックの総数も増加する。この総数が、GPUに搭載されている利用可能な SM の数の倍数を超えた瞬間、タスクを処理しきれずに追加の「ウェーブ」が必要となる。このウェーブの切り替わりポイントにおいて、処理能力にアイドルな（何もしていない）SMが大量に発生し、パフォーマンス（TFLOPS）が急激に低下する。</p>
+<p>例えば、NVIDIA A100 GPU は 108 基の SM を搭載している。ある CUTLASS ベースの Matmul カーネルが <span class="math inline">\(256 \times 128\)</span> のタイルサイズを使用しているとする。行列サイズ <span class="math inline">\(N=1792\)</span> の場合、グリッドサイズは <span class="math inline">\((1792/256) \times (1792/128) = 7 \times 14 = 98\)</span> タイルとなる。98は108未満なので、ちょうど1ウェーブで収まる。 しかし、<span class="math inline">\(N=1793\)</span> になった瞬間、グリッドサイズは切り上げられて <span class="math inline">\(8 \times 15 = 120\)</span> タイルとなる。108を超えるため、2ウェーブの実行が必要となり、パフォーマンスは劇的に悪化する。</p>
+<p>ウェーブ量子化は、具体的なカーネルのパラメータ（タイルサイズなど）やハードウェアの SM 数に強く依存するため、予測や回避が困難な罠となる。プロファイリングツールを活用することで、cuBLASがアルゴリズムを切り替えたタイミングや、この隠れたパフォーマンス低下の要因を特定することが可能である。</p>
+<p>近年では、このウェーブ量子化の制約を根本から打ち破るアプローチとして、<strong>Stream-K</strong> のような革新的なアルゴリズムに関する研究も進んでいる。Stream-K は、従来のタイルベースの物理的な分割ではなく、内側のループイテレーションをプロセッシングエレメント間でワークセントリック（Work-centric）に分割することで、いかなる行列形状に対しても計算リソースをほぼ完璧に利用（Near-perfect utilization）することを目指しており、ウェーブ量子化の回避に光明を投じている。</p>
+</section>
+<section id="torch.compile-は万能薬か" class="level2">
+<h2 class="anchored" data-anchor-id="torch.compile-は万能薬か">4. <code>torch.compile</code> は万能薬か？</h2>
+<p>PyTorchの <code>torch.compile</code> のような最新のコンパイラツールは、Pythonコードを自動的に最適化する際、行列をよりパフォーマンスの高い形状（例えば32の倍数など）にパディング（Padding）する処理を試みる。これにより、開発者が形状を意識しなくてもある程度の最適化が施される。</p>
+<p>しかし、これらの自動ツールがすべての問題を解決できるわけではなく、いくつかの制限が存在する。</p>
+<ol type="1">
+<li><strong>コピーのオーバーヘッド（Copying Overhead）：</strong> パディングを行うには、通常、メモリ上で新しい行列のコピーを作成する必要がある。演算の途中のテンソルであればオペレーションのフュージョン（Fusion）で隠蔽できることもあるが、入力データ（例えば Network の重み行列など）をパディングする場合、このメモリコピーによるオーバーヘッドが避けられず、かえって遅くなるケースがある。</li>
+<li><strong>ウェーブ量子化の複雑性：</strong> キャッシュアライメントのためのパディングは比較的単純だが、特定のハードウェアの SM 数や動的なバッチサイズに依存するウェーブ量子化の問題をコンパイラが自動で完全に解決するのは極めて困難である。依然として、手動での介入や慎重な形状設計が求められる領域が残されている。</li>
+</ol>
+</section>
+<section id="結論" class="level2">
+<h2 class="anchored" data-anchor-id="結論">結論</h2>
+<p>Large Language Model (LLM) をはじめとする現在のディープラーニングモデル内で実行されている行列乗算の形状（Shape）は、決して恣意的に決めてよいものではない。それは、並列性の活用、メモリへのアクセスパターン、そしてスレッドブロックのスケジューリング（ウェーブ）を通じて、最終的な実行パフォーマンスに極めて深い影響を及ぼしている。</p>
+<p>タイリングによるメモリアライメントや、ウェーブ量子化といった背後にある概念を深く理解することで、我々は以下の恩恵を得ることができる。</p>
+<ul>
+<li><strong>パフォーマンス問題の診断：</strong> 特定のバッチサイズや埋め込み次元において、なぜ突然モデルの学習や推論が遅くなるのかを論理的に特定できる。</li>
+<li><strong>コードの最適化：</strong> 対象となる GPU アーキテクチャに適合するように、手動で行列をパディングしたり、ネットワークのハイパーパラメータ（次元数など）を賢く選択できる。</li>
+<li><strong>限界性能の引き出し：</strong> ほんのわずかな形状の調整（数要素の追加や削減）によって、全体のパフォーマンスをさらに10〜15%向上させることが可能となる。</li>
+</ul>
+<p>コンパイラや自動最適化ツールの進化は目覚ましいが、ハードウェアとアルゴリズムの境界で起きているこれらの根本的な原理を理解することは、機械学習エンジニアや HPC リサーチャーにとって、極限のパフォーマンス（Peak Performance）を達成するための強力な武器であり続けるだろう。</p>
+<section id="参考" class="level4">
+<h4 class="anchored" data-anchor-id="参考">参考:</h4>
+<ul>
+<li><a href="https://www.thonking.ai/p/what-shapes-do-matrix-multiplications">What Shapes Do Matrix Multiplications Like? [medium]</a></li>
+<li><a href="https://youtu.be/izZba4UA7iY?si=siGI9JYQEDxEctrN">Stanford CS336 Language Modeling from Scratch | Spring 2026 | Lecture 5: GPUs, TPUs</a></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
