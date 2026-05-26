@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="OpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。">
+<meta name="description" content="行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。">
 
-<title>AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋</title>
+<title>行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -82,15 +82,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋 – jiwasawaのブログ">
-<meta property="og:description" content="OpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。">
-<meta property="og:image" content="https://picsum.photos/id/107/200">
+<meta property="og:title" content="行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか） – jiwasawaのブログ">
+<meta property="og:description" content="行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。">
+<meta property="og:image" content="https://picsum.photos/id/193/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋 – jiwasawaのブログ">
-<meta name="twitter:description" content="OpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。">
-<meta name="twitter:image" content="https://picsum.photos/id/107/200">
+<meta name="twitter:title" content="行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか） – jiwasawaのブログ">
+<meta name="twitter:description" content="行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。">
+<meta name="twitter:image" content="https://picsum.photos/id/193/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -146,15 +175,14 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">AIが数学オリンピックを制覇した日：OpenAIのIMO金メダル獲得と、その先にある「超知能」への道筋</h1>
+      <h1 class="title">行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</h1>
                   <div>
         <div class="description">
-          OpenAIによる国際数学オリンピック金メダル獲得という歴史的快挙を題材に、AIが到達した新たな思考レベルと、Googleとの競争が加速させる「超知能」への道筋を分析する。
+          行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">LLM</div>
-                <div class="quarto-category">AI</div>
+                <div class="quarto-category">GPU</div>
               </div>
                   </div>
   </div>
@@ -172,7 +200,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年8月1日</p>
+        <p class="date">2026年5月26日</p>
       </div>
     </div>
     
@@ -191,41 +219,70 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>OpenAIが、ついにAI研究における長年の悲願であった国際数学オリンピック（IMO）での金メダル性能を達成したと発表した。Sam Altmanが数年前から目標として掲げていたこのマイルストーンは、単なる計算能力の向上ではなく、人間のトップレベルの創造性やひらめきが求められる領域へのAIの進出を意味する。</p>
-<p>驚くべきことに、この歴史的快挙を成し遂げたコアチームは、Alexander Wei氏、Sheryl Hsu氏、Noam Brown氏というわずか3人の研究者による、ここ数ヶ月の「スプリント」だったという。多くの人が「2025年中の達成は無理だろう」と懐疑的だった中、彼らは一体どのようにしてこの偉業を成し遂げたのか。<a href="https://www.youtube.com/watch?v=EEIPtofVe2Q">7/30に公開されたSequoia Capitalのインタビュー</a>からそのアプローチと舞台裏に迫る。</p>
-<section id="imo金メダルの何がそんなに凄いのか" class="level2">
-<h2 class="anchored" data-anchor-id="imo金メダルの何がそんなに凄いのか">「IMO金メダル」の何がそんなに凄いのか？</h2>
-<p>まず、この成果の画期的な点を整理しよう。</p>
+<p>機械学習やハイパフォーマンスコンピューティング（HPC）のコミュニティにおいて、「行列の形状（Shape）が行列乗算（Matmul）のパフォーマンスに極めて大きな影響を与える」という事実は、一種の暗黙知として広く共有されている。しかし、時折、非常に直感に反する現象に遭遇することがある。例えば、「行列のサイズを<strong>大きくした</strong>にもかかわらず、計算の<strong>絶対的な実行時間</strong>が短くなる」という現象である。計算量（Work）が増加しているのにもかかわらず、より速く処理が完了するのだ。</p>
+<p>この不可解な現象は、GPUがこれらの基本的な演算をどのように実行しているのか、そのアーキテクチャの深淵を覗き込むことで説明が可能である。</p>
+<p>本稿では、<a href="https://www.thonking.ai/p/what-shapes-do-matrix-multiplications">Horace He氏によるオリジナルの解説記事</a>の洞察を交えながら、行列乗算の形状がなぜこれほどまでに重要なのかを解き明かす。具体的には、パフォーマンスを支配する3つの重要な概念、すなわち<strong>計算強度と並列化（Compute Intensity and Parallelization）</strong>、<strong>タイリング（Tiling）</strong>、そして<strong>ウェーブ量子化（Wave Quantization）</strong>について詳細に解説する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="image.jpg" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://www.thonking.ai/p/what-shapes-do-matrix-multiplications">What Shapes Do Matrix Multiplications Like? [medium]</a>より引用</figcaption>
+</figure>
+</div>
+<section id="計算強度と並列性の必要性" class="level2">
+<h2 class="anchored" data-anchor-id="計算強度と並列性の必要性">1. 計算強度と並列性の必要性</h2>
+<p>グラフの全体的な傾向として、行列のサイズ <span class="math inline">\(N\)</span> が大きくなるにつれて、Matmulのパフォーマンス（FLOPs）は向上していく。これには主に2つの要因が存在する。</p>
+<p>第一に、<strong>オーバーヘッドの相対的な減少と並列性の確保</strong>である。GPU上で計算カーネルを起動（Launch）する際、Streaming Multiprocessors (SMs) のセットアップや同期処理など、一定の固定オーバーヘッドが発生する。計算すべきタスクの量が増えれば、この固定オーバーヘッドが全体の実行時間に占める割合は小さくなる。さらに重要なのは、GPUが膨大な数の並列コアを搭載しているという事実である。これらのコアを休ませることなく最大スループットを達成するには、GPUを飽和させるのに十分な「並列化可能なタスク」が必要となる。行列サイズが小さい場合、GPUのリソースを完全に使い切るだけのタスクを供給できないのである。</p>
+<p>第二に、<strong>算術強度（Arithmetic Intensity）の向上</strong>である。行列乗算には、メモリへのアクセスと実際の計算（FLOPs）の両方が含まれる。ハードウェアの特性上、メモリアクセスは計算に比べて桁違いに高コストである。サイズ <span class="math inline">\(N\)</span> の正方行列の乗算を考えた場合、計算量は <span class="math inline">\(2N^3\)</span> FLOPs であるのに対し、メモリアクセス量は <span class="math inline">\(3N^2\)</span> となる。つまり、<span class="math inline">\(N\)</span> が大きくなるにつれて、メモリアクセスに対する計算の比率（<span class="math inline">\(\mathcal{O}(N)\)</span>）が上昇する。これにより、データの到着を待つ時間が相対的に減少し、純粋な計算に費やされる時間の割合が増加する。これが算術強度の向上である。</p>
+<p>十分な計算強度と並列性が確保されていない小さな行列では、メモリアクセス律速やGPUリソースの過少利用がボトルネックとなり、低いパフォーマンスしか得られない。</p>
+</section>
+<section id="タイリングメモリレイアウトがもたらす影響" class="level2">
+<h2 class="anchored" data-anchor-id="タイリングメモリレイアウトがもたらす影響">2. タイリング：メモリレイアウトがもたらす影響</h2>
+<p>計算強度の概念は、パフォーマンスが右肩上がりになる全体的なトレンドを説明する。しかし、プロットに見られる「激しい上下の振動（Squiggly lines）」や、行列サイズによる劇的なパフォーマンスの差異を説明するには不十分である。この複雑な挙動の主たる原因は<strong>タイリング（Tiling）</strong>にある。</p>
+<p>タイリングとは、巨大な行列をGPUの高速なオンチップキャッシュ（共有メモリなど）に収まるサイズの小さなブロック（Tile）に分割して処理する最適化手法である。このタイリングプロセスの効率は、行列のデータがメモリ上でどのように配置されているか（メモリレイアウト）に決定的に依存する。</p>
 <ul>
-<li><strong>人間のトップ頭脳と同じ土俵での勝負：</strong> AIは、人間の参加者と全く同じルール（4.5時間の試験を2回、ツールやインターネットは使用不可）で、2025年のIMO問題に挑戦した。</li>
-<li><strong>圧倒的なスコア：</strong> 6問中5問を正答し、合計42点満点中35点を獲得。このスコアは、人間の参加者であれば余裕で金メダルに相当する。採点は3名の元IMOメダリストが担当し、満場一致で正答と認められた。</li>
-<li><strong>思考の持続時間が桁違い：</strong> これまでの数学ベンチマークは、トップレベルの人間でも数秒〜数分で解けるものが大半だった。しかしIMOの問題は、平均して1問あたり100分以上の持続的かつ創造的な思考を必要とする。AIの推論能力が、この時間軸に到達したことの意義は計り知れない。</li>
+<li><p><strong>アライメントの取れたメモリレイアウト（Aligned Memory Layout）：</strong> 行列の次元がキャッシュラインサイズ（例えばGPUでは32要素など）の完全な倍数である場合、タイルの各行はキャッシュラインと綺麗に整列（アライン）する。この状態では、GPUは必要な要素を含むキャッシュラインだけを正確かつ無駄なくロードできるため、極めて効率的なメモリアクセスが実現する。</p></li>
+<li><p><strong>アライメントの崩れたメモリレイアウト（Unaligned Memory Layout）：</strong> 行列の次元がキャッシュラインサイズの倍数でない場合、論理的な行の境界と物理的なキャッシュラインの境界にズレが生じる。これにより、タイル内のある行を読み込む際に、本来不要な隣接するキャッシュラインのデータまで強制的にロードしなければならなくなる。この冗長なメモリアクセスは、メモリ帯域を浪費し、計算を著しく遅延させる。</p></li>
 </ul>
-<p>インタビューでNoam Brown氏が語ったように、AIの数学能力の進歩は凄まじい。数年前は小学生レベルの算数で苦戦していたモデルが、GSM8K（小学校レベル）、MATHベンチマーク（高校レベル）、AIME（トップ高校レベル）、そしてついにIMOという最高峰の壁を、わずか数年で次々と突破してしまったのだ。この速度感こそが、今回のニュースの核心である。</p>
+<p>この現象は、時に「タイル量子化（Tile Quantization）」と混同されるが、タイル量子化が主にタイルの境界サイズにおけるタスク数の非連続な増加による効率低下を指すのに対し、メモリレイアウトの問題は、<strong>カーネルの実行開始時点で既に勝敗が決している</strong>という点でより深刻である。次元数がほんの少し（例えば数要素）変わるだけで、アライメントの取れた完璧なメモリアクセスパターンが破壊され、大幅なパフォーマンスの低下（時には半分以下になることすらある）を引き起こすのである。</p>
 </section>
-<section id="汎用技術という異端のアプローチ" class="level2">
-<h2 class="anchored" data-anchor-id="汎用技術という異端のアプローチ">汎用技術という「異端」のアプローチ</h2>
-<p>今回のIMOモデルがさらに興味深いのは、その開発アプローチだ。チェスのDeep Blueや囲碁のAlphaGoのように、特定のタスクに特化した「特化型AI」を開発したわけではない。チームが優先したのは、（以前Alexander Wei氏とNoam Brown氏が開発に携わったCICEROと同じく）あらゆるタスクに応用可能な「汎用技術」だった。</p>
-<p>具体的には、以下の2点が挙げられる。</p>
+<section id="ウェーブ量子化見えざる追加ウェーブのコスト" class="level2">
+<h2 class="anchored" data-anchor-id="ウェーブ量子化見えざる追加ウェーブのコスト">3. ウェーブ量子化：見えざる「追加ウェーブ」のコスト</h2>
+<p>さらに不可解なのは、行列の次元が32などの重要なファクターで割り切れる（つまりアライメントが取れている）にもかかわらず、特定の周期で「縞模様（Striped）」のようにパフォーマンスが急落するパターンが存在することだ。この現象は<strong>ウェーブ量子化（Wave Quantization）</strong>に起因する。</p>
+<p>この概念を理解するために、単純な思考実験を行ってみよう。 あなたが並列に実行可能な <span class="math inline">\(N\)</span> 個のタスクと、<span class="math inline">\(N\)</span> 個の処理ユニット（プロセッサ）を持っているとする。すべてのタスクはちょうど1秒で完了する。 * <span class="math inline">\(N\)</span> 個のタスクを処理するのに何秒かかるか？ → 答えは1秒である。すべてのプロセッサが一斉に稼働し、1つの「ウェーブ（Wave）」で完了する。 * では、タスクが <span class="math inline">\(N+1\)</span> 個になったらどうなるか？ → 答えは2秒である。<span class="math inline">\(N\)</span> 個のプロセッサのうち1つが、2つ目のタスクを引き受けなければならず、全体のレイテンシは実質的に2倍になる。</p>
+<p>行列乗算のコンテキストにおいて、この「タスク」は計算用の「スレッドブロック（Thread Block）」または「タイル」に相当し、「処理ユニット」はGPUの Streaming Multiprocessors (SMs) である。</p>
+<p>行列サイズが大きくなると、必要なスレッドブロックの総数も増加する。この総数が、GPUに搭載されている利用可能な SM の数の倍数を超えた瞬間、タスクを処理しきれずに追加の「ウェーブ」が必要となる。このウェーブの切り替わりポイントにおいて、処理能力にアイドルな（何もしていない）SMが大量に発生し、パフォーマンス（TFLOPS）が急激に低下する。</p>
+<p>例えば、NVIDIA A100 GPU は 108 基の SM を搭載している。ある CUTLASS ベースの Matmul カーネルが <span class="math inline">\(256 \times 128\)</span> のタイルサイズを使用しているとする。行列サイズ <span class="math inline">\(N=1792\)</span> の場合、グリッドサイズは <span class="math inline">\((1792/256) \times (1792/128) = 7 \times 14 = 98\)</span> タイルとなる。98は108未満なので、ちょうど1ウェーブで収まる。 しかし、<span class="math inline">\(N=1793\)</span> になった瞬間、グリッドサイズは切り上げられて <span class="math inline">\(8 \times 15 = 120\)</span> タイルとなる。108を超えるため、2ウェーブの実行が必要となり、パフォーマンスは劇的に悪化する。</p>
+<p>ウェーブ量子化は、具体的なカーネルのパラメータ（タイルサイズなど）やハードウェアの SM 数に強く依存するため、予測や回避が困難な罠となる。プロファイリングツールを活用することで、cuBLASがアルゴリズムを切り替えたタイミングや、この隠れたパフォーマンス低下の要因を特定することが可能である。</p>
+<p>近年では、このウェーブ量子化の制約を根本から打ち破るアプローチとして、<strong>Stream-K</strong> のような革新的なアルゴリズムに関する研究も進んでいる。Stream-K は、従来のタイルベースの物理的な分割ではなく、内側のループイテレーションをプロセッシングエレメント間でワークセントリック（Work-centric）に分割することで、いかなる行列形状に対しても計算リソースをほぼ完璧に利用（Near-perfect utilization）することを目指しており、ウェーブ量子化の回避に光明を投じている。</p>
+</section>
+<section id="torch.compile-は万能薬か" class="level2">
+<h2 class="anchored" data-anchor-id="torch.compile-は万能薬か">4. <code>torch.compile</code> は万能薬か？</h2>
+<p>PyTorchの <code>torch.compile</code> のような最新のコンパイラツールは、Pythonコードを自動的に最適化する際、行列をよりパフォーマンスの高い形状（例えば32の倍数など）にパディング（Padding）する処理を試みる。これにより、開発者が形状を意識しなくてもある程度の最適化が施される。</p>
+<p>しかし、これらの自動ツールがすべての問題を解決できるわけではなく、いくつかの制限が存在する。</p>
 <ol type="1">
-<li><strong>検証困難なタスクに対する強化学習：</strong> IMOの証明問題には、ゲームのように明確で検証しやすい報酬（勝ち/負け）が存在しない。AIが出力した数ページにわたる証明が「本当に正しいか」を判断するのは非常に難しい。チームは、このような「検証困難なタスク（Hard-to-verify problem）」をうまく扱うための、新しい強化学習の地平を切り拓いた。</li>
-<li><strong>自然言語による推論へのこだわり：</strong> 数学の証明には「Lean」のような形式的検証言語を用いるアプローチもある。しかしチームは、より汎用性の高い<strong>自然言語</strong>による証明にこだわった。Alex Wei氏が言うように、「世界の多くの問題は、形式化できるものよりも、非形式的な推論でアプローチできるものの方が多い」からだ。</li>
+<li><strong>コピーのオーバーヘッド（Copying Overhead）：</strong> パディングを行うには、通常、メモリ上で新しい行列のコピーを作成する必要がある。演算の途中のテンソルであればオペレーションのフュージョン（Fusion）で隠蔽できることもあるが、入力データ（例えば Network の重み行列など）をパディングする場合、このメモリコピーによるオーバーヘッドが避けられず、かえって遅くなるケースがある。</li>
+<li><strong>ウェーブ量子化の複雑性：</strong> キャッシュアライメントのためのパディングは比較的単純だが、特定のハードウェアの SM 数や動的なバッチサイズに依存するウェーブ量子化の問題をコンパイラが自動で完全に解決するのは極めて困難である。依然として、手動での介入や慎重な形状設計が求められる領域が残されている。</li>
 </ol>
-<p>このアプローチの結果、AIが出力する証明は「お世辞にも読みやすいとは言えないひどい（atrociousな）もの」になったという。しかし、その論理は完璧であり、AIの思考の「生」の状態を我々に見せつけている。ちなみに、この証明をChatGPTに食わせて「もっと読みやすく書き直して」と頼むこともできたが、チームは透明性を重視し、あえて生の出力のまま公開したそうだ。</p>
 </section>
-<section id="解けなかった第6問とaiの自己認識" class="level2">
-<h2 class="anchored" data-anchor-id="解けなかった第6問とaiの自己認識">解けなかった「第6問」とAIの自己認識</h2>
-<p>このモデルは5問を解いたが、伝統的に最難関とされる第6問（この年は組合せ論の問題）には手も足も出なかった。大量の計算リソースを投入したにもかかわらず、最終的な出力は「解答なし（no answer）」だった。</p>
-<p>一見すると残念な結果だが、チームはこの結果にこそ希望を見出している。なぜなら、これはAIが<strong>自らの能力の限界を認識している</strong>ことを示唆しているからだ。</p>
-<p>数年前のモデルであれば、解けない問題に対してもっともらしい嘘の解答を平気で生成（ハルシネーション）していただろう。しかし今回のモデルは、膨大な思考の末に「これは無理だ」と白旗を上げた。インタビュー中に明かされた、モデルが思考の途中で「難しそうだ（seems hard）」と呟いていたというエピソードは、AIが新たなレベルの自己認識を獲得しつつあることを示す面白い証拠と言える。</p>
-</section>
-<section id="次の戦場はどこか" class="level2">
-<h2 class="anchored" data-anchor-id="次の戦場はどこか">次の戦場はどこか？</h2>
-<p>IMOを制覇した今、AIの数学能力における次のフロンティアはどこになるのか。チームは「コンペ数学の時代は終わった」と断言する。次の目標は、数ヶ月、数年単位の思考を必要とする「未解決の数学研究」だ。IMOが1.5時間の思考だとすれば、研究レベルの数学は1500時間以上の思考を要する。まだ1000倍の隔たりがあるが、この数年の進歩のペースを考えれば、それも決して夢物語ではないだろう。</p>
-<p>そして、この物語はOpenAIだけで終わらない。奇しくも同じ2025年のIMOで、Googleのモデル（8/1に<a href="https://blog.google/products/gemini/gemini-2-5-deep-think/">Gemini 2.5 Deep Thinkとして公開</a>）も同様に金メダル性能に到達していたことが明らかになった。</p>
-<p>AIによる科学的発見の時代は、我々の想像を遥かに超えるスピードで近づいている。一つの山頂が見えたと思ったら、そこは次の巨大な山脈の麓に過ぎなかった。AI開発のレースは、新たなステージに突入したのだ。</p>
+<section id="結論" class="level2">
+<h2 class="anchored" data-anchor-id="結論">結論</h2>
+<p>Large Language Model (LLM) をはじめとする現在のディープラーニングモデル内で実行されている行列乗算の形状（Shape）は、決して恣意的に決めてよいものではない。それは、並列性の活用、メモリへのアクセスパターン、そしてスレッドブロックのスケジューリング（ウェーブ）を通じて、最終的な実行パフォーマンスに極めて深い影響を及ぼしている。</p>
+<p>タイリングによるメモリアライメントや、ウェーブ量子化といった背後にある概念を深く理解することで、我々は以下の恩恵を得ることができる。</p>
+<ul>
+<li><strong>パフォーマンス問題の診断：</strong> 特定のバッチサイズや埋め込み次元において、なぜ突然モデルの学習や推論が遅くなるのかを論理的に特定できる。</li>
+<li><strong>コードの最適化：</strong> 対象となる GPU アーキテクチャに適合するように、手動で行列をパディングしたり、ネットワークのハイパーパラメータ（次元数など）を賢く選択できる。</li>
+<li><strong>限界性能の引き出し：</strong> ほんのわずかな形状の調整（数要素の追加や削減）によって、全体のパフォーマンスをさらに10〜15%向上させることが可能となる。</li>
+</ul>
+<p>コンパイラや自動最適化ツールの進化は目覚ましいが、ハードウェアとアルゴリズムの境界で起きているこれらの根本的な原理を理解することは、機械学習エンジニアや HPC リサーチャーにとって、極限のパフォーマンス（Peak Performance）を達成するための強力な武器であり続けるだろう。</p>
+<section id="参考" class="level4">
+<h4 class="anchored" data-anchor-id="参考">参考:</h4>
+<ul>
+<li><a href="https://www.thonking.ai/p/what-shapes-do-matrix-multiplications">What Shapes Do Matrix Multiplications Like? [medium]</a></li>
+<li><a href="https://youtu.be/izZba4UA7iY?si=siGI9JYQEDxEctrN">Stanford CS336 Language Modeling from Scratch | Spring 2026 | Lecture 5: GPUs, TPUs</a></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

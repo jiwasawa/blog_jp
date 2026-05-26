@@ -9,8 +9,18 @@
 <link>https://jiwasawa.github.io/blog_jp/</link>
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
-<generator>quarto-1.9.37</generator>
-<lastBuildDate>Mon, 25 May 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Tue, 26 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/horace-he-matmuls/</link>
+  <description><![CDATA[ 行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。 ]]></description>
+  <category>GPU</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/horace-he-matmuls/</guid>
+  <pubDate>Tue, 26 May 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/193/200" medium="image"/>
+</item>
 <item>
   <title>Jane StreetのGPU戦略と「AGI完全」な金融市場</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,17 +126,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/terence-tao-dwarkesh/</guid>
   <pubDate>Wed, 22 Apr 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/184/200" medium="image"/>
-</item>
-<item>
-  <title>Interleaved Head Attention (IHA) 入門：LLMの推論能力を拡張する新たなアテンション機構</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/interleaved-head-attention/</link>
-  <description><![CDATA[ Multi-Head Attention (MHA)のヘッドの独立性という限界を克服し、LLMの多段推論能力を大幅に向上させるInterleaved Head Attention (IHA)の理論と実証結果を解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/interleaved-head-attention/</guid>
-  <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/183/200" medium="image"/>
 </item>
 </channel>
 </rss>
