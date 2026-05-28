@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/oriol-vinyals-unsupervised-learning/index.html",
       "/posts/horace-he-matmuls/index.html",
       "/posts/jane-street-dwarkesh/index.html",
       "/posts/slimqwen/index.html",
