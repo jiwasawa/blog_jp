@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。">
+<meta name="description" content="Google DeepMindのOriol Vinyals氏へのインタビューから、GoogleがWorld ModelsとContinuous Learningを通じてAGIを目指す戦略と、AI開発におけるパラダイムシフトの兆しを読み解く。">
 
-<title>Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰</title>
+<title>Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -82,44 +82,15 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰 – jiwasawaのブログ">
-<meta property="og:description" content="MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。">
-<meta property="og:image" content="https://picsum.photos/id/131/200">
+<meta property="og:title" content="Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地 – jiwasawaのブログ">
+<meta property="og:description" content="Google DeepMindのOriol Vinyals氏へのインタビューから、GoogleがWorld ModelsとContinuous Learningを通じてAGIを目指す戦略と、AI開発におけるパラダイムシフトの兆しを読み解く。">
+<meta property="og:image" content="https://picsum.photos/id/194/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰 – jiwasawaのブログ">
-<meta name="twitter:description" content="MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。">
-<meta name="twitter:image" content="https://picsum.photos/id/131/200">
+<meta name="twitter:title" content="Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地 – jiwasawaのブログ">
+<meta name="twitter:description" content="Google DeepMindのOriol Vinyals氏へのインタビューから、GoogleがWorld ModelsとContinuous Learningを通じてAGIを目指す戦略と、AI開発におけるパラダイムシフトの兆しを読み解く。">
+<meta name="twitter:image" content="https://picsum.photos/id/194/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -175,15 +146,16 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Back to Basics: 拡散モデルは「ノイズ」ではなく「データ」を予測すべきという原点回帰</h1>
+      <h1 class="title">Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地</h1>
                   <div>
         <div class="description">
-          MITの研究者らが、拡散モデルはノイズではなくクリーンなデータを直接予測すべきだと提唱し、ViTを用いたシンプルなJiTモデルで高解像度画像生成に成功した研究を解説する。
+          Google DeepMindのOriol Vinyals氏へのインタビューから、GoogleがWorld ModelsとContinuous Learningを通じてAGIを目指す戦略と、AI開発におけるパラダイムシフトの兆しを読み解く。
         </div>
       </div>
                           <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
-                <div class="quarto-category">Transformer</div>
+                <div class="quarto-category">Podcast</div>
               </div>
                   </div>
   </div>
@@ -201,7 +173,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年12月18日</p>
+        <p class="date">2026年5月29日</p>
       </div>
     </div>
     
@@ -220,126 +192,30 @@ window.Quarto = {
 
 
 
-<p>近年、生成AIの分野、特に画像生成においては「拡散モデル（Diffusion Models）」が圧倒的な成功を収めている。Stable DiffusionやDALL-E 3といった最先端モデルの多くは、ノイズ予測（<span class="math inline">\(\epsilon\)</span>-prediction）または速度予測（<span class="math inline">\(v\)</span>-prediction）というアプローチを採用している。しかし、Kaiming Heらによる最新の論文「<a href="https://arxiv.org/html/2511.13720v1">Back to Basics: Let Denoising Generative Models Denoise</a>」は、この支配的なパラダイムに根本的な疑問を投げかけた。</p>
-<p>彼らの主張はシンプルかつ強力である。「<strong>デノイジングモデルなのだから、ノイズではなくクリーンなデータを直接予測させるべきだ</strong>」というものだ。</p>
-<p>本記事では、この論文が提唱する「<span class="math inline">\(x\)</span>-prediction（データ予測）」の理論的背景である多様体仮説（Manifold Hypothesis）と、それを実装した極めてシンプルなアーキテクチャ「Just image Transformers (JiT)」について、その技術的詳細と意義を解説する。</p>
-<section id="なぜノイズ予測が標準だったのか" class="level2">
-<h2 class="anchored" data-anchor-id="なぜノイズ予測が標準だったのか">なぜ「ノイズ予測」が標準だったのか？</h2>
-<p>拡散モデルの基本原理は、データに徐々にノイズを加えていく順方向プロセスと、そのノイズを除去してデータを復元する逆方向プロセス（デノイジング）にある。</p>
-<p>DDPM（Denoising Diffusion Probabilistic Models）[Ho et al., 2020] 以降、多くのモデルは学習目標として「加えられたノイズ <span class="math inline">\(\epsilon\)</span> を予測すること」を採用してきた。ニューラルネットワークは、時刻 <span class="math inline">\(t\)</span> におけるノイズ付き画像 <span class="math inline">\(x_t\)</span> を入力とし、そこに含まれるノイズ成分 <span class="math inline">\(\epsilon_\theta(x_t, t)\)</span> を出力するように訓練される。</p>
-<p><span class="math display">\[L_{\text{simple}} = \mathbb{E}_{t, x_0, \epsilon} [ \| \epsilon - \epsilon_\theta(x_t, t) \|^2 ]\]</span></p>
-<p>このアプローチが普及した理由は、初期の研究において、クリーンな画像 <span class="math inline">\(x_0\)</span> を直接予測するよりも、ノイズ <span class="math inline">\(\epsilon\)</span> を予測する方が実験的に良好な結果が得られたためである。しかし、この論文の著者らは、その常識が高次元データにおいては破綻すると指摘する。</p>
+<p>Google I/Oが閉幕し、AI界隈が新しい発表の余韻に浸る中、Google DeepMindのVP of ResearchでありGeminiプログラムのCo-Leadを務めるOriol Vinyalsが、<a href="https://youtu.be/NQczevdpxq0?si=c_JoihuNvIDS-Sub">「Unsupervised Learning」podcastに出演した</a>。</p>
+<p>OpenAIのGPT 5.5 や Anthropic の Opus 4.8でみられるように各社が推論（Reasoning）とPost-trainingでのReinforcement Learning (RL) に興じている中、Googleは頑なにマルチモーダルとWorld Modelsを中心としたAGIへの道程を説き続けている。Vinyalsのインタビューから読み取れるGoogleの深謀遠慮と、次世代AIのアーキテクチャについて分析する。</p>
+<section id="視覚情報における未だ見ぬgpt-moment" class="level2">
+<h2 class="anchored" data-anchor-id="視覚情報における未だ見ぬgpt-moment">視覚情報における未だ見ぬ「GPT Moment」</h2>
+<p>Vinyalsが強調するのは、World ModelsこそがArtificial General Intelligence (AGI) への最短経路であるという確信だ。テキストという人間が既に高度に抽象化し、ラベル付けを済ませたデータセットを食い尽くしつつある現在、次なる知能の跳躍は画像やビデオから物理法則や文脈を直接抽出するRepresentation Learningにかかっている。</p>
+<p>現状のマルチモーダルモデルは、確かに画像を入力してキャプションを生成したり、動画の文脈を理解したりと「マジカル」な挙動を見せる。しかし、Vinyalsによれば、我々はまだ視覚データにおける「GPT moment」を目撃していない。真のGPT momentとは、テキストによる明示的な紐付けなしに、膨大な動画データから「重力とは何か」「物体が衝突した際の物理的挙動はどうなるか」といった世界の概念を純粋に抽出し、それを理解・操作できるようになる瞬間だ。シミュレーションと現実世界のギャップを埋め、ロボティクスの分野で精密なモーターコントロールから大局的なプランニングまでを自律的にこなすようになるには、この純粋なWorld Modelsの完成が不可欠となる。</p>
 </section>
-<section id="多様体仮説と次元の呪い" class="level2">
-<h2 class="anchored" data-anchor-id="多様体仮説と次元の呪い">多様体仮説と「次元の呪い」</h2>
-<p>本論文の核心的な洞察は、機械学習における古典的な概念である<strong>多様体仮説（Manifold Hypothesis）</strong>に立ち返る点にある。</p>
-<section id="データは低次元ノイズは高次元" class="level3">
-<h3 class="anchored" data-anchor-id="データは低次元ノイズは高次元">データは低次元、ノイズは高次元</h3>
-<p>多様体仮説とは、「高次元空間にある自然データ（画像など）は、実際にはその空間内に埋め込まれた低次元の多様体（Manifold）上に分布している」という仮定である。</p>
-<ul>
-<li><strong>クリーンなデータ (<span class="math inline">\(x\)</span>):</strong> 低次元の多様体上に存在する。構造化されており、規則性がある。</li>
-<li><strong>ノイズ (<span class="math inline">\(\epsilon\)</span>):</strong> 高次元空間全体に均一に広がる。ランダムであり、構造を持たない。</li>
-</ul>
-<p>従来の手法のようにネットワークに「ノイズ」を予測させようとすると、ネットワークは高次元空間全体に広がる複雑なランダム情報を表現しなければならない。これには極めて高いモデル容量（Capacity）が必要となる。</p>
-<p>一方で、「クリーンなデータ」を予測させる（<span class="math inline">\(x\)</span>-prediction）場合、ネットワークは入力からノイズを「捨て」、低次元の多様体へ射影することを目指せばよい。これは、モデルの容量が限られていても達成しやすいタスクである。</p>
+<section id="rlの苦悩とscaffoldingの自己記述" class="level2">
+<h2 class="anchored" data-anchor-id="rlの苦悩とscaffoldingの自己記述">RLの苦悩とScaffoldingの自己記述</h2>
+<p>界隈ではOpenAIに代表されるように、Post-trainingにおけるRLの活用が一種の銀の弾丸として扱われている。しかし、VinyalsはRLの適用において冷静な見方を示している。AlphaGoが「Move 37」で世界を驚愕させたように、ゲームの世界では自己対戦によって無限に複雑な環境を生成し、データをタダで手に入れることができた。しかし、言語や一般的なタスクにおいて「無限の複雑さの源泉」を見つけるのは容易ではない。LLMは依然としてデータ制限の壁に直面しており、数学やコーディングのような検証可能（Verifiable）なドメイン以外でのRLの汎化能力には疑問符が残る。</p>
+<p>一方で、AIエージェントの構築においては興味深いパラダイムシフトが起きつつある。現状、開発者たちはモデルの周囲に複雑なScaffolding（足場となるコードやシステム）を必死に構築し、マルチエージェントの協調や長期タスクの実行を制御しようとしている。だがVinyalsは、究極的にはこのScaffolding自体をモデルがその場で動的に記述するようになると指摘する。ユーザーの要求の複雑さに応じて、モデル自身が「どれくらい長く考えるべきか」「どのSub-agentsを生成すべきか」を決定し、Token効率の良い最適なアーキテクチャを都度生み出す未来だ。これはつまり、我々が現在血眼になって開発しているエージェントフレームワークの大半が、基盤モデルの進化によって自然消滅する（Wash outされる）ことを意味している。</p>
 </section>
-<section id="高次元パッチにおける破綻" class="level3">
-<h3 class="anchored" data-anchor-id="高次元パッチにおける破綻">高次元パッチにおける破綻</h3>
-<p>現在のVision Transformer (ViT) ベースの拡散モデルでは、画像をパッチに分割して処理する。パッチサイズを大きくすると（例: <span class="math inline">\(16 \times 16\)</span> や <span class="math inline">\(32 \times 32\)</span> ピクセル）、1つのトークンが持つ次元数は数百から数千（例: <span class="math inline">\(32 \times 32 \times 3 = 3072\)</span>次元）に達する。</p>
-<p>論文の実験によると、このような高次元トークン空間において、従来の <span class="math inline">\(\epsilon\)</span>-prediction や <span class="math inline">\(v\)</span>-prediction は壊滅的な失敗（Catastrophic Failure）を起こすことが判明した。これは、モデルがノイズの高次元な情報を捉えきれないためである。対照的に、<span class="math inline">\(x\)</span>-prediction はこの高次元環境下でも安定して学習し、高品質な生成が可能であることが示された。</p>
+<section id="記憶の外部化weightsへの焼き付けからの脱却" class="level2">
+<h2 class="anchored" data-anchor-id="記憶の外部化weightsへの焼き付けからの脱却">記憶の外部化：Weightsへの焼き付けからの脱却</h2>
+<p>エージェントがより長期的なタスクをこなすようになると、必然的にContinuous Learning（継続的学習）とMemory（記憶）の扱いが最大の課題となる。昨今のContext Windowの肥大化（Gemini 1.5の数百万Tokenの入力が可能になることなど）は一種のWorking Memoryの拡張と言えるが、それだけでは不十分だ。</p>
+<p>Vinyalsは認知神経科学の知見を引き合いに出し、Episodic Memoryの重要性を語る。実運用の観点（Serving scale）から言えば、ユーザーごとの膨大な相互作用の履歴をモデルのWeights（重み）に直接焼き付けるのは非現実的だ。月額数千円の課金ユーザーごとに独自のモデルをホストするなど、SaaSの経済学から見ても狂気の沙汰である。</p>
+<p>そこで彼が提唱するのは、モデルがファイルシステムのようなNon-parametricな記憶領域にアクセスし、自ら情報を書き込み、ディレクトリを構造化し、必要な時に検索・取得するというアプローチだ。最近になって各社のLLMが「記憶力」をアピールし始めたが、これはまさにこの方向性への第一歩だろう。ユーザーとの長期間のやり取りを通じてモデルが自己の知識ベースを構築・更新していくこの手法は、数年前のReasoningの登場と同等かそれ以上のインパクトを業界にもたらすはずだ。</p>
 </section>
-</section>
-<section id="just-image-transformers-jit極限まで単純化されたモデル" class="level2">
-<h2 class="anchored" data-anchor-id="just-image-transformers-jit極限まで単純化されたモデル">Just image Transformers (JiT)：極限まで単純化されたモデル</h2>
-<p>この理論的洞察に基づき、著者らは「JiT (Just image Transformers)」と名付けた極めてシンプルなモデルを提案している。</p>
-<section id="jitのアーキテクチャ" class="level3">
-<h3 class="anchored" data-anchor-id="jitのアーキテクチャ">JiTのアーキテクチャ</h3>
-<p>JiTの設計思想は「余計なものを一切排除する」点にある。</p>
-<ul>
-<li><strong>Plain Vision Transformer:</strong> 特殊な改良を加えない、標準的なViTを使用。</li>
-<li><strong>ピクセル空間での直接動作:</strong> Stable DiffusionのようにVAE（Variational Autoencoder）を用いて潜在空間（Latent Space）に圧縮することをしない。</li>
-<li><strong>トークナイザーなし:</strong> VQ-VAEのような離散トークナイザーも使用しない。</li>
-<li><strong>補助損失なし:</strong> Adversarial Loss（GAN的損失）やPerceptual Loss（知覚的損失）も使用しない。</li>
-<li><strong><span class="math inline">\(x\)</span>-predictionの採用:</strong> ネットワークの最終出力層から、クリーンな画像パッチを直接予測する。</li>
-</ul>
-<p>これは、近年の「Latent Diffusion」や複雑な「U-Net」構造へのアンチテーゼとも言えるアプローチである。</p>
-</section>
-<section id="ボトルネックの意外な効用" class="level3">
-<h3 class="anchored" data-anchor-id="ボトルネックの意外な効用">ボトルネックの意外な効用</h3>
-<p>JiTにおける特筆すべき発見の一つは、ネットワーク内の<strong>ボトルネック（Bottleneck）</strong>の有効性である。</p>
-<p>通常、ディープラーニングではモデルの幅（Hidden Size）を広げることが性能向上につながると考えられがちである。しかし、JiTにおいては、パッチ埋め込み層（Patch Embedding）などで次元を意図的に削減するボトルネック構造を導入しても、性能が劣化しないどころか、むしろ向上する場合があることが確認された。</p>
-<p>これは多様体仮説と整合する。データの本質的な次元が低いため、ネットワークの内部表現を低次元に制約することで、モデルはノイズ成分を無視し、重要なデータ構造（多様体）の学習に集中できるようになるためであると考えられる。</p>
-</section>
-</section>
-<section id="実験結果とスケーラビリティ" class="level2">
-<h2 class="anchored" data-anchor-id="実験結果とスケーラビリティ">実験結果とスケーラビリティ</h2>
-<p>論文では、ImageNetデータセットを用いた実験により、JiTの有効性が実証されている。</p>
-<ol type="1">
-<li><strong>高解像度への適応:</strong> <span class="math inline">\(256 \times 256\)</span>、<span class="math inline">\(512 \times 512\)</span>、さらには <span class="math inline">\(1024 \times 1024\)</span> の解像度において、JiTは安定して動作した。特に高解像度化に伴ってパッチサイズを大きくしても（例: <span class="math inline">\(32\)</span> や <span class="math inline">\(64\)</span>）、<span class="math inline">\(x\)</span>-predictionのおかげで計算コストを爆発させずに学習が可能であった。</li>
-<li><strong>既存手法との比較:</strong> VAEや高度な正則化を用いた複雑なSOTAモデルと比較しても、JiTは事前学習なし（Training from Scratch）で競争力のあるFIDスコアを達成している。</li>
-<li><strong><span class="math inline">\(\epsilon\)</span>-predの失敗:</strong> パッチサイズを大きくしてトークンの次元数が上がると、<span class="math inline">\(\epsilon\)</span>-prediction を用いたモデルは学習が進まなくなる現象が明確に示された（下図の概念的な対比を参照）。</li>
-</ol>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">予測対象</th>
-<th style="text-align: left;">低次元データでの挙動</th>
-<th style="text-align: left;">高次元データ（大パッチ）での挙動</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><strong><span class="math inline">\(\epsilon\)</span>-prediction (ノイズ)</strong></td>
-<td style="text-align: left;">良好（現在の標準）</td>
-<td style="text-align: left;"><strong>破綻 (Catastrophic Failure)</strong></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong><span class="math inline">\(x\)</span>-prediction (データ)</strong></td>
-<td style="text-align: left;">良好</td>
-<td style="text-align: left;"><strong>良好 (Robust)</strong></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="議論なぜ今原点回帰なのか" class="level2">
-<h2 class="anchored" data-anchor-id="議論なぜ今原点回帰なのか">議論：なぜ今「原点回帰」なのか</h2>
-<p>この研究は、生成AIの設計思想における重要な転換点を示唆している。</p>
-<section id="トークナイザー依存からの脱却" class="level3">
-<h3 class="anchored" data-anchor-id="トークナイザー依存からの脱却">1. トークナイザー依存からの脱却</h3>
-<p>現在の画像生成の主流であるLatent Diffusion Models (LDM) は、強力な画像圧縮器（VAE）に依存している。しかし、画像以外のドメイン（気象データ、天体観測データ、タンパク質構造など）では、必ずしも適切なトークナイザーや圧縮器が存在するとは限らない。JiTのアプローチは、生のデータ（Raw Data）に対して直接Transformerを適用できるため、他分野への応用可能性が極めて高い。</p>
-</section>
-<section id="予測すべきものの再定義" class="level3">
-<h3 class="anchored" data-anchor-id="予測すべきものの再定義">2. 「予測すべきもの」の再定義</h3>
-<p>ニューラルネットワークは万能ではない。容量には限界がある。本研究は、モデルに何を予測させるか（Inductive Biasの設計）が、アーキテクチャの複雑さを増すこと以上に重要である可能性を示している。</p>
-</section>
-<section id="シンプルさの勝利" class="level3">
-<h3 class="anchored" data-anchor-id="シンプルさの勝利">3. シンプルさの勝利</h3>
-<p>「Back to Basics」というタイトルが示す通り、複雑怪奇になりがちな最新のモデルに対し、基礎的な原理（多様体仮説）に忠実であれば、標準的なTransformerだけで十分高度な生成が可能であることを示した点は、エンジニアリング的にも示唆に富む。</p>
-</section>
-</section>
-<section id="まとめ" class="level2">
-<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
-<p>「<a href="https://arxiv.org/html/2511.13720v1">Back to Basics: Let Denoising Generative Models Denoise</a>」は、拡散モデルにおける「常識」を覆す研究である。</p>
-<ul>
-<li><strong>ノイズ予測からデータ予測へ:</strong> 高次元データにおいては、ノイズ（<span class="math inline">\(\epsilon\)</span>）ではなくクリーンデータ（<span class="math inline">\(x\)</span>）を予測することが、多様体仮説の観点から合理的であり、実際に不可欠である。</li>
-<li><strong>JiTの提案:</strong> 素のVision Transformerを用いたシンプルなモデルで、高解像度画像の生成に成功した。</li>
-<li><strong>自己完結性:</strong> 外部のトークナイザーや事前学習済みモデルに依存しないため、多様なデータドメインへ適用できるポテンシャルを持つ。</li>
-</ul>
-<p>拡散モデルの研究は、より複雑なアーキテクチャや損失関数の組み合わせへと進む傾向があったが、本研究は「何を学習させるか」という根本的な問いに立ち返ることで、新たな突破口を開いたと言えるだろう。</p>
-</section>
-<section id="参考文献" class="level2">
-<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
-<ol type="1">
-<li>Li, T., &amp; He, K. (2025). <a href="https://arxiv.org/html/2511.13720v1">Back to Basics: Let Denoising Generative Models Denoise</a>. arXiv preprint arXiv:2511.13720.</li>
-<li>Ho, J., Jain, A., &amp; Abbeel, P. (2020). <a href="https://proceedings.neurips.cc/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf">Denoising diffusion probabilistic models</a>. <em>NeurIPS 2020</em>.</li>
-<li>Peebles, W., &amp; Xie, S. (2023). <a href="https://openaccess.thecvf.com/content/ICCV2023/papers/Peebles_Scalable_Diffusion_Models_with_Transformers_ICCV_2023_paper.pdf">Scalable diffusion models with transformers</a>. <em>ICCV 2023</em>. (DiT)</li>
-<li>Rombach, R., et al.&nbsp;(2022). <a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.pdf">High-resolution image synthesis with latent diffusion models</a>. <em>CVPR 2022</em>. (Stable Diffusion)</li>
-</ol>
+<section id="googleだからこそ可能な贅沢な探求" class="level2">
+<h2 class="anchored" data-anchor-id="googleだからこそ可能な贅沢な探求">Googleだからこそ可能な「贅沢な探求」</h2>
+<p>これらの長期的な研究を可能にしているのは、皮肉なことに、批判の的になりがちなGoogleの巨大なインフラそのものである。TPUの共同設計からEnd-to-endの収益基盤、そしてBrainとDeepMindの統合に至るまで、Alphabetという巨大な傘の下にあるからこそ、直近のAPIの売上やベンチマークのスコア競争に一喜一憂することなく、「World Models」や「Robotのシミュレーション」といった利益回収に時間のかかる探求に大量のComputeを注ぎ込むことができるのだ。</p>
+<p>一部のスタートアップが特定のドメインでRLを回し、数ヶ月で陳腐化するTreadmill（ランニングマシン）の上を走り続けているのとは対照的である。基盤モデルの能力が向上し続ける中で、特定の狭いドメインに特化したモデルの優位性を保ち続けることは、本質的に消耗戦を強いられることと同義だ。</p>
+<p>Vinyalsはインタビューの終盤、「AGIはある意味ですでに実現している」と述べている。これは決して技術的な敗北宣言ではない。数年前であれば、現在のLLMの能力を見れば誰もがそれをAGIと呼んだはずだ。しかし、知能の定義というゴールポストは常に我々の進歩とともに後ろへ下がり続けている。</p>
+<p>真に問われるべきは、我々が定義するAGIが「人間の知的作業の代替」なのか、それとも「Machine Learningの新たなパラダイムを自己創出する存在」なのかという点だ。GoogleがWorld Modelsの先に目指しているのは明らかに後者であり、彼らがAI研究における真の「Move 37」を叩き出すその日まで、我々はこの巨大な知能の進化を傍観し続けるしかないのだろう。</p>
 
 
 </section>

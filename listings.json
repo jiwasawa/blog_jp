@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/oriol-vinyals-unsupervised-learning/index.html",
       "/posts/horace-he-matmuls/index.html",
       "/posts/jane-street-dwarkesh/index.html",
       "/posts/slimqwen/index.html",
@@ -41,8 +42,8 @@
       "/posts/opsd-on-policy-self-distillation/index.html",
       "/posts/continual-learning-wolfe/index.html",
       "/posts/terminal-bench-2/index.html",
-      "/posts/ttt-discovery/index.html",
       "/posts/vercel-malte/index.html",
+      "/posts/ttt-discovery/index.html",
       "/posts/minimax-m2-1-post-training/index.html",
       "/posts/xai-sulaiman/index.html",
       "/posts/engram-deepseek/index.html",

@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Tue, 26 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 29 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/oriol-vinyals-unsupervised-learning/</link>
+  <description><![CDATA[ Google DeepMindのOriol Vinyals氏へのインタビューから、GoogleがWorld ModelsとContinuous Learningを通じてAGIを目指す戦略と、AI開発におけるパラダイムシフトの兆しを読み解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/oriol-vinyals-unsupervised-learning/</guid>
+  <pubDate>Fri, 29 May 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/194/200" medium="image"/>
+</item>
 <item>
   <title>行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -113,19 +125,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/megatron-core-moe/</guid>
   <pubDate>Thu, 23 Apr 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/185/200" medium="image"/>
-</item>
-<item>
-  <title>Terence Taoが語る、LLM時代のアイデア量産と「深さ」の消失</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/terence-tao-dwarkesh/</link>
-  <description><![CDATA[ 現代数学の大家Terence Taoが、Keplerの発見や「AI slop」といった話題を通して、AI時代における科学的発見の「幅」と「深さ」の分業、そしてserendipityの喪失というパラダイムシフトを深く分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Dwarkesh Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/terence-tao-dwarkesh/</guid>
-  <pubDate>Wed, 22 Apr 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/184/200" medium="image"/>
 </item>
 </channel>
 </rss>
