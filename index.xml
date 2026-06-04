@@ -10,7 +10,32 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Fri, 29 May 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 04 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Satya Nadellaが語るMicrosoftのAI覇権戦略</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/satya-microsoft-build-2026/</link>
+  <description><![CDATA[ Microsoft Build 2026で語られたSatya Nadellaの戦略から、SaaSの終焉と「Token IP」という新たな知財概念が企業の競争優位性をどう変えるかを分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Latent Space Podcast</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/satya-microsoft-build-2026/</guid>
+  <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/195/200" medium="image"/>
+</item>
+<item>
+  <title>DeepSWE：次世代AIコーディングエージェントの真の能力を測る新たな指標</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/deepswe-benchmark/</link>
+  <description><![CDATA[ DeepSWEは、汚染のないオリジナルタスク、多様なリポジトリ、現実的な複雑性、そして高精度な検証により、AIコーディングエージェントの真の能力を測る革新的なベンチマークです。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Benchmark</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/deepswe-benchmark/</guid>
+  <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/196/200" medium="image"/>
+</item>
 <item>
   <title>Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -102,29 +127,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4/</guid>
   <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/187/200" medium="image"/>
-</item>
-<item>
-  <title>Claude Code品質低下のポストモーテムに見る、AIエージェント開発のジレンマ</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/claude-code-post-mortem/</link>
-  <description><![CDATA[ Anthropic Claude Codeの品質低下ポストモーテムから、AIエージェント開発におけるコンテキストエンジニアリングの脆さと、過剰な最適化が招くジレンマを分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/claude-code-post-mortem/</guid>
-  <pubDate>Fri, 24 Apr 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/186/200" medium="image"/>
-</item>
-<item>
-  <title>Megatron-CoreによるMixture-of-Expertsモデルのスケーラブルな学習：システム最適化の全貌</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/megatron-core-moe/</link>
-  <description><![CDATA[ NVIDIAのMegatron-Core MoEフレームワークが、Memory、Communication、Compute Efficiencyの「Three Walls」を克服し、Parallel FoldingやFP8トレーニングなどの統合的最適化によって大規模Mixture-of-Expertsモデルのスケーラブルかつ高効率な学習を実現する技術的詳細を解説。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Transformer</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/megatron-core-moe/</guid>
-  <pubDate>Thu, 23 Apr 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/185/200" medium="image"/>
 </item>
 </channel>
 </rss>
