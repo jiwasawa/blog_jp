@@ -11,7 +11,7 @@ image: https://picsum.photos/id/196/200
 
 本稿では、既存の評価指標の限界を克服し、現実世界の複雑なタスクにおけるエージェントのパフォーマンスをより正確に測定するために開発された最新のベンチマーク[「DeepSWE」](https://deepswe.datacurve.ai/blog)について、その基本概念から定性的な分析結果、そしてAIを活用したソフトウェアテストの未来像までを解説する。
 
-![[[https://deepswe.datacurve.ai/#leaderboard](https://deepswe.datacurve.ai/#leaderboard)より引用](fig1.png){width=80%}
+![[https://deepswe.datacurve.ai/#leaderboard](https://deepswe.datacurve.ai/#leaderboard)より引用](fig1.png){width=70%}
 
 ## 既存のベンチマークが抱える本質的な課題
 
@@ -54,7 +54,7 @@ DeepSWEによる評価結果は、最先端モデル間の能力差をかつて�
 
 興味深いことに、出力トークン数、タスク完了までの所要時間、および試行あたりのコストは、必ずしも正答率（Pass Rate）と強い相関関係を持たないことが明らかになった。例えば、GPT-5.5は最も高いスコア（70%）を達成しつつも、試行あたりの出力トークン数の中央値は約47kと、他のモデルと比較して極めてトークン効率が高かった。単に長く推論を続けたり、大量のコードを出力したりすることが、ソフトウェアエンジニアリングタスクにおける成功を保証するわけではない。
 
-![[[https://deepswe.datacurve.ai/blog](https://deepswe.datacurve.ai/blog)より引用](fig2.png){width=80%}
+![[https://deepswe.datacurve.ai/blog](https://deepswe.datacurve.ai/blog)より引用](fig2.png){width=70%}
 
 ### モデルファミリーごとの定性的な特徴と失敗の傾向
 
