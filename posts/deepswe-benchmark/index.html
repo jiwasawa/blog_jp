@@ -194,7 +194,12 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 <p>近年、ソフトウェア開発の領域において、強力な推論能力を備えたAIコーディングエージェントの進化が目覚ましい。しかし、これらの高度なモデル（LLM）がソフトウェアエンジニアリングにおいて真にどの程度の能力を有しているのかを正確に評価するためのベンチマークは、AIの進化速度に追いついていないのが現状である。</p>
 <p>本稿では、既存の評価指標の限界を克服し、現実世界の複雑なタスクにおけるエージェントのパフォーマンスをより正確に測定するために開発された最新のベンチマーク<a href="https://deepswe.datacurve.ai/blog">「DeepSWE」</a>について、その基本概念から定性的な分析結果、そしてAIを活用したソフトウェアテストの未来像までを解説する。</p>
-<p>![<a href="fig1.png" width="80%">[https://deepswe.datacurve.ai/#leaderboard](https://deepswe.datacurve.ai/#leaderboard)より引用</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://deepswe.datacurve.ai/#leaderboard">https://deepswe.datacurve.ai/#leaderboard</a>より引用</figcaption>
+</figure>
+</div>
 <section id="既存のベンチマークが抱える本質的な課題" class="level2">
 <h2 class="anchored" data-anchor-id="既存のベンチマークが抱える本質的な課題">既存のベンチマークが抱える本質的な課題</h2>
 <p>AIコーディングエージェントの能力を測る上で、SWE-Benchなどの既存のベンチマークは重要な役割を果たしてきた。しかし、モデルの能力が向上するにつれて、これらの評価手法が持ついくつかの致命的な限界が浮き彫りになりつつある。</p>
@@ -231,7 +236,12 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <section id="コスト効率と精度の非相関性" class="level3">
 <h3 class="anchored" data-anchor-id="コスト効率と精度の非相関性">コスト・効率と精度の非相関性</h3>
 <p>興味深いことに、出力トークン数、タスク完了までの所要時間、および試行あたりのコストは、必ずしも正答率（Pass Rate）と強い相関関係を持たないことが明らかになった。例えば、GPT-5.5は最も高いスコア（70%）を達成しつつも、試行あたりの出力トークン数の中央値は約47kと、他のモデルと比較して極めてトークン効率が高かった。単に長く推論を続けたり、大量のコードを出力したりすることが、ソフトウェアエンジニアリングタスクにおける成功を保証するわけではない。</p>
-<p>![<a href="fig2.png" width="80%">[https://deepswe.datacurve.ai/blog](https://deepswe.datacurve.ai/blog)より引用</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig2.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://deepswe.datacurve.ai/blog">https://deepswe.datacurve.ai/blog</a>より引用</figcaption>
+</figure>
+</div>
 </section>
 <section id="モデルファミリーごとの定性的な特徴と失敗の傾向" class="level3">
 <h3 class="anchored" data-anchor-id="モデルファミリーごとの定性的な特徴と失敗の傾向">モデルファミリーごとの定性的な特徴と失敗の傾向</h3>
