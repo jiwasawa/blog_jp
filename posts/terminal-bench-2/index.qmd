@@ -3,7 +3,7 @@ title: "Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真�
 description: "Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。"
 author: "Junichiro Iwasawa"
 date: "2026-01-27"
-categories: [LLM, AI]
+categories: [LLM, AI, Benchmark]
 image: https://picsum.photos/id/155/200
 ---
 

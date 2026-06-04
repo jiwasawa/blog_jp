@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。">
+<meta name="description" content="DeepSWEは、汚染のないオリジナルタスク、多様なリポジトリ、現実的な複雑性、そして高精度な検証により、AIコーディングエージェントの真の能力を測る革新的なベンチマークです。">
 
-<title>Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</title>
+<title>DeepSWE：次世代AIコーディングエージェントの真の能力を測る新たな指標</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -82,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標 – jiwasawaのブログ">
-<meta property="og:description" content="Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。">
-<meta property="og:image" content="https://picsum.photos/id/155/200">
+<meta property="og:title" content="DeepSWE：次世代AIコーディングエージェントの真の能力を測る新たな指標 – jiwasawaのブログ">
+<meta property="og:description" content="DeepSWEは、汚染のないオリジナルタスク、多様なリポジトリ、現実的な複雑性、そして高精度な検証により、AIコーディングエージェントの真の能力を測る革新的なベンチマークです。">
+<meta property="og:image" content="https://picsum.photos/id/196/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標 – jiwasawaのブログ">
-<meta name="twitter:description" content="Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。">
-<meta name="twitter:image" content="https://picsum.photos/id/155/200">
+<meta name="twitter:title" content="DeepSWE：次世代AIコーディングエージェントの真の能力を測る新たな指標 – jiwasawaのブログ">
+<meta name="twitter:description" content="DeepSWEは、汚染のないオリジナルタスク、多様なリポジトリ、現実的な複雑性、そして高精度な検証により、AIコーディングエージェントの真の能力を測る革新的なベンチマークです。">
+<meta name="twitter:image" content="https://picsum.photos/id/196/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -144,10 +144,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Terminal-Bench 2.0：CLI環境におけるAIエージェントの「真の実力」を測る新たな指標</h1>
+      <h1 class="title">DeepSWE：次世代AIコーディングエージェントの真の能力を測る新たな指標</h1>
                   <div>
         <div class="description">
-          Terminal-Bench 2.0は、CLI環境におけるAIエージェントの複雑で現実的なタスク遂行能力を測る新たなベンチマークであり、最新モデルの性能と課題を浮き彫りにする。
+          DeepSWEは、汚染のないオリジナルタスク、多様なリポジトリ、現実的な複雑性、そして高精度な検証により、AIコーディングエージェントの真の能力を測る革新的なベンチマークです。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -171,7 +171,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026年1月27日</p>
+        <p class="date">2026年6月3日</p>
       </div>
     </div>
     
@@ -190,84 +190,71 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>近年、LLM（Large Language Model）を核としたAIエージェントの開発競争は熾烈を極めている。特に、チャットボットのような単純な対話を超え、現実世界の複雑なタスクを自律的に遂行する能力が求められている。その最前線となるのが、開発者やシステム管理者の主戦場であるCLI（Command-Line Interface）環境だ。</p>
-<p>本記事では、AIエージェントの能力を厳密に評価するために新しく提案されたベンチマーク<strong>「<a href="https://tbench.ai">Terminal-Bench 2.0</a>」</strong>について解説する。既存のベンチマークが抱える課題を克服し、フロンティアモデルですら苦戦するこの「難解かつ現実的」なデータセットは、AIエージェント研究の新たな羅針盤となり得るのか。その全貌と、初期実験から見えてきた最新モデルの傾向を紐解いていく。</p>
-<section id="terminal-bench-2.0とは何か" class="level2">
-<h2 class="anchored" data-anchor-id="terminal-bench-2.0とは何か">Terminal-Bench 2.0とは何か？</h2>
-<p>Terminal-Bench 2.0は、AIエージェントがLinuxターミナル環境を用いて、どれだけ現実に即した複雑なタスクを完遂できるかを測定するために設計された包括的なベンチマークである。</p>
-<p>従来のベンチマーク（例：HumanEvalやSWE-benchの簡易版など）は、比較的短期間で解決可能なタスクや、人工的に簡略化された環境に依存する傾向があった。しかし、実際のエンジニアリング業務は、環境設定、デバッグ、ライブラリの依存関係解消、そして長時間にわたる試行錯誤を伴うものである。</p>
-<p>Terminal-Bench 2.0は、こうしたギャップを埋めるために以下の特徴を備えている。</p>
+<p>近年、ソフトウェア開発の領域において、強力な推論能力を備えたAIコーディングエージェントの進化が目覚ましい。しかし、これらの高度なモデル（LLM）がソフトウェアエンジニアリングにおいて真にどの程度の能力を有しているのかを正確に評価するためのベンチマークは、AIの進化速度に追いついていないのが現状である。</p>
+<p>本稿では、既存の評価指標の限界を克服し、現実世界の複雑なタスクにおけるエージェントのパフォーマンスをより正確に測定するために開発された最新のベンチマーク<a href="https://deepswe.datacurve.ai/blog">「DeepSWE」</a>について、その基本概念から定性的な分析結果、そしてAIを活用したソフトウェアテストの未来像までを解説する。</p>
+<p>![<a href="fig1.png" width="80%">[https://deepswe.datacurve.ai/#leaderboard](https://deepswe.datacurve.ai/#leaderboard)より引用</a></p>
+<section id="既存のベンチマークが抱える本質的な課題" class="level2">
+<h2 class="anchored" data-anchor-id="既存のベンチマークが抱える本質的な課題">既存のベンチマークが抱える本質的な課題</h2>
+<p>AIコーディングエージェントの能力を測る上で、SWE-Benchなどの既存のベンチマークは重要な役割を果たしてきた。しかし、モデルの能力が向上するにつれて、これらの評価手法が持ついくつかの致命的な限界が浮き彫りになりつつある。</p>
 <ol type="1">
-<li><strong>現実的なタスク設定（Realistic Tasks）：</strong> 実際の専門的なワークフローから着想を得た89のタスクで構成されている。レガシーシステムの構成変更、研究論文の実装再現、セキュリティ脆弱性の修正など、深いドメイン知識と自律的な問題解決能力が要求される。</li>
-<li><strong>包括的な評価環境（Comprehensive Evaluation）：</strong> 各タスクはDockerコンテナとして完全に隔離・パッケージ化されている。エージェントにはタスク記述（Instruction）が与えられ、最終的なコンテナの状態に対して一連のテストスイートが実行されることで、正否が判定される。</li>
-<li><strong>高い難易度（Focus on Difficulty）：</strong> 意図的に難易度が高く設定されており、現在の最先端（Frontier）モデルであっても、平均スコアは65%を下回る。これにより、将来的なモデルの進歩を長期的に計測することが可能となる。</li>
+<li><strong>ベンチマークの汚染（Contamination）：</strong> 現在の最大の課題は、モデルの事前学習データにベンチマークのタスクや解答が意図せず含まれてしまう「データ汚染」である。既存のベンチマーク（例えばSWE-Bench Verifiedなど）は公開されているGitHubのPull Requestやコミット履歴から問題を抽出しているため、モデルが純粋な問題解決能力を発揮しているのか、単に過去に見たコードを「記憶（Recall）」から引き出しているだけなのかを区別することが困難になっている。</li>
+<li><strong>限定的なスコープと単純化されたタスク：</strong> 多くの公開ベンチマークは、小規模な関数の生成や短いコードスニペットの補完など、孤立した単純なタスクに偏っている。また、対象となるリポジトリも限定的で、高度にメンテナンスされた少数の有名プロジェクトに集中している。これでは、複雑な依存関係やレガシーコード、アーキテクチャ設計が絡み合う現実のソフトウェアシステムにおけるパフォーマンスを正しく評価できない。</li>
+<li><strong>検証機能（Verifier）の信頼性の欠如：</strong> ベンチマークの精度は、生成されたコードを評価するVerifierの質に完全に依存する。既存のベンチマークでは、マージされたPull Requestのテストスイートをそのまま流用することが多いが、これは「特定の意図された実装」のみを通すように作られていることが多く、他の有効なアプローチを誤って不合格（False Negative）にしたり、逆に要件を満たしていないコードを合格（False Positive）にしてしまう問題が多発していた。</li>
 </ol>
-<p>データセットおよび評価用ハーネスは、<a href="https://tbench.ai">tbench.ai</a>にて公開されており、コミュニティによる検証と発展が期待されている。</p>
 </section>
-<section id="ベンチマークの構成とterminus-2" class="level2">
-<h2 class="anchored" data-anchor-id="ベンチマークの構成とterminus-2">ベンチマークの構成と「Terminus 2」</h2>
-<p>Terminal-Benchの評価プロセスにおける公平性を担保するために導入されたのが、<strong>「Terminus 2」</strong>と呼ばれるエージェントスカフォールド（Agent Scaffold）である。</p>
-<p>多くの商用エージェント（Claude CodeやGitHub Copilot CLIなど）は、モデルの性能だけでなく、エージェント自体の実装（プロンプトエンジニアリングやツール使用の最適化）に強く依存している。純粋なモデルごとの性能差を比較するために、Terminus 2は極めてシンプルな構造を採用している。</p>
+<section id="deepsweの革新性4つの主要なアプローチ" class="level2">
+<h2 class="anchored" data-anchor-id="deepsweの革新性4つの主要なアプローチ">DeepSWEの革新性：4つの主要なアプローチ</h2>
+<p>これらの課題を解決するため、DeepSWEは「Long-horizon（長期的な視野を要する）」なソフトウェアエンジニアリングタスクに焦点を当て、以下の4つの革新的なアプローチを導入した。</p>
+<section id="汚染のないタスク設計contamination-free-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="汚染のないタスク設計contamination-free-tasks">1. 汚染のないタスク設計（Contamination-Free Tasks）</h3>
+<p>DeepSWEのタスクはすべて、既存のコミットやPull Requestから流用するのではなく、完全にゼロから作成されたオリジナルの問題である。さらに、これらの解答は元のアップストリームリポジトリにマージされることはない。これにより、いかなるLLMも事前学習段階で解答を見たことがない状態が保証され、モデルの真の「ゼロからの問題解決能力」を測定することが可能となる。</p>
+</section>
+<section id="高い多様性と広範なカバレッジ" class="level3">
+<h3 class="anchored" data-anchor-id="高い多様性と広範なカバレッジ">2. 高い多様性と広範なカバレッジ</h3>
+<p>エージェントが実世界で遭遇する多様なコードベースに適応できるかを評価するため、DeepSWEは非常に広範なリポジトリを対象としている。具体的には、500以上のGitHubスターを持つアクティブなオープンソースプロジェクトから選ばれた<strong>91のリポジトリ</strong>と、<strong>5つのプログラミング言語</strong>（TypeScript、Go、Python、JavaScript、Rust）を網羅している。これにより、特定のフレームワークに過剰適合したモデルを排除し、より汎用的な実力を測ることができる。</p>
+</section>
+<section id="現実世界を反映した複雑性" class="level3">
+<h3 class="anchored" data-anchor-id="現実世界を反映した複雑性">3. 現実世界を反映した複雑性</h3>
+<p>DeepSWEのプロンプトは、開発者が実際にエージェントに指示を出すような、短く自然な言葉で記述されている。SWE-Bench Proのプロンプトと比較して平均文字数は約半分（2,158文字）であるにもかかわらず、要求される変更ははるかに大規模である。解決に必要な追加コード行数は平均668行に達し、これはSWE-Bench Pro（平均120行）の5.5倍に相当する。エージェントは過剰に指定された指示に従うだけでなく、コードベースを自ら探索し、どこをどのように修正すべきかを発見しなければならない。</p>
+</section>
+<section id="振る舞いベースの高精度な検証behavioral-verifiers" class="level3">
+<h3 class="anchored" data-anchor-id="振る舞いベースの高精度な検証behavioral-verifiers">4. 振る舞いベースの高精度な検証（Behavioral Verifiers）</h3>
+<p>DeepSWEのVerifierは、実装の詳細な構造ではなく、ソフトウェアの「観測可能な振る舞い（Observable Behavior）」をテストするように手書きで専用設計されている。エージェントが内部のヘルパー関数を書き換えようが、新しいモジュールを追加しようが、最終的な出力やAPIの挙動が要件を満たしていれば合格となる。</p>
+<p>監査によれば、SWE-Bench ProではVerifierの誤判定（AIの専門的な判定との不一致）が約32%のケースで見られた（False Positiveが約8.5%、False Negativeが約24.0%）。これに対し、DeepSWEのVerifierの誤判定率はわずか1.4%（False Positive 0.3%、False Negative 1.1%）に抑えられており、極めて信頼性の高い評価基盤を提供している。</p>
+</section>
+</section>
+<section id="パフォーマンス分析から見えてくる最先端モデルの実態" class="level2">
+<h2 class="anchored" data-anchor-id="パフォーマンス分析から見えてくる最先端モデルの実態">パフォーマンス分析から見えてくる最先端モデルの実態</h2>
+<p>DeepSWEによる評価結果は、最先端モデル間の能力差をかつてないほど鮮明に描き出している。SWE-Bench Proのリーダーボードではトップクラスのモデル群が狭いスコア帯に密集していたのに対し、DeepSWEでは明確な順位と大きなギャップが確認された（例：GPT-5.5が70%、GPT-5.4が56%、Claude Opus 4.7が54%など）。</p>
+<section id="コスト効率と精度の非相関性" class="level3">
+<h3 class="anchored" data-anchor-id="コスト効率と精度の非相関性">コスト・効率と精度の非相関性</h3>
+<p>興味深いことに、出力トークン数、タスク完了までの所要時間、および試行あたりのコストは、必ずしも正答率（Pass Rate）と強い相関関係を持たないことが明らかになった。例えば、GPT-5.5は最も高いスコア（70%）を達成しつつも、試行あたりの出力トークン数の中央値は約47kと、他のモデルと比較して極めてトークン効率が高かった。単に長く推論を続けたり、大量のコードを出力したりすることが、ソフトウェアエンジニアリングタスクにおける成功を保証するわけではない。</p>
+<p>![<a href="fig2.png" width="80%">[https://deepswe.datacurve.ai/blog](https://deepswe.datacurve.ai/blog)より引用</a></p>
+</section>
+<section id="モデルファミリーごとの定性的な特徴と失敗の傾向" class="level3">
+<h3 class="anchored" data-anchor-id="モデルファミリーごとの定性的な特徴と失敗の傾向">モデルファミリーごとの定性的な特徴と失敗の傾向</h3>
+<p>DeepSWEの定性的なエラー分析は、各モデルの思考プロセスに特有のパターンがあることを示している。</p>
 <ul>
-<li><strong>単一ツール:</strong> 使用できるのは「ヘッドレスなターミナル」のみ。</li>
-<li><strong>操作方法:</strong> 純粋なBashコマンドの実行のみでタスクを遂行する（ファイル編集も<code>sed</code>や<code>vim</code>などのコマンド経由で行う）。</li>
+<li><strong>Claudeの環境への注意力と「物忘れ」：</strong> Claude（Opus 4.7など）は環境に対する観察力が高く、既存のテスト環境の不具合やリポジトリの履歴を探索する能力に長けている。場合によっては <code>git log</code> を駆使して正解に近い情報を環境から引き出そうとする（DeepSWEでは環境がクリーンなためこの「チート」は防がれている）。一方で、プロンプトが「同期（sync）と非同期（async）の両方をサポートせよ」といった複数要素を含む場合、一方の実装に集中するあまり、もう一方を完全に忘れてしまう（Missed Requirement）傾向が他モデルより強く見られた。</li>
+<li><strong>GPTの厳密な指示追従性：</strong> GPTモデル（GPT-5.5、GPT-5.4）は、要求された要件を見落とす確率が最も低かった。プロンプトと既存のコード規約を文字通り厳密に解釈し、指示された範囲のパッチを正確に生成する能力において、現在最も安定した結果を残している。</li>
+<li><strong>自律的なテスト行動の違い：</strong> 高度なモデルほど、自発的にコードのテストを実行する傾向にある。DeepSWEの環境下では、GPT-5.4やClaude Opus 4.7は、プロンプトで明示的に指示されずとも、80%以上の確率で対象プロジェクトのテストフレームワークを用いて新規テストを記述し、自己検証を行った。対照的に、SWE-Bench Proのプロンプトでは「テストロジックを変更しないこと」という文言が含まれているため、優秀なモデルであっても自発的なテスト記述を控えてしまう（20%前後まで低下する）現象が確認された。</li>
 </ul>
-<p>この「素の」環境により、モデルが本来持っている推論能力やLinuxコマンドへの習熟度が浮き彫りになる。</p>
-</section>
-<section id="最新aiモデルの性能評価" class="level2">
-<h2 class="anchored" data-anchor-id="最新aiモデルの性能評価">最新AIモデルの性能評価</h2>
-<p>Terminal-Bench 2.0を用いた初期評価の結果は、現在のAI技術の到達点と限界を明確に示している。</p>
-<section id="全体的な解決率resolution-rate" class="level3">
-<h3 class="anchored" data-anchor-id="全体的な解決率resolution-rate">1. 全体的な解決率（Resolution Rate）</h3>
-<p>最も高いスコアを記録した組み合わせは、<strong>GPT-5.2</strong>をバックエンドに用いた<strong>Codex CLI</strong>エージェントであり、解決率は<strong>63%</strong>であった。これに<strong>Claude Opus 4.5</strong>や<strong>Gemini 3 Pro</strong>（いずれもTerminus 2を使用）が50%後半台で続く。 逆に言えば、人類最高峰のAIモデルを使用しても、提示されたタスクの約4割は解決できていない。これは、単純なコード生成とは異なり、環境の状態を把握しながら長期間にわたって作業を継続することの難しさを物語っている。</p>
-</section>
-<section id="プロプライエタリ-vs-オープンウェイト" class="level3">
-<h3 class="anchored" data-anchor-id="プロプライエタリ-vs-オープンウェイト">2. プロプライエタリ vs オープンウェイト</h3>
-<p>明確な傾向として、GPT、Claude、Geminiといったプロプライエタリ（クローズド）なモデルが上位を独占している。オープンウェイトモデル（LLaMAやQwenなど）も健闘してはいるものの、Terminus 2と組み合わせた場合の最高スコアは36%程度（Kimi K2 Thinking）に留まり、トップ層とは依然として大きな差が開いている。</p>
-</section>
-<section id="モデル選択の重要性" class="level3">
-<h3 class="anchored" data-anchor-id="モデル選択の重要性">3. モデル選択の重要性</h3>
-<p>興味深い知見として、<strong>「エージェントのスカフォールド（枠組み）よりも、使用する基盤モデルの性能の方が結果に大きく影響する」</strong>という点が挙げられる。 例えば、同じCodex CLIエージェントを使用した場合でも、モデルをGPT-5.2からGPT-5-Nanoに変更すると性能は劇的に低下する。一方で、強力なモデルを使えば、シンプルなTerminus 2スカフォールドでも、高度に最適化されたエージェント（OpenHandsなど）と同等以上の成果を出すケースが見られた。</p>
-</section>
-<section id="進化の速度" class="level3">
-<h3 class="anchored" data-anchor-id="進化の速度">4. 進化の速度</h3>
-<p>モデルのリリース時期とベンチマークスコアには強い相関が見られ、新しいモデルほど高スコアを記録している。この分野におけるAIの能力は急速に向上しており、現在は「難関」とされるタスクも、近い将来には解決率が飽和する可能性が示唆されている。</p>
 </section>
 </section>
-<section id="エラー分析なぜエージェントは失敗するのか" class="level2">
-<h2 class="anchored" data-anchor-id="エラー分析なぜエージェントは失敗するのか">エラー分析：なぜエージェントは失敗するのか？</h2>
-<p>Terminal-Bench 2.0の研究チームは、エージェントの失敗パターン（Failure Modes）について詳細な分析を行っている。失敗は主に以下のカテゴリーに分類される。</p>
-<section id="実行エラーexecution-errors" class="level3">
-<h3 class="anchored" data-anchor-id="実行エラーexecution-errors">実行エラー（Execution Errors）</h3>
-<p>最も頻繁に見られるのが実行エラーである。これはエージェントが指示（Instruction）に忠実に従わない、あるいは仕様を無視した行動をとるケースを指す。 * <strong>指示違反:</strong> 「特定のファイルパスに出力せよ」という指示を無視する。 * <strong>ループ:</strong> 同じエラーを何度も繰り返す（Step repetition）。</p>
-</section>
-<section id="整合性と検証の欠如coherence-and-verification-errors" class="level3">
-<h3 class="anchored" data-anchor-id="整合性と検証の欠如coherence-and-verification-errors">整合性と検証の欠如（Coherence and Verification Errors）</h3>
-<p>エージェントが「タスク完了」を宣言したにもかかわらず、実際には要件を満たしていないケースも多い。 * <strong>幻覚（Hallucination）:</strong> テストが通っていないのに「成功しました」と報告する。 * <strong>検証不足:</strong> 変更を加えた後に、それが正しく動作しているか（例：コンパイルが通るか、スクリプトが動くか）を確認せずに終了してしまう。</p>
-</section>
-<section id="コマンドレベルの失敗" class="level3">
-<h3 class="anchored" data-anchor-id="コマンドレベルの失敗">コマンドレベルの失敗</h3>
-<p>より低レイヤーな視点では、以下のような初歩的なミスが依然として多いことが判明した。 * <strong>Command not found:</strong> 存在しないコマンドや、インストールされていないツールを呼び出そうとする。 * <strong>File not found:</strong> パス指定のミスや、ファイル生成の失敗。</p>
-<p>これらのエラーは、現在のLLMが「文脈を保持し続ける能力（Long-context reasoning）」や「自己批判・自己修正する能力（Self-correction）」において、まだ改善の余地があることを示唆している。</p>
-</section>
+<section id="ソフトウェアエンジニアリングとテストの未来像" class="level2">
+<h2 class="anchored" data-anchor-id="ソフトウェアエンジニアリングとテストの未来像">ソフトウェアエンジニアリングとテストの未来像</h2>
+<p>DeepSWEが示すエージェントの自律的なテスト行動は、今後のソフトウェア開発における「テスト」の在り方が根本的に変わることを示唆している。</p>
+<p>これからのAIを活用したテスト分野では、人間に代わって完全なテストスイートを生成し、アプリケーションの動作から学習してテストカバレッジを自律的に向上させるエージェントが主流となるだろう。AIは単なる受動的な検証ツールから、開発の予測的なパートナーへと進化する。</p>
+<p>また、AIが生成したコードの非決定的な振る舞いや幻覚（Hallucinations）に対処するため、テスト自体にも「確率的アサーション（Probabilistic Assertions）」のような新しいパラダイムが求められる。人間はAIと協働し、最終的な品質判断やアーキテクチャの意思決定を行う「Human-in-the-loop（ヒューマン・イン・ザ・ループ）」のアプローチが、DevOpsやCI/CDのパイプラインを加速させる鍵となる。</p>
 </section>
 <section id="まとめと今後の展望" class="level2">
 <h2 class="anchored" data-anchor-id="まとめと今後の展望">まとめと今後の展望</h2>
-<p>Terminal-Bench 2.0は、AIエージェントにとっての「現実の壁」を可視化した。63%という最高スコアは、AIが実用的なレベルに近づいていることを示す一方で、人間のエンジニアが日々行っている複雑なトラブルシューティングやシステム構築を完全に自律化するには、まだ距離があることも示している。</p>
-<p>今後の研究開発においては、単にモデルのパラメータ数を増やすだけでなく、以下の点が重要になるだろう。</p>
-<ol type="1">
-<li><strong>指示遵守能力の向上:</strong> 複雑な要件定義を正確に読み取り、逸脱せずに行動する能力。</li>
-<li><strong>自己検証メカニズムの強化:</strong> 自分の行動結果を客観的にテストし、エラーから自律的に回復するループの確立。</li>
-<li><strong>環境認識能力:</strong> ターミナルというステートフルな環境において、現在のディレクトリ構造やインストール済みパッケージの状態を正確に把握し続ける能力。</li>
-</ol>
-<p>AIエージェントが真に信頼できるパートナーとなるために、Terminal-Benchのような厳格かつ現実的なベンチマークの存在は不可欠である。このベンチマークが飽和するその時こそ、AIエンジニアリングの新たな地平が開かれる瞬間となるだろう。</p>
-</section>
-<section id="参考文献" class="level2">
-<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<p>DeepSWEは、汚染のないオリジナルなタスク設計と、振る舞いベースの厳格な検証プロセスにより、AIコーディングエージェントの真の能力を評価するための新たな金字塔を打ち立てた。</p>
 <ul>
-<li>Merrill, M. A., Shaw, A. G., et al.&nbsp;(2025). <em>Terminal-Bench: Benchmarking Agents on Hard, Realistic Tasks in Command Line Interfaces</em>. <a href="file:///Users/jiwasawa/Dropbox/Papers/202504_paperpile/TERMINAL-BENCH-%20BENCHMARKING%20AGENTS%20ON%20HARD,%20REALISTIC%20TASKS%20IN%20COMMAND%20LINE%20INTERFACES.pdf">PDF</a></li>
-<li>Terminal-Bench Official Website: <a href="https://tbench.ai">tbench.ai</a></li>
+<li><strong>現在の限界：</strong> モデル間の純粋な比較を行うため、すべての評価は標準化されたハーネス（<code>mini-swe-agent</code>）上で実行されており、各ベンダーが提供するネイティブな環境（Claude CodeやCursorなど）での最適化されたパフォーマンスを完全には反映できていない。また、対象が500スター以上のアクティブなリポジトリに限られているため、ニッチなレガシーコードへの適応力は未知数である。</li>
+<li><strong>今後の課題と発展：</strong> 今後は、単一のハーネスへの依存から脱却し、複数の実行環境でのテストを統合していくことが求められる。また、エンタープライズ領域で需要の高いC++やJavaといった言語への対応、さらにはLLMの判定と動的ユニットテストを組み合わせた「ハイブリッドVerifier」の導入により、さらに自然なプロンプトによる評価システムの構築が期待される。</li>
 </ul>
+<p>AI支援によるソフトウェア開発が急速に普及する中、DeepSWEのような妥協のないベンチマークの存在は、モデルの過大評価を防ぎ、より堅牢で信頼性の高いAI開発を牽引する不可欠なインフラとなるだろう。</p>
 
 
 </section>
