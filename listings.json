@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/kyle-github/index.html",
+      "/posts/yaroslav-azhnyuk-fpv-drones/index.html",
       "/posts/satya-microsoft-build-2026/index.html",
       "/posts/deepswe-benchmark/index.html",
       "/posts/oriol-vinyals-unsupervised-learning/index.html",
