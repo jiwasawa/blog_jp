@@ -10,7 +10,32 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 03 Jun 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 09 Jun 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>GitHubインフラ崩壊の真相と、AIエージェントが再定義する「開発」の未来</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/kyle-github/</link>
+  <description><![CDATA[ AIエージェントによる1400%の急成長がGitHubインフラに負荷をかける中、Copilotの進化とMicrosoftによるOSレイヤー戦略、そして開発者基盤の安定化への課題が語られる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/kyle-github/</guid>
+  <pubDate>Tue, 09 Jun 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/198/200" medium="image"/>
+</item>
+<item>
+  <title>FPVドローンによる戦争の再定義と、西側諸国の致命的な怠慢</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/yaroslav-azhnyuk-fpv-drones/</link>
+  <description><![CDATA[ AIとFPVドローンが戦争を不可逆的に変容させる中、西側諸国は中国の圧倒的な製造能力と技術的遅れという致命的な課題に直面している。 ]]></description>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/yaroslav-azhnyuk-fpv-drones/</guid>
+  <pubDate>Mon, 08 Jun 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://picsum.photos/id/197/200" medium="image"/>
+</item>
 <item>
   <title>Satya Nadellaが語るMicrosoftのAI覇権戦略</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -103,30 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-xai-partnership/</guid>
   <pubDate>Thu, 07 May 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/189/200" medium="image"/>
-</item>
-<item>
-  <title>Anthropicの根深い歪みと、Claude劣化を巡る陰謀論</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-conspiracy-theories/</link>
-  <description><![CDATA[ Safetyの過剰補正とResearch至上主義が招いた摩擦から、AnthropicのClaudeモデルは性能劣化や不透明なBANといった問題を抱え、開発者コミュニティから厳しい目を向けられている ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-conspiracy-theories/</guid>
-  <pubDate>Mon, 04 May 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/188/200" medium="image"/>
-</item>
-<item>
-  <title>DeepSeek-V4詳解：100万トークン時代のコンテキスト理解を支えるアーキテクチャの革新</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4/</link>
-  <description><![CDATA[ DeepSeek-V4は、CSAとHCAを組み合わせたハイブリッドAttention機構、mHC、Muon Optimizerなどの革新により、100万トークンを効率的に処理する次世代LLMアーキテクチャを詳細に解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Transformer</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4/</guid>
-  <pubDate>Sun, 26 Apr 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/187/200" medium="image"/>
 </item>
 </channel>
 </rss>
