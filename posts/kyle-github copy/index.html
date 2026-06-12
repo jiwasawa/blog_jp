@@ -2,18 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="「敵の敵は味方」という状況下、Compute危機を背景にAnthropicとxAIの戦略的提携が、AI業界のcompute確保とデータ独占という生存競争の次フェーズへの突入を浮き彫りにする。">
+<meta name="description" content="OpenAI o1によるErdős予想の反証を機に、AIが数学における推論能力の限界を突破し、人間とAIの役割分担や「Scalable Oversight」といった新たな課題に直面する現状を分析する。">
 
-<title>憎悪を超えた戦略的野合：AnthropicとSpaceXの提携が浮き彫りにするCompute危機の狂気</title>
+<title>Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -37,14 +34,15 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="../../">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-bba5ebae505b5c03f3f0d8040a416a6b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -84,13 +82,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="憎悪を超えた戦略的野合：AnthropicとSpaceXの提携が浮き彫りにするCompute危機の狂気 – jiwasawaのブログ">
-<meta property="og:description" content="「敵の敵は味方」という状況下、Compute危機を背景にAnthropicとxAIの戦略的提携が、AI業界のcompute確保とデータ独占という生存競争の次フェーズへの突入を浮き彫りにする。">
-<meta property="og:image" content="https://picsum.photos/id/189/200">
+<meta property="og:title" content="Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化 – jiwasawaのブログ">
+<meta property="og:description" content="OpenAI o1によるErdős予想の反証を機に、AIが数学における推論能力の限界を突破し、人間とAIの役割分担や「Scalable Oversight」といった新たな課題に直面する現状を分析する。">
+<meta property="og:image" content="https://picsum.photos/id/199/200">
 <meta property="og:site_name" content="jiwasawaのブログ">
-<meta name="twitter:title" content="憎悪を超えた戦略的野合：AnthropicとSpaceXの提携が浮き彫りにするCompute危機の狂気 – jiwasawaのブログ">
-<meta name="twitter:description" content="「敵の敵は味方」という状況下、Compute危機を背景にAnthropicとxAIの戦略的提携が、AI業界のcompute確保とデータ独占という生存競争の次フェーズへの突入を浮き彫りにする。">
-<meta name="twitter:image" content="https://picsum.photos/id/189/200">
+<meta name="twitter:title" content="Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化 – jiwasawaのブログ">
+<meta name="twitter:description" content="OpenAI o1によるErdős予想の反証を機に、AIが数学における推論能力の限界を突破し、人間とAIの役割分担や「Scalable Oversight」といった新たな課題に直面する現状を分析する。">
+<meta name="twitter:image" content="https://picsum.photos/id/199/200">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -146,10 +144,10 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">憎悪を超えた戦略的野合：AnthropicとSpaceXの提携が浮き彫りにするCompute危機の狂気</h1>
+      <h1 class="title">Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化</h1>
                   <div>
         <div class="description">
-          「敵の敵は味方」という状況下、Compute危機を背景にAnthropicとxAIの戦略的提携が、AI業界のcompute確保とデータ独占という生存競争の次フェーズへの突入を浮き彫りにする。
+          OpenAI o1によるErdős予想の反証を機に、AIが数学における推論能力の限界を突破し、人間とAIの役割分担や「Scalable Oversight」といった新たな課題に直面する現状を分析する。
         </div>
       </div>
                           <div class="quarto-categories">
@@ -173,7 +171,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026年5月8日</p>
+        <p class="date">2026年6月12日</p>
       </div>
     </div>
     
@@ -192,35 +190,36 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>AIインフラ市場の勢力図を塗り替える特大の爆弾が投下されてから一夜が明けた。</p>
-<p>昨日、<a href="https://x.ai/news/anthropic-compute-partnership">5月7日に発表されたxAIとAnthropicの提携</a>は、xAIが自社のスーパーコンピューター「Colossus 1」が抱える22万基ものGPUへのアクセスをAnthropicに提供するという、耳を疑うようなディールである。Elon Muskが親の仇のように「Misanthropic（人間嫌いの・非道な）」と罵り続けてきたあのAnthropicに、自身の虎の子のComputeを提供するというのだから、AI業界の風見鶏ぶりには感嘆するほかない。</p>
-<p>犬猿の仲であった両者が急転直下で手を結んだ背景には、Theo Browneが<a href="https://www.youtube.com/watch?v=3pkz-Ie_k_c">自身のYouTubeチャンネル</a>で的確に分析している通り、一企業の思惑を超えたAI業界全体の深刻な「Compute枯渇（Compute crisis）」が存在する。安全性へのアプローチの違いだの、イデオロギーの対立だのといった無責任極まりない感情論的与太話は一旦無視し、この「敵の敵は味方」を地で行く強引なプロダクト戦略と、両社が抱える致命的な弱点に焦点を当てる。</p>
-<section id="anthropicのcomputeコンナンドラム" class="level2">
-<h2 class="anchored" data-anchor-id="anthropicのcomputeコンナンドラム">AnthropicのComputeコンナンドラム</h2>
-<p>プロダクトとしてのClaudeの優位性は、今さら語るまでもない。しかし、その圧倒的な支持がAnthropicの首を絞めていた。</p>
-<p>Anthropicが直面していた最大のボトルネックは、極めてシンプルだ。「<a href="https://jiwasawa.github.io/blog_jp/posts/anthropic-conspiracy-theories/">物理的にコンピューターが足りなかった</a>」のである。彼らがProユーザーへの提供を制限したり、ピーク時のRate limitを不自然なまでに絞ったりしていたのは、価格交渉力を高めるための高尚なアップセル戦略などではなく、年換算で80倍とも言われる非常識な需要の爆発に対して、確保したComputeが全く追いついていなかったからに過ぎない。</p>
-<p>同社も手をこまねいていたわけではない。Amazon（Trainium）、Google（TPUs）、そしてMicrosoft/NVIDIA（Azure）といったマルチクラウド環境にインフラを分散させることで、リスクヘッジとリソース確保を図っていた。しかし、ここで一つの喜劇的なジレンマが生じる。モデルの訓練や研究開発はNVIDIAのGPUの上で行われることがほとんどで、しかもリサーチャー同士で取り合いになるのが常である。結果として、NVIDIAのGPUリソースは常に枯渇し、限られたComputeのパイをユーザーの推論（Inference）と社内の研究（Training）で奪い合うという泥沼の様相を呈していた。</p>
-<p>興味深いことに、今回の提携発表と同時に、AnthropicはAPIのRate limit（特に入力トークン制限）を最大5倍にまで大幅に引き上げた。これは、彼らが喉から手が出るほど欲しかったNVIDIAのComputeを遂に確保し、息継ぎができる状態になったという何よりの証左である。</p>
+<p>OpenAIのAIモデルが<a href="https://openai.com/index/model-disproves-discrete-geometry-conjecture/">Erdős unit distance conjecture（エルデシュの単位距離問題）の反証に成功した</a>というニュースが界隈を駆け巡ってから少しの時間が経った。</p>
+<p>本稿では、Bain Capital VenturesのSlater Stichがホストを務める<a href="https://youtu.be/h4ZguzEMKAU?si=7uSAm7ja24QxTiiW">podcastにおける、OpenAIのNoam Brownのインタビュー</a>を紐解きながら分析を進める。Noam Brownといえば、マルチエージェント推論やtest-time computeのスケーリングを牽引し、世間を驚かせた推論モデル「o1」の開発をリードしたキーパーソンである。彼が語る数学とAIの交差点には、Large Language Model (LLM)のアーキテクチャが直面する本質的な壁と、次なるブレイクスルーの萌芽が隠されている。</p>
+<section id="チェスgoそしてself-playの幻想" class="level2">
+<h2 class="anchored" data-anchor-id="チェスgoそしてself-playの幻想">チェス、Go、そして「Self-play」の幻想</h2>
+<p>AIが人間の知能を凌駕する過程を語る際、我々は幾度となくチェスにおけるDeep Blueや、Go（囲碁）におけるAlphaGoの歴史を引き合いに出す。AIが自らと対戦し、無限にデータを生成しながら青天井で賢くなっていく「Self-play（自己対戦）」のアプローチは、AI研究における魔法の杖のように扱われがちだ。</p>
+<p>しかしNoamは、この単純なアナロジーを冷徹に否定する。なぜなら、チェスやGoは「two-player zero-sum game（2プレイヤーのゼロサムゲーム）」という極めて特殊な環境だからだ。この環境下では、勝つか負けるかという明確な目的関数が存在し、Minimaxポリシーへの収束という客観的な正解に向かって自己対戦を繰り返すことができる。外部からの人間のデータなど一切不要で、AIは自らのミスから学習し続けることが可能だ。</p>
+<p>一方で、数学の証明プロセスはそのような単純な構造をしていない。仮に数学でSelf-playを模倣し、「問題を作るAI」と「それを解くAI」を競わせたとしよう（ProposerとSolverの敵対的生成）。ここには決定的な問題が生じる。「問題を作るAI」は、人間にとって全く無価値だが解くのが死ぬほど難しい問題（例えば、電卓なしでの50桁の掛け算など）を生成してしまう可能性があるからだ。Ultimatum game（最後通牒ゲーム）のように、ゼロサムゲームの枠組みを外れた瞬間に、Self-playが美しく完璧な戦略へと収束するという前提は崩れ去る。</p>
+<p>つまり、数学領域でAIが超人的（superhuman）な領域に到達するための道筋は、チェスやGoの時のような「無限の自己対戦によるチートモード」ではなく、より複雑で、人間的な価値基準（何が面白い数学の問題なのかというテイスト）の介入を伴うものにならざるを得ない。</p>
 </section>
-<section id="箱ばかりデカいxaiの悲哀とcursorに群がる理由" class="level2">
-<h2 class="anchored" data-anchor-id="箱ばかりデカいxaiの悲哀とcursorに群がる理由">箱ばかりデカいxAIの悲哀と、Cursorに群がる理由</h2>
-<p>ひるがえってxAI、そしてSpaceXの陣営を見てみよう。彼らはColossus 1という、約28万基のH100（今回Anthropicに貸し出されるのはその大部分である22万基規模, 300MW）を並べた狂気的なインフラを構築済みであり、さらに150万基相当のキャパシティを持つColossus 2の稼働をも控えている。</p>
-<p>圧倒的なComputeの暴力だが、ここには残酷な現実がある。誰も好んでGrokを使っていないのだ。推論用に割り当てられた莫大なComputeはダダ余りして遊んでおり、稼働していないGPU群はただの巨大な暖房器具として、毎秒天文学的なカネを燃やし続けているに等しい。箱（Compute）はあるが、それを回すための需要がないのである。</p>
-<p>さらに致命的なのは、xAIには次世代モデルを鍛え上げるための「高品質なデータ」がないことだ。Twitter（現X）の全投稿データを持っていると彼らは豪語するかもしれないが、そこから抽出できるのは人間の感情的な罵倒やミームばかりである。高度なコーディングや論理的推論能力をLLMに学習させるにあたり、Twitterのノイズデータは、電子レンジの動作音を無限に学習させるのと同じくらい無用の長物だ。</p>
-<p>だからこそxAIは、コーディング特化AIであるCursorに対して、買収（あるいは提携）というゾスムーブに出たのである。開発者がCursor上で「コードを書き、AIに修正させ、また直す」という動的で生々しいインタラクションの履歴こそが、AIの推論プロセスを劇的に賢くするための最高級の強化学習（RL）データとなる。ユーザー数が圧倒的に少ないGrokの背後でいくらシステムプロンプトをこねくり回したところで、大きなNの利用ログを集約できるプラットフォームには決して勝てない。データ飢餓に苦しむxAIにとって、Cursorが握る良質なコーディングデータは、何十億ドルを積んででも手に入れたい黄金の鉱脈なのだ。</p>
+<section id="推論のみにボトルネックされる無限の遊び場" class="level2">
+<h2 class="anchored" data-anchor-id="推論のみにボトルネックされる無限の遊び場">「推論」のみにボトルネックされる無限の遊び場</h2>
+<p>Self-playという魔法の杖が使えないとしても、AIにとって数学が極めて魅力的なターゲットであることには変わりない。その最大の理由は、数学という分野が「純粋に推論（reasoning）のみにボトルネックされている」点にある。</p>
+<p>物理学や生物学などのAI for scienceの文脈において、AIがどれほど素晴らしい仮説や理論を構築したとしても、最終的には現実世界のWet lab（ウェットラボ）での実験や、莫大なコストをかけた物理実験によるデータの収集・検証がボトルネックとなる。思考のスピードで世界は進まないのだ。</p>
+<p>しかし、数学にはこの現実の物理的制約が存在しない。暗い部屋の片隅で、ただひたすらに「考える」ことだけでブレイクスルーを生み出すことができる。この性質は、test-time compute（テスト時の計算量）をかければかけるほど性能がスケールするというo1モデルのアプローチと完璧に合致している。事実、Erdős予想の反証においても、膨大なtest-time computeを投下することで、問題の解決確率が劇的に向上することが確認されている。モデルの推論能力さえ向上させれば、あとは計算資源の暴力によって未知の領域を切り拓くことができるという事実は、AI研究者にとって垂涎の的だろう。</p>
 </section>
-<section id="openai包囲網という名の地獄のマリアージュ" class="level2">
-<h2 class="anchored" data-anchor-id="openai包囲網という名の地獄のマリアージュ">OpenAI包囲網という名の地獄のマリアージュ</h2>
-<p>xAIにはComputeが腐るほどあるが、良質なデータと世界最高峰の研究力が足りない。Anthropicには優秀な研究チームとCursor経由等で得られる良質なデータへのアクセスがあるが、肝心のComputeが絶望的に足りない。需要と供給のパズルとしては、あまりにも美しくピースが噛み合っている。</p>
-<p>しかし、この提携が異常なのは、かつてAnthropicが自社のモデル出力をxAIの学習に使われることを極度に嫌い、xAIスタッフの利用を明示的にバンするという露骨な敵対行動をとっていた歴史があるからだ。AI業界において「他社の優秀なモデル出力を蒸留（Distillation）して自社モデルを鍛えること」は公然の秘密だが、Anthropicは競合にデータをタダ取りされることを全力で阻止しようとしていた。</p>
-<p>そんな怨恨と意地を綺麗さっぱり飲み込んででも手を組まねばならないほど、OpenAIという圧倒的巨獣の足音は背後に迫っているのである。これまでAnthropicは、AWS（Bedrock）での独占的な立ち位置を最大の堀（Wedge）としてエンタープライズ市場で優位に立っていた。しかし、OpenAIがAWS上でのサポートを開始するという情報が飛び交い、その優位性は音を立てて崩れようとしている。さらには、OpenAIのコーディング能力（Codex系や最新推論モデル）が劇的な進化を遂げ、Claudeの牙城を脅かしつつある。</p>
-<p>OpenAIという巨大な死神に対抗するためには、自尊心も過去の諍いもドブに捨て、目の前にあるColossus 1のGPU群にすがるしかなかったというのがAnthropicの偽らざる実態だろう。一方のxAIにとっても、Anthropicの卓越したモデル構築ノウハウや推論データのエッセンスに（何らかの形で）アクセスできるのであれば、休眠しているComputeを貸し出すことなど安い対価である。</p>
+<section id="専門分化の壁とcentaurケンタウロスの時代" class="level2">
+<h2 class="anchored" data-anchor-id="専門分化の壁とcentaurケンタウロスの時代">専門分化の壁と「Centaur（ケンタウロス）」の時代</h2>
+<p>現在、AIと人間の数学者の関係性は、かつてのチェス界が経験した「Centaur（ケンタウロス）」の時期に突入しつつある。Garry KasparovがDeep Blueに敗れた後、人間とAIがタッグを組んで戦うことで、単体の人間や単体のAIよりも強い時代がしばらく続いた。数学も今、まさにそのフェーズにある。</p>
+<p>現代の数学は高度に専門分化（Specialization）が進んでおり、トップクラスの数学者であっても、自分の専門外の最新論文をすべて把握することは物理的に不可能だ。ここにAIの圧倒的なComparative Advantage（比較優位）が存在する。AIは、代数的整数論から組合せ幾何学まで、広大な数学のあらゆる領域の文献を瞬時に横断し、人間が見逃すような異なる分野のアイデアを結合（Combine）させることができる。この「知識の結合力」において、AIはすでに人間を超越している。</p>
+<p>この状況下において、人間の数学者の役割は劇的に変化する。ゴリゴリと自力で複雑な計算や証明を行う職人から、AIモデルという強力な推論エンジンの手綱を握り、「どの問題に取り組むべきか」「どの方向に探索を進めるべきか」というResearch taste（研究のセンス）を発揮するプロンプター、あるいはディレクターへと移行していくのだ。</p>
+<p>皮肉なことに、今後数年間で最も偉大な数学的発見をするのは、圧倒的な計算力を持つFields Medalist（フィールズ賞受賞者）ではなく、AIモデルの癖を理解し、彼らに適切な「コンテキスト」と「問い」を与えることに長けた、新世代の「ケンタウロス・マスマティシャン」になる可能性が高い。</p>
 </section>
-<section id="開発競争は次のフェーズへ" class="level2">
-<h2 class="anchored" data-anchor-id="開発競争は次のフェーズへ">開発競争は次のフェーズへ</h2>
-<p>正直な話、イデオロギーでAIの未来を語るフェーズはとうに終わっている。今回のAnthropicとSpaceXの提携は、AI覇権を握るためのルールが完全に「物理的なComputeの暴力的な確保」と「利用データからの継続的学習エコシステムの独占」の2点に集約されたことを、残酷なまでに示しつけている。</p>
-<p>敵の敵は味方。足りないものを補い合うために資本主義の論理が機能したと言えば聞こえはいいが、少なくともB2Bの文脈でこの血みどろのインフラ争奪戦を眺める我々開発者としては、巨大企業同士が首の皮一枚で牽制し合う綱渡りのようなプラットフォーム基盤の上でプロダクトを作らざるを得ないという危うさを、改めて自覚させられる。</p>
-<p>この野合が生み出す巨大な演算リソースが、Claudeをさらなる高みへと押し上げるのか、あるいはxAIを底なしの泥沼から救い出すのか。いずれにせよ、AI戦国時代は「Computeという物理的資産をいかに確保し、いかに効率よく燃やすか」という極めて泥臭いフェーズへと突入したといえる。</p>
+<section id="scalable-oversight理解不能な真理とどう向き合うか" class="level2">
+<h2 class="anchored" data-anchor-id="scalable-oversight理解不能な真理とどう向き合うか">Scalable Oversight：理解不能な真理とどう向き合うか</h2>
+<p>しかし、この先にはさらに絶望的で興味深い課題が待ち受けている。AIモデルの能力がさらに向上し、人間の能力をあらゆる側面で完全に凌駕した時、我々はそのAIが導き出した証明が「正しい」とどうやって確認すればよいのだろうか。</p>
+<p>Erdős予想の反証が示された際、高名な数学者であるTimothy Gowersでさえ、その解法が複雑すぎて当初は「人間はもう完全に終わった」と夜も眠れないほどの衝撃を受けたという。最終的には、その証明が超絶技巧のカウンターエグザンプルの構築であったことがわかり安堵したようだが、これは近い将来に訪れる危機の予兆に過ぎない。</p>
+<p>AIが生成する証明が、人間の認知限界を超えて複雑化していくことは避けられない。数十分野の理論を横断し、数万ステップの推論を経て導き出された真理を前に、人間の数学者はただ頷くことしかできなくなる。ここにきて、AI Alignment（アライメント）における古典的かつ最大の難問である「Scalable Oversight（スケーラブルな監視）」が、純粋数学の世界で現実の課題として牙を剥くこととなる。</p>
+<p>我々は、人間に理解できない証明を検証するために、別のAIモデルを使って「その証明が正しいことを人間にわかるように説明させる（あるいは証明させる）」というメタ的なタスクをAIに課さざるを得なくなる。AIの吐き出したブラックボックスの真理を、別のAIが翻訳して初めて人間が咀嚼できるという構図は、もはや我々が数学を「探求」しているのか、AIの思考の「観察者」に成り下がっているのかを曖昧にする。</p>
+<p>OpenAIは現在、こうした特化型のモデルを特定の数学者にだけ提供し続けるのではなく、モデル自体の汎用的な推論能力を向上させ、次世代のGPTシリーズとして広く世界に投下することに注力しているという。開発者目線では、「早く特化型のAPIとして公開してくれよ」と愚痴りたくもなるが、汎用的な推論能力の底上げこそがAGIへの最短経路であるという彼らの主張は、理にかなっていると言わざるを得ない。</p>
+<p>我々は今、純粋理性のフロンティアが、人間の脳髄からシリコンの海へと不可逆的に移譲されていく歴史の転換点に立ち会っている。数年後、数学の教科書にAIモデルの名前が「共同発見者」としてではなく、「単独の定理証明者」として刻まれる日は、我々が思っているよりもずっと近いのかもしれない。</p>
 
 
 </section>
