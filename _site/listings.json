@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/yann-lecun-jepa/index.html",
       "/posts/noam-brown-erdos/index.html",
       "/posts/kyle-github/index.html",
       "/posts/yaroslav-azhnyuk-fpv-drones/index.html",
