@@ -7,7 +7,8 @@ website:
   description: "機械学習・AIに関する話題を中心に書いています"
   google-analytics: G-8BXHXPDSCJ
   open-graph: true
-  twitter-card: true
+  twitter-card:
+    card-style: summary
   navbar:
     right:
       - about.qmd
@@ -30,6 +31,5 @@ format:
     css: styles.css
 execute:
   freeze: auto
-
 
 

@@ -4,7 +4,7 @@ description: "OpenAI o1によるErdős予想の反証を機に、AIが数学に�
 author: "Junichiro Iwasawa"
 date: "2026-06-12"
 categories: [LLM, AI, Podcast]
-image: https://picsum.photos/id/199/200
+image: 202606121520.png
 ---
 
 OpenAIのAIモデルが[Erdős unit distance conjecture（エルデシュの単位距離問題）の反証に成功した](https://openai.com/index/model-disproves-discrete-geometry-conjecture/)というニュースが界隈を駆け巡ってから少しの時間が経った。
