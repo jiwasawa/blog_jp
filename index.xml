@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Fri, 12 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 13 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Yann LeCunの反逆と、LLM至上主義の終焉</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</link>
+  <description><![CDATA[ Yann LeCunのFAIR離脱とAMI設立の背景にあるLLMへの懐疑論と、world modelsによる次世代AIへの展望を解説する。 ]]></description>
+  <category>JEPA</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</guid>
+  <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606130049.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,18 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/slimqwen/</guid>
   <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/191/200" medium="image"/>
-</item>
-<item>
-  <title>AI駆動開発の臨界点：Garry Tanの “Tokenmaxxing”と開発者の生存戦略</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/gstack/</link>
-  <description><![CDATA[ Y Combinator CEOのGarry Tanが、AIコーディングエージェントを駆使した「Tokenmaxxing」戦略と「Conductor Pattern」による開発ワークフローから、AIネイティブなソフトウェア開発のパラダイムシフトを読み解く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/gstack/</guid>
-  <pubDate>Wed, 13 May 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/190/200" medium="image"/>
 </item>
 </channel>
 </rss>
