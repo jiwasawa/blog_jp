@@ -4,7 +4,7 @@ description: "AIとFPVドローンが戦争を不可逆的に変容させる中�
 author: "Junichiro Iwasawa"
 date: "2026-06-09"
 categories: [AI, Podcast, Latent Space Podcast]
-image: 202606121558.png
+image: 202606121558-twitter.jpg
 ---
 
 ペットに餌を放り投げるカメラを作る起業家が、侵略者に爆薬を投げつけるAIドローン企業を立ち上げる。そんなSF映画のような転身が、現在のウクライナでは現実の日常として起きている。

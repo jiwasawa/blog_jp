@@ -4,7 +4,7 @@ description: "AIエージェントによる1400%の急成長がGitHubインフ�
 author: "Junichiro Iwasawa"
 date: "2026-06-10"
 categories: [LLM, AI, Podcast, Latent Space Podcast]
-image: 202606121508.png
+image: 202606121508-twitter.jpg
 ---
 
 最近、GitHubの稼働率が著しく下がり、開発者たちがTwitter（現X）で阿鼻叫喚の様相を呈しているのをよく見かける。CI/CDが回らず、強制的に「雪休み（Snow day）」を謳歌する羽目になった開発者も少なくないだろう。このダウンタイムの頻発を以て、GitHubの技術力低下だのオワコンだのと騒ぎ立てる輩が後を絶たないが、一旦そのような短絡的な批判は無視して、裏で何が起きているのかに焦点を当てる。
