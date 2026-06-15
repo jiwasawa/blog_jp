@@ -12,16 +12,17 @@
 <generator>quarto-1.8.27</generator>
 <lastBuildDate>Fri, 12 Jun 2026 15:00:00 GMT</lastBuildDate>
 <item>
-  <title>Yann LeCunの反逆と、LLM至上主義の終焉</title>
+  <title>Large Language Model (LLM) 信仰の終焉とWorld Modelの逆襲</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</link>
-  <description><![CDATA[ Yann LeCunのFAIR離脱とAMI設立の背景にあるLLMへの懐疑論と、world modelsによる次世代AIへの展望を解説する。 ]]></description>
+  <description><![CDATA[ Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。 ]]></description>
   <category>JEPA</category>
+  <category>LLM</category>
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</guid>
   <pubDate>Fri, 12 Jun 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606130049.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606152207.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化</title>
