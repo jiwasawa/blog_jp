@@ -1,5 +1,5 @@
 ---
-title: "Large Language Model (LLM) 信仰の終焉とWorld Modelの逆襲"
+title: "Yann LeCunが語るLarge Language Model (LLM) 信仰の終焉とWorld Modelの逆襲"
 description: "Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。"
 author: "Junichiro Iwasawa"
 date: "2026-06-13"
@@ -8,7 +8,7 @@ image: 202606152207.jpg
 ---
 
 
-Yann LeCunが[「Unsupervised Learning podcast」](https://youtu.be/ngBraLDqzdI?si=94gwMI3XabzIjWYW)に出演し、現在のAI開発トレンド、とりわけLarge Language Model (LLM) の限界について辛辣な批判を展開した。
+Yann LeCunが[Unsupervised Learning podcast](https://youtu.be/ngBraLDqzdI?si=94gwMI3XabzIjWYW)に出演し、現在のAI開発トレンド、とりわけLarge Language Model (LLM) の限界について辛辣な批判を展開した。
 
 彼がMetaのFAIR (Facebook AI Research) のトップポジションを退き、新たにAMI (Advanced Machine Intelligence) Labsを立ち上げた背景には、短期的なプロダクトサイクルとLLM至上主義に毒された業界への強い危機感がある。LLMのスケールアップさえ続ければいつか真の人工知能に到達するという無責任極まりない未来観測的与太話を真っ向から否定し、物理世界を理解する「World Model（世界モデル）」の構築こそが本質的なアプローチだと断言するLeCunの論考は、過熱するAIレースに冷や水を浴びせる極めてディープな代物だ。当記事では、単なるLLM批判の枠を超え、彼が提唱する次世代アーキテクチャであるJEPAの真価と、Metaからのスピンアウトを経て彼が狙うオープンソース戦略およびAI主権（AI sovereignty）の確立に焦点を当てる。
 
