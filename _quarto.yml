@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "jiwasawaのブログ"
+  title: "miscellaneous notes"
   site-url: https://jiwasawa.github.io/blog_jp
   description: "機械学習・AIに関する話題を中心に書いています"
   google-analytics: G-8BXHXPDSCJ
