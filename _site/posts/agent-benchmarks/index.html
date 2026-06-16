@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="AIエージェントの基本原理からτ-benchやTerminal-Benchのような実践的アプローチ、そして独自の評価システム構築ロードマップまでを網羅し、その複雑な評価メカニズムを体系的に解説します。">
+
+<title>AIエージェント評価の深層：基本原理から実践的アプローチまで</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="AIエージェント評価の深層：基本原理から実践的アプローチまで – jiwasawaのブログ">
+<meta property="og:description" content="AIエージェントの基本原理からτ-benchやTerminal-Benchのような実践的アプローチ、そして独自の評価システム構築ロードマップまでを網羅し、その複雑な評価メカニズムを体系的に解説します。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/202606160857.jpg">
+<meta property="og:site_name" content="jiwasawaのブログ">
+<meta name="twitter:title" content="AIエージェント評価の深層：基本原理から実践的アプローチまで – jiwasawaのブログ">
+<meta name="twitter:description" content="AIエージェントの基本原理からτ-benchやTerminal-Benchのような実践的アプローチ、そして独自の評価システム構築ロードマップまでを網羅し、その複雑な評価メカニズムを体系的に解説します。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/202606160857.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">jiwasawaのブログ</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">AIエージェント評価の深層：基本原理から実践的アプローチまで</h1>
+                  <div>
+        <div class="description">
+          AIエージェントの基本原理からτ-benchやTerminal-Benchのような実践的アプローチ、そして独自の評価システム構築ロードマップまでを網羅し、その複雑な評価メカニズムを体系的に解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Agentic Systems</div>
+                <div class="quarto-category">Benchmark</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年6月16日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、Artificial Intelligence (AI) のランドスケープは劇的な進化を遂げている。AIエージェントは、単一の質問に応答する単純なチャットボットの域を脱し、複雑で複数ステップにわたるタスクを自律的に遂行可能な高度なシステムへと変貌を遂げた。ソフトウェアエンジニアリングや医療といったリスクと責任が伴う高ステークスな領域において、これらのエージェントの導入が進む中、その性能と信頼性を正確に測定する「評価（Evaluation）」の重要性がかつてないほど高まっている。</p>
+<p>本稿では、<a href="https://cameronrwolfe.substack.com/p/agent-evals">AIエージェント評価</a>の複雑なメカニズムを紐解き、基本概念から実務で観察される共通パターン、そして最前線の研究におけるベンチマークのケーススタディまで、詳細かつ体系的に解説する。</p>
+<section id="aiエージェントの基本パラダイムllmから自律型システムへ" class="level2">
+<h2 class="anchored" data-anchor-id="aiエージェントの基本パラダイムllmから自律型システムへ">AIエージェントの基本パラダイム：LLMから自律型システムへ</h2>
+<p>エージェントシステムの根幹を成すのは、間違いなく Large Language Model (LLM) である。しかし、従来のLLMが入力されたプロンプトに対して一度きりの出力を生成する静的なシステムであったのに対し、AIエージェントは推論能力を活用し、ツールを駆使しながら環境と相互作用し、エラーから回復しつつ目標達成を目指す動的なシステムである。この自律的な反復プロセスは、「Agentic loop」と呼ばれる。</p>
+<section id="エージェントを構成する3つのコアコンポーネント" class="level3">
+<h3 class="anchored" data-anchor-id="エージェントを構成する3つのコアコンポーネント">エージェントを構成する3つのコアコンポーネント</h3>
+<p>実用的なエージェントは、主に以下の3つの要素によって構成されている。</p>
+<ol type="1">
+<li><strong>The Underlying LLM（基盤となるLLM）：</strong> エージェントの「頭脳」として機能し、現状の把握、次に取るべき行動の推論、および意思決定を担う。最近では、より高度な推論能力を持つ推論モデル（Reasoning models）が採用されるケースが増えている。</li>
+<li><strong>Tools（ツール）：</strong> Application Programming Interface (API) や Command Line Interface (CLI)、データベースへのアクセスなど、エージェントが外部環境と情報をやり取りし、物理的あるいは仮想的な変化をもたらすための外部機能である。ツールの定義と呼び出し方（Tool calling）の設計は、エージェントの挙動に決定的な影響を与える。</li>
+<li><strong>Instructions（命令・ガイドライン）：</strong> エージェントの行動を方向付ける明確なルール群である。単に目的を指示するだけでなく、問題解決の戦略、エッジケースへの対処法、行動の制約などを詳細に規定する。</li>
+</ol>
+</section>
+<section id="reactフレームワークとagentic-loop" class="level3">
+<h3 class="anchored" data-anchor-id="reactフレームワークとagentic-loop">ReActフレームワークとAgentic Loop</h3>
+<p>これらのコンポーネントを単一の反復ループに統合したものが Agentic loop である。このループの代表的な実装パラダイムとして <a href="https://arxiv.org/abs/2210.03629"><strong>ReAct (Reasoning and Action)</strong></a> フレームワークが挙げられる。</p>
+<p>ReActフレームワークにおいては、エージェントは現在の環境を観察（Observation）し、その状態に基づいて次にとるべきステップを推論（Thought）し、実際の行動（Action）を起こす。行動の結果として得られた新たな観察を基に、タスクが完了するまでこのサイクルを繰り返す。思考と行動を明示的に分離しつつ連動させることで、長期的なコンテキストを維持しながら複雑な問題に対処することが可能となる。</p>
+</section>
+<section id="multi-agent-systems-mas-への拡張" class="level3">
+<h3 class="anchored" data-anchor-id="multi-agent-systems-mas-への拡張">Multi-agent Systems (MAS) への拡張</h3>
+<p>タスクの複雑性が増すにつれ、単一のエージェント（Single-agent）では Instruction が肥大化し、適切なツールの選択が困難になる現象（Context rot）が発生する。この課題に対処するため、専門化された複数のエージェントにタスクを分散させる <strong>Multi-agent systems (MAS)</strong> が台頭している。</p>
+<p>MASの実装パターンには、全体を統括する中央エージェントが専門エージェントをオーケストレーションする「Manager setup」や、個々のエージェントが対等な立場でタスクをパスし合う「Decentralized setup（分散型セットアップ）」が存在する。これにより論理的なタスクの分割が可能になるが、システムの挙動はより複雑化し、評価の難易度も飛躍的に上昇する。</p>
+</section>
+</section>
+<section id="エージェント評価の複雑性と構成要素" class="level2">
+<h2 class="anchored" data-anchor-id="エージェント評価の複雑性と構成要素">エージェント評価の複雑性と構成要素</h2>
+<p>従来行われてきたLLMの評価は、静的な質問データセットに対する回答の精度を測るシングルターン（一問一答）形式が主流であった。しかし、エージェントは環境やツールと動的に相互作用しながらマルチターン（複数回のやり取り）でタスクを実行する。このため、エージェントの評価にはシステム全体を実行・監視するための堅牢な <strong>Evaluation harness（評価ハーネス）</strong> または Scaffold（足場）が必要不可欠となる。</p>
+<section id="評価を構築する基本コンポーネント" class="level3">
+<h3 class="anchored" data-anchor-id="評価を構築する基本コンポーネント">評価を構築する基本コンポーネント</h3>
+<p>エージェント評価は、一貫して以下の基本要素によって構成される。</p>
+<ul>
+<li><strong>Tasks（タスク）：</strong> 定義済みの入力条件と成功基準を持つ個々のテストケース。</li>
+<li><strong>Trials（試行）：</strong> あるタスクを解決しようとする1回の実行プロセス。非決定論的なLLMの性質を考慮し、同一タスクに対して複数回の試行が行われることが多い。</li>
+<li><strong>Transcripts / Trajectories（軌跡）：</strong> エージェントの推論ステップ、ツールの呼び出し履歴、中間出力など、試行中のあらゆる相互作用を記録したログ。</li>
+<li><strong>Outcomes（結果・成果）：</strong> 試行完了時における外部環境（データベース、コンテナなど）の最終状態。エージェントが生成したテキスト出力とは区別される。</li>
+<li><strong>Graders（評価器）：</strong> 試行が成功したかどうかを、Transcript や Outcome に基づいて判定するメカニズム。</li>
+</ul>
+</section>
+<section id="graderの分類と役割human-vs.-automatic" class="level3">
+<h3 class="anchored" data-anchor-id="graderの分類と役割human-vs.-automatic">Graderの分類と役割：Human vs.&nbsp;Automatic</h3>
+<p>評価器（Grader）の選定は、評価の信頼性とスケーラビリティに直結する。</p>
+<ul>
+<li><strong>Human Evaluators（人間の評価者）：</strong> ニュアンスを含んだ詳細なフィードバックを提供可能な、評価におけるゴールドスタンダードである。しかし、コストと時間がかかり、評価者間のキャリブレーション（基準のすり合わせ）を怠ると品質が担保できない。</li>
+<li><strong>Automatic Graders（自動評価器）：</strong>
+<ul>
+<li><strong>Code-based Graders（コードベースの評価器）：</strong> 文字列の完全一致、正規表現、アサーション、テストケースの実行など、Pythonスクリプト等で記述可能な決定論的チェック。効率的で再現性が高いが、主観的な品質評価には向かない。</li>
+<li><strong>Model-based Graders (LLM-as-a-Judge)：</strong> LLMを用いて、コードベースでは捉えきれない主観的または定性的な品質を評価する。ペアワイズ比較（Pairwise scoring）や絶対評価（Direct assessment）などの手法が用いられる。</li>
+</ul></li>
+</ul>
+<p>包括的な評価戦略においては、これらを単一の手法に依存させるのではなく、Human Evaluators を用いて Model-based Graders をキャリブレーションし、スケーラビリティを確保しながら Code-based の決定論的チェックを組み合わせるアプローチが推奨される。</p>
+</section>
+<section id="masにおける評価の固有の課題" class="level3">
+<h3 class="anchored" data-anchor-id="masにおける評価の固有の課題">MASにおける評価の固有の課題</h3>
+<p>Multi-agent systems の評価においては、さらなる困難が待ち受けている。第一に <strong>スケーラビリティと相互運用性（Interoperability）</strong> である。エージェント数が増加するにつれ、システム全体のオーケストレーション異常（タスク分解の失敗や役割の誤割り当て）をどのように特定するかが課題となる。第二に <strong>非決定論的性質（Non-deterministic nature）</strong> である。確率的推論に基づく動的コンテキスト下では、全く同じ入力でも異なる軌跡（Transcript）を辿って正解に到達する可能性がある。したがって、手続き型のスクリプトに従ったかどうかではなく、指定された制約条件（Behavioral boundaries）の中で目的の Outcome を達成したかを評価するフレームワークが求められている。</p>
+</section>
+</section>
+<section id="実世界におけるケーススタディ最前線のベンチマーク" class="level2">
+<h2 class="anchored" data-anchor-id="実世界におけるケーススタディ最前線のベンチマーク">実世界におけるケーススタディ：最前線のベンチマーク</h2>
+<p>エージェント評価の原則が実際にどのように適用されているか、最近の代表的なベンチマーク研究を紐解いてみよう。</p>
+<section id="τ-bench-series動的対話と厳格な指標-passk" class="level3">
+<h3 class="anchored" data-anchor-id="τ-bench-series動的対話と厳格な指標-passk">τ-bench Series：動的対話と厳格な指標 <code>Pass^K</code></h3>
+<p>Yaoらによって提案された <a href="https://arxiv.org/abs/2406.12045"><strong>τ-bench (Tau-bench)</strong></a> は、小売や航空業界といった実世界のドメインにおける、動的でマルチターンな会話をシミュレートするベンチマークである。エージェントは、提供されたドメイン固有のポリシー文書に従いながら、ユーザー（LLMによってシミュレートされる）の曖昧な要求を解釈し、APIを叩いてデータベースを操作しなければならない。</p>
+<p>このベンチマークの特筆すべき点は、エージェントの信頼性を測るための独自指標である。従来LLMで用いられてきた <code>Pass@K</code>（K回の試行のうち1回でも成功すれば合格）に代わり、より厳格な <strong><code>Pass^K</code> (Pass hat K)</strong> を導入した。これは、K回の独立した試行の<strong>すべて</strong>でタスクに成功する確率を測定する指標である。現実世界のカスタマーサポートにおいて、顧客ごとに対応品質がばらつくことは許されないため、この指標はエージェントの「真の堅牢性」を浮き彫りにする。</p>
+<p>その後、ユーザーとエージェント双方がツールを用いて協調的に問題を解決するDual-control環境を導入した <strong>τ²-bench</strong>、さらに情報検索（Knowledge base retrieval）の要素を加え、必要なツールやポリシーを自ら発見しなければならない <strong>τ³-bench</strong> へと進化を続けている。</p>
+</section>
+<section id="terminal-benchcli環境におけるoutcome-orientedな評価" class="level3">
+<h3 class="anchored" data-anchor-id="terminal-benchcli環境におけるoutcome-orientedな評価">Terminal-Bench：CLI環境におけるOutcome-orientedな評価</h3>
+<p>Merrillらによる <a href="https://arxiv.org/abs/2601.11868"><strong>Terminal-Bench</strong></a> は、Command Line Interface (CLI) をエージェントのワークスペースと見なし、ソフトウェアエンジニアリングや機械学習の高度なタスクを評価するフレームワークである。</p>
+<p>このベンチマークにおける最大の設計思想は、徹底した <strong>Outcome-oriented（結果指向）</strong> アプローチにある。エージェントがどのようなコマンドを実行したか（Transcript）は評価の対象とせず、タスク終了時における Docker コンテナの最終状態のみをアサーションによって検証する。エージェントは、目的を達成する限り、どのようなアプローチやツールを使用しても構わない。</p>
+<p><a href="https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2/index.html">Terminal-Bench 2.0</a>の構築においては、Integrity（チートによる不正解法の排除）と Solvability（実際に解決可能であること）を担保するため、タスクの提出から採用までに数時間に及ぶ人間の専門家による厳格なレビューと、敵対的エージェント（Adversarial exploit agent）を用いた脆弱性テストが組み込まれており、ベンチマーク自体の品質管理が極めて高い水準で行われている。</p>
+</section>
+</section>
+<section id="独自のエージェント評価システム構築のためのロードマップ" class="level2">
+<h2 class="anchored" data-anchor-id="独自のエージェント評価システム構築のためのロードマップ">独自のエージェント評価システム構築のためのロードマップ</h2>
+<p>最前線のベンチマークから得られた知見を統合すると、自らのプロジェクトに最適なエージェント評価スイートを構築するためのシステマティックなアプローチは以下の7つのステップに集約される。</p>
+<ol type="1">
+<li><strong>Define Success（成功の定義）：</strong> エージェントの「成功」とは何かを明確に言語化する。特定の手続きを踏んだか（Process goals）よりも、最終的な環境の変化（Outcome goals）に焦点を当てることが、評価の堅牢性を高める。</li>
+<li><strong>Collect Task Set（タスクセットの初期収集）：</strong> 最初から大規模なデータセットを用意するのではなく、現実的なユースケースと既知の失敗モードを代表する少数のタスク（10〜20程度）を手動でキュレーションすることから始める。</li>
+<li><strong>Create Quality Tasks（高品質なタスクの作成）：</strong> タスクの指示に曖昧さがないことを確認する。タスクの欠陥によってエージェントが失敗する事態を防ぐため、実行条件と測定可能な基準を厳密に定義する。</li>
+<li><strong>Provide Ground Truth（グラウンドトゥルースの提供）：</strong> 各タスクが確実に解決可能であることを証明するため、人間の専門家による参照用ソリューション（Oracle solution）や正解軌跡を用意する。これは評価器（Grader）のデバッグにも直結する。</li>
+<li><strong>Configure Graders（評価器の構成）：</strong> 決定論的な Code-based Grader と、LLM-as-a-Judge による Model-based Grader を組み合わせる。主観的な判定には人間のレビューを定期的に実施し、モデルのキャリブレーションを継続して行う。</li>
+<li><strong>Build Evaluation Harness（評価ハーネスの構築）：</strong> 制御された分離環境（サンドボックス化されたコンテナなど）内でエージェントを一貫して実行し、Transcript や Outcome を自動的に収集・記録するシステムを開発する。</li>
+<li><strong>Inspect, Iterate, and Maintain（検証、反復、および保守）：</strong> エージェントの性能向上に伴いベンチマークはすぐに飽和する。失敗した Transcript を分析して新たなエッジケースを発見し、評価スイートを継続的にアップデートしていくことが不可欠である。</li>
+</ol>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>AIエージェントの評価は、一度きりのテストで完結するものではない。それは、エージェントの推論能力、ツール使用能力、そして自律的な環境相互作用の複雑性を、正確かつスケーラブルに測定するための継続的なエンジニアリングプロセスである。</p>
+<p>従来のソフトウェアテストで培われた決定論的なアプローチと、LLMの確率的で創発的な性質を評価するための柔軟なアプローチ（Behavioral boundariesに基づく評価など）を融合させる必要がある。τ-benchの <code>Pass^K</code> が示すような厳格な一貫性の要求や、Terminal-Benchが示すような純粋な Outcome-oriented の思想は、私たちがAIに期待する「真の自律性」を測定するための重要な指針となる。</p>
+<p>本稿で概説したロードマップと設計原則を採用し、既存のベンチマークの進化から学ぶことで、研究者および開発者はより信頼性が高く、実世界で真の価値を提供するAIエージェントの実現に向けた有意義な前進を推進することができるだろう。</p>
+<hr>
+<p><strong>出典・参考:</strong> * <a href="https://cameronrwolfe.substack.com/p/agent-evals">Agent Evaluation: A Detailed Guide | Cameron R. Wolfe, Ph.D.</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
