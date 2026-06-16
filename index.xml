@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sat, 13 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 16 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIエージェント評価の深層：基本原理から実践的アプローチまで</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/</link>
+  <description><![CDATA[ AIエージェントの基本原理からτ-benchやTerminal-Benchのような実践的アプローチ、そして独自の評価システム構築ロードマップまでを網羅し、その複雑な評価メカニズムを体系的に解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Agentic Systems</category>
+  <category>Benchmark</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/</guid>
+  <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/202606160857.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Large Language Model (LLM) 信仰の終焉とWorld Modelの逆襲</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -118,17 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/jane-street-dwarkesh/</guid>
   <pubDate>Mon, 25 May 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/192/200" medium="image"/>
-</item>
-<item>
-  <title>SlimQwen：大規模MoEモデルの事前学習における枝刈りと蒸留の探求</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/slimqwen/</link>
-  <description><![CDATA[ SlimQwenは、大規模MoEモデルの事前学習における構造化枝刈り・部分保存エキスパートマージ・MTP Distillation・段階的スケジュールといった革新的なアプローチにより、約4倍の圧縮率で性能を維持する効率的なモデル圧縮手法を確立した。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/slimqwen/</guid>
-  <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/191/200" medium="image"/>
 </item>
 </channel>
 </rss>
