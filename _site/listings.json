@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/post-training-science/index.html",
       "/posts/rl-scaling/index.html",
       "/posts/agent-benchmarks/index.html",
       "/posts/yann-lecun-jepa/index.html",

@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 18 Jun 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 21 Jun 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Post-Training Science：Supervised Fine-Tuningの体系的最適化</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/post-training-science/</link>
+  <description><![CDATA[ Basetenの研究論文に基づき、Supervised Fine-Tuning (SFT) における学習率、LoRA設定、エポック数、オプティマイザ選択などのハイパーパラメータ最適化に関する実証的な知見とデータ駆動型の推奨事項を解説する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/post-training-science/</guid>
+  <pubDate>Sun, 21 Jun 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/post-training-science/202606221011.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,16 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/oriol-vinyals-unsupervised-learning/</guid>
   <pubDate>Thu, 28 May 2026 15:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/194/200" medium="image"/>
-</item>
-<item>
-  <title>行列乗算の隠れた特性：なぜその Matmul は遅いのか（そしてどう解決するのか）</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/horace-he-matmuls/</link>
-  <description><![CDATA[ 行列乗算のパフォーマンスを支配する計算強度、タイリング、ウェーブ量子化の3つの隠れた特性を理解することで、LLMなどのモデルにおける遅延の原因を特定し、最適化につなげる方法を解説します。 ]]></description>
-  <category>GPU</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/horace-he-matmuls/</guid>
-  <pubDate>Mon, 25 May 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/193/200" medium="image"/>
 </item>
 </channel>
 </rss>
