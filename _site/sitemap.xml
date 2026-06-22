@@ -474,10 +474,14 @@
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/index.html</loc>
-    <lastmod>2026-06-16T00:18:46.831Z</lastmod>
+    <lastmod>2026-06-16T00:18:59.735Z</lastmod>
   </url>
   <url>
     <loc>https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/index.html</loc>
     <lastmod>2026-06-16T00:17:42.377Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jiwasawa.github.io/blog_jp/posts/rl-scaling/index.html</loc>
+    <lastmod>2026-06-22T01:29:24.458Z</lastmod>
   </url>
 </urlset>

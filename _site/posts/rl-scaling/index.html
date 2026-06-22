@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。">
+<meta name="description" content="LLMにおけるスケーリング則は事前学習から強化学習（RL）へと進化し、GRPOアルゴリズムやシグモイド曲線・べき乗則による分析を通じて、計算量と性能の関係予測やリソース配分の最適化といった実践的洞察をもたらしている。">
 
-<title>Yann LeCunが語るLarge Language Model (LLM) 信仰の終焉とWorld Modelの逆襲</title>
+<title>Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,15 +80,44 @@ gtag('js', new Date());
 gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Yann LeCunが語るLarge Language Model (LLM) 信仰の終焉とWorld Modelの逆襲 – miscellaneous notes">
-<meta property="og:description" content="Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。">
-<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606152207.jpg">
+<meta property="og:title" content="Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察 – miscellaneous notes">
+<meta property="og:description" content="LLMにおけるスケーリング則は事前学習から強化学習（RL）へと進化し、GRPOアルゴリズムやシグモイド曲線・べき乗則による分析を通じて、計算量と性能の関係予測やリソース配分の最適化といった実践的洞察をもたらしている。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/rl-scaling/202606160913.jpg">
 <meta property="og:site_name" content="miscellaneous notes">
-<meta name="twitter:title" content="Yann LeCunが語るLarge Language Model (LLM) 信仰の終焉とWorld Modelの逆襲 – miscellaneous notes">
-<meta name="twitter:description" content="Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。">
-<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606152207.jpg">
+<meta name="twitter:title" content="Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察 – miscellaneous notes">
+<meta name="twitter:description" content="LLMにおけるスケーリング則は事前学習から強化学習（RL）へと進化し、GRPOアルゴリズムやシグモイド曲線・べき乗則による分析を通じて、計算量と性能の関係予測やリソース配分の最適化といった実践的洞察をもたらしている。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/rl-scaling/202606160913.jpg">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -144,17 +173,15 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Yann LeCunが語るLarge Language Model (LLM) 信仰の終焉とWorld Modelの逆襲</h1>
+      <h1 class="title">Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察</h1>
                   <div>
         <div class="description">
-          Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。
+          LLMにおけるスケーリング則は事前学習から強化学習（RL）へと進化し、GRPOアルゴリズムやシグモイド曲線・べき乗則による分析を通じて、計算量と性能の関係予測やリソース配分の最適化といった実践的洞察をもたらしている。
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">JEPA</div>
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
-                <div class="quarto-category">Podcast</div>
               </div>
                   </div>
   </div>
@@ -172,7 +199,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026年6月13日</p>
+        <p class="date">2026年6月19日</p>
       </div>
     </div>
     
@@ -191,35 +218,105 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>Yann LeCunが<a href="https://youtu.be/ngBraLDqzdI?si=94gwMI3XabzIjWYW">Unsupervised Learning podcast</a>に出演し、現在のAI開発トレンド、とりわけLarge Language Model (LLM) の限界について辛辣な批判を展開した。</p>
-<p>彼がMetaのFAIR (Facebook AI Research) のトップポジションを退き、新たにAMI (Advanced Machine Intelligence) Labsを立ち上げた背景には、短期的なプロダクトサイクルとLLM至上主義に毒された業界への強い危機感がある。LLMのスケールアップさえ続ければいつか真の人工知能に到達するという無責任極まりない未来観測的与太話を真っ向から否定し、物理世界を理解する「World Model（世界モデル）」の構築こそが本質的なアプローチだと断言するLeCunの論考は、過熱するAIレースに冷や水を浴びせる極めてディープな代物だ。当記事では、単なるLLM批判の枠を超え、彼が提唱する次世代アーキテクチャであるJEPAの真価と、Metaからのスピンアウトを経て彼が狙うオープンソース戦略およびAI主権（AI sovereignty）の確立に焦点を当てる。</p>
-<section id="言語という牢獄llmの構造的欠陥と世界の欠如" class="level2">
-<h2 class="anchored" data-anchor-id="言語という牢獄llmの構造的欠陥と世界の欠如">言語という牢獄：LLMの構造的欠陥と「世界」の欠如</h2>
-<p>現在のAI業界は、GPT-5.5やMythosといったLLMの目覚ましい進化に酔いしれている。たしかにLLMは、テキスト翻訳やコード生成といった離散記号（discrete symbols）の操作においては驚異的な能力を発揮する。しかし、LeCunに言わせれば「LLMは現在やっているタスクにおいては素晴らしいが、人間レベルの知能への道筋にはなり得ない」のである。</p>
-<p>その最大の理由は、物理世界の複雑さに対する根本的な理解と、自己の行動がもたらす結果を予測し、それに基づいて計画（プランニング）する能力が完全に欠落しているからだ。現在のLLMは巨大なコーパスを元に自己回帰的に次のトークンを予測しているに過ぎず、コンテキストに基づく推論らしきものを生成できても、それは「世界」の物理法則や因果関係を理解しているわけではない。</p>
-<p>近年、LLMのアーキテクチャを無理やりロボティクスに拡張しようとするVLA (Vision-Language-Action) モデルが持て囃されたが、これもLeCunの視点からすれば「うまくいかないことが明白な短絡的アプローチ」である。現実の物理世界は高次元で連続的、かつノイズにまみれている。これを言語モデルのように自己回帰で予測させようとしても、模倣学習（imitation learning）のために膨大なテレオペレーション（遠隔操作）データが必要となり、未知の状況に対する汎用性（generalization）が全くスケールしない。</p>
-<p>さらにLeCunは、現在のLLMを「面白いくらいに安全ではない（interestingly unsafe）」と評している。世界モデルを持たないLLMは、結果を予測せずに発言・行動するため、本質的にハルシネーション（幻覚）を排除するアーキテクチャ上の制約を持たない。Open AIやAnthropicが声高に叫ぶ「AIの暴走リスク（Doomerシナリオ）」は詭弁であり、本当の危険性は「結果を予測できないシステムにエージェントとしての自律性を与えること」そのものにあるのだ。</p>
+<p>AI研究の歴史において、「スケーリング（Scaling）」ほど大きな影響を与えた概念は少ない。Large Language Model (LLM) において、スケーリングは主に事前学習（Pretraining）の文脈で研究されてきた。厳密なスケーリング則（Scaling Laws）の確立により、研究者は計算量とモデル性能の関係を明確に定義し、計算資源の投資効果を予測することが可能になった。</p>
+<p>しかし近年、推論モデル（Reasoning Models）の台頭により、パラダイムシフトが起きている。モデルの能力を引き出すための計算資源の投資先が、事前学習から強化学習（Reinforcement Learning, RL）へと拡大しているのだ。<a href="https://cameronrwolfe.substack.com/p/rl-scaling-laws">Cameron R. Wolfe氏による詳細な論考</a>に基づき、本稿では、事前学習におけるスケーリング則の基礎を振り返りつつ、LLMの強化学習プロセスにおけるスケーリング則がどのように進化し、どのような実践的洞察をもたらしているのかを詳細に解説する。</p>
+<section id="事前学習におけるスケーリング則の基礎" class="level2">
+<h2 class="anchored" data-anchor-id="事前学習におけるスケーリング則の基礎">事前学習におけるスケーリング則の基礎</h2>
+<p>LLMの初期のブレイクスルーの多くは、事前学習プロセスのスケールアップによってもたらされた。より大規模なデータセットでより大きなモデルを訓練するために計算量を投下すれば、それに比例して性能が向上するというシンプルな原則である。</p>
+<section id="べき乗則power-lawによる定式化" class="level3">
+<h3 class="anchored" data-anchor-id="べき乗則power-lawによる定式化">べき乗則（Power Law）による定式化</h3>
+<p>LLMの事前学習プロセスは、べき乗則（Power Law）を用いてモデル化することができる。最も基本的なべき乗則は <span class="math inline">\(y = a x^p\)</span> という関係で表されるが、LLMのスケーリング則の研究では通常、テスト損失（交差エントロピー損失など）の減少をモデル化するため、負の指数を用いた逆べき乗則が用いられる。</p>
+<p>対数スケール（Log-log space）でプロットした際、テスト損失 <span class="math inline">\(L\)</span> と以下の要素との間には、きれいな直線関係（線形関係）が観察される。</p>
+<ol type="1">
+<li>モデルのパラメータ数 <span class="math inline">\(N\)</span></li>
+<li>学習データ量 <span class="math inline">\(D\)</span></li>
+<li>訓練に使用される計算量 <span class="math inline">\(C\)</span> （FLOPs）</li>
+</ol>
+<p>訓練時の計算量 <span class="math inline">\(C\)</span> は、LLMが各ステップで1回の順伝播（Forward pass）と逆伝播（Backward pass）を行うという前提に基づき、一般的に以下のように近似される。</p>
+<p><span class="math display">\[C = 6 N D\]</span></p>
+<p>順伝播はトークンあたり約 <span class="math inline">\(2N\)</span> FLOPs、逆伝播はその2倍のコストがかかるため、合計で約 <span class="math inline">\(6N\)</span> FLOPs/トークンとなる。これに学習データの総トークン数 <span class="math inline">\(D\)</span> を掛けたものが総計算量となる。</p>
 </section>
-<section id="generativeモデルの敗北とjepaによる表現空間の予測" class="level2">
-<h2 class="anchored" data-anchor-id="generativeモデルの敗北とjepaによる表現空間の予測">Generativeモデルの敗北とJEPAによる表現空間の予測</h2>
-<p>では、いかにして機械に世界を理解させるのか。LeCunが長年提唱し、AMI Labsにおいてその具体的な青写真として結実しつつあるのが「World Model」である。</p>
-<p>基礎研究的な観点で述べるならば、彼が提唱するアーキテクチャの根幹は「Generative（生成）からの脱却」にある。画像や動画から世界モデルを学習させる際、VAE（変分オートエンコーダ）やMAE（Masked Autoencoder）のように「欠損したピクセルを予測・再構成させる」手法は、計算資源の無駄遣いであり失敗に終わることが明白となっている。物理世界の不確実性をピクセルレベルで予測することは不可能に近い。テーブルの上のペットボトルを指で弾いたとき、それがどのように回転してどのピクセルに水滴が飛び散るかの正確な予測は不要であり、単に「倒れて水がこぼれる」という抽象的な結果だけが重要だからだ。</p>
-<p>これを解決するのが、彼がFAIR時代から心血を注いできたJEPA (Joint Embedding Predictive Architecture) である。JEPAは、入力データ（例えば動画の連続するフレーム）を抽象的な表現空間（representation space）にエンコードし、ピクセルそのものではなく「表現空間内での推移」を自己教師あり学習（self-supervised learning）によって予測する。</p>
-<p>ピクセルを再構成しないため、表現が単一の点に潰れてしまう表現の崩壊（representation collapse）を防ぐ工夫が必要になるが、LeCunらは情報量を最大化する高度な正則化（regularization）アプローチを用いることでこれを解決しつつある。このアーキテクチャは既にDINOなどの画像表現モデルで大きな成果を挙げており、これを動画や行動条件付き（action-conditioned）の予測へと拡張したものが、推論とプランニングが可能な次世代システムの基盤となるのである。</p>
+<section id="compute-optimal-なリソース配分" class="level3">
+<h3 class="anchored" data-anchor-id="compute-optimal-なリソース配分">Compute-Optimal なリソース配分</h3>
+<p>Kaplan et al.&nbsp;(2020) の研究は、計算量、データ量、パラメータ数と性能の間に滑らかなべき乗則が存在することを示した。その後、DeepMindの「Chinchilla」論文 (Hoffmann et al., 2022) は、固定された計算量予算をモデルサイズとデータ量にどう最適配分（Compute-optimal allocation）するかを厳密に調査した。</p>
+<p>Chinchillaの研究により、事前学習を計算量最適にするためには、モデルサイズとデータ量を<strong>比例して</strong>増加させるべきであることが判明した。これにより、スケーリング則は単なる現象の観察から、膨大なコストがかかる訓練プロセスを設計するための強力な「予測ツール」へと進化したのである。</p>
 </section>
-<section id="fairの変質とami-labsが仕掛けるai主権の逆襲" class="level2">
-<h2 class="anchored" data-anchor-id="fairの変質とami-labsが仕掛けるai主権の逆襲">FAIRの変質と、AMI Labsが仕掛けるAI主権の逆襲</h2>
-<p>LeCunがMetaを離れてAMI Labsをパリに設立した理由は、こうした画期的な基礎研究を推進するための環境が、今の巨大テック企業には残されていないからだ。</p>
-<p>かつてのFAIRは純粋な科学的ブレイクスルーを追求し、PyTorchをはじめとする今日のAIインフラを生み出した理想的な研究組織だった。しかし2023年以降、Llamaの成功によって潮目が変わる。Metaの経営陣は、全社的なリソースをLLMの短期的なプロダクト開発へと全振りした。「LLM-pilled（LLMに洗脳された）」なシリコンバレーのエコシステムの中では、数ヶ月単位でのリリースが求められ、次世代のWorld Model構築という長期的なビジョンは組織の片隅へと追いやられてしまった。目先のパラメータ競争に奔走し、本質的なパラダイムシフトを見逃す様は、かつてGUIの可能性を自らドブに捨てたXerox PARCの歴史的失態すら彷彿とさせる。</p>
-<p>独立したAMI Labsのもう一つの重要なミッションが、「AI主権（AI sovereignty）」の確立だ。LeCunは、世界の言語や文化、価値観が少数の西海岸のテック企業（あるいは中国企業）が作ったクローズドなAIによって支配される未来に警鐘を鳴らす。AMIが目指すのは、多様なデータで訓練されたオープンな基盤モデルを構築し、各地域や文化圏のユーザーが自身の価値観に合わせてファインチューニング（fine-tuning）できるプラットフォームの提供である。</p>
-<p>LeCunはこの構想を、かつてのインターネットインフラ競争になぞらえている。1990年代、Sun MicrosystemsやHPがプロプライエタリなUNIXサーバーで市場を囲い込もうとしたが、結果的にオープンソースのLinuxに全てを駆逐された。現在のOpen AIやAnthropicは、まさに当時のSun Microsystemsと同じ道を歩んでいるというわけだ。彼らがクローズドなLLMで世界を支配しようとする試みは、いずれ多様な世界モデルを取り込んだオープンソースプラットフォームの前に敗れ去る運命にある。</p>
 </section>
-<section id="開発者は後回しにされるllm競争の次を見据えよ" class="level2">
-<h2 class="anchored" data-anchor-id="開発者は後回しにされるllm競争の次を見据えよ">開発者は後回しにされるLLM競争の「次」を見据えよ</h2>
-<p>現状のLLMが、プログラミングや数学など、言語そのものが推論の基盤となる限定的なドメインにおいて有用であることは疑いようがない。コーディング作業においては、LLMは優秀なプログラマーとして機能する（ソフトウェアアーキテクトにはなれずとも、だ）。</p>
-<p>しかし、ヘルスケアにおける複雑な生理学的ダイナミクスの予測や、工場で自律稼働するロボットの制御など、現実の物理的な「世界」の理解とプランニングが必要な領域において、LLMベースのアプローチはいずれ限界の壁に激突する。膨大なテレオペレーションデータをかき集めてAIに無理やり物理世界を模倣させるアプローチは、17歳の人間がたった20時間の練習で車の運転を習得する圧倒的なデータ効率性（data efficiency）の前には、あまりにも無力だ。</p>
-<p>LeCunが豪語する「5年以内でWorld Modelが世界を支配する」というタイムラインがそのまま現実のものとなるかは未知数だが、パラメータのゴリ押しでLLMを巨大化させるだけの脳死レースから抜け出し、抽象空間での予測とプランニングを備えたアーキテクチャへのシフトが不可避であることは火を見るより明らかである。</p>
-<p>我々は今、AIが単なる「高機能なオウム返し機械」から、現実世界を理解し自律的に行動する「知能」へと変座する決定的な過渡期に立ち会っている。プロンプトエンジニアリング・コンテキストエンジニアリングという名の泥臭い調整ゲームにいつまでも固執する者は、そう遠くない未来に、World Modelという真のパラダイムシフトの波に飲み込まれることとなるのかもしれない。</p>
+<section id="強化学習rlへの進化と背景技術" class="level2">
+<h2 class="anchored" data-anchor-id="強化学習rlへの進化と背景技術">強化学習（RL）への進化と背景技術</h2>
+<p>これまでLLMの訓練計算量の大部分は事前学習に費やされ、事後学習（Post-training）はモデルの挙動やスタイルを調整するための比較的安価なプロセスとみなされていた。しかし、OpenAIの「o1」シリーズやDeepSeekの「DeepSeek-R1」に代表される推論モデルの登場により、状況は一変した。</p>
+<p>これらのモデルは、最終的な回答を生成する前に、長い推論プロセス（Chain of Thought）を <code>&lt;think&gt;</code> トークンで囲んで生成する。この高度な推論能力やコーディング能力を引き出すためには、検証可能な報酬（Verifiable Rewards）を用いた大規模なRLトレーニングが不可欠である。結果として、LLMの訓練プロセスにおけるRL計算量の割合は劇的に増加している。</p>
+<section id="grpo大規模rlの標準アルゴリズム" class="level3">
+<h3 class="anchored" data-anchor-id="grpo大規模rlの標準アルゴリズム">GRPO：大規模RLの標準アルゴリズム</h3>
+<p>RLのスケーリングを理解するためには、その基礎となるアルゴリズムを理解する必要がある。RLHF時代にはProximal Policy Optimization (PPO) が主流であったが、現在の大規模な推論モデルのRLでは、<strong>Group Relative Policy Optimization (GRPO)</strong> が広く採用されている。</p>
+<p>GRPOの最大の特徴は、PPOで必要だった価値モデル（Value Model）を廃止した点にある。代わりに、バッチ内の各プロンプトに対して複数の出力（Rollouts）を生成し、その「グループ」内での相対的なスコアからアドバンテージ（Advantage）を推定する。</p>
+<p>特定の出力 <span class="math inline">\(i\)</span> の報酬を <span class="math inline">\(r_i\)</span>、グループ内の報酬の平均を <span class="math inline">\(\mu\)</span>、標準偏差を <span class="math inline">\(\sigma\)</span> とした場合、アドバンテージ <span class="math inline">\(A_i\)</span> は以下のように計算される。</p>
+<p><span class="math display">\[A_i = \frac{r_i - \mu}{\sigma}\]</span></p>
+<p>これにより、メモリと計算のオーバーヘッドが劇的に削減される。損失関数自体はPPOに似ており、クリッピングされたポリシー比率（Policy Ratio）を用いてモデルの更新幅を制限する。</p>
+</section>
+<section id="grpoの派生アルゴリズムと進化" class="level3">
+<h3 class="anchored" data-anchor-id="grpoの派生アルゴリズムと進化">GRPOの派生アルゴリズムと進化</h3>
+<p>GRPOの実装はオープンリサーチのコミュニティで急速に洗練され、安定性とサンプル効率を向上させるための多くの派生手法が提案されている。</p>
+<ul>
+<li><strong>GSPO (Group Sequence Policy Optimization):</strong> トークンレベルのポリシー比率は分散が大きく、訓練の不安定化を招きやすい。GSPOは、ポリシー比率をシーケンス（文全体）レベルで計算し、幾何平均（Geometric Mean）を用いて長さを正規化することで、特に長文やMixture-of-Experts (MoE) モデルの訓練を安定させる。</li>
+<li><strong>DAPO (Dynamic Sampling Policy Optimization):</strong> GRPOの課題であるエントロピー崩壊（モデルが特定の出力に過剰に自信を持つ現象）を防ぐため、上限と下限のクリッピング幅を非対称にする手法。また、正解率が100%に達したプロンプトを動的に除外し、バッチを再構成する「動的サンプリング」により効率を高める。</li>
+<li><strong>Dr.&nbsp;GRPO (GRPO Done Right):</strong> 応答の長さによるバイアス（長い回答ほど勾配への影響が歪む）や、問題の難易度によるアドバンテージの極端な変動（標準偏差による正規化の弊害）を取り除くための補正を導入。</li>
+<li><strong>TIS (Truncated Importance Sampling):</strong> 効率化のために、ロールアウトの生成（vLLMなど）とポリシーの更新（FSDPなど）で異なるエンジンや精度を使用すると、トークンの確率にズレが生じる。TISは、このエンジンの不一致を補正するための重要度サンプリング（Importance Sampling）項を損失関数に組み込む。</li>
+<li><strong>CISPO:</strong> PPOスタイルのクリッピングでは、確率が大きく変動したトークン（推論における “Wait” や “Aha” といった重要なフォークトークン）の勾配が完全にカットされる問題がある。CISPOは、クリッピングされた比率にストップ勾配を適用し、重要なトークンが学習から除外されるのを防ぐ。</li>
+</ul>
+<p>また、RLの訓練が極端な分布に陥るのを防ぐため、事前学習モデルからの乖離をペナルティとする <strong>KL Divergence</strong> や、トークン分布の不確実性を維持する <strong>Entropy Bonus</strong> といった正則化技術も、状況に応じて損失関数に組み込まれる。</p>
+</section>
+</section>
+<section id="rlトレーニングのスケーリング則" class="level2">
+<h2 class="anchored" data-anchor-id="rlトレーニングのスケーリング則">RLトレーニングのスケーリング則</h2>
+<p>事前学習とは異なり、RLには予測のための確立された標準的なスケーリング則が存在しなかった。RLの設計空間は広大であり、「科学というより芸術（more art than science）」と揶揄されることも多かった。しかし最新の研究により、RLトレーニングにおける予測可能なスケーリングの法則性が明らかになりつつある。</p>
+<section id="シグモイド曲線によるrlスケーリングモデリング" class="level3">
+<h3 class="anchored" data-anchor-id="シグモイド曲線によるrlスケーリングモデリング">1. シグモイド曲線によるRLスケーリングモデリング</h3>
+<p>RLの性能向上を計算量（GPU時間）の関数としてモデル化した研究では、パフォーマンスの推移が<strong>シグモイド曲線（S字カーブ）</strong>を描くことが示されている。</p>
+<p>初期段階では報酬の増加は平坦だが、あるポイントから急速に性能が向上し、最終的に漸近的な上限（Asymptotic Ceiling）に達してプラトー（飽和状態）となる。この曲線をモデル化することで、以下の2つの指標を切り分けて評価することが可能になる。</p>
+<ol type="1">
+<li><strong>漸近的パフォーマンス（A）:</strong> 限界まで計算量を投下した場合に到達可能な最高性能。</li>
+<li><strong>計算効率（B）:</strong> 性能が向上する曲線の急峻さ。</li>
+</ol>
+<p>このアプローチの最大の利点は、小規模なRLトレーニングの初期動態から、数万GPU時間を要する大規模な実行結果を正確に外挿（Extrapolate）できる点にある。研究者らはこの手法を用いて数々の設計選択を評価し、非同期RL（PipelineRL）、CISPO損失、フル精度（float32）の言語モデリングヘッド、そして難易度に基づくデータカリキュラムを統合した「<strong>ScaleRL</strong>」と呼ばれる最適化レシピを開発した。</p>
+</section>
+<section id="数学推論タスクにおけるべき乗則" class="level3">
+<h3 class="anchored" data-anchor-id="数学推論タスクにおけるべき乗則">2. 数学推論タスクにおけるべき乗則</h3>
+<p>別の研究では、数学推論タスクにおけるRLのテスト損失（エラー率）が、計算量（Compute）やデータ量（Data）に対して明確な<strong>べき乗則</strong>に従うことが実証されている。</p>
+<p>RLの文脈において、このべき乗則は以下の2つの強力な外挿を可能にする。 * <strong>Inter-model extrapolation:</strong> 小規模モデル（0.5B〜32B）の学習結果から、大規模モデル（72B）の最終性能を予測する。 * <strong>Intra-model extrapolation:</strong> 単一モデルの学習軌跡の前半から、より長く訓練を続けた際の後半の性能を予測する。</p>
+<p>興味深い洞察として、「学習効率（Learning Efficiency）」はモデルサイズが大きくなるにつれて向上するが、ある時点で飽和（Saturate）することが分かっている。そのため、固定された限られた計算量予算の条件下では、小規模なモデルの方がより多くの「訓練ステップ」を実行できるため、大規模モデルよりも優れた性能を発揮する<strong>交差点（Crossover）</strong>が存在する。ただし、データと計算量が十分にスケールすれば、最終的には常により大きなモデルが勝利する。</p>
+</section>
+<section id="サンプリング計算量への最適配分" class="level3">
+<h3 class="anchored" data-anchor-id="サンプリング計算量への最適配分">3. サンプリング計算量への最適配分</h3>
+<p>RLの計算量 <span class="math inline">\(C\)</span> は、事前学習の単純な <span class="math inline">\(6ND\)</span> とは異なり、以下のような要素の積としてモデル化される。</p>
+<p><span class="math display">\[C = B_p \times n \times M\]</span> （<span class="math inline">\(B_p\)</span>: バッチ内のプロンプト数、<span class="math inline">\(n\)</span>: プロンプトあたりのロールアウト数、<span class="math inline">\(M\)</span>: 訓練ステップ数）</p>
+<p>限られた計算量予算をこれら3つのリソースにどう配分すべきかという問いに対し、最新の分析は明確な答えを出している。それは、<strong>計算量が増加するにつれて、プロンプトあたりのロールアウト数（<span class="math inline">\(n\)</span>）を増やすことに投資すべき</strong>だという点である。</p>
+<p>単純に訓練ステップ数（<span class="math inline">\(M\)</span>）を増やすよりも、一度により多くのロールアウトをサンプリングする方が有利に働く。これは特に難易度の高いタスクで顕著である。易しい問題ではロールアウトの増加がポリシーの堅牢性を高める一方、難しい問題では探索空間が広がり、稀な正解軌跡（Rare solutions）を発見する確率が高まるためである。</p>
+<p>また、問題の難易度によって適切な正則化戦略が異なることも判明している。易しい問題ではEntropy BonusとKL Divergenceを併用してエントロピー爆発を遅らせるのが有効だが、難しい問題では一切の正則化を行わない方が良い結果をもたらすケースが多い。</p>
+</section>
+</section>
+<section id="事前学習とrlのスケーリング則の比較" class="level2">
+<h2 class="anchored" data-anchor-id="事前学習とrlのスケーリング則の比較">事前学習とRLのスケーリング則の比較</h2>
+<p>事前学習とRLのスケーリング則は「予測可能である」という根本的な哲学を共有しているが、その実態には明確な違いがある。</p>
+<ul>
+<li><strong>パフォーマンス指標の違い:</strong> 事前学習は「交差エントロピー損失」という極めて安定的で普遍的な指標を用いる。対してRLは「報酬」や「正解率（Accuracy, Pass@Kなど）」といった下流タスクのノイジーな指標を使用するため、トレンドがタスクやベンチマークに依存しやすい。</li>
+<li><strong>計算量の定義:</strong> 事前学習の計算量はFLOPsとして明確に定義される。一方、RLは推論（サンプリング）と訓練（アップデート）の比率がフレームワークによって異なるため、計算量をGPU時間で測るかFLOPsで測るかが定まっておらず、一意なX軸を定義しづらい。</li>
+<li><strong>外挿のアプローチ:</strong> 事前学習は主にモデル間の外挿（Inter-model）に関心がある。RLはハイパーパラメータやセットアップに対する感度が極めて高いため、単一の訓練実行がどう推移するかを予測するモデル内（Intra-model）の外挿も同様に重要視される。</li>
+<li><strong>標準化の欠如（Bespokeな性質）:</strong> 事前学習のレシピは業界全体でほぼ標準化されているが、RLは設計空間が広大である。「この設定を変えればスケーリング則自体が変化する」という事態が頻繁に起こるため、RLのスケーリング則はそのセットアップに依存した「特注（Bespoke）」のものになりがちである。</li>
+</ul>
+</section>
+<section id="まとめ実践的takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ実践的takeaways">まとめ：実践的Takeaways</h2>
+<p>RLのスケーリングにはまだ未解明な部分が多く、本質的にノイジーでセットアップに依存する性質を持っている。しかし、近年蓄積された研究から得られる以下の実践的な洞察は、AI開発者にとって極めて有益である。</p>
+<ol type="1">
+<li><strong>所与のセットアップ内では予測可能である：</strong> RLの挙動はランダムではない。小規模な予算で初期動態を観察し、S字カーブやべき乗則を用いてIntra-modelの外挿を行うことで、コストの高い大規模実行の成否を事前に判断できる。</li>
+<li><strong>設計選択の二面性を理解する：</strong> アルゴリズムの変更が「学習の計算効率」を改善しているのか、それとも「漸近的な最高性能」の天井を引き上げているのかを区別して評価する必要がある。効率の悪化は訓練時間を延ばすことでカバーできるが、最高性能の低下は取り返しがつかない。</li>
+<li><strong>サンプリング計算量への投資：</strong> RLに利用可能な計算量が増えた場合、安易に訓練ステップを増やすのではなく、推論エンジン側でのサンプリング（プロンプトあたりのロールアウト数やバッチサイズ）にリソースを割く戦略が、漸近的性能の向上に直結する。</li>
+<li><strong>モデルサイズと計算量のトレードオフ：</strong> 基本的に「より大きなモデル」は常に優れた最終性能をもたらす。しかし、計算量に厳しい制約がある環境下では、より多くステップを踏める小規模モデルが有利になる領域が存在することを念頭に置くべきである。</li>
+</ol>
+<p>推論モデルへの移行に伴い、LLMの能力を決定づける重心はRLへと移行しつつある。事前学習におけるスケーリング則がAI開発を「錬金術から科学へ」と変えたように、RLスケーリングの法則性を探求する試みは、次世代のフロンティアモデルを構築するための最も重要なマイルストーンとなるだろう。</p>
+<hr>
+<p><strong>参考・出典:</strong> * <a href="https://cameronrwolfe.substack.com/p/rl-scaling-laws">RL Scaling Laws for LLMs | Deep (Learning) Focus by Cameron R. Wolfe, Ph.D.</a></p>
 
 
 </section>
