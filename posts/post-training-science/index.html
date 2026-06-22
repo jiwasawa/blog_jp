@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Basetenの研究論文に基づき、Supervised Fine-Tuning (SFT) における学習率、LoRA設定、エポック数、オプティマイザ選択などのハイパーパラメータ最適化に関する実証的な知見とデータ駆動型の推奨事項を解説する。">
+
+<title>Post-Training Science：Supervised Fine-Tuningの体系的最適化</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-bba5ebae505b5c03f3f0d8040a416a6b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Post-Training Science：Supervised Fine-Tuningの体系的最適化 – miscellaneous notes">
+<meta property="og:description" content="Basetenの研究論文に基づき、Supervised Fine-Tuning (SFT) における学習率、LoRA設定、エポック数、オプティマイザ選択などのハイパーパラメータ最適化に関する実証的な知見とデータ駆動型の推奨事項を解説する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/post-training-science/202606221011.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Post-Training Science：Supervised Fine-Tuningの体系的最適化 – miscellaneous notes">
+<meta name="twitter:description" content="Basetenの研究論文に基づき、Supervised Fine-Tuning (SFT) における学習率、LoRA設定、エポック数、オプティマイザ選択などのハイパーパラメータ最適化に関する実証的な知見とデータ駆動型の推奨事項を解説する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/post-training-science/202606221011.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Post-Training Science：Supervised Fine-Tuningの体系的最適化</h1>
+                  <div>
+        <div class="description">
+          Basetenの研究論文に基づき、Supervised Fine-Tuning (SFT) における学習率、LoRA設定、エポック数、オプティマイザ選択などのハイパーパラメータ最適化に関する実証的な知見とデータ駆動型の推奨事項を解説する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年6月22日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、オープンソースの基盤モデルを特定のタスクに適応させるアプローチとしてSupervised Fine-Tuning (SFT)が広く普及している。しかし、SFTにおける学習率、バッチサイズ、LoRAの設定、エポック数、オプティマイザの選択といった意思決定は、事前学習からの流用や経験則、あるいはその都度のアドホックなパラメータ探索に依存することが多かった。</p>
+<p>こうした状況に対し、Basetenは顧客モデルのファインチューニング経験に基づいたテクニカルペーパー「<a href="https://www.datocms-assets.com/104802/1781805778-baseten-research-sft.pdf">Post-Training Science for Supervised Fine-Tuning</a>」を公開した。本研究は、匿名化された実際のプロダクションSFTデータセットを用い、DenseモデルおよびMixture-of-Experts (MoE)の複数ファミリーに対して、統制された環境でハイパーパラメータの影響を測定している。</p>
+<p>本稿では、この論文から得られた知見をもとに、SFTのプロセスを勘や経験則からデータ駆動型の「科学」へと昇華させるための実践的アプローチと理論的背景を解説する。</p>
+<section id="学習率とバッチサイズの法則性" class="level2">
+<h2 class="anchored" data-anchor-id="学習率とバッチサイズの法則性">1. 学習率とバッチサイズの法則性</h2>
+<p>事前学習においては、学習率とバッチサイズの間に線形スケーリング則などの明確な関係が確立されているが、SFTにおけるこれらの振る舞いは十分に検証されていなかった。</p>
+<p>本研究におけるQwen3およびLlamaファミリーでのスイープ結果は、驚くべき一貫性を示している。LoRAの最適学習率は、モデルのスケール（0.6Bから32B）やファミリーを問わず <span class="math inline">\(1 \times 10^{-3}\)</span> 付近で平坦なプラトーを形成する。一方、Full Fine-Tuning (FullFT) の最適学習率は、およそ <span class="math inline">\(3 \times 10^{-5}\)</span> と、LoRAと比較して約1オーダー（約33倍）低くなる。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://www.datocms-assets.com/104802/1781805778-baseten-research-sft.pdf">Post-Training Science for Supervised Fine-Tuning</a>より引用</figcaption>
+</figure>
+</div>
+<p>さらに、最適学習率はバッチサイズに対してほぼ不変であり、トークン数が増加した場合にのみわずかに上昇する傾向が見られた。バッチサイズの選択は、Validation Lossに対する絶対的な最適値が存在するというよりも、計算ステップ数（学習時間）とメモリ上限との間のトレードオフとして機能する。 また、上限の学習率（例: <span class="math inline">\(3 \times 10^{-3}\)</span>）に近づくと、大規模モデルほど先に学習の不安定性（ロスが突然上昇する現象）を示すことが確認されている。</p>
+</section>
+<section id="loraハイパーパラメータの容量とスケーリング" class="level2">
+<h2 class="anchored" data-anchor-id="loraハイパーパラメータの容量とスケーリング">2. LoRAハイパーパラメータの容量とスケーリング</h2>
+<p>LoRAのアーキテクチャ設計において、Rank (<span class="math inline">\(r\)</span>) とスケーリング係数 (<span class="math inline">\(\alpha\)</span>) はアップデートの表現力を決定する重要な要素である。論文ではこれらのパラメータのスイープ実験が行われた。</p>
+<p>実験の結果、Rankは64まではValidation Lossの低下に寄与し有用なキャパシティを提供するが、それ以上（例: <span class="math inline">\(r=128\)</span>）に増やしても性能の向上はプラトーに達することが判明した。同時に、すべてのテストシナリオにおいて <span class="math inline">\(\alpha = 32\)</span> が最適なスケールであることが確認された。</p>
+<p>したがって、標準的なSFTにおいては、デフォルト設定として <span class="math inline">\(r=64, \alpha=32\)</span> を採用することが推奨される。計算リソースやメモリ消費を抑えたい場合の安価な代替案としては <span class="math inline">\(r=32\)</span> が妥当であり、性能低下を最小限に抑えつつ学習コストを削減させることが可能である。</p>
+</section>
+<section id="validation-lossはダウンストリーム性能を予測できるか" class="level2">
+<h2 class="anchored" data-anchor-id="validation-lossはダウンストリーム性能を予測できるか">3. Validation Lossはダウンストリーム性能を予測できるか？</h2>
+<p>モデル選択において我々は暗黙的にValidation Lossの最小値に依存しているが、これが実際のプロダクションタスクにおける性能（ダウンストリーム性能）を正しく反映しているかは自明ではない。</p>
+<p>論文の検証によれば、<strong>同一のモデルファミリー、データセット、そして同一のファインチューニングレシピ（例えば、学習率とバッチサイズのスイープ）の内部</strong>においては、Validation Lossはダウンストリーム性能の極めて信頼できる予測指標として機能する（Spearman相関 <span class="math inline">\(-0.38 \sim -0.88\)</span>）。 しかし、この予測能力は異なるモデルファミリー間には転移しない。たとえば、LlamaモデルがQwenモデルよりも低いNLL（Negative Log-Likelihood）を達成したとしても、タスクの評価スコアでは劣るというケースが観察されている。</p>
+<p>また、最適化理論において汎化性能と関連付けられるLoss landscapeの平坦性（Fisher traceを介してHessianのトレースとして測定される）は、同一Lossレベルにおけるダウンストリーム性能の差異を説明するには不十分であった。ただし、この平坦性は後述する「汎用的な命令追従能力」の保持と強く相関することが示されている。</p>
+</section>
+<section id="スケーリングの傾向とmixture-of-experts-moe" class="level2">
+<h2 class="anchored" data-anchor-id="スケーリングの傾向とmixture-of-experts-moe">4. スケーリングの傾向とMixture-of-Experts (MoE)</h2>
+<p>事前学習におけるスケーリング則と同様に、SFTにおいてもロスはモデルサイズに対して飽和するべき乗則（Saturating power law）に従う。興味深いことに、FullFTはLoRAよりも急激なロスの低下を示す。これは、小規模モデルでは存在したFullFTとLoRAの性能差（LoRAはFullFTの改善幅の約98%をカバーする）が、モデルスケールの拡大に伴ってさらに縮小していくことを意味している。</p>
+<p>では、Mixture-of-Experts (MoE) モデルはこのスケーリング則のどこに位置付けられるのだろうか。Qwen3-30B-A3BなどのMoEモデルを評価した結果、MoEモデルは単純なActive parametersのサイズでも、Total parametersのサイズでもなく、<strong>それらの幾何平均（Geometric mean）</strong>に相当するサイズのDenseモデルと同等のSFT性能（ロス）を示すことが明らかになった。</p>
+<p>さらにデータ量に関しても、同じデータを反復するより、新鮮なトレーニングデータを追加することが一貫してロスを低下させるが、その改善幅はモデルのサイズよりもデータセットの性質（タスクの難易度やトークン数など）に強く依存する。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig23.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://www.datocms-assets.com/104802/1781805778-baseten-research-sft.pdf">Post-Training Science for Supervised Fine-Tuning</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="オプティマイザの選択adamwとmuonの比較" class="level2">
+<h2 class="anchored" data-anchor-id="オプティマイザの選択adamwとmuonの比較">5. オプティマイザの選択：AdamWとMuonの比較</h2>
+<p>標準的なLarge Language Model (LLM) の学習にはAdamやAdamWが用いられるが、より洗練された構造認識型オプティマイザの恩恵も注目されている。本研究では、パラメータの更新を直交化するオプティマイザであるMuonをAdamWと比較している。</p>
+<p>MuonはAdamWよりもさらに低い最適学習率で動作し、結果としてわずかに低いValidation NLLと、より平坦なLoss minimumに到達する。近年の研究動向が示唆するように、オプティマイザの選択はLLMの汎化性能やノイズに対するロバスト性に直接影響を与える。本論文でも、タスク固有の性能においては両者に大きな差はなかったものの、Muonが導く平坦なLoss minimumは、モデルの汎用的な命令追従能力（IFEvalによって測定）の優れた保持と明確に相関していることが示された。</p>
+<p>これは、特定のタスクに特化する過程で元の汎用能力が失われるCatastrophic forgettingを、オプティマイザの選択によってある程度緩和できる可能性を示唆している。</p>
+</section>
+<section id="学習のエポック数過学習とcapability-erosionのジレンマ" class="level2">
+<h2 class="anchored" data-anchor-id="学習のエポック数過学習とcapability-erosionのジレンマ">6. 学習のエポック数：過学習とCapability Erosionのジレンマ</h2>
+<p>SFTにおいてデータを何周させるか（エポック数）は、常に悩ましい問題である。測定結果は明確な事実を示している。</p>
+<p>通常、Validation Lossは約2エポックで最小値を迎え、それ以降は上昇に転じる（過学習）。しかし、タスク固有の評価スコアはLossが上昇し始めても低下せず、プラトーを維持するか、さらに向上することすらある。</p>
+<p>一見するとエポック数を増やすことにペナルティはないように思えるが、ここで代償となるのが汎用的な命令追従能力（IFEval）である。エポック数を増やすほど、モデルは訓練データに過度に特化し、元の基盤モデルが持っていた汎用的な指示理解能力が侵食（Capability Erosion）されていく。</p>
+<p>したがって実践的なガイドラインとしては、学習は概ね2エポック程度に留め、それ以上の性能向上を望む場合は無闇にエポック数を増やすのではなく、新鮮な（Freshな）訓練データを追加することにリソースを投資すべきである。</p>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>Basetenによる<a href="https://www.datocms-assets.com/104802/1781805778-baseten-research-sft.pdf">本研究</a>は、SFTにおける様々なハイパーパラメータの挙動に対して、実証的データに基づいた強力な洞察を提供している。</p>
+<ul>
+<li><strong>推奨されるデフォルト値:</strong> LoRAの設定は <span class="math inline">\(r=64, \alpha=32\)</span>、学習率は <span class="math inline">\(1 \times 10^{-3}\)</span> が堅牢な出発点である。</li>
+<li><strong>評価指標の信頼性:</strong> 同一条件のレシピ内では、モデル選択の指標としてValidation Lossを信頼してよい。</li>
+<li><strong>MoEのスケーリング:</strong> Mixture-of-Experts (MoE) は、Active parametersとTotal parametersの幾何平均サイズとしてスケーリングする。</li>
+<li><strong>データの優先順位:</strong> タスク性能と汎用能力のトレードオフを考慮し、2エポック以降は同一データの反復を避け、Fresh dataの追加を優先する。</li>
+<li><strong>オプティマイザの影響:</strong> 汎化性能と汎用能力の維持には、Muonのような更新を直交化するオプティマイザの採用が有効な手段となり得る。</li>
+</ul>
+<p>これらのデータ駆動型の推奨事項を活用することで、我々はSFTにおける無駄なパラメータ探索を減らし、より効果的かつ予測可能なLLMのチューニングを実現できるようになるだろう。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
