@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Tue, 16 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 19 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/rl-scaling/</link>
+  <description><![CDATA[ LLMにおけるスケーリング則は事前学習から強化学習（RL）へと進化し、GRPOアルゴリズムやシグモイド曲線・べき乗則による分析を通じて、計算量と性能の関係予測やリソース配分の最適化といった実践的洞察をもたらしている。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/rl-scaling/</guid>
+  <pubDate>Fri, 19 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/rl-scaling/202606160913.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>AIエージェント評価の深層：基本原理から実践的アプローチまで</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,17 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/horace-he-matmuls/</guid>
   <pubDate>Tue, 26 May 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/193/200" medium="image"/>
-</item>
-<item>
-  <title>Jane StreetのGPU戦略と「AGI完全」な金融市場</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/jane-street-dwarkesh/</link>
-  <description><![CDATA[ Jane StreetのRon MinskyとDan Pontecorvoへのインタビューから、100ナノ秒のトレードにおける物理的制約、多様なAIモデルアーキテクチャの重要性、そしてインフラ投資と人間の判断が競争優位性を築く鍵であることを解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/jane-street-dwarkesh/</guid>
-  <pubDate>Mon, 25 May 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/192/200" medium="image"/>
 </item>
 </channel>
 </rss>
