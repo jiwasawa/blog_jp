@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Mon, 22 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 23 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Terminal Agentsの最前線：TMAXが提示するオープンなRLレシピとデータセットの革新</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/tmax/</link>
+  <description><![CDATA[ TMAX論文は、難易度と多様性を制御した大規模な合成データセット「TMAX-15K」と、DPPOやFP32 LM Headを用いた学習安定化レシピを提案し、Terminal Agentsの性能向上におけるオープンなRLの可能性を切り拓く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Agentic Systems</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/tmax/</guid>
+  <pubDate>Tue, 23 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/tmax/202606231021.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Post-Training Science：Supervised Fine-Tuningの体系的最適化</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,18 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/deepswe-benchmark/</guid>
   <pubDate>Wed, 03 Jun 2026 00:00:00 GMT</pubDate>
   <media:content url="https://picsum.photos/id/196/200" medium="image"/>
-</item>
-<item>
-  <title>Googleの孤高なるAGIへの道：World ModelsとContinuous Learningの現在地</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/oriol-vinyals-unsupervised-learning/</link>
-  <description><![CDATA[ Google DeepMindのOriol Vinyals氏へのインタビューから、GoogleがWorld ModelsとContinuous Learningを通じてAGIを目指す戦略と、AI開発におけるパラダイムシフトの兆しを読み解く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/oriol-vinyals-unsupervised-learning/</guid>
-  <pubDate>Fri, 29 May 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/194/200" medium="image"/>
 </item>
 </channel>
 </rss>

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/tmax/index.html",
       "/posts/post-training-science/index.html",
       "/posts/rl-scaling/index.html",
       "/posts/agent-benchmarks/index.html",
