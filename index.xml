@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Mon, 29 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 30 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>深層学習におけるScaling Laws（スケーリング則）の深層：予測可能性からデータ制約パラダイムまで</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/</link>
+  <description><![CDATA[ 深層学習におけるScaling Lawsの予測可能性から、KaplanとChinchillaの対立、データ制約下での適用、そしてフィッティングの難しさまで、最新の理論的背景と共に徹底解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/</guid>
+  <pubDate>Tue, 30 Jun 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/202606291704.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Agentic AIへのシフト：Codex利用データから読み解く働き方のパラダイム転換</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,19 +130,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/yaroslav-azhnyuk-fpv-drones/</guid>
   <pubDate>Tue, 09 Jun 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/yaroslav-azhnyuk-fpv-drones/202606121558-twitter.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Satya Nadellaが語るMicrosoftのAI覇権戦略</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/satya-microsoft-build-2026/</link>
-  <description><![CDATA[ Microsoft Build 2026で語られたSatya Nadellaの戦略から、SaaSの終焉と「Token IP」という新たな知財概念が企業の競争優位性をどう変えるかを分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Latent Space Podcast</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/satya-microsoft-build-2026/</guid>
-  <pubDate>Thu, 04 Jun 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://picsum.photos/id/195/200" medium="image"/>
 </item>
 </channel>
 </rss>
