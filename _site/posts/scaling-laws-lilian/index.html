@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="深層学習におけるScaling Lawsの予測可能性から、KaplanとChinchillaの対立、データ制約下での適用、そしてフィッティングの難しさまで、最新の理論的背景と共に徹底解説します。">
+
+<title>深層学習におけるScaling Laws（スケーリング則）の深層：予測可能性からデータ制約パラダイムまで</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="深層学習におけるScaling Laws（スケーリング則）の深層：予測可能性からデータ制約パラダイムまで – miscellaneous notes">
+<meta property="og:description" content="深層学習におけるScaling Lawsの予測可能性から、KaplanとChinchillaの対立、データ制約下での適用、そしてフィッティングの難しさまで、最新の理論的背景と共に徹底解説します。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/202606291704.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="深層学習におけるScaling Laws（スケーリング則）の深層：予測可能性からデータ制約パラダイムまで – miscellaneous notes">
+<meta name="twitter:description" content="深層学習におけるScaling Lawsの予測可能性から、KaplanとChinchillaの対立、データ制約下での適用、そしてフィッティングの難しさまで、最新の理論的背景と共に徹底解説します。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/202606291704.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">深層学習におけるScaling Laws（スケーリング則）の深層：予測可能性からデータ制約パラダイムまで</h1>
+                  <div>
+        <div class="description">
+          深層学習におけるScaling Lawsの予測可能性から、KaplanとChinchillaの対立、データ制約下での適用、そしてフィッティングの難しさまで、最新の理論的背景と共に徹底解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年6月30日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、深層学習の飛躍的な進歩を牽引してきた重要な要素の一つに「Scaling Laws（スケーリング則）」の経験的発見がある。モデルのパラメータ数（<span class="math inline">\(N\)</span>）、データセットのサイズ（<span class="math inline">\(D\)</span>）、および計算量（<span class="math inline">\(C\)</span>）をスケールアップさせると、学習損失（Loss）がべき乗則（Power-law）に従って予測可能に減少するというこの法則は、Large Language Model (LLM) やFoundation Modelsの開発において、計算資源を最適に配分するための羅針盤となってきた。</p>
+<p>本稿では、Lilian Weng氏が2026年6月24日に公開した最新のブログ記事「<a href="https://lilianweng.github.io/posts/2026-06-24-scaling-laws/">Scaling Laws, Carefully</a>」の知見をベースに、Scaling Lawsが何を予測するのか、計算量の最適配分（Compute-optimal allocation）のメカニズム、KaplanらとChinchillaの結論の相違とその和解、さらにデータ制約（Data-limited）領域での挙動や外挿（Extrapolation）におけるフィッティングの難しさについて、最新の理論的背景も交えながら深く掘り下げて解説する。</p>
+<section id="scaling-lawsの黎明期機械学習における損失の予測可能性" class="level2">
+<h2 class="anchored" data-anchor-id="scaling-lawsの黎明期機械学習における損失の予測可能性">Scaling Lawsの黎明期：機械学習における損失の予測可能性</h2>
+<p>深層学習においてScaling Lawsが主流の概念となる以前から、汎化誤差（Generalization error）とスケールの関係性は理論・経験の両面から研究されてきた。</p>
+<p>2010年代半ば、<a href="https://arxiv.org/abs/1712.00409">Hestnessら（2017）</a>は、機械翻訳や言語モデリングなど複数のドメインにおいて、データサイズに対する汎化誤差がべき乗則に従って減少することを確認した。興味深いことに、アーキテクチャの変更はべき乗則のオフセット（切片）を変化させるものの、指数（Exponent）にはほとんど影響を与えず、この指数はアーキテクチャではなく問題ドメインの特性であることが示唆された。</p>
+<p>その後、<a href="https://arxiv.org/abs/1909.12673">Rosenfeldら（2020）</a>は、誤差をモデルサイズ <span class="math inline">\(N\)</span> とデータサイズ <span class="math inline">\(D\)</span> の結合関数としてモデル化するアプローチを提案した。彼らは、一方を固定した場合、もう一方に対して誤差がべき乗則で減衰することを経験的に示し、以下のような結合形式を導き出した。</p>
+<p><span class="math display">\[ \hat{L}(D, N) \approx \frac{A}{N^\alpha} + \frac{B}{D^\beta} + E \]</span></p>
+<p>ここで <span class="math inline">\(A, B &gt; 0\)</span>、$ , $ は定数であり、<span class="math inline">\(E\)</span> は <span class="math inline">\(N\)</span> にも <span class="math inline">\(D\)</span> にも依存しない還元不能な誤差（Irreducible loss）である。この定式化により、小規模な実験結果から大規模な領域における性能を予測するフレームワークの基礎が築かれた。</p>
+</section>
+<section id="無限データ領域におけるscaling-lawskaplan-vs-chinchilla" class="level2">
+<h2 class="anchored" data-anchor-id="無限データ領域におけるscaling-lawskaplan-vs-chinchilla">無限データ領域におけるScaling Laws：Kaplan vs Chinchilla</h2>
+<p>Transformerアーキテクチャの台頭により、言語モデリングにおけるScaling Lawsは新たな局面を迎えた。ここでは、歴史的に重要な2つの研究間の対立と、その後の見解の統一について解説する。</p>
+<section id="kaplan-et-al.-2020-のスケーリング則" class="level3">
+<h3 class="anchored" data-anchor-id="kaplan-et-al.-2020-のスケーリング則">Kaplan et al.&nbsp;(2020) のスケーリング則</h3>
+<p><a href="https://arxiv.org/abs/2001.08361">Kaplanら（2020）</a>は、交差エントロピー損失 <span class="math inline">\(L\)</span> がモデルサイズ <span class="math inline">\(N\)</span>（Embedding層を除く）、データセットサイズ <span class="math inline">\(D\)</span>、および計算量 <span class="math inline">\(C\)</span> のそれぞれに対してべき乗則でスケーリングすることを示した。</p>
+<p>彼らの最も影響力があり、後に議論の的となった結論は「Compute-optimal allocation（計算量の最適配分）」に関するものである。限られた計算予算 <span class="math inline">\(C\)</span> が与えられた場合、小さなモデルを最後まで収束させるよりも、<strong>非常に大きなモデルを少ないステップ数で学習させ、完全に収束する前に停止する方が効率的である</strong>と主張した。具体的には、<span class="math inline">\(N_{opt} \propto C^{0.73}\)</span> という関係を見出し、計算量が10倍になった場合、モデルサイズを約5.5倍にする一方で、学習トークン数は約1.8倍に留めるべきであるとした。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://arxiv.org/abs/2001.08361">Kaplan et al.&nbsp;(2020)</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="chinchilla-scaling-laws-hoffmann-et-al.-2022" class="level3">
+<h3 class="anchored" data-anchor-id="chinchilla-scaling-laws-hoffmann-et-al.-2022">Chinchilla Scaling Laws (Hoffmann et al., 2022)</h3>
+<p>Kaplanらの結論に異を唱えたのが、<a href="https://arxiv.org/abs/2203.15556">Hoffmannら（2022）</a>による通称「Chinchilla」論文である。彼らはより厳密な実験設計を行い、モデルサイズにEmbeddingパラメータを含めた上で、固定の計算予算 <span class="math inline">\(C \approx 6ND\)</span> の下でのリソース配分を再評価した。</p>
+<p>IsoFLOPプロファイルなどの手法を用いた結果、Chinchillaは <span class="math inline">\(N_{opt} \propto C^{0.5}\)</span> という結論に達した。つまり、最適性能を得るためには、<strong>計算量の増加に伴い、モデルサイズとデータセットサイズを同等の割合でスケールさせるべきである</strong>というものである。当時の多くのLarge Language Model (LLM) はモデルサイズに対して学習データが圧倒的に不足している「Undertrained」な状態にあり、パラメータ数を増やすよりも学習データを増やすべきであることが実証された。実際、Chinchillaモデル自身も、当時の巨大モデルより小規模でありながら、より多くのデータで学習されたことでそれらを凌駕する性能を示した。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig3.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption><a href="https://arxiv.org/abs/2203.15556">Hoffmann et al.&nbsp;(2022)</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="kaplanとchinchillaの差異の調和" class="level3">
+<h3 class="anchored" data-anchor-id="kaplanとchinchillaの差異の調和">KaplanとChinchillaの差異の調和</h3>
+<p>両者の結論の乖離は、Scaling Lawsのフィッティングの感度の高さを示している。<a href="https://arxiv.org/abs/2406.12907">Pearce &amp; Song（2024）</a>は、この矛盾を解消するための重要な要因として「Embeddingパラメータの扱い」と「実験スケールの違い」を指摘した。</p>
+<p>Kaplanらは比較的小さなモデル（最大1.5B）を中心に実験を行っていたが、小規模モデルにおいては全パラメータに占めるEmbedding層の割合が無視できない。全パラメータ <span class="math inline">\(N\)</span> とEmbedding層を除くパラメータ <span class="math inline">\(N_{\setminus E}\)</span> の関係を <span class="math inline">\(N = N_{\setminus E} + \omega N_{\setminus E}^{1/3}\)</span> と定式化し、Chinchillaの方程式に代入すると、<span class="math inline">\(C_{\setminus E}\)</span> と <span class="math inline">\(N_{\setminus E}\)</span> の関係はもはや綺麗なべき乗則にはならない。しかし、小規模な領域で局所的に近似すると、その指数（Local exponent）はKaplanらが算出した <span class="math inline">\(0.73\)</span> に極めて近づくことが証明された。</p>
+</section>
+</section>
+<section id="データ制約data-limited領域への移行とデータ品質" class="level2">
+<h2 class="anchored" data-anchor-id="データ制約data-limited領域への移行とデータ品質">データ制約（Data-Limited）領域への移行とデータ品質</h2>
+<p>スケーリングを続ける上で「無限の高品質なユニークデータ」という前提は崩れつつある。事実、AIの進化が「Data wall（データの壁）」に衝突するかどうかが活発に議論されている。</p>
+<section id="データ品質の影響" class="level3">
+<h3 class="anchored" data-anchor-id="データ品質の影響">データ品質の影響</h3>
+<p>近年の研究では、データ品質（Data quality）の重要性がScaling Lawsにおいても形式化されている。ノイズの多い巨大なデータセットよりも、小規模でもクリーンで多様なデータセットの方が優れた性能をもたらす。無次元の品質パラメータを導入した研究では、高品質なデータは必要なモデルサイズや計算リソースを大幅に削減できる（小さなモデルの性能を補償できる）ことが示されている。</p>
+</section>
+<section id="データ重複とオーバーフィッティングのペナルティ" class="level3">
+<h3 class="anchored" data-anchor-id="データ重複とオーバーフィッティングのペナルティ">データ重複とオーバーフィッティングのペナルティ</h3>
+<p>データが枯渇した場合、同じデータを複数エポック学習させる必要がある。<a href="https://arxiv.org/abs/2305.16264">Muennighoffら（2023）</a>は、データの繰り返しが学習に与える影響を調査し、トークンが繰り返されるたびにその価値が指数関数的に減衰（Exponential decay）するというモデルを提案した。</p>
+<p>さらに最新の<a href="https://arxiv.org/abs/2605.01640">Lovelaceら（2026）</a>の研究では、モデルサイズとデータの繰り返しの相互作用を明示的にモデル化している。彼らは「Capacity ratio（キャパシティ比）」、すなわちユニークなトークン数に対するパラメータ数の比率 <span class="math inline">\(N / U_D\)</span> に着目し、以下のようなオーバーフィッティングのペナルティ項（赤字部分）を追加した。</p>
+<p><span class="math display">\[ \hat{L}(N, U_D, R_D) = E + \frac{A}{N^\alpha} + \frac{B}{\big(U_D (1 + R_D)\big)^\beta} + \color{red}{P \cdot R_D^\delta \cdot \left(\frac{N}{U_D}\right)^\kappa} \]</span></p>
+<p>ここで <span class="math inline">\(R_D\)</span> は反復回数（Epochs - 1）である。このモデルは、エポック数が増えるほど、またモデルがデータに対して過剰パラメータ化（Over-parameterized）されているほど、ペナルティが非線形に増大することを示している。データ制約シナリオ下では、単にモデルを巨大化させるよりも、複数エポックの学習にリソースを割り当てる方が有益である場合が多い。</p>
+</section>
+</section>
+<section id="なぜべき乗則が成立するのか理論的背景" class="level2">
+<h2 class="anchored" data-anchor-id="なぜべき乗則が成立するのか理論的背景">なぜ「べき乗則」が成立するのか？（理論的背景）</h2>
+<p>経験的に観測されるScaling Lawsがなぜ「べき乗則」の形態をとるのかについては、単なる経験則を超えた理論的な裏付けが進められている。</p>
+<ol type="1">
+<li><strong>データ多様体の低次元性:</strong> <a href="https://arxiv.org/abs/2004.10802">Sharma &amp; Kaplan (2020)</a> は、言語モデリングを「低次元データ多様体（Low-dimensional data manifold）上の回帰問題」として捉える仮説を提唱した。パラメータ数 <span class="math inline">\(N\)</span> が増えることで、この多様体をより細かく分割できるようになり、汎化誤差が減少する。この分割の解像度がべき乗則の形をとるという理論である。</li>
+<li><strong>知識の量子化モデル:</strong> <a href="https://arxiv.org/abs/2303.13506">Michaudら (2023)</a> や <a href="https://arxiv.org/abs/2412.07942">Brill (2024)</a> は、知識やスキルが離散的（Quantized）なチャンクとして学習されると仮定する。出現頻度が高いスキルから先に学習され、まれなスキルが後に学習される過程が、全体として滑らかなべき乗則の減衰を生み出す。</li>
+<li><strong>分散制限と解像度制限の双対性:</strong> 無限データや無限幅の極限において、モデルのゆらぎが減少することで性能が向上する「Variance-limited（分散制限）」レジームと、モデルが滑らかなデータ多様体を効果的に解像する「Resolution-limited（解像度制限）」レジームの相互作用からべき乗則が創発するという理論的枠組みも提唱されている。</li>
+</ol>
+</section>
+<section id="現実世界におけるフィッティングの罠と今後の展望" class="level2">
+<h2 class="anchored" data-anchor-id="現実世界におけるフィッティングの罠と今後の展望">現実世界におけるフィッティングの罠と今後の展望</h2>
+<p>Scaling Lawsの数学的形態はシンプルであるものの、現実のデータに対するフィッティング（Fitting）は極めて困難を伴う。我々は安価な小規模モデルで法則を当てはめ、そこから何桁も大きなモデルの性能を「外挿（Extrapolation）」しなければならない。</p>
+<p>対数-対数（Log-log）プロット上での微小なズレや、損失の精度（丸め誤差）、ノイズレベル、フィッティングに使用するスケールの範囲の違いが、外挿結果に破壊的な影響を与える。実際、<a href="https://arxiv.org/abs/2404.10102">Besirogluら（2024）</a>は、ChinchillaのMethod 3におけるパラメータフィッティングを再評価し、最適化アルゴリズム（L-BFGS）におけるHuber損失の「合計」ではなく「平均」を用いてしまったことによるLoss scaleの異常が、早期終了（Early stopping）を引き起こし、結果を歪めていたことを発見している。</p>
+<p>また、データ制約領域などの不確実性が高いシナリオでの意思決定を支援するため、単なるべき乗則関数の適用を超え、ベイズ推論（Bayesian frameworks）を用いて不確実性の定量化（Uncertainty quantification）を行う新たな外挿手法の開発も進んでいる。</p>
+<section id="まとめ" class="level3">
+<h3 class="anchored" data-anchor-id="まとめ">まとめ</h3>
+<p>Scaling Lawsは、深層学習の進歩を俯瞰し、莫大な計算資源を投下する際の重要なレンズを提供し続けている。しかし、その強力な予測能力を真に活用するためには、KaplanとChinchillaの対立が示した実験設計の機微や、限界を迎えつつあるユニークデータの再利用（Epoch学習）がもたらすペナルティ、そして外挿における不確実性を深く理解する必要がある。</p>
+<p>単なる「規模の拡大」から、「データ品質・モデルアーキテクチャ・計算資源の極限の最適化」へと移行しつつある現在のDeep Learningの最前線において、Scaling Lawsのニュアンスを読み解くことは、次世代のAIパラダイムを切り拓くための必須教養と言えるだろう。</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

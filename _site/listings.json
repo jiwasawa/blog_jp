@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/scaling-laws-lilian/index.html",
       "/posts/codex-usage-oai/index.html",
       "/posts/tmax/index.html",
       "/posts/post-training-science/index.html",
