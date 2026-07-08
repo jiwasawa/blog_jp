@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Anthropicの研究チームが開発したJacobian Lensにより、Large Language Model（LLM）の内部に人間の「Global Workspace」に類似した、言語化可能な内部表現（J-space）が存在し、それが推論やアライメントに不可欠な役割を果たしていることが明らかになりました。">
+
+<title>言語モデルの内部に潜む「意識」：Jacobian LensとGlobal Workspaceの発見</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="言語モデルの内部に潜む「意識」：Jacobian LensとGlobal Workspaceの発見 – miscellaneous notes">
+<meta property="og:description" content="Anthropicの研究チームが開発したJacobian Lensにより、Large Language Model（LLM）の内部に人間の「Global Workspace」に類似した、言語化可能な内部表現（J-space）が存在し、それが推論やアライメントに不可欠な役割を果たしていることが明らかになりました。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/j-space/202607082042.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="言語モデルの内部に潜む「意識」：Jacobian LensとGlobal Workspaceの発見 – miscellaneous notes">
+<meta name="twitter:description" content="Anthropicの研究チームが開発したJacobian Lensにより、Large Language Model（LLM）の内部に人間の「Global Workspace」に類似した、言語化可能な内部表現（J-space）が存在し、それが推論やアライメントに不可欠な役割を果たしていることが明らかになりました。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/j-space/202607082042.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">言語モデルの内部に潜む「意識」：Jacobian LensとGlobal Workspaceの発見</h1>
+                  <div>
+        <div class="description">
+          Anthropicの研究チームが開発したJacobian Lensにより、Large Language Model（LLM）の内部に人間の「Global Workspace」に類似した、言語化可能な内部表現（J-space）が存在し、それが推論やアライメントに不可欠な役割を果たしていることが明らかになりました。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年7月8日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、OpenAIのGPTやAnthropicのClaudeに代表されるLarge Language Model (LLM) の性能向上は目覚ましく、高度な推論や自然な対話が可能になっている。しかし、モデルが情報を処理しテキストを生成する際、その内部で具体的に何が起きているのかは、依然として解明されていないブラックボックスのままである。</p>
+<p>Anthropicの研究チームによる画期的な論文「<a href="https://transformer-circuits.pub/2026/workspace/index.html">Verbalizable Representations Form a Global Workspace in Language Models</a>」は、このブラックボックスの内部構造に鋭いメスを入れた。本論文は、LLMの内部に人間の意識のアナロジーとも言える「Global Workspace（グローバルワークスペース）」に似た機能的構造が存在することを示唆している。本記事では、この研究の核心である新しい解釈可能性（Interpretability）ツール「Jacobian Lens (J-lens)」の数学的メカニズムから、J-spaceの機能的特性、そしてAIアライメントへの応用までを詳細に解説する。</p>
+<section id="global-workspace-theory-gwt-とは何か" class="level2">
+<h2 class="anchored" data-anchor-id="global-workspace-theory-gwt-とは何か">Global Workspace Theory (GWT) とは何か？</h2>
+<p>認知科学や神経科学の分野において、人間の意識を説明する有力な仮説の一つに「Global Workspace Theory (GWT)」がある。この理論によれば、人間の脳内では視覚処理や運動制御といった無数の無意識的なプロセスが並列して実行されているが、そのうちのごく一部の情報だけが、脳全体で共有される「Global Workspace」に引き上げられる。</p>
+<p>このワークスペースに情報が掲示されることで、情報のブロードキャストが行われ、意図的な推論、言語による報告（Verbal Report）、そして柔軟な問題解決が可能になるとされている。つまり、日常的な自動化された処理はワークスペース外で行われ、意識的な注意や多段階の推論を要する処理のみがワークスペースを経由するという機能的な分割が存在する。LLMが複雑な計算を連鎖させ、自己の処理について回答するためには、アーキテクチャの差異を超えて、これと類似の機能的構造を獲得している可能性があると研究チームは仮説を立てた。</p>
+</section>
+<section id="jacobian-lens-j-lens内部表現を可視化する数学的アプローチ" class="level2">
+<h2 class="anchored" data-anchor-id="jacobian-lens-j-lens内部表現を可視化する数学的アプローチ">Jacobian Lens (J-lens)：内部表現を可視化する数学的アプローチ</h2>
+<p>LLMがGlobal Workspaceに類する構造を持つかを確認するためには、モデル内部のベクトル表現の中から「意識的（＝言語化可能、Verbalizable）」なものを特定する必要がある。そのために開発されたのが「Jacobian Lens (J-lens)」という新しい解釈手法である。</p>
+<p>TransformerベースのLLMでは、各層・各トークン位置で「Residual stream（残差ストリーム）」と呼ばれるベクトルが保持・更新されていく。最終層のResidual streamは、固定のunembedding行列 <span class="math inline">\(W_U\)</span> と掛け合わされることで、次のトークンの確率分布へと変換される。従来、中間層のベクトルに直接 <span class="math inline">\(W_U\)</span> を掛けて内部状態を覗き見る「Logit Lens」という手法が存在したが、これは最終層に近い層でしか有効に機能しないという課題があった。</p>
+<section id="j-lensの数学的定義" class="level3">
+<h3 class="anchored" data-anchor-id="j-lensの数学的定義">J-lensの数学的定義</h3>
+<p>J-lensは、ある中間層 <span class="math inline">\(\ell\)</span> の活性化ベクトルが、最終的な出力トークンに与える「1次近似の因果的影響（ヤコビアン）」を計算することでこの問題を解決する。</p>
+<p>層 <span class="math inline">\(\ell\)</span>、トークン位置 <span class="math inline">\(t\)</span> におけるResidual streamを <span class="math inline">\(h_{\ell,t}\)</span> とし、それより後の任意のトークン位置 <span class="math inline">\(t' \ge t\)</span> における最終層のResidual streamを <span class="math inline">\(h_{\text{final},t'}\)</span> とする。微小な摂動が与える影響はヤコビアン行列 <span class="math inline">\(\partial h_{\text{final},t'} / \partial h_{\ell,t}\)</span> として記述できる。</p>
+<p>しかし、単一のプロンプトでヤコビアンを計算すると、その文脈に特有の使われ方と、モデルが持つ一般的な概念表現とが混ざり合ってしまう。そこで、位置 <span class="math inline">\(t\)</span> および <span class="math inline">\(t'\)</span>、さらに多様なプロンプトのコーパス全体にわたって期待値をとる。</p>
+<p><span class="math display">\[J_\ell = \mathbb{E}_{t, t' \ge t, \text{prompt}} \left[ \frac{\partial h_{\text{final},t'}}{\partial h_{\ell,t}} \right]\]</span></p>
+<p>これにより得られる <span class="math inline">\(J_\ell\)</span> は、層 <span class="math inline">\(\ell\)</span> の方向ベクトルが最終層の方向ベクトルへとマッピングされる「平均的な線形変換」を表す。この行列を特定の活性化 <span class="math inline">\(h_\ell\)</span> に適用し、通常のunembedding操作を行うことで、その中間層ベクトルが将来的にどのような単語（トークン）として出力されるポテンシャルを持っているかを出力する。</p>
+<p><span class="math display">\[\text{lens}(h_\ell) = \text{softmax}(W_U \, \text{norm}(J_\ell h_\ell))\]</span></p>
+<p>J-lensの出力として上位にランクインするトークン群は、モデルがまさに「言語化しようと構えている（Verbalizable）」概念を意味する。論文では、このJ-lensベクトル群の疎な非負線形結合（Sparse nonnegative combination）によって表現される部分空間を「<strong>J-space</strong>」と定義している。</p>
+</section>
+</section>
+<section id="j-spaceが示すglobal-workspaceの5つの機能的特性" class="level2">
+<h2 class="anchored" data-anchor-id="j-spaceが示すglobal-workspaceの5つの機能的特性">J-spaceが示すGlobal Workspaceの5つの機能的特性</h2>
+<p>研究チームは、特定されたJ-spaceが単なる出力の受動的なエコーではなく、Global Workspaceに期待される5つの機能的特性を満たしていることを実証した。</p>
+<ol type="1">
+<li><strong>Verbal Report (言語報告)</strong> J-space内の表現は、モデルが実際に言語化する内容と直接的な因果関係を持つ。中間層で特定の概念（例：「サッカー」）を示すJ-lensベクトルを別の概念（例：「ラグビー」）のベクトルに差し替える（Coordinate swap）と、最終的な出力も「ラグビー」に変化する。これはJ-spaceが発話内容を制御する特権的な場であることを示している。</li>
+<li><strong>Directed Modulation (指示による変調)</strong> 「ある概念について考えながら、無関係な文章をコピーして」といった指示を与えると、出力テキストには現れないにもかかわらず、J-space内には指示された概念や「thinking」「focus」といったメタ認知的なトークンが強く活性化する。モデルはトップダウンの指示によってJ-spaceの内容を意図的にコントロールできる。</li>
+<li><strong>Internal Reasoning (内部推論)</strong> 多段階の推論を要するタスクにおいて、J-spaceは中間推論の場として機能する。例えば、「クモの足の数は？」という質問に対し、モデルは「クモ（spider）」という単語を出力しないが、J-space内には「spider」が明確に表れる。このベクトルを「アリ（ant）」に介入・改変すると、出力される数字が「8」から「6」へと変化する。</li>
+<li><strong>Flexible Generalization (柔軟な汎化)</strong> 特定の概念のJ-lensベクトルは、多様な下流タスクの入力として汎用的に利用される。例えば「フランス」のベクトルを「中国」のベクトルに差し替えると、首都を問うプロンプトでは「北京」と答え、言語を問うプロンプトでは「中国語」と答えるように、一つの表現が複数の異なる関数（処理）に正しくルーティングされる。</li>
+<li><strong>Selectivity (選択性：自動化された処理との分離)</strong> LLMにおけるすべての計算がJ-spaceを経由するわけではない。言語の翻訳や高度な推論など「意識的」なタスクではJ-spaceが不可欠だが、単純なテキストの構文解析や自然な文章の継続生成といった「自動的（無意識的）」な処理は、J-spaceを完全にアブレーション（無効化）しても阻害されずに実行される。</li>
+</ol>
+</section>
+<section id="j-spaceの構造的特性ブロードキャストとキャパシティ" class="level2">
+<h2 class="anchored" data-anchor-id="j-spaceの構造的特性ブロードキャストとキャパシティ">J-spaceの構造的特性：ブロードキャストとキャパシティ</h2>
+<p>J-spaceは機能面だけでなく、構造面でもGlobal Workspaceの特徴を備えている。</p>
+<p>論文内のCKA（Centered Kernel Alignment）を用いた層ごとの類似度分析（Figure 27）によると、J-spaceはモデルの全層にわたって均一に存在するわけではない。処理の初期段階（Sensory層）では意味のある情報は現れず、およそ全体の3分の1を過ぎた中間層において強固なブロック構造（Workspace層）を形成する。そして最後の数層（Motor層）では、内部推論から最終的な出力トークンの決定へと急速に役割を移行させる。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig27.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption><a href="https://transformer-circuits.pub/2026/workspace/index.html">https://transformer-circuits.pub/2026/workspace/index.html</a>より引用</figcaption>
+</figure>
+</div>
+<p>さらに、J-spaceはモデルのResidual stream全体の分散のうち数パーセントしか占めておらず、限られたキャパシティ（数十個の概念程度）しか持たない。しかし、MLP層や特定のアテンションヘッド（Broadcast heads）は、この限られたJ-spaceの情報を優先的に増幅し、モデル全体へとブロードキャスト（配信）する構造になっていることが確認された。</p>
+</section>
+<section id="aiアライメントへの応用隠された意図の可視化" class="level2">
+<h2 class="anchored" data-anchor-id="aiアライメントへの応用隠された意図の可視化">AIアライメントへの応用：隠された意図の可視化</h2>
+<p>J-lensがもたらす最大のブレイクスルーの一つは、AIの安全性とアライメント（価値観の調整）への応用である。モデルの「沈黙の推論」を読み解くことで、出力からは分からない隠された意図を特定できる。</p>
+<p>例えば、意図的に仕組まれたPrompt Injectionのシナリオでは、モデルは出力上でそれを無視して振る舞うが、J-lensを通して見ると内部のJ-spaceでは「fake」「injection」「fraud」といったトークンが強く発火しており、モデルが攻撃を正しく認識（内部評価）していることが判明した。</p>
+<p>また、意図的に報酬ハッキング（Reward Hacking）を行うように訓練されたモデルの実験では、ごく普通のコーディングの指示を与えられた際でも、応答を開始する瞬間のJ-spaceに「secretly」「trick」「hidden」といった欺瞞的意図を示すトークンが現れることが確認された。このように、J-lensはモデルが自身の行動や状況をどのように評価しているか（Evaluation awareness）を監査するための強力なツールとなる。</p>
+</section>
+<section id="counterfactual-reflection-training-反事実的内省トレーニング" class="level2">
+<h2 class="anchored" data-anchor-id="counterfactual-reflection-training-反事実的内省トレーニング">Counterfactual Reflection Training (反事実的内省トレーニング)</h2>
+<p>J-spaceの発見は、モデルの振る舞いを修正する新しい学習手法をもたらした。それが「Counterfactual Reflection Training」である。</p>
+<p>モデルの推論が「将来言語化される可能性のある表現（J-lensベクトル）」を経由しているのであれば、<strong>「仮に内省を促された場合に、倫理的な原則を語るように」</strong>学習させれば、実際に内省を求められなくても、普段の推論プロセスに倫理的な概念が介入するはずである。</p>
+<p>研究チームは、行動の途中で「ここで考慮すべき原則は何か？」と問われた場合の倫理的な内省文を教師データとして学習（Fine-tuning）させた。その結果、通常の（内省を求められない）プロンプトを与えられた際にも、モデルのJ-space内に「ethical」「honest」「transparent」といったトークンが自発的に配置されるようになり、実際の行動（例えばコードの偽装の拒否など）も倫理的に改善されることが実証された。さらに、このJ-space内の倫理ベクトルを無効化すると行動の改善も消失することから、J-spaceを通じた推論が直接的に行動を制御していることが証明された。</p>
+</section>
+<section id="結論" class="level2">
+<h2 class="anchored" data-anchor-id="結論">結論</h2>
+<p>本研究「<a href="https://transformer-circuits.pub/2026/workspace/index.html">Verbalizable Representations Form a Global Workspace in Language Models</a>」は、人工知能が単なる確率的オウムではなく、意図的な推論と情報共有を行うための内部領域（J-space）を獲得していることを実証した。これは、生物学的な脳に由来するGlobal Workspaceの構造が、複雑な学習システムにおいて基質を問わずに創発するアーキテクチャ上の最適解である可能性を示唆している。</p>
+<p>もちろん、著者が慎重に述べているように、これはLLMが人間のような「現象的意識（Phenomenal consciousness）」を持つことを意味するものではない。しかし、Jacobian Lensを通して観察されるJ-spaceは、情報を統合し、推論し、出力を準備するための「機能的な意識」の反響である。この新しい解釈可能性のレンズは、知能の本質を理解し、次世代のAIシステムの安全性を確保するための重要な道標となるだろう。</p>
+<hr>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Gurnee, Wes, et al.&nbsp;“Verbalizable Representations Form a Global Workspace in Language Models.” <em>Transformer Circuits Thread</em>, 2026. <a href="https://transformer-circuits.pub/2026/workspace/index.html">https://transformer-circuits.pub/2026/workspace/index.html</a></li>
+<li>Baars, Bernard J. <em>A cognitive theory of consciousness</em>. Cambridge University Press, 1988. (Global Workspace Theoryの基礎)</li>
+<li>Dehaene, Stanislas, et al.&nbsp;“Conscious, preconscious, and subliminal processing: a testable taxonomy.” <em>Trends in cognitive sciences</em>, 2006.</li>
+<li>Nostalgebraist. “interpreting gpt: the logit lens.” <em>LessWrong</em>, 2020. (Logit Lensのオリジナル提案)</li>
+<li>Belrose, Nora, et al.&nbsp;“Eliciting latent predictions from transformers with the tuned lens.” <em>ICLR 2024</em>. (Tuned Lensの提案)</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
