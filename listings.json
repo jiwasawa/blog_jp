@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/esmc-biohub/index.html",
       "/posts/j-space/index.html",
       "/posts/scaling-laws-lilian/index.html",
       "/posts/codex-usage-oai/index.html",

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="Microsoft Build 2026で語られたSatya Nadellaの戦略から、SaaSの終焉と「Token IP」という新たな知財概念が企業の競争優位性をどう変えるかを分析する。">
+<meta name="description" content="AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。">
 
-<title>Satya Nadellaが語るMicrosoftのAI覇権戦略</title>
+<title>プロテイン言語モデルにおける「苦い教訓」の受容</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -84,13 +84,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Satya Nadellaが語るMicrosoftのAI覇権戦略 – miscellaneous notes">
-<meta property="og:description" content="Microsoft Build 2026で語られたSatya Nadellaの戦略から、SaaSの終焉と「Token IP」という新たな知財概念が企業の競争優位性をどう変えるかを分析する。">
-<meta property="og:image" content="https://picsum.photos/id/195/200">
+<meta property="og:title" content="プロテイン言語モデルにおける「苦い教訓」の受容 – miscellaneous notes">
+<meta property="og:description" content="AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg">
 <meta property="og:site_name" content="miscellaneous notes">
-<meta name="twitter:title" content="Satya Nadellaが語るMicrosoftのAI覇権戦略 – miscellaneous notes">
-<meta name="twitter:description" content="Microsoft Build 2026で語られたSatya Nadellaの戦略から、SaaSの終焉と「Token IP」という新たな知財概念が企業の競争優位性をどう変えるかを分析する。">
-<meta name="twitter:image" content="https://picsum.photos/id/195/200">
+<meta name="twitter:title" content="プロテイン言語モデルにおける「苦い教訓」の受容 – miscellaneous notes">
+<meta name="twitter:description" content="AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -146,16 +146,15 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Satya Nadellaが語るMicrosoftのAI覇権戦略</h1>
+      <h1 class="title">プロテイン言語モデルにおける「苦い教訓」の受容</h1>
                   <div>
         <div class="description">
-          Microsoft Build 2026で語られたSatya Nadellaの戦略から、SaaSの終焉と「Token IP」という新たな知財概念が企業の競争優位性をどう変えるかを分析する。
+          AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
-                <div class="quarto-category">Latent Space Podcast</div>
                 <div class="quarto-category">Podcast</div>
               </div>
                   </div>
@@ -174,7 +173,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026年6月4日</p>
+        <p class="date">2026年7月18日</p>
       </div>
     </div>
     
@@ -193,50 +192,34 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>Microsoft Build 2026の熱狂冷めやらぬ中、AI業界における二つのpodcast、<a href="https://www.latent.space/p/satya-2026">「Latent Space」と「No Priors」のクロスオーバーエピソード</a>にSatya Nadellaが登場した。</p>
-<p>巨大テック企業のトップが技術特化型のpodcastに出演し、AIの技術的深淵とビジネスモデルの変容について語るという事象自体が、現在のAI業界のスピード感と異常な熱量を象徴している。世間では次々と発表される新モデルのベンチマーク競争に一喜一憂する声が絶えないが、一旦そのような表層的なパラメータ競争の与太話は無視しよう。今回のNadellaの発言から浮かび上がってきたのは、単なる「便利なAIツールを提供するMicrosoft」という姿ではなく、SaaSの根底的な解体と、企業の知的財産（IP）の再定義を企図する冷徹なプラットフォーマーとしての戦略である。</p>
-<p>当記事では、AIエージェントの台頭がもたらすビジネス構造の地殻変動と、Microsoftが提唱する「Frontier Intelligence Platform」の真の狙いについて分析する。</p>
-<section id="モデルからharnessへtoken-ipという新たな堀" class="level2">
-<h2 class="anchored" data-anchor-id="モデルからharnessへtoken-ipという新たな堀">モデルから「Harness」へ：Token IPという新たな堀</h2>
-<p>Nadellaが今回強調した戦略の核は、かつての「Bill Gates Line（プラットフォーム上で構築される価値が、プラットフォーム自身の価値を上回らなければならない）」のAI時代における再定義である。Microsoftは自社のAI製品を売り込むだけでなく、顧客企業自身がAIのエコシステムを構築するための基盤を提供するという。</p>
-<p>基礎研究的な観点から言えば、現在のLLM（Large Language Model）における「Scaling laws」は確かに機能しているが、業界全体として「実世界で価値を生み出すための複雑さ」を過小評価していたきらいがある。オープンウェイトのモデルがベンチマークで高得点を叩き出しても、実運用で使い物にならないケースは枚挙にいとまがない。</p>
-<p>ここでNadellaが提示するのが、「Harness（ハーネス）」という概念だ。モデル単体の性能ではなく、OpenClawやScoutのようなマルチモデルのHarnessと、企業のコンテキストを統合するWork IQのようなレイヤーを組み合わせることで、初めてAIは実務的な意味を持つ。</p>
-<p>極めて示唆に富むのは、AI時代における企業の知的財産の定義についてである。Nadellaは、これからの企業にとって最大のIPは「Private evals（非公開の評価指標）」と、エージェントの思考プロセスである「Traces」になると断言した。</p>
-<blockquote class="blockquote">
-<p><strong>Satya Nadella:</strong> 「どの企業にとっても、Private evalsを持つことが最大のIPになるかもしれません。あるPrivate evalがあり、Model Aを使っているとします。それをModel Bに切り替えても、性能を向上（Hill climb）させることができるか。それができれば、あなたはコントロールを握っていることになります。できなければ、コントロールを失っているのです。」</p>
-</blockquote>
-<p>要するに、汎用モデル（Generalist）を自社の優秀なベテラン社員（Specialist）へと育て上げるための独自の評価指標とデータセット、すなわち「Token IP」を構築できるかどうかが、企業の競争優位性を決定づけるということだ。これは、単なる「AIの導入」から「AIによる自社特有の認知プロセスの資産化（バランスシートへの計上）」へのパラダイムシフトを意味している。</p>
+<p>AlphaFold 3の登場を以てタンパク質構造予測は完全に解かれたと、まるで科学の終焉を告げるかのように言い切る人が後を絶たないが、一旦そのような短絡的極まりない未来観測的与太話は無視し、<a href="https://youtu.be/XdevS0GSuiQ?si=DGO7hMl2jvyEoKa0">Latent Space podcast</a>で語られたBiohubのHead of Science、Alex Reevesの深淵なる洞察をもとに、Protein Language Model (PLM) の現在地および今後のProgrammable Biologyの行方に焦点を当てる。</p>
+<section id="esmc-as-a-world-model-の強み" class="level2">
+<h2 class="anchored" data-anchor-id="esmc-as-a-world-model-の強み">ESMC as a World Model の強み</h2>
+<p>Evolutionary Scale Modeling (ESM) シリーズの最新版、ESMCのポイントは大きくわけて三つある。①約70億（6.8 billion）の非冗長なタンパク質配列と11億の予測構造という前例のないデータスケールを用いていること、②Metagenomics（メタゲノミクス）データの活用によりScaling Lawsの頭打ちを突破したこと、そして③Mechanistic Interpretability（メカニスティック解釈可能性）によるモデル内部の生物学的World Modelの存在証明、である。</p>
+<p>まずAlphaFoldのようなモデルとの決定的な違いについてだが、AlphaFoldがMultiple Sequence Alignment (MSA) や進化的圧力といった人間の生物学的ドメイン知識（Inductive bias）を多分に組み込んだアーキテクチャであるのに対し、ESMシリーズはより純粋な言語モデルのアプローチをとっている。つまり、進化の過程で生み出されたアミノ酸配列の「次のトークン」を予測させるという、極めてシンプルな自己教師あり学習に根ざしている。</p>
+<p>基礎研究的な観点で述べるならば、巨大なTransformerモデルに系列データを流し込むという構成要素自体に真新しい要素はない。しかし、Rich Suttonが提唱した「Bitter Lesson（苦い教訓）」——人間の事前知識をハードコーディングするよりも、純粋な計算量とデータスケールに任せた方が最終的には勝るという経験則——が、自然言語だけでなくBiologyの領域においても完全に成立することを実証してみせた点において、ESMCの功績は計り知れない。</p>
+<p>手元で特定のタンパク質の構造を解こうとするならば、MSAベースの手法でも事足りるかもしれない。しかし、抗体（Antibodies）やscFvのような治療薬の設計においてはそうはいかない。抗体は多様性を生み出すために進化の圧力が他とは逆の働き方をしており、従来のMSAに依存したアプローチではモデリングの限界がある。</p>
+<p>そこでESMCは、PDB（Protein Data Bank）のような美しくキュレーションされたデータだけでなく、深海の熱水噴口から人間の腸内細菌に至るまで、あらゆる環境から採取された所属不明の「メタゲノム」のノイズまみれの配列データを大量に飲み込んだ。結果としてESM-2で見られかけたScaling Lawsの限界を突破し、抗体設計などにおいても顕著な成果を上げ始めている。toCオンラインサービスの本質がログデータのNを増やすことにあるように、AI主導の生物学もまた、自然界が走らせてきた「数十億年分の並列実験ログ」をどれだけモデルに食わせられるかが勝負の分かれ目となる。</p>
 </section>
-<section id="saasの死とunbundlingのジレンマ" class="level2">
-<h2 class="anchored" data-anchor-id="saasの死とunbundlingのジレンマ">SaaSの死と、Unbundlingのジレンマ</h2>
-<p>Agenticなワークフローが現実のものとなる中、エンタープライズ業界を席巻しているのが「SaaSの終焉（End of SaaS）」という議論である。これまでSaaS企業は、「データモデル」「ビジネスロジック」「UI（ユーザーインターフェース）」の三層をパッケージ化し、Per-user（ユーザーごとの月額課金）で提供することで莫大な利益を上げてきた。</p>
-<p>しかし、AIエージェントがソフトウェア間の「Glue work（繋ぎの作業）」を自動化し、ユーザーがUIを介さずに目的を達成できるようになれば、従来のSaaSの価値は激減する。Generative AIを使えば社内ツールを数日で構築できる現在、Build vs Buy（自社開発か購入か）の方程式は根本から書き換えられつつある。</p>
-<p>Nadellaはこの変化に対して極めて冷静だ。SaaSのパッケージングは解体（Unbundling）され、新たな形で再構築されると予測する。例えば、裏側にある堅牢なデータモデルや、Power BIで構築された精緻なセマンティックモデル（ビジネスロジック）の価値は失われない。不要になるのは、人間が操作することを前提とした旧態依然のUIと、それに縛られたビジネスモデルである。</p>
-<p>課金体系も劇的な変化を余儀なくされる。予算の確実性を担保するPer-userモデルから、Consumption（従量課金）へ、さらにはOutcome-based（成果報酬型）へと移行していく。しかし、Outcome-basedの罠についても彼は皮肉交じりに語っている。</p>
-<blockquote class="blockquote">
-<p>「顧客はOutcome-basedの価格設定を好みます。実際に『成果』が出るまでは。いざ成果が出て、自社の利益をベンダーとシェアしなければならないと気づいた途端、『やっぱりPer-userとConsumptionに戻してくれ！』と言うのです。」</p>
-</blockquote>
-<p>Microsoft自身も、GitHub Copilotの課金体系でこの洗礼を受けている。当初は人間の開発者のタイピングを補助するツールとしてPer-userで設計されたが、バックグラウンドで数万のエージェントが自律的に稼働するようになれば、Consumptionメーターの導入は避けられない。M365においても、Work IQによって社内のあらゆるデータが「エージェントのためのデータベース」と化す中、人間のアクセスを前提としたインフラや課金モデルは再構築を迫られているのだ。</p>
+<section id="sparse-autoencoderが暴く進化の逆コンパイル" class="level2">
+<h2 class="anchored" data-anchor-id="sparse-autoencoderが暴く進化の逆コンパイル">Sparse Autoencoderが暴く進化の逆コンパイル</h2>
+<p>さらに興味深いのは、ReevesらがESMCの6 Billionパラメータモデルの表現空間に対してSparse Autoencoder (SAE) を適用し、深いMechanistic Interpretabilityの分析を行った点だ。</p>
+<p>事前知識を一切与えられていないにもかかわらず、モデル内部には生化学的特性から、「nucleophilic elbow」のような高度に抽象化された構造モチーフに至るまで、人間の生物学者が数十年の歳月をかけて解き明かしてきた還元的階層構造が自然発生的（emergent）に形成されていたのである。驚くべきことに、進化の系統樹上では全く異なる経路を辿ってきたはずの遺伝子編集システム群が、モデルの表現空間内では同じ機能クラスターとして認識されていた。</p>
+<p>これは、自然言語モデルが文脈から単語の意味論的構造を理解するように、PLMが数十億年の進化のプロセスが書き残したDNAのログから、タンパク質を支配する物理法則を自律的に「理解」し始めていることを示唆している。モデルは単に既存の配列を暗記しているわけではなく、未踏の生物学的空間を探索し、新たなタンパク質を設計するための潜在変数をもったWorld Modelを獲得したと言ってよい。</p>
 </section>
-<section id="generalistの台頭とメタワークへの昇華" class="level2">
-<h2 class="anchored" data-anchor-id="generalistの台頭とメタワークへの昇華">Generalistの台頭と、メタワークへの昇華</h2>
-<p>SaaSの在り方が変われば、当然ながら人間の「働く」という行為そのものも再定義される。AIが人間の仕事を奪うという単純な二元論ではなく、Nadellaは「Ambition（野心）」と「Agency（主体性）」の拡張という観点から未来を語っている。</p>
-<p>とりわけ興味深いのが、Azureネットワークチームの事例だ。彼らはかつて、物理的なファイバー網の切断や障害に対し、DevOpsという名の下に送られてくる膨大なアラートメールを手作業で処理していた。しかし現在、彼らは「Miles」と呼ばれるAIエージェントシステムを構築し、ネットワーク管理そのものをAIに委譲した。彼らが会社に要求するのは、人員（Headcount）の追加ではなく、Milesを動かすための「Token」の追加である。</p>
-<p>彼らの仕事は「ネットワークを管理すること」から、「ネットワークを管理するAIエージェントシステムを構築・管理すること」へと、一段抽象度の高い「Meta-work（メタワーク）」へと昇華した。</p>
-<p>これはソフトウェアエンジニアリングの世界でも同様だ。フロントエンド、バックエンド、QAといった細分化された職能は統合され、「Full stack builder」という新たなパラダイムが生まれる。そして何より、AIの支援によって専門知識の壁が崩れることで、広範な知識と文脈を繋ぎ合わせる「Generalist（ジェネラリスト）」のレバレッジが最大化される黄金時代が到来しようとしている。</p>
+<section id="virtual-cellへの道開発者は後回し否実験データの枯渇が先か" class="level2">
+<h2 class="anchored" data-anchor-id="virtual-cellへの道開発者は後回し否実験データの枯渇が先か">Virtual Cellへの道：開発者は後回し？否、実験データの枯渇が先か</h2>
+<p>ESMCのオープンソース（MITライセンス）化に見られるBiohubの姿勢は手放しで歓迎すべきだが、ひたすら褒め称えて終わるのも座りが悪いので、次に立ち塞がる現実的な壁についても触れておく。</p>
+<p>Biohubの最終的な野望は、タンパク質単体のモデリングに留まらず、細胞全体、さらには生理学（Physiology）レベルのシステムをデジタル上で再現する「Virtual Cell（仮想細胞）」の構築である。これが実現すれば、数百万の科学的仮説をデジタル空間上で並列検証し、未知の疾患に対するProgrammableな治療法をゼロから設計することが可能になる。</p>
+<p>しかし、開発者や生物学の研究者ならお分かりの通り、現在のAIは細胞内の動的な相互作用（Protein-protein interactions）やシグナル伝達を第一原理からシミュレーションするには程遠い。Reeves自身も認めているように、細胞レベルのモデリングを実現するためには、Compute（計算資源）の増強だけでは全く足りない。モデルの学習に耐えうる次元と量を持った「マルチモーダルな動的データ」そのものが決定的に不足しているのである。</p>
+<p>これまでの生物学のデータセット（例えばPDB）は、個々の研究者が個別の目的（例えば自身のPh.D.論文のため）に収集した結果の寄せ集めに過ぎず、Machine Learningのために最適化されたものではなかった。このデータ収集プロセスの非効率性が、Virtual Cell構築における最大のボトルネックとなっている。</p>
+<p>だからこそBiohubは、Cryo-electron tomography（クライオ電子線トモグラフィー）やLight sheet microscopy（光シート顕微鏡）といった次世代の計測技術の開発に巨額の投資を行っている。AIモデルが仮説を立て、自動化されたロボティクスが実験を行い、その結果を新たな計測器で観察してモデルを更新する「Lab-in-the-loop」の体制構築である。AIアルゴリズムの進化スピードにデータ取得技術が完全に置いてけぼりを食らっている現在、ハードウェアを含むデータ生成プロセスの抜本的な再構築なしに、Virtual Cellの実現は絵に描いた餅に終わる。</p>
 </section>
-<section id="物理世界との摩擦データセンターと社会契約" class="level2">
-<h2 class="anchored" data-anchor-id="物理世界との摩擦データセンターと社会契約">物理世界との摩擦：データセンターと社会契約</h2>
-<p>AIの進化がソフトウェア空間の出来事にとどまっていれば話は簡単だが、現実はそうではない。Microsoftをはじめとするハイパースケーラーたちは現在、歴史上類を見ない規模でデータセンターの建設を推し進めている。そこで直面するのは、電力、水、そして地域社会の許容という極めて物理的かつ政治的なハードルである。</p>
-<p>Nadellaは、テクノロジー業界が陥りがちな「我々を信じてくれ。未来は素晴らしいものになる（Trust us, the future is glorious.）」という傲慢な態度に対して、世界が極めて懐疑的になっていることを認めている。</p>
-<p>AIが社会に受け入れられるためには、単なる啓蒙キャンペーンではなく、電力価格の低下、水資源の再生、雇用創出、税収増といった形で、地域社会に「目に見える恩恵（Tangible benefits）」をもたらさなければならない。マクロな経済成長と、ミクロな地域社会の繁栄の双方がリンクして初めて、AI産業は社会からの「Permission（許可）」を得ることができる。ヘルスケアや教育分野でのAI活用が急務とされているのも、この社会契約を果たすための重要なピースだからに他ならない。</p>
-</section>
-<section id="プラットフォーマーの自己矛盾を乗り越えられるか" class="level2">
-<h2 class="anchored" data-anchor-id="プラットフォーマーの自己矛盾を乗り越えられるか">プラットフォーマーの自己矛盾を乗り越えられるか</h2>
-<p>最後に、Microsoftという企業の立ち位置について少し批判的な視点も交えておこう。</p>
-<p>Nadellaの語る「誰もが自らのデータとモデルを持ち込み、Frontierレベルで運用できるエコシステム」というビジョンは、オープンかつ開発者フレンドリーで素晴らしい。しかし、同社がいまだにM365などの「人間が操作することを前提としたSaaSのPer-userライセンス」から莫大な収益を得ている事実を忘れてはならない。</p>
-<p>Agenticな未来が到来し、顧客企業が「自社専用のベテランAIエージェント（Token IP）」を構築してSaaSを解約し始めたとき、Microsoftは本当に自社の屋台骨を削ってまでプラットフォーマーとしての道に殉じることができるのだろうか。古典的なイノベーターのジレンマである。</p>
-<p>とはいえ、Work IQを用いてM365をエージェント向けの巨大なデータベースへと作り変えようとしている現在の動きを見るに、彼らは自らのレガシーを破壊する準備を周到に進めているようにも見える。単なるモデル提供者（Model provider）の枠を超え、SaaSエコシステム全体を飲み込むメタ・プラットフォームへと脱皮しようとするMicrosoft。その野望が「Token IP」という新大陸でどのような結末を迎えるのか、我々はその目撃者となる。</p>
+<section id="クローズドaiへのアンチテーゼ" class="level2">
+<h2 class="anchored" data-anchor-id="クローズドaiへのアンチテーゼ">「クローズドAI」へのアンチテーゼ</h2>
+<p>我々は今、Programmable Biologyという新たな科学的パラダイムの入り口に立っている。AIが進化の「苦い教訓」を飲み込み、生命の設計図を自律的に書き換える未来は確実に近づいている。</p>
+<p>最後に特筆すべきは、Biohubがこれほどまでに巨大な資本と計算資源を投じて構築した基礎モデルを、惜しげもなくコミュニティに解放している点だ。一部のAI企業がモデルのAPIエンドポイントを小出しにしては開発者を振り回し、クローズドなエコシステムへの囲い込みに躍起になっている昨今の状況を鑑みると、このアプローチは極めて対照的である。</p>
+<p>プラットフォーム企業が悪手中の悪手とも言える外部開発者軽視の姿勢を強める中、真に科学の進歩を加速させるのは、こうしたオープンサイエンスの徹底である。少なくともBiohubの取り組みは、クローズドなサイロに閉じこもる企業たちに対する、最も強力で実践的なアンチテーゼとなっているように感じる。未来の科学的ブレイクスルーは、ブラックボックスの中ではなく、誰もがアクセスできるオープンなWorld Modelの上で産声を上げるはずだ。</p>
 
 
 </section>
