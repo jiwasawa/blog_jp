@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 07 Jul 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 17 Jul 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>プロテイン言語モデルにおける「苦い教訓」の受容</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</link>
+  <description><![CDATA[ AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</guid>
+  <pubDate>Fri, 17 Jul 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>言語モデルの内部に潜む「意識」：Jacobian LensとGlobal Workspaceの発見</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,19 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/noam-brown-erdos/</guid>
   <pubDate>Thu, 11 Jun 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/noam-brown-erdos/202606121520-twitter.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>GitHubインフラ崩壊の真相と、AIエージェントが再定義する「開発」の未来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/kyle-github/</link>
-  <description><![CDATA[ AIエージェントによる1400%の急成長がGitHubインフラに負荷をかける中、Copilotの進化とMicrosoftによるOSレイヤー戦略、そして開発者基盤の安定化への課題が語られる。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/kyle-github/</guid>
-  <pubDate>Tue, 09 Jun 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kyle-github/202606121508-twitter.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
