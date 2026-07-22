@@ -3,7 +3,7 @@ title: "プロテイン言語モデルにおける「苦い教訓」の受容"
 description: "AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。"
 author: "Junichiro Iwasawa"
 date: "2026-07-18"
-categories: [LLM, AI, Podcast]
+categories: [LLM, AI, Podcast, Biology]
 image: 202607182203.jpg
 ---
 
