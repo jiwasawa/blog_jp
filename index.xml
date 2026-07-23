@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sat, 18 Jul 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 23 Jul 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/</link>
+  <description><![CDATA[ AIがライフサイエンスを再定義するProgrammable BiologyとVirtual Cellの可能性と、その技術的・倫理的課題をPatrick Hsu氏との対談から分析する。 ]]></description>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Biology</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/</guid>
+  <pubDate>Thu, 23 Jul 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/202607230845.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>プロテイン言語モデルにおける「苦い教訓」の受容</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -19,6 +31,7 @@
   <category>LLM</category>
   <category>AI</category>
   <category>Podcast</category>
+  <category>Biology</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</guid>
   <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg" medium="image" type="image/jpeg"/>
@@ -116,18 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</guid>
   <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606152207.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Noam Brown: 数学におけるCentaur期の到来と、推論モデルの不可逆的進化</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/noam-brown-erdos/</link>
-  <description><![CDATA[ OpenAI o1によるErdős予想の反証を機に、AIが数学における推論能力の限界を突破し、人間とAIの役割分担や「Scalable Oversight」といった新たな課題に直面する現状を分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/noam-brown-erdos/</guid>
-  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/noam-brown-erdos/202606121520-twitter.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

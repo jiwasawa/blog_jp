@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。">
+<meta name="description" content="AIがライフサイエンスを再定義するProgrammable BiologyとVirtual Cellの可能性と、その技術的・倫理的課題をPatrick Hsu氏との対談から分析する。">
 
-<title>プロテイン言語モデルにおける「苦い教訓」の受容</title>
+<title>Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -84,13 +84,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="プロテイン言語モデルにおける「苦い教訓」の受容 – miscellaneous notes">
-<meta property="og:description" content="AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。">
-<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg">
+<meta property="og:title" content="Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義 – miscellaneous notes">
+<meta property="og:description" content="AIがライフサイエンスを再定義するProgrammable BiologyとVirtual Cellの可能性と、その技術的・倫理的課題をPatrick Hsu氏との対談から分析する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/202607230845.jpg">
 <meta property="og:site_name" content="miscellaneous notes">
-<meta name="twitter:title" content="プロテイン言語モデルにおける「苦い教訓」の受容 – miscellaneous notes">
-<meta name="twitter:description" content="AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。">
-<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg">
+<meta name="twitter:title" content="Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義 – miscellaneous notes">
+<meta name="twitter:description" content="AIがライフサイエンスを再定義するProgrammable BiologyとVirtual Cellの可能性と、その技術的・倫理的課題をPatrick Hsu氏との対談から分析する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/202607230845.jpg">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -146,14 +146,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">プロテイン言語モデルにおける「苦い教訓」の受容</h1>
+      <h1 class="title">Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義</h1>
                   <div>
         <div class="description">
-          AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。
+          AIがライフサイエンスを再定義するProgrammable BiologyとVirtual Cellの可能性と、その技術的・倫理的課題をPatrick Hsu氏との対談から分析する。
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
                 <div class="quarto-category">Podcast</div>
                 <div class="quarto-category">Biology</div>
@@ -174,7 +173,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2026年7月18日</p>
+        <p class="date">2026年7月23日</p>
       </div>
     </div>
     
@@ -193,34 +192,31 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>AlphaFold 3の登場を以てタンパク質構造予測は完全に解かれたと、まるで科学の終焉を告げるかのように言い切る人が後を絶たないが、一旦そのような短絡的極まりない未来観測的与太話は無視し、<a href="https://youtu.be/XdevS0GSuiQ?si=DGO7hMl2jvyEoKa0">Latent Space podcast</a>で語られたBiohubのHead of Science、Alex Reevesの深淵なる洞察をもとに、Protein Language Model (PLM) の現在地および今後のProgrammable Biologyの行方に焦点を当てる。</p>
-<section id="esmc-as-a-world-model-の強み" class="level2">
-<h2 class="anchored" data-anchor-id="esmc-as-a-world-model-の強み">ESMC as a World Model の強み</h2>
-<p>Evolutionary Scale Modeling (ESM) シリーズの最新版、ESMCのポイントは大きくわけて三つある。①約70億（6.8 billion）の非冗長なタンパク質配列と11億の予測構造という前例のないデータスケールを用いていること、②Metagenomics（メタゲノミクス）データの活用によりScaling Lawsの頭打ちを突破したこと、そして③Mechanistic Interpretability（メカニスティック解釈可能性）によるモデル内部の生物学的World Modelの存在証明、である。</p>
-<p>まずAlphaFoldのようなモデルとの決定的な違いについてだが、AlphaFoldがMultiple Sequence Alignment (MSA) や進化的圧力といった人間の生物学的ドメイン知識（Inductive bias）を多分に組み込んだアーキテクチャであるのに対し、ESMシリーズはより純粋な言語モデルのアプローチをとっている。つまり、進化の過程で生み出されたアミノ酸配列の「次のトークン」を予測させるという、極めてシンプルな自己教師あり学習に根ざしている。</p>
-<p>基礎研究的な観点で述べるならば、巨大なTransformerモデルに系列データを流し込むという構成要素自体に真新しい要素はない。しかし、Rich Suttonが提唱した「Bitter Lesson（苦い教訓）」——人間の事前知識をハードコーディングするよりも、純粋な計算量とデータスケールに任せた方が最終的には勝るという経験則——が、自然言語だけでなくBiologyの領域においても完全に成立することを実証してみせた点において、ESMCの功績は計り知れない。</p>
-<p>手元で特定のタンパク質の構造を解こうとするならば、MSAベースの手法でも事足りるかもしれない。しかし、抗体（Antibodies）やscFvのような治療薬の設計においてはそうはいかない。抗体は多様性を生み出すために進化の圧力が他とは逆の働き方をしており、従来のMSAに依存したアプローチではモデリングの限界がある。</p>
-<p>そこでESMCは、PDB（Protein Data Bank）のような美しくキュレーションされたデータだけでなく、深海の熱水噴口から人間の腸内細菌に至るまで、あらゆる環境から採取された所属不明の「メタゲノム」のノイズまみれの配列データを大量に飲み込んだ。結果としてESM-2で見られかけたScaling Lawsの限界を突破し、抗体設計などにおいても顕著な成果を上げ始めている。toCオンラインサービスの本質がログデータのNを増やすことにあるように、AI主導の生物学もまた、自然界が走らせてきた「数十億年分の並列実験ログ」をどれだけモデルに食わせられるかが勝負の分かれ目となる。</p>
+<p>最近のAI界隈は、Large Language Model (LLM) の推論能力の向上や、Big Techによるデータセンターの増設といった話題で持ちきりだ。しかし、そうしたITインフラ的な技術の進化が、物理世界において最も劇的な化学反応を起こしている領域を我々は注視する必要がある。ライフサイエンス、あるいはデジタル生物学と呼ばれる領域である。</p>
+<p>先日配信された<a href="https://youtu.be/S0pAPjXmBHQ?si=EzbytZhUICrRuvW-">Ground Truths podcast</a>において、Eric TopolがARC Instituteの共同創設者でありStanford大学の教員でもあるPatrick Hsuを招き、AIがライフサイエンスをいかに「触媒（catalyze）」しているかについて深掘りした。彼のデジタル生物学に対する見解は真にインスパイアされるものであり、本稿ではこの対談から得られたインサイトを足がかりとして、AI駆動の生物医学研究の現在地と、その先にある事業的・倫理的な力学を分析する。AIが単なる研究の補助ツールに留まるという無責任極まりない現状維持の観測は一旦無視し、パラダイムシフトの本質に焦点を当てる。</p>
+<section id="agent-based-aiと科学的推論のスケーリング" class="level2">
+<h2 class="anchored" data-anchor-id="agent-based-aiと科学的推論のスケーリング">Agent-Based AIと科学的推論のスケーリング</h2>
+<p>ここ1年の間に、AIを駆使した生物医学的発見のペースは前例のないレベルへと加速している。その先駆けとして特筆すべきは、5月に立て続けに発表された2つの画期的な論文である。一つは創薬ターゲットの特定と再利用（repurposing）に焦点を当てたGoogleの「Co-Scientist」であり、もう一つは加齢黄斑変性症という特定の疾患領域に取り組んだFutureHouseの「Robin」モデルである。これらのモデルが示しているのは、もはやAIが単なるデータ処理ツールではなく、膨大な科学的文献全体を俯瞰し、人間の認知限界を超えた仮説生成や実験設計を行う存在になりつつあるという事実だ。</p>
+<p>さらに最近のScience誌で発表された、Stanford大学の共同研究者らによる「Biomni」は、このアプローチを一段上の次元へと引き上げた。Biomniは、150以上の専門ツール、2500以上の論文、そして広範なデータベースを統合する「Discovery Engine」として機能する。希少疾患の診断から、Single-cell RNA sequencingの分析、センサーデータを用いたCOVID-19のバイオマーカー発見、さらには胚の骨格発達の解析に至るまで、その応用範囲は驚異的である。</p>
+<p>ここでPatrickが強調しているのが、「Agent-Based AI」の台頭である。仮説生成、データの検証、そして分析といった異なる専門性を持つ複数のAIエージェントが協調して動作するアーキテクチャは、人間の研究チームのワークフローそのものを模倣している。単一のLLMにすべてを丸投げするのではなく、タスクを分割し、互いにレビューし合う多段的なAgent-Based AIの導入により、これまで数百時間を要していた創薬ワークフローは、わずか数分へと劇的に圧縮されつつある。</p>
 </section>
-<section id="sparse-autoencoderが暴く進化の逆コンパイル" class="level2">
-<h2 class="anchored" data-anchor-id="sparse-autoencoderが暴く進化の逆コンパイル">Sparse Autoencoderが暴く進化の逆コンパイル</h2>
-<p>さらに興味深いのは、ReevesらがESMCの6 Billionパラメータモデルの表現空間に対してSparse Autoencoder (SAE) を適用し、深いMechanistic Interpretabilityの分析を行った点だ。</p>
-<p>事前知識を一切与えられていないにもかかわらず、モデル内部には生化学的特性から、「nucleophilic elbow」のような高度に抽象化された構造モチーフに至るまで、人間の生物学者が数十年の歳月をかけて解き明かしてきた還元的階層構造が自然発生的（emergent）に形成されていたのである。驚くべきことに、進化の系統樹上では全く異なる経路を辿ってきたはずの遺伝子編集システム群が、モデルの表現空間内では同じ機能クラスターとして認識されていた。</p>
-<p>これは、自然言語モデルが文脈から単語の意味論的構造を理解するように、PLMが数十億年の進化のプロセスが書き残したDNAのログから、タンパク質を支配する物理法則を自律的に「理解」し始めていることを示唆している。モデルは単に既存の配列を暗記しているわけではなく、未踏の生物学的空間を探索し、新たなタンパク質を設計するための潜在変数をもったWorld Modelを獲得したと言ってよい。</p>
+<section id="programmable-biologyとvirtual-cellの深淵" class="level2">
+<h2 class="anchored" data-anchor-id="programmable-biologyとvirtual-cellの深淵">Programmable BiologyとVirtual Cellの深淵</h2>
+<p>しかし、AIがもたらす真の破壊的イノベーションは、既存のプロセスの高速化だけにとどまらない。その本質は「Programmable Biology」という概念への移行にある。</p>
+<p>例えば「Evo 2」のようなAIモデルは、進化の過程で蓄積された膨大な生物学的データセットを学習している。これにより、治療用の新規DNAシーケンスなど、自然界には存在しなかった生物学的コンポーネントをゼロから設計することが可能になりつつある。これは抗体設計や遺伝子治療の分野におけるパラダイムシフトであり、ソフトウェアエンジニアがコードを書くように、生物学者がDNAやタンパク質を設計する未来を意味している。</p>
+<p>そして、このProgrammable Biologyを実証するための究極のプラットフォームが「Virtual Cell」である。ARC InstituteにおけるPatrickの研究室は、このVirtual Cellモデル開発の最前線にいる。人間の生物学をin silicoでシミュレートし、遺伝的あるいは化学的な摂動（perturbations）に対する細胞の反応を高精度に予測する。これは単なるデータ間の相関関係の発見ではなく、疾患の背後にある「Causal Inference（因果推論）」を解き明かすためのアプローチである。とりわけAlzheimer’s病のような複雑な疾患において、特定の遺伝子変異がどのように細胞の振る舞いを変化させるかをシミュレートできるVirtual Cellの存在は、個別化医療に向けた最大のブレイクスルーとなるだろう。</p>
 </section>
-<section id="virtual-cellへの道開発者は後回し否実験データの枯渇が先か" class="level2">
-<h2 class="anchored" data-anchor-id="virtual-cellへの道開発者は後回し否実験データの枯渇が先か">Virtual Cellへの道：開発者は後回し？否、実験データの枯渇が先か</h2>
-<p>ESMCのオープンソース（MITライセンス）化に見られるBiohubの姿勢は手放しで歓迎すべきだが、ひたすら褒め称えて終わるのも座りが悪いので、次に立ち塞がる現実的な壁についても触れておく。</p>
-<p>Biohubの最終的な野望は、タンパク質単体のモデリングに留まらず、細胞全体、さらには生理学（Physiology）レベルのシステムをデジタル上で再現する「Virtual Cell（仮想細胞）」の構築である。これが実現すれば、数百万の科学的仮説をデジタル空間上で並列検証し、未知の疾患に対するProgrammableな治療法をゼロから設計することが可能になる。</p>
-<p>しかし、開発者や生物学の研究者ならお分かりの通り、現在のAIは細胞内の動的な相互作用（Protein-protein interactions）やシグナル伝達を第一原理からシミュレーションするには程遠い。Reeves自身も認めているように、細胞レベルのモデリングを実現するためには、Compute（計算資源）の増強だけでは全く足りない。モデルの学習に耐えうる次元と量を持った「マルチモーダルな動的データ」そのものが決定的に不足しているのである。</p>
-<p>これまでの生物学のデータセット（例えばPDB）は、個々の研究者が個別の目的（例えば自身のPh.D.論文のため）に収集した結果の寄せ集めに過ぎず、Machine Learningのために最適化されたものではなかった。このデータ収集プロセスの非効率性が、Virtual Cell構築における最大のボトルネックとなっている。</p>
-<p>だからこそBiohubは、Cryo-electron tomography（クライオ電子線トモグラフィー）やLight sheet microscopy（光シート顕微鏡）といった次世代の計測技術の開発に巨額の投資を行っている。AIモデルが仮説を立て、自動化されたロボティクスが実験を行い、その結果を新たな計測器で観察してモデルを更新する「Lab-in-the-loop」の体制構築である。AIアルゴリズムの進化スピードにデータ取得技術が完全に置いてけぼりを食らっている現在、ハードウェアを含むデータ生成プロセスの抜本的な再構築なしに、Virtual Cellの実現は絵に描いた餅に終わる。</p>
+<section id="物理現実という壁とethical-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="物理現実という壁とethical-considerations">物理現実という壁と、Ethical Considerations</h2>
+<p>とはいえ、この熱狂の只中にあっても、我々は技術的および物理的な制約を冷静に見極める必要がある。AIモデルは依然としてHallucinationを起こし、存在しないデータや誤った相関を尤もらしく出力するリスクを抱えている。Agent-Based AIがどれほど精巧に仮説を立てたとしても、最終的には厳格な人間の監視と、現実の実験室での検証が不可欠である。</p>
+<p>AIが予測したモデルと物理的な現実との間には、依然として深いキャズムが存在する（Bridging the Gap to Physical Reality）。複雑な生物学的システムにおいて、シミュレーション上の成功がそのまま現実の成功を保証するわけではない。そのため、ロボティクスや自動化ラボとの統合による「物理世界での高速なフィードバックループ」の構築こそが、今後の生命科学系AI企業にとっての最大のボトルネックであり、同時に強固なモート（参入障壁）となるはずだ。</p>
+<p>また、Ethical Considerations（倫理的懸念）も避けては通れない。DNAシーケンスを自由に設計でき、生物学的メカニズムをシミュレートできるツールが民主化されるということは、それがバイオ兵器の開発といった極めて悪意のある目的（nefarious purposes）に転用されるリスクと表裏一体である。AIモデルへのアクセスが容易になる中で、DNA合成プロセスにおけるスクリーニングや、適切なガバナンスの枠組みの構築は、業界全体で取り組むべき急務となっている。</p>
 </section>
-<section id="クローズドaiへのアンチテーゼ" class="level2">
-<h2 class="anchored" data-anchor-id="クローズドaiへのアンチテーゼ">「クローズドAI」へのアンチテーゼ</h2>
-<p>我々は今、Programmable Biologyという新たな科学的パラダイムの入り口に立っている。AIが進化の「苦い教訓」を飲み込み、生命の設計図を自律的に書き換える未来は確実に近づいている。</p>
-<p>最後に特筆すべきは、Biohubがこれほどまでに巨大な資本と計算資源を投じて構築した基礎モデルを、惜しげもなくコミュニティに解放している点だ。一部のAI企業がモデルのAPIエンドポイントを小出しにしては開発者を振り回し、クローズドなエコシステムへの囲い込みに躍起になっている昨今の状況を鑑みると、このアプローチは極めて対照的である。</p>
-<p>プラットフォーム企業が悪手中の悪手とも言える外部開発者軽視の姿勢を強める中、真に科学の進歩を加速させるのは、こうしたオープンサイエンスの徹底である。少なくともBiohubの取り組みは、クローズドなサイロに閉じこもる企業たちに対する、最も強力で実践的なアンチテーゼとなっているように感じる。未来の科学的ブレイクスルーは、ブラックボックスの中ではなく、誰もがアクセスできるオープンなWorld Modelの上で産声を上げるはずだ。</p>
+<section id="次世代の知のインフラの覇者は誰か" class="level2">
+<h2 class="anchored" data-anchor-id="次世代の知のインフラの覇者は誰か">次世代の「知のインフラ」の覇者は誰か</h2>
+<p><a href="https://youtu.be/S0pAPjXmBHQ?si=EzbytZhUICrRuvW-">Ground Truths podcastでの対談</a>を通じてPatrickが放つメッセージは、極めて明確かつ楽観的である。AIは科学者を不要にするのではなく、個々の科学者の能力を拡張（augment）し、複雑な課題に立ち向かう力を与えるものだ。彼が提唱するように、生物学におけるAIの活用には、より大胆で想像力豊かなアプローチが求められている。</p>
+<p>ソフトウェアの領域で起きたエコシステムの進化が、現在ライフサイエンスの領域でフラクタルに再現されつつある。Big Techが基盤モデルの汎用化に莫大な資本を投じる一方で、ARC Instituteのような機関や特化型のスタートアップが、Causal InferenceやVirtual Cellといったドメイン固有の「知のインフラ」を構築している。最終的にこの分野の勝者となるのは、単に推論能力の高いLLMをAPIで提供する企業ではなく、膨大な物理的実験データとAIの推論ループを最も速く、かつ正確に回すことができるプレイヤーだろう。</p>
+<p>病気の複雑な因果メカニズムを解明し、ヘルスケアを根本から再定義するProgrammable Biologyの波は、もうそこまで来ている。我々はその波に乗るか、あるいは傍観者として医療の進化を見守るか。いずれにせよ、AIとライフサイエンスが交差するこの特異点から、目を離すことはできない。</p>
 
 
 </section>
