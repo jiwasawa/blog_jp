@@ -24,6 +24,18 @@
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/202607230845.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
+  <title>Sarah Guoの語るAI時代の起業家とVCの冷徹な力学</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</link>
+  <description><![CDATA[ AI時代の到来により機会の半減期が短縮する中、起業家はプロダクト至上主義を捨て、スピード感あるGTM戦略とVCとの冷徹な力学を理解する必要がある。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</guid>
+  <pubDate>Thu, 23 Jul 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/202607230903.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
   <title>プロテイン言語モデルにおける「苦い教訓」の受容</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</link>
@@ -116,19 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/</guid>
   <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/202606160857.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Yann LeCunが語るLarge Language Model (LLM) 信仰の終焉とWorld Modelの逆襲</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</link>
-  <description><![CDATA[ Yann LeCunがLLMの限界とJEPAによるWorld Modelの可能性を語り、AI主権確立に向けた自身の挑戦を明かす。 ]]></description>
-  <category>JEPA</category>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/</guid>
-  <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/yann-lecun-jepa/202606152207.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
