@@ -9,8 +9,20 @@
 <link>https://jiwasawa.github.io/blog_jp/</link>
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
-<generator>quarto-1.9.38</generator>
-<lastBuildDate>Thu, 23 Jul 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.10.18</generator>
+<lastBuildDate>Mon, 27 Jul 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Kimi K3が暴く「Open-Closed Gap」の終焉と、AI地政学の最前線</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/</link>
+  <description><![CDATA[ Kimi K3の登場がAIの「Open-Closed Gap」の終焉を示唆し、中国AIラボの驚異的なCapital EfficiencyとDistillation論の誤謬、そしてAI地政学の最前線を暴く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/</guid>
+  <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/202607271625.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -115,19 +127,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/rl-scaling/</guid>
   <pubDate>Fri, 19 Jun 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/rl-scaling/202606160913.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>AIエージェント評価の深層：基本原理から実践的アプローチまで</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/</link>
-  <description><![CDATA[ AIエージェントの基本原理からτ-benchやTerminal-Benchのような実践的アプローチ、そして独自の評価システム構築ロードマップまでを網羅し、その複雑な評価メカニズムを体系的に解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Agentic Systems</category>
-  <category>Benchmark</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/</guid>
-  <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/agent-benchmarks/202606160857.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
