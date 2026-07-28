@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Mon, 27 Jul 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 28 Jul 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Kimi K3詳解：オープンフロンティアを切り拓く2.8兆パラメータMoEの全貌</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/</link>
+  <description><![CDATA[ 2.8兆パラメータのMoEモデルKimi K3が、Kimi Delta AttentionやAttention Residualsといった革新的なアーキテクチャ、Agenticなタスクを可能にするPost-Training、そしてそれを支えるインフラストラクチャと共にオープンソース化され、AIの新たなフロンティアを切り拓く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/</guid>
+  <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/202607282159.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Kimi K3が暴く「Open-Closed Gap」の終焉と、AI地政学の最前線</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -116,17 +128,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/post-training-science/</guid>
   <pubDate>Mon, 22 Jun 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/post-training-science/202606221011.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Large Language ModelにおけるRLスケーリング則：事前学習からの進化と実践的洞察</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/rl-scaling/</link>
-  <description><![CDATA[ LLMにおけるスケーリング則は事前学習から強化学習（RL）へと進化し、GRPOアルゴリズムやシグモイド曲線・べき乗則による分析を通じて、計算量と性能の関係予測やリソース配分の最適化といった実践的洞察をもたらしている。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/rl-scaling/</guid>
-  <pubDate>Fri, 19 Jun 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/rl-scaling/202606160913.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
