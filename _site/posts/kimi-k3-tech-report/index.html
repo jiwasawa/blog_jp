@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="2.8兆パラメータのMoEモデルKimi K3が、Kimi Delta AttentionやAttention Residualsといった革新的なアーキテクチャ、Agenticなタスクを可能にするPost-Training、そしてそれを支えるインフラストラクチャと共にオープンソース化され、AIの新たなフロンティアを切り拓く。">
+
+<title>Kimi K3詳解：オープンフロンティアを切り拓く2.8兆パラメータMoEの全貌</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Kimi K3詳解：オープンフロンティアを切り拓く2.8兆パラメータMoEの全貌 – miscellaneous notes">
+<meta property="og:description" content="2.8兆パラメータのMoEモデルKimi K3が、Kimi Delta AttentionやAttention Residualsといった革新的なアーキテクチャ、Agenticなタスクを可能にするPost-Training、そしてそれを支えるインフラストラクチャと共にオープンソース化され、AIの新たなフロンティアを切り拓く。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/202607282159.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Kimi K3詳解：オープンフロンティアを切り拓く2.8兆パラメータMoEの全貌 – miscellaneous notes">
+<meta name="twitter:description" content="2.8兆パラメータのMoEモデルKimi K3が、Kimi Delta AttentionやAttention Residualsといった革新的なアーキテクチャ、Agenticなタスクを可能にするPost-Training、そしてそれを支えるインフラストラクチャと共にオープンソース化され、AIの新たなフロンティアを切り拓く。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/202607282159.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Kimi K3詳解：オープンフロンティアを切り拓く2.8兆パラメータMoEの全貌</h1>
+                  <div>
+        <div class="description">
+          2.8兆パラメータのMoEモデルKimi K3が、Kimi Delta AttentionやAttention Residualsといった革新的なアーキテクチャ、Agenticなタスクを可能にするPost-Training、そしてそれを支えるインフラストラクチャと共にオープンソース化され、AIの新たなフロンティアを切り拓く。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年7月28日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>近年、Large Language Model (LLM) の開発において、事前学習におけるスケールアップと、推論時計算量（Test-Time Computation）の拡張という2つの軸が研究の中心となっている。しかし、オープンソースの領域では依然として1Tパラメータ前後のモデルが主流であり、最先端のプロプライエタリモデルとの性能差が拡大しつつあるのが現状であった。</p>
+<p>この課題に対する強力な解答として、Moonshot AIが最新モデル「Kimi K3」の<a href="https://github.com/MoonshotAI/Kimi-K3/blob/main/k3_tech_report.pdf">テクニカルレポート</a>を公開し、同時にそのModel Weightsをオープンソースとしてリリースした。Kimi K3は、総パラメータ数2.8 Trillion (2.8T)、アクティブパラメータ数104 Billion (104B) を誇る巨大な Mixture-of-Experts (MoE) モデルであり、最大1 Million (1M) トークンの Context Window と Native Vision 機能を備えている。</p>
+<p>本稿では、Kimi K3がどのようにして前世代のKimi K2から約2.5倍のScaling Efficiency向上を果たしたのか、その根幹をなすアーキテクチャの革新、Reinforcement Learning (RL) による推論能力の向上、そして特筆すべき手法である Knowledge-Graph-Guided Task Synthesis などの技術的詳細について深く掘り下げていく。</p>
+<section id="アーキテクチャの革新情報フローの3次元スケーリング" class="level2">
+<h2 class="anchored" data-anchor-id="アーキテクチャの革新情報フローの3次元スケーリング">アーキテクチャの革新：情報フローの3次元スケーリング</h2>
+<p>Kimi K3のアーキテクチャは、系列長（Sequence Length）、ネットワークの深さ（Network Depth）、およびモデルの幅（Model Width）という3つの次元において情報の流れを最適化するように設計されている。</p>
+<section id="系列長のスケーリングhybrid-attention-kda-gated-mla" class="level3">
+<h3 class="anchored" data-anchor-id="系列長のスケーリングhybrid-attention-kda-gated-mla">系列長のスケーリング：Hybrid Attention (KDA + Gated MLA)</h3>
+<p>長大な Context Window を効率的に処理するため、Kimi K3は層ごとに異なるAttention機構を組み合わせた Hybrid Attention を採用している。具体的には、各ブロックにおいて3層の Kimi Delta Attention (KDA) と1層の Gated MLA (Multi-head Latent Attention) を3:1の比率で配置している。</p>
+<ol type="1">
+<li><strong>Kimi Delta Attention (KDA)：</strong> KDAは、従来のSoftmax Attentionが抱えていた巨大なKVキャッシュの増大という問題を解決するため、系列の情報を固定サイズのRecurrent State <span class="math inline">\(\mathbf{S}_t \in \mathbb{R}^{d_k \times d_v}\)</span> に圧縮する。Kimi K3では、計算のボトルネックとなっていた対角タイルの処理を解消するため、減衰率（Decay）のパラメータ化に改良を加えている。具体的には、対数減衰（Log-Decay）を下限付きのシグモイド関数でバウンドすることで、数値的なオーバーフローを防ぎ、すべてのCausal Tileにおいて高密度なTensor Coreを用いた行列乗算を可能にした。</li>
+<li><strong>Gated MLA：</strong> 定期的に挿入されるMLA層は、No Position Encoding (NoPE) の状態で大域的なトークン間の相互作用（Global Content Interaction）を担う。さらに、入力依存のFull-Rank Output Gateを導入することで、トークンごとにGlobal Attentionから読み出すチャネルを動的に変調する機能が追加されている。</li>
+</ol>
+</section>
+<section id="深さのスケーリングattention-residuals-attnres" class="level3">
+<h3 class="anchored" data-anchor-id="深さのスケーリングattention-residuals-attnres">深さのスケーリング：Attention Residuals (AttnRes)</h3>
+<p>従来の残差接続（Residual Connections）は、過去のすべての層の情報を単一の隠れ状態に蓄積していくため、情報伝達のボトルネックになりやすかった。これに対し、Kimi K3は Attention Residuals (AttnRes) を導入している。</p>
+<p>これは、各層が過去のすべての層（および埋め込み層）の表現に対してAttentionを計算し、必要な情報を選択的に取得するメカニズムである。計算量とメモリのオーバーヘッドを削減するため、層を複数のブロック（Kimi K3では12層ごとの8ブロック）に分割し、ブロック単位の表現に対してAttentionを行う Block Attention Residuals を採用している。これにより、ネットワークの深さ方向に対する情報の選択的アクセスが劇的に改善されている。</p>
+</section>
+<section id="幅のスケーリングstable-latentmoe" class="level3">
+<h3 class="anchored" data-anchor-id="幅のスケーリングstable-latentmoe">幅のスケーリング：Stable LatentMoE</h3>
+<p>Kimi K3は、各トークンに対して896個のRouted Expertsから16個をアクティブにするという極めて高いSparsity（疎性）を持つ LatentMoE を採用している。このような大規模な Mixture-of-Experts (MoE) は表現力を大幅に高める一方で、学習時の最適化を極めて不安定にするリスクを伴う。これを安定化させるため、以下の2つの重要なコンポーネントが導入された。</p>
+<ul>
+<li><strong>Sigmoid Tanh Unit GLU (SiTU-GLU)：</strong> 従来のSwiGLUは正の領域で入力が青天井になるため、巨大なスケールのモデルではActivationの爆発を引き起こす可能性があった。SiTU-GLUは、SwiGLUの局所的な非線形性を維持しつつ、線形ブランチとアップブランチの両方に滑らかな上限（Soft Cap）を適用することで、Activationの外れ値を効果的に抑制する。</li>
+<li><strong>Quantile Balancing (QB)：</strong> 補助損失（Auxiliary Loss）に依存しないLoad Balancing手法である。約1,000個に及ぶExpertsへのルーティングを均等に保つため、ルータのスコアマージンの分布（ヒストグラム）から直接分位数（Quantile）を計算し、エキスパートごとのバイアスを動的に調整する。これにより、訓練中のExpertへの負荷が極めて均等に保たれる。</li>
+</ul>
+</section>
+</section>
+<section id="post-trainingと高度な推論能力の獲得" class="level2">
+<h2 class="anchored" data-anchor-id="post-trainingと高度な推論能力の獲得">Post-Trainingと高度な推論能力の獲得</h2>
+<p>Kimi K3の強さは、強固な事前学習モデルの上に構築された、Agenticなタスクや複雑な推論を解くための Post-Training パイプラインにある。</p>
+<section id="knowledge-graph-guided-task-synthesis" class="level3">
+<h3 class="anchored" data-anchor-id="knowledge-graph-guided-task-synthesis">Knowledge-Graph-Guided Task Synthesis</h3>
+<p>今回公開された<a href="file:///Users/jiwasawa/Library/CloudStorage/Dropbox/Papers/202604_paperpile/k3_tech_report.pdf">レポート</a>の中で特に興味深いアプローチの一つが、Knowledge-Graph-Guided Task Synthesis（知識グラフ主導のタスク合成）である。Reinforcement Learning (RL) のための高品質かつ多様なタスク環境を自動で構築するために、この手法が用いられている。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig9.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption><a href="https://github.com/MoonshotAI/Kimi-K3/blob/main/k3_tech_report.pdf">Kimi K3 Tech Report</a>より引用</figcaption>
+</figure>
+</div>
+<p>システムはまず、AIやAgent自身にウェブを探索させ、自己進化型の有向非巡回グラフ（DAG）として Knowledge Graph を構築する。大きなドメイン（例：コンピュータサイエンス、物理学）から始まり、末端の細粒度な概念（例：特定のGPUカーネルの最適化アルゴリズム）へとAgentが知識を掘り下げていく。タスクを生成する際は、このグラフから関連するノードをサンプリングし、対応するインターネット上の公開ドキュメントやコードリポジトリを取得して、合成Agent（Synthesis Agent）がRL用の多様な環境・タスクを生成する。この仕組みにより、ロングテールな専門知識から広範なドメインまで、学習データのカバレッジを動的かつシステマティックに制御することが可能となっている。</p>
+</section>
+<section id="multi-effort-reinforcement-learning-と-mopd" class="level3">
+<h3 class="anchored" data-anchor-id="multi-effort-reinforcement-learning-と-mopd">Multi-Effort Reinforcement Learning と MOPD</h3>
+<p>Kimi K3は、Test-Time Computation のスケールアップを目的として、様々な Reasoning Effort（推論の深さ：low, high, max）に応じた Reinforcement Learning (RL) を実施している。</p>
+<ul>
+<li>コーディング（ソフトウェアエンジニアリング、カーネル最適化など）</li>
+<li>一般的なAgentタスク（数千回のツール呼び出しを伴う長期的な自律実行など）</li>
+<li>一般的な知識・推論タスク</li>
+</ul>
+<p>これら異なるドメインと推論レベルに特化した個別のPolicy（エキスパートモデル）を学習させた後、Multi-Teacher On-Policy Distillation (MOPD) と呼ばれる手法を用いて、単一のモデルへと統合（Consolidate）する。このプロセスによって、Kimi K3は単純な対話から、何百万トークンにも及ぶ長期的な自律型 Agentic Workflow まで、動的に推論の深さを変えながら対応できる汎用性を獲得している。</p>
+</section>
+</section>
+<section id="multi-trillion-規模を支える-infrastructure" class="level2">
+<h2 class="anchored" data-anchor-id="multi-trillion-規模を支える-infrastructure">Multi-Trillion 規模を支える Infrastructure</h2>
+<p>2.8Tパラメータの Mixture-of-Experts (MoE) モデルを1M Context Window で学習・サービングするには、ソフトウェアとハードウェアの限界を押し広げるインフラストラクチャが必要不可欠である。</p>
+<ul>
+<li><strong>MoonEP (Perfectly Balanced Expert-Parallel Training)：</strong> 学習時の最大の課題は、ノード間での計算負荷の不均衡である。MoonEPは、動的にRedundant Experts（冗長エキスパート）をプランニングし、各ランクに割り当てられるトークン数を数学的に完全に一致させる。これにより、Staticな計算シェイプでの実行とゼロコピーでの通信が可能になり、GPUの使用率を極限まで高めている。</li>
+<li><strong>AgentENV (MicroVM Sandboxes)：</strong> 長期間にわたる Agentic Workflow の RL を行うため、Dockerのようなコンテナベースではなく、Firecracker を用いた MicroVM ベースのサンドボックス環境「AgentENV」を構築した。これにより、Agent が誤って Kernel Panic を引き起こすような破壊的な行動をとってもシステムを保護できる高い隔離性と、ミリ秒単位での状態の保存（Snapshot）や再開（Resume）を可能にする高い効率性を両立している。</li>
+</ul>
+</section>
+<section id="パフォーマンスとオープンソース化の意義" class="level2">
+<h2 class="anchored" data-anchor-id="パフォーマンスとオープンソース化の意義">パフォーマンスとオープンソース化の意義</h2>
+<p>数々のベンチマークにおいて、Kimi K3は Claude Fable 5 や GPT-5.6 Sol といった最上位のプロプライエタリモデルに肉薄する Frontier-level の性能を叩き出しており、既存のオープンソースモデル（あるいは他の多くのプロプライエタリモデル）を安定して上回っている。特に、長文脈を活かした SWE-Marathon（コーディング）や BrowseComp（ブラウザ操作のAgentタスク）、Math-Vision（視覚と数学的推論）などにおいて、最高クラスのスコアを記録した。</p>
+<p>特筆すべきは、Moonshot AIがこの2.8T規模の Model Weights を完全に公開したことである。これまでのオープンソース LLM は最大でも数百Billionクラスに留まっていた。Kimi K3のリリースにより、世界中の研究者や開発者が、Kimi Delta Attention (KDA) の挙動や、Knowledge-Graph-Guided Task Synthesis で培われた Agentic な推論能力、そして大規模な Mixture-of-Experts (MoE) の振る舞いを直接手元で解析・ファインチューニングできるようになった。</p>
+<p>Kimi K3は単なる新しいAIモデルではなく、オープンソースAIの到達点を数段引き上げ、今後のAIアーキテクチャやスケーリングの新たな「フロンティア」を提示する画期的なマイルストーンであると言えるだろう。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
