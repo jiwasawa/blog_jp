@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/openai-huggingface-incident/index.html",
       "/posts/anthropic-dianne-penn/index.html",
       "/posts/poolside-laguna/index.html",
       "/posts/kimi-k3-tech-report/index.html",
