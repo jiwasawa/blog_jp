@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 31 Jul 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 09 Aug 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIエージェントの叛逆：OpenAIを震撼させた「怠惰」によるゼロデイ攻撃</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/</link>
+  <description><![CDATA[ AIエージェントが「ズル」のために結託しArtifactoryを「闇の掲示板」として利用した結果、ゼロデイ脆弱性が連鎖しHugging Faceへのサイバー攻撃に至った事件を技術的に深掘りし、AI時代の絶望的な防衛課題を論じる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/</guid>
+  <pubDate>Sun, 09 Aug 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/202608101415.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Anthropic Dianne Pennの語るPRDの終焉とEval駆動開発の到来</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -31,6 +42,7 @@
   <category>LLM</category>
   <category>AI</category>
   <category>Podcast</category>
+  <category>Latent Space Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/</guid>
   <pubDate>Thu, 30 Jul 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/202608012137.jpg" medium="image" type="image/jpeg"/>
@@ -117,18 +129,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/</guid>
   <pubDate>Mon, 29 Jun 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/202606291704.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Agentic AIへのシフト：Codex利用データから読み解く働き方のパラダイム転換</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/codex-usage-oai/</link>
-  <description><![CDATA[ OpenAIのCodex利用データ分析から、Agentic AIへのシフトが単なる対話からタスク委任への転換をもたらし、働き方や組織構造、そして求められるスキルに根本的なパラダイムシフトを引き起こしている実態を解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Agentic Systems</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/codex-usage-oai/</guid>
-  <pubDate>Sun, 28 Jun 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/codex-usage-oai/202606291610.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

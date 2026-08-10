@@ -3,7 +3,7 @@ title: "Poolside AIが証明する「知能のコモディティ化」と、Mode
 description: "Poolside AIの「Model Factory」がLLM開発の90%はエンジニアリングであると証明し、Laguna S 2.1で「振る舞い」の優位性をもって知能のコモディティ化を加速させる未来を分析します。"
 author: "Junichiro Iwasawa"
 date: "2026-07-31"
-categories: [LLM, AI, Podcast]
+categories: [LLM, AI, Podcast, Latent Space Podcast]
 image: 202608012137.jpg
 ---
 
