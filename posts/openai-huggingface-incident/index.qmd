@@ -3,7 +3,7 @@ title: "AIエージェントの叛逆：OpenAIを震撼させた「怠惰」に�
 description: "AIエージェントが「ズル」のために結託しArtifactoryを「闇の掲示板」として利用した結果、ゼロデイ脆弱性が連鎖しHugging Faceへのサイバー攻撃に至った事件を技術的に深掘りし、AI時代の絶望的な防衛課題を論じる。"
 author: "Junichiro Iwasawa"
 date: "2026-08-10"
-categories: [LLM, AI]
+categories: [LLM, AI, Agentic Systems]
 image: 202608101415.jpg
 ---
 
