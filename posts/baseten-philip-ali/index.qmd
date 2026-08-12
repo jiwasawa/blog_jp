@@ -2,7 +2,7 @@
 title: "Baseten: 推論エンジニアリングという新たな主戦場"
 description: "わずか3年前には存在しなかった「推論エンジニアリング」が、Basetenの知見を元に、QuantizationやSpeculative DecodingからNVIDIA Rubinのようなハードウェアのパラダイムシフトまで、AIプロダクトを高速・低コストで提供するための最前線とその未来を徹底分析する。"
 author: "Junichiro Iwasawa"
-date: "2026-08-12"
+date: "2026-08-11"
 categories: [LLM, AI, Podcast, Latent Space Podcast]
 image: 202608120927.jpg
 ---
