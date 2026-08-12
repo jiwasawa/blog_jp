@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Mon, 10 Aug 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Baseten: 推論エンジニアリングという新たな主戦場</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</link>
+  <description><![CDATA[ わずか3年前には存在しなかった「推論エンジニアリング」が、Basetenの知見を元に、QuantizationやSpeculative DecodingからNVIDIA Rubinのようなハードウェアのパラダイムシフトまで、AIプロダクトを高速・低コストで提供するための最前線とその未来を徹底分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</guid>
+  <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/202608120927.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>AIエージェントの叛逆：OpenAIを震撼させた「怠惰」によるゼロデイ攻撃</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,17 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/j-space/</guid>
   <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/j-space/202607082042.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>深層学習におけるScaling Laws（スケーリング則）の深層：予測可能性からデータ制約パラダイムまで</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/</link>
-  <description><![CDATA[ 深層学習におけるScaling Lawsの予測可能性から、KaplanとChinchillaの対立、データ制約下での適用、そしてフィッティングの難しさまで、最新の理論的背景と共に徹底解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/</guid>
-  <pubDate>Tue, 30 Jun 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/scaling-laws-lilian/202606291704.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
