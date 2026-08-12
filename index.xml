@@ -12,6 +12,18 @@
 <generator>quarto-1.10.18</generator>
 <lastBuildDate>Wed, 12 Aug 2026 00:00:00 GMT</lastBuildDate>
 <item>
+  <title>プロプライエタリLLM APIにおける推論トレース抽出の脅威とメカニズム</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/</link>
+  <description><![CDATA[ プロプライエタリLLM APIの暗号化された推論トレースの互換性を悪用し、軽量モデルをデクリプション・オラクルとして利用して機密情報や有害情報を抽出する新たな攻撃手法が、AIセキュリティに深刻な影響を与える可能性を指摘する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/</guid>
+  <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/202608122215.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
   <title>Baseten: 推論エンジニアリングという新たな主戦場</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</link>
@@ -21,7 +33,7 @@
   <category>Podcast</category>
   <category>Latent Space Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</guid>
-  <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/202608120927.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -121,17 +133,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</guid>
   <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>言語モデルの内部に潜む「意識」：Jacobian LensとGlobal Workspaceの発見</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/j-space/</link>
-  <description><![CDATA[ Anthropicの研究チームが開発したJacobian Lensにより、Large Language Model（LLM）の内部に人間の「Global Workspace」に類似した、言語化可能な内部表現（J-space）が存在し、それが推論やアライメントに不可欠な役割を果たしていることが明らかになりました。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/j-space/</guid>
-  <pubDate>Wed, 08 Jul 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/j-space/202607082042.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
