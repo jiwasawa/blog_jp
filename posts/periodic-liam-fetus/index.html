@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する">
+<meta name="description" content="ChatGPT開発者Liam Fetus氏が挑む、AIによるマテリアルサイエンスと化学分野の革新、およびPeriodic Labsの野望について、データ戦略、AIアーキテクチャ、そして物理世界への応用を深く掘り下げる。">
 
-<title>John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心</title>
+<title>BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -87,13 +87,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心 – miscellaneous notes">
-<meta property="og:description" content="OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する">
-<meta property="og:image" content="https://picsum.photos/id/134/200">
+<meta property="og:title" content="BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望 – miscellaneous notes">
+<meta property="og:description" content="ChatGPT開発者Liam Fetus氏が挑む、AIによるマテリアルサイエンスと化学分野の革新、およびPeriodic Labsの野望について、データ戦略、AIアーキテクチャ、そして物理世界への応用を深く掘り下げる。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/202608211345.jpg">
 <meta property="og:site_name" content="miscellaneous notes">
-<meta name="twitter:title" content="John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心 – miscellaneous notes">
-<meta name="twitter:description" content="OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する">
-<meta name="twitter:image" content="https://picsum.photos/id/134/200">
+<meta name="twitter:title" content="BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望 – miscellaneous notes">
+<meta name="twitter:description" content="ChatGPT開発者Liam Fetus氏が挑む、AIによるマテリアルサイエンスと化学分野の革新、およびPeriodic Labsの野望について、データ戦略、AIアーキテクチャ、そして物理世界への応用を深く掘り下げる。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/202608211345.jpg">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -149,15 +149,16 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">John Schulmanの「解像度」：OpenAI創設者が語る強化学習の現在地と、Thinking Machinesの野心</h1>
+      <h1 class="title">BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望</h1>
                   <div>
         <div class="description">
-          OpenAI共同創業者John Schulmanが明かす、初期の「正しすぎる失敗」や強化学習の不都合な真実、そしてAGIへの冷徹な視点から、新天地Thinking Machinesで彼が仕掛ける次世代のAI開発戦略までを分析する
+          ChatGPT開発者Liam Fetus氏が挑む、AIによるマテリアルサイエンスと化学分野の革新、およびPeriodic Labsの野望について、データ戦略、AIアーキテクチャ、そして物理世界への応用を深く掘り下げる。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
               </div>
                   </div>
   </div>
@@ -175,7 +176,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年12月21日</p>
+        <p class="date">2026年8月21日</p>
       </div>
     </div>
     
@@ -194,48 +195,39 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>John SchulmanがOpenAIを去り、Anthropicを経て自らの新天地Thinking Machinesへと居を移してからしばらくが経つ。</p>
-<p>ChatGPTのリードアーキテクトであり、PPO（Proximal Policy Optimization）の生みの親でもある彼が、CursorのMichael Truellとのやりとりの中でOpenAI初期の狂乱と、現在のReinforcement Learning（RL）における「不都合な真実」を淡々と、しかし極めて高い解像度で語っている。</p>
-<p>今回のブログでは、<a href="https://youtu.be/29BYxvvF1iM?si=avB1uybraWM3DxF_">彼のインタビュー</a>から見えてくるAI開発の「泥臭い真実」と、彼が次に仕掛けるTinkerの勝算について、独自の視点で分析してみたい。</p>
-<section id="universeという正しすぎる失敗" class="level2">
-<h2 class="anchored" data-anchor-id="universeという正しすぎる失敗">「Universe」という正しすぎる失敗</h2>
-<p>OpenAIの初期がいかに「Rag-tag（寄せ集め）」な集団であったか。今や時価総額が国家予算レベルに達しようとしている巨人の、かつての姿をSchulmanは懐かしむように語る。</p>
-<p>当時は現代のような「スケーリング則への狂信」はなく、アカデミアに近い自由な雰囲気が漂っていたという。そこで生まれた大きな挫折の一つが、Universeプロジェクトだ。</p>
-<p>Universeは、あらゆるコンピューター上のタスク（ビデオゲームやウェブナビゲーション）をRLの環境として統合し、汎用エージェントを育てようという壮大な試みだった。Schulmanはこれを「深く正しいアイデア（Deeply correct idea）だったが、10年早すぎた」と評している。</p>
-<p>当時のインフラではシステムの複雑さに耐えきれず、モデルの汎化性能も追いつかなかった。結局、OpenAIはこの広すぎる野心を一旦捨て、Dota 2というスコープを絞ったプロジェクトで「大規模なエンジニアリング」の筋肉を鍛えることになる。</p>
-<p>この「正しいが早すぎるアイデア」を捨てる勇気こそが、後のOpenAIを成功に導いた。ロボティクス部門の閉鎖も同様だ。それらは「デッドエンド」だったかもしれないが、そこで培われた大規模学習のノウハウが、後のGPTシリーズの血肉となっている。</p>
+<p>巷ではLarge Language Model (LLM) の次なる進化や、AIエージェントの自律性がどうのこうのという議論が喧びすしいが、一旦そのようなデジタル空間のコップの中の嵐からは視点を引き上げたい。言語モデルがテキストやコードを生成できることは既に自明の理であり、インフラ化のフェーズに入りつつある。真に注目すべき次なるフロンティアは、デジタルな「Bits」の世界から、物理的な「Atoms」の世界への拡張である。</p>
+<p>先日配信された<a href="https://youtu.be/Oru2Jxr1xHU?si=m8hDZ3JYzbe03Sc2">No Priors podcast</a>にて、OpenAIでGPT-4のプロダクション化を主導し、ChatGPTの共同開発者（co-creator）の一人でもあるLiam Fetus氏が、自身の新たなベンチャーであるPeriodic Labsのビジョンについて語った。彼が目指しているのは、マテリアルサイエンス（材料科学）や化学の領域に特化した「AI foundation lab for atoms」の構築だ。</p>
+<p>本稿では、Liam Fetus氏の技術的知見に基づき、物理科学分野におけるAIのアーキテクチャ、データ戦略、そしてそれがもたらす自己改善（Self-Improvement）のパラダイムシフトについて深く掘り下げて分析する。</p>
+<section id="物理学者たちがaiに惹かれる理由と現代のマンハッタン計画" class="level2">
+<h2 class="anchored" data-anchor-id="物理学者たちがaiに惹かれる理由と現代のマンハッタン計画">物理学者たちがAIに惹かれる理由と、現代のマンハッタン計画</h2>
+<p>Liam Fetus氏のキャリアは、Google BrainやOpenAIでAIの最前線を走る前、物理学のバックグラウンドから始まっている。暗黒物質（dark matter）の研究に従事していた彼は、パーティクル・リコンストラクション（粒子再構成）の過程で機械学習の課題に直面し、AIの持つ圧倒的なレバレッジの高さに魅了され、コンピュータサイエンスの領域へと舵を切った。</p>
+<p>興味深いことに、AnthropicのDario Amodei氏をはじめ、現在のAI革命を牽引するトップランナーには物理学出身者が非常に多い。この現象についてLiam Fetus氏は、物理学者の持つ「原理原則に基づくアプローチ（principled approach）」と「厳格な分析力」が、未知の知能を創出する現在のAI研究と極めて親和性が高いからだと分析している。これは単なる技術開発というより、新しい形態の知能を探求する「現代のマンハッタン計画」と呼ぶに相応しい熱狂を帯びている。</p>
+<p>OpenAI時代、強大なパラメータを持つ事前学習済みモデルであったGPT-4を、いかにしてユーザーが使えるプロダクトに落とし込むかという課題に対し、彼らは「ミーティングの議事録ボット」のような退屈なアイデアを捨て、最も汎用性の高い「チャットボット」すなわちChatGPTを生み出した。しかし、デジタル空間での成功を収めた彼が次に見据えたのは、AIを物理世界に接続するという、より困難で、しかし不可避な未来であった。</p>
 </section>
-<section id="なぜ今value-functionはオワコンなのか" class="level2">
-<h2 class="anchored" data-anchor-id="なぜ今value-functionはオワコンなのか">なぜ今、Value Functionは「オワコン」なのか</h2>
-<p>インタビューの中で、筆者が最も興味を惹かれたのが、強化学習におけるValue Function（価値関数）の現状に関するSchulmanの分析だ。</p>
-<p>伝統的なRLにおいて、Value FunctionはVariance Reduction（分散低減）のために不可欠な要素だった。しかし、現在のLLMに対するRL（特にRLHFや検証可能な報酬を用いた学習）において、Value Functionはそれほど大きな役割を果たしていないという。</p>
-<blockquote class="blockquote">
-<p><strong>John Schulman:</strong> 「なぜ価値関数が現在のタスクでそれほど役立たないのか、その理由ははっきりとは分かりません。おそらく、分散低減の効果が期待したほど得られていないのでしょう。ただ、いつかValue Functionが返り咲く時は来ると予想しています。」</p>
-</blockquote>
-<p>この発言は非常に示唆に富んでいる。現在のLLMの学習が、ある種「短いタイムホライズン（時間軸）」の最適化に終始している可能性を示唆しているからだ。数万トークンをサンプリングする今のLLMは一見「長い時間軸」を扱っているように見えるが、RLの構造としてはまだ深みに欠けているのかもしれない。</p>
+<section id="データと汎化能力インターネットのテキストだけでは物質は創れない" class="level2">
+<h2 class="anchored" data-anchor-id="データと汎化能力インターネットのテキストだけでは物質は創れない">データと汎化能力：インターネットのテキストだけでは「物質」は創れない</h2>
+<p>Periodic Labsが直面する最大の壁であり、同時に最大の競争優位性となるのが「データ」の性質である。LLMの成功は、インターネット上に存在する数十兆トークンという膨大なテキストデータを喰い尽くすことで達成された。しかし、マテリアルサイエンスの世界には、そのような都合の良い巨大コーパスは存在しない。</p>
+<p>Liam Fetus氏によれば、既存のオープンソースモデルなどが持つ自然言語やコードの理解力は、基礎的な汎化能力として十分に再利用可能であるという。Periodic Labs自身も、コーディングモデルの開発にゼロからリソースを割くことはせず、既存の強力なモデルをテコ入れに活用している。問題は、化学空間や物質探索といった特定のドメインに足を踏み入れた途端に発生する。</p>
+<p>過去の文献から抽出された物質の特性データは、報告者によって数桁もの誤差（orders of magnitude）があることが珍しくない。このようなノイズだらけの分布をいくら学習させても、ground truthには到達できないのだ。ここで必要になるのが、モデルに高い「サンプル効率（sample efficiency）」を持たせるための強力な事前知識（prior）と、それを検証・補正するための「実験データ」である。</p>
+<p>物理科学におけるAIの汎化は直感に反することがある。例えば、量子力学的な効果を極めて正確にモデル化できたからといって、それが流体力学にそのまま応用できるわけではない。しかし、「化学合成の基本ステップ」や「原子間の相互作用（ファンデルワールス力など）」といった第一原理的なレベルでの汎化は十分に可能であり、ここに特定の実験データを掛け合わせることで、AIは単なるデータのプールから「閉ループ（closed-loop）」の探索システムへと進化する。</p>
 </section>
-<section id="agiタイムラインに潜むエンジニアのバイアス" class="level2">
-<h2 class="anchored" data-anchor-id="agiタイムラインに潜むエンジニアのバイアス">AGIタイムラインに潜む「エンジニアのバイアス」</h2>
-<p>Schulmanは、巷で囁かれるAGI（人工汎用知能）のタイムラインに対しても、極めて現実的な、あるいは冷ややかな視点を持っている。</p>
-<p>彼は、エンジニアや研究者がプロジェクトの完了時間を常に見誤る「計画の錯誤」に触れ、世の中のAGI予測には「3倍の係数（3x factor）」をかけるべきだと示唆している。自動運転車（Self-driving cars）が「あと数年」と言われ続けてから久しいのと同様に、AGIもまた、最後の数パーセントの精度を埋めるために膨大な時間がかかるという見立てだ。</p>
-<p>一方で、AIがAI自身の開発を加速させる「ポジティブ・フィードバック・ループ」の存在も認めており、直感に反するスピードで進化が起こる可能性についても留保を置いている。この「慎重な楽観主義」こそが、狂騒のAI業界で彼が信頼され続ける理由だろう。</p>
+<section id="オーケストレーション層としてのllmと特化型モデルの融合" class="level2">
+<h2 class="anchored" data-anchor-id="オーケストレーション層としてのllmと特化型モデルの融合">オーケストレーション層としてのLLMと、特化型モデルの融合</h2>
+<p>プロダクトとしてのアーキテクチャの観点から見ると、Periodic Labsのアプローチは非常に示唆に富んでいる。彼らはLLMを万能の神として扱うのではなく、あくまで「オーケストレーション層（orchestration layer）」として位置づけているのだ。</p>
+<p>LLMは文献を読み込み、実験データを解釈し、次の実験の方向性を指示する司令塔（あるいはコパイロット）として機能する。しかし、実際の原子システムにおける対称性を認識し、低レイテンシで計算を行うようなタスクには、そのために特別に設計・ファインチューニングされた特化型のニューラルネットワークが呼び出される。LLMがこれらの特化型モデルを「ツール」や「報酬関数（reward function）」としてオーケストレートするこの構造は、今後のエンタープライズAIやロボティクス領域において標準的なアーキテクチャになっていくことは想像に難くない。</p>
 </section>
-<section id="thinking-machinesとtinkerの狙い" class="level2">
-<h2 class="anchored" data-anchor-id="thinking-machinesとtinkerの狙い">Thinking Machinesと「Tinker」の狙い</h2>
-<p>Schulmanが現在取り組んでいるThinking Machinesの旗艦プロダクトがTinkerだ。</p>
-<p>これは、低レイヤーのFine-tuning APIであり、GPUや分散システムの複雑さを意識することなく、独自のPost-trainingアルゴリズムを実装できるプラットフォームだという。</p>
-<p>OpenAIやAnthropicが、高度にパッケージ化された「推論API」を提供する「プラットフォームの巨人」へと進化する中で、Schulmanはあえて「モデルの裏側を弄りたい」という玄人志向の開発者、あるいは研究者たちのニーズに賭けている。</p>
-<blockquote class="blockquote">
-<p><strong>John Schulman:</strong> 「Tinkerは、MLの知識があり、細部にこだわりたい人たちのためのものです。GPUボックスを自前で立てる必要なく、Pythonスクリプトを書くだけで大規模なトレーニングが可能になります。」</p>
-</blockquote>
-<p>これは、前述のサンプルブログで指摘されていたOpenAIの「アンチプラットフォーム性（外部開発者の軽視）」に対する、Schulmanなりのアンサーのようにも聞こえる。</p>
+<section id="ロボティクスによるデータのボトルネック解消" class="level2">
+<h2 class="anchored" data-anchor-id="ロボティクスによるデータのボトルネック解消">ロボティクスによる「データのボトルネック」解消</h2>
+<p>このclosed-loopシステムを真にスケールさせるためには、物理世界での実験を自動化するロボティクスの存在が不可欠となる。現在、リキッドハンドリング（液体分注）などの自動化機器は存在するものの、それらは高度なカスタマイズを要し、システムとして非常に脆弱で遅い。</p>
+<p>Liam Fetus氏は、高度に汎用的なロボット（例えば、非構造化された実験室を歩き回り、指示通りに確実に実験をこなすヒューマノイドなど）の登場が、AIによる科学的発見の「巨大なアクセラレーター」になると断言している。高品質で多様な実験データを圧倒的なスループットで生成できるようになれば、AIは物理世界のフィードバックをデジタル空間と同等の速度で吸収できるようになる。</p>
 </section>
-<section id="今でも研究者に必要なのはコーヒーとノート" class="level2">
-<h2 class="anchored" data-anchor-id="今でも研究者に必要なのはコーヒーとノート">今でも研究者に必要なのは「コーヒーとノート」</h2>
-<p>最後に、Schulmanの日常が語られている。意外にも、彼は今でもノートを手に喫茶店へ行き、雑音の中で思考を巡らせることを好むという。</p>
-<p>GPT-5 Proを使って文献調査を行い、自分の曖昧なアイデアをモデルに肉付けさせる。一方で、コードの1行1行を完全に把握し、シンプルな実装を保つことの重要性を説く。</p>
-<p>AIの進化を最前線でリードしてきた男が、最終的には「コーヒーとノート」という極めてアナログな環境を思考のベースに置いている事実は、技術に溺れがちな我々への警鐘のようにも響く。</p>
-<p>Thinking Machinesが次に何を打ち出すのか。Tinkerがどこまで開発者の筋肉を加速させるのか。John Schulmanの第2章は、まだ始まったばかりだ。</p>
+<section id="科学における自己改善の遅延と物質生成の未来" class="level2">
+<h2 class="anchored" data-anchor-id="科学における自己改善の遅延と物質生成の未来">科学における「自己改善」の遅延と、物質生成の未来</h2>
+<p>AI研究界隈では、モデルが自らを改善していくRecursive Self-Improvement (RSI) の到来が議論の的となっている。Liam Fetus氏はこれを、約10年前のNeural Architecture Searchの延長線上にあると捉えている。</p>
+<p>ソフトウェアエンジニアリングの領域では、ユニットテストなどの「安価で検証可能な環境」が存在するため、RSIは既に現実のものとなりつつある（数個のCPUがあれば、コードがパスしたかどうか瞬時に判定できるためだ）。しかし、科学的AIの研究においては、実験という物理的なステップを挟むため、このフィードバックループ（outer loop）は必然的に遅くなる。モデルが収束したか、汎化能力が向上したかを確認するためには、GPUを回すだけでなく、実際の物理的な検証時間を要するからだ。</p>
+<p>だが、この遅延を乗り越え、物理科学におけるスケーリング則（scaling laws）が確立された時、世界は劇的に変わる。デジタル世界がここ数年で経験した進化のスピードが、そのまま物理世界（半導体、航空宇宙、エネルギー、先端製造業など）に持ち込まれるのだ。</p>
+<p>Liam Fetus氏が思い描く未来は、AIが論文を書いたりコードを生成したりするだけでなく、文字通り「物質を生成（generate matter）」する世界である。これは人類にとって、農業革命に匹敵する物理的な生産性とイノベーションの爆発を意味する。</p>
+<p>ソフトウェアエンジニアの数に対して、物理世界で「モノづくり」に関わる人々の数は圧倒的に多く、同時に深刻な労働力不足に悩まされている。AIとロボティクスがインターフェースとなり、Bitsの世界の圧倒的な進化速度をAtomsの世界へと注ぎ込むこれからの10年は、我々の想像を遥かに超えるエキサイティングな時代となるに違いない。</p>
 
 
 </section>
