@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 11 Aug 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 20 Aug 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/</link>
+  <description><![CDATA[ ChatGPT開発者Liam Fetus氏が挑む、AIによるマテリアルサイエンスと化学分野の革新、およびPeriodic Labsの野望について、データ戦略、AIアーキテクチャ、そして物理世界への応用を深く掘り下げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/</guid>
+  <pubDate>Thu, 20 Aug 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/202608211345.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>プロプライエタリLLM APIにおける推論トレース抽出の脅威とメカニズム</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,19 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/</guid>
   <pubDate>Wed, 22 Jul 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/202607230845.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>プロテイン言語モデルにおける「苦い教訓」の受容</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</link>
-  <description><![CDATA[ AlphaFoldの帰納的バイアスからの脱却を目指すESMCが、メタゲノミクスデータとMechanistic Interpretabilityを活用し、Programmable Biologyの未来を切り拓くWorld Modelを構築する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Biology</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/</guid>
-  <pubDate>Fri, 17 Jul 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/esmc-biohub/202607182203.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
