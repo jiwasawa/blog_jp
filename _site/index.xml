@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Thu, 20 Aug 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 21 Aug 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AI時代の数学：証明の過食症と、我々が本当に最適化すべき価値</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/</link>
+  <description><![CDATA[ AI時代の数学界は、AIによる研究タスク遂行能力の向上を前提とし、「AIに数学ができるか」ではなく、数学的営みの真の目的と価値を再定義するパラダイムシフトに直面している。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/</guid>
+  <pubDate>Fri, 21 Aug 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/202608211459.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,18 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</guid>
   <pubDate>Wed, 22 Jul 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/202607230903.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Programmable BiologyとVirtual Cellの襲来：AIによるライフサイエンスの再定義</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/</link>
-  <description><![CDATA[ AIがライフサイエンスを再定義するProgrammable BiologyとVirtual Cellの可能性と、その技術的・倫理的課題をPatrick Hsu氏との対談から分析する。 ]]></description>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Biology</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/</guid>
-  <pubDate>Wed, 22 Jul 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/patrick-hsu-arc/202607230845.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
