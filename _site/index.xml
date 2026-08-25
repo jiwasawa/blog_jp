@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 21 Aug 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 25 Aug 2026 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>狂気の計算資源集中：AnthropicとOpenAIが覇権を握る2028年の世界</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/</link>
+  <description><![CDATA[ SemiAnalysisのDylan Patel氏の分析に基づき、2028年までにAnthropicとOpenAIが世界の計算資源の過半数を支配し、その巨大な資金需要が国家債務危機や「第2のVolckerショック」を引き起こす可能性を解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/</guid>
+  <pubDate>Tue, 25 Aug 2026 07:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/202608251518.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Terrence Tao: 証明の過食症と我々が本当に最適化すべき価値</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -20,7 +33,7 @@
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/</guid>
-  <pubDate>Fri, 21 Aug 2026 15:00:00 GMT</pubDate>
+  <pubDate>Sat, 22 Aug 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/202608211459.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -32,7 +45,7 @@
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/</guid>
-  <pubDate>Thu, 20 Aug 2026 15:00:00 GMT</pubDate>
+  <pubDate>Fri, 21 Aug 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/202608211345.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -44,7 +57,7 @@
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/</guid>
-  <pubDate>Tue, 11 Aug 2026 15:00:00 GMT</pubDate>
+  <pubDate>Wed, 12 Aug 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/202608122215.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -57,7 +70,7 @@
   <category>Podcast</category>
   <category>Latent Space Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</guid>
-  <pubDate>Mon, 10 Aug 2026 15:00:00 GMT</pubDate>
+  <pubDate>Tue, 11 Aug 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/202608120927.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -69,7 +82,7 @@
   <category>AI</category>
   <category>Agentic Systems</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/</guid>
-  <pubDate>Sun, 09 Aug 2026 15:00:00 GMT</pubDate>
+  <pubDate>Mon, 10 Aug 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/202608101415.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -81,7 +94,7 @@
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/</guid>
-  <pubDate>Fri, 31 Jul 2026 15:00:00 GMT</pubDate>
+  <pubDate>Sat, 01 Aug 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/202608012149.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -94,7 +107,7 @@
   <category>Podcast</category>
   <category>Latent Space Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/</guid>
-  <pubDate>Thu, 30 Jul 2026 15:00:00 GMT</pubDate>
+  <pubDate>Fri, 31 Jul 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/202608012137.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -106,7 +119,7 @@
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/</guid>
-  <pubDate>Mon, 27 Jul 2026 15:00:00 GMT</pubDate>
+  <pubDate>Tue, 28 Jul 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/202607282159.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
@@ -118,20 +131,8 @@
   <category>AI</category>
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/</guid>
-  <pubDate>Sun, 26 Jul 2026 15:00:00 GMT</pubDate>
+  <pubDate>Mon, 27 Jul 2026 07:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/202607271625.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Sarah Guoの語るAI時代の起業家とVCの冷徹な力学</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</link>
-  <description><![CDATA[ AI時代の到来により機会の半減期が短縮する中、起業家はプロダクト至上主義を捨て、スピード感あるGTM戦略とVCとの冷徹な力学を理解する必要がある。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</guid>
-  <pubDate>Wed, 22 Jul 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/202607230903.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
