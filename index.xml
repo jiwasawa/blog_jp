@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sat, 22 Aug 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 25 Aug 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>狂気の計算資源集中：AnthropicとOpenAIが覇権を握る2028年の世界</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/</link>
+  <description><![CDATA[ SemiAnalysisのDylan Patel氏の分析に基づき、2028年までにAnthropicとOpenAIが世界の計算資源の過半数を支配し、その巨大な資金需要が国家債務危機や「第2のVolckerショック」を引き起こす可能性を解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/</guid>
+  <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/202608251518.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Terrence Tao: 証明の過食症と我々が本当に最適化すべき価値</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,18 +133,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/</guid>
   <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/202607271625.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Sarah Guoの語るAI時代の起業家とVCの冷徹な力学</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</link>
-  <description><![CDATA[ AI時代の到来により機会の半減期が短縮する中、起業家はプロダクト至上主義を捨て、スピード感あるGTM戦略とVCとの冷徹な力学を理解する必要がある。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/</guid>
-  <pubDate>Thu, 23 Jul 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/sarah-guo-conviction/202607230903.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
