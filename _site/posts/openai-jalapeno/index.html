@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="OpenAIの自社製ASIC「Jalapeño」が、電力効率とTCO、そしてAIによる設計プロセスにおいて革新性を持つことを、そのアーキテクチャと戦略的インパクトから分析する。">
+
+<title>OpenAI “Jalapeño”の衝撃</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="OpenAI “Jalapeño”の衝撃 – miscellaneous notes">
+<meta property="og:description" content="OpenAIの自社製ASIC「Jalapeño」が、電力効率とTCO、そしてAIによる設計プロセスにおいて革新性を持つことを、そのアーキテクチャと戦略的インパクトから分析する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/openai-jalapeno/202609010951.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="OpenAI “Jalapeño”の衝撃 – miscellaneous notes">
+<meta name="twitter:description" content="OpenAIの自社製ASIC「Jalapeño」が、電力効率とTCO、そしてAIによる設計プロセスにおいて革新性を持つことを、そのアーキテクチャと戦略的インパクトから分析する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/openai-jalapeno/202609010951.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">OpenAI “Jalapeño”の衝撃</h1>
+                  <div>
+        <div class="description">
+          OpenAIの自社製ASIC「Jalapeño」が、電力効率とTCO、そしてAIによる設計プロセスにおいて革新性を持つことを、そのアーキテクチャと戦略的インパクトから分析する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">SemiAnalysis</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年9月1日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Hot Chipsの最終日に投下されたOpenAIの自社設計ASIC「Jalapeño」に関する情報が、AIハードウェア界隈を騒然とさせている。先日公開された<a href="https://youtu.be/hj_ffVldQZA?si=-8GlnqncPJX5_3EE">SemiAnalysisのpodcast</a>でも熱を帯びた議論が交わされていたが、その内容は単なる「自社製チップを作ってみた」という牧歌的なレベルを遥かに超越していた。</p>
+<p>今回、最強のLarge Language Model (LLM) を保有するOpenAI自身がBroadcomと手を組み、元TPU開発者たちをかき集めて世に送り出したJalapeñoは、ベンチマークにおいてNVIDIAの次世代アーキテクチャであるVera Rubinすらも脅かす数値を叩き出している。本記事では、このJalapeñoがなぜそれほどまでに革命的なのか、アーキテクチャの妙とAI主導の開発プロセス、そして今後の市場に与える戦略的インパクトを分析する。</p>
+<section id="tcoと電力効率という現実的な戦場" class="level2">
+<h2 class="anchored" data-anchor-id="tcoと電力効率という現実的な戦場">TCOと電力効率という現実的な戦場</h2>
+<p>Jalapeñoの性能を語る上で欠かせないのが、評価軸の転換である。従来のAIチップは、チップ単体あるいはパッケージあたりのFLOPsやスループットで語られることが多かった。しかし、今日のデータセンターにおける最大のボトルネックは「電力」である。資金がいくらあろうと、データセンターのメガワット上限に達すれば、それ以上の計算リソースは物理的に詰め込めない。</p>
+<p>OpenAIはJalapeñoの評価において、「Total Cost of Ownership (TCO)」と「メガワットあたりのトークン生成量」という極めて実務的かつシビアな指標を採用した。SemiAnalysisの分析によれば、JalapeñoのTCOはNVIDIAのGB300（Blackwell）はおろか、次世代のRubinすらをも上回るか、少なくとも互角以上の戦いを繰り広げている。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="SA.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption><a href="https://newsletter.semianalysis.com/p/openai-jalapeno-better-than-nvidia">SemiAnalysis</a>より引用</figcaption>
+</figure>
+</div>
+<p>具体的に見てみよう。DeepSeek-V3/R1ベースのアーキテクチャや、1Tパラメータ級のKimi 2.5、そして自社のGPT-OSS 12Bといったモデルを用いたベンチマークにおいて、Jalapeñoは驚異的なPareto曲線を描いている。縦軸にメガワットあたりのトークン生成量、横軸にユーザーあたりのインタラクティビティ（レイテンシ）をとった場合、Jalapeñoは低バッチサイズで高応答性が求められる領域から、高スループットが求められる領域に至るまで、すべてのポイントでNVIDIAを凌駕しているのだ。低バッチサイズ時にはユーザーあたり毎秒700トークンという、競合のピーク値（約350トークン）の倍に達するパフォーマンスを見せつけている。</p>
+<p>当然、GB300がHBM3を採用しているのに対し、JalapeñoはSamsung製と目されるHBM4を採用しているという「世代の違い」によるアドバンテージはある。しかし、消費電力（TDP）がRubinの3分の一以下であるにも関わらず、約15.4 TB/sという驚異的なHBM帯域幅を実現している点は特筆に値する。ワットあたりの帯域幅という観点で見れば、Jalapeñoは他のあらゆるチップを絶望的なまでに突き放しているのである。</p>
+</section>
+<section id="スペックシートの罠とマイクロアーキテクチャの妙" class="level2">
+<h2 class="anchored" data-anchor-id="スペックシートの罠とマイクロアーキテクチャの妙">スペックシートの罠とマイクロアーキテクチャの妙</h2>
+<p>紙上のスペック（FP4 FLOPsやHBMの容量など）だけを見れば、Jalapeñoは決して派手なチップではない。むしろRubinなどと比較すれば、客観的に見て見劣りする数字が並んでいる。AMDのMI450のように「スペック上はNVIDIAより上だ」と声高に主張するアプローチとは対極にある。では、なぜJalapeñoはこれほどのリアルワールド・パフォーマンスを発揮できるのか。</p>
+<p>答えは、データ移動の最小化とプログラミングモデルの洗練にある。多くのTPU系チップやアクセラレータは、巨大なsystolic arrayを採用している。しかしこのアプローチには、いわゆるスキニージェム（細長い行列積）や、奇数サイズのバッチ処理を行う際に、演算器（Processing Elements）を使い切れず効率が著しく低下するという弱点がある。</p>
+<p>Jalapeñoは、ソフトウェア管理のスクラッチパッドメモリ（L1キャッシュ）に頼るのではなく、より小さなsystolic arrayを採用し、コア間の同期とウェイトやKVキャッシュの配置を極めてインテリジェントに制御するマイクロアーキテクチャを採用した。これにより、無駄なデータ移動を極限まで削ぎ落とし、紙上のFLOPsを机上の空論で終わらせず、実効性能として100%使い切ることに成功している。</p>
+<p>さらに恐ろしいのは、JalapeñoがMulti-Token Prediction (MTP) や speculative decoding といった推論最適化の飛び道具を「あえて使わず」にこの結果を出している点だ。片手を後ろ手に縛った状態のプレーンなデコード処理だけでRubinに勝っているのだから、OpenAIが内部で密かに開発しているであろう高度なspeculative decodingを適用すれば、この差はさらに3倍から5倍へと広がる可能性がある。</p>
+</section>
+<section id="ドッグフーディングの極致aiによるaiチップ設計" class="level2">
+<h2 class="anchored" data-anchor-id="ドッグフーディングの極致aiによるaiチップ設計">ドッグフーディングの極致：AIによるAIチップ設計</h2>
+<p>そして、当ニュースレターが最も注目すべきと考えるのが、Jalapeñoの開発プロセスの異常な速さである。構想から稼働するシリコンがラボに届くまで2年未満、Register Transfer Level (RTL) のフリーズからテープアウトまでわずか9ヶ月。半導体開発の常識を覆すこのスピードを実現したのは、他でもないOpenAI自身のAIモデルによる設計支援だ。</p>
+<p>開発において、AIはRTLの生成や最適化を強力にアシストした。SIMDエリアで8%、行列エンジンエリアで10%の削減をAIの力で成し遂げている。ソフトウェアの領域でも、Tritonベースの低レベルなカーネルプログラミングにおいて、AIがアセンブリコードを大量に生成し、テストし、最適化するという反復プロセスを人間には不可能な速度で回し続けた。</p>
+<p>SemiAnalysisのpodcastでも言及されていたが、OpenAIのエンジニアが提示した3万行にも及ぶカーネルコードは、人間の目には解読不能な「AIが吐き出した最適化の結晶」であったという。人間がハードウェアの複雑なデータ移動を深く推論しなくても、AIが勝手に環境を探索し、正解を導き出す。これこそが強化学習の真骨頂である。</p>
+<p>皮肉なことに、このJalapeñoの設計・最適化を行うためのAIモデルは、NVIDIAのGPUクラスター上でトレーニングされている。NVIDIAのハードウェアを使ってトレーニングされた最高峰のAIモデルが、NVIDIAの首を絞めるためのハードウェアを最速で設計しているのだ。</p>
+</section>
+<section id="cudaの堀は枯渇するか" class="level2">
+<h2 class="anchored" data-anchor-id="cudaの堀は枯渇するか">CUDAの堀は枯渇するか？</h2>
+<p>これまで、AnthropicやGoogleなどは、NVIDIAのGPU以外（TPUやTrainiumなど）でもトップクラスのモデルをトレーニングできることを証明してきた。しかし、推論エコシステムにおける「CUDA moat」は依然として強固だと思われていた。</p>
+<p>しかし、Jalapeñoの登場は、ソフトウェアの進化とAI自身による最適化能力が、特定のハードウェアへの依存度を劇的に引き下げつつあることを示している。OpenAIは、自社の最新モデル（Astraなど）を世界中の誰よりも早く、独占的に自社のインフラ設計に投入できる。これは、単なるファブレス半導体企業には絶対に真似のできない、圧倒的な非対称性を持つ競争優位である。</p>
+<p>Anthropicもこの潮流を察知し、自社のシリコンチームを立ち上げて追随しようとしている。AIモデルの進化がハードウェアの進化を加速させ、そのハードウェアがさらに強力なAIを生み出す。この自己強化ループに入った少数のフロンティアAIラボだけが、今後のインフラ競争を生き残るのだろう。</p>
+<p>NVIDIAのJensen CEOは、こうした自社開発チップの動きに対して「気にしていない」という態度を崩していない。確かに、エコシステム全体をカバーするNVIDIAの包括的なビジネスモデルが明日すぐに崩壊するわけではない。しかし、巨額のインフラ投資を行う最大顧客たちが、AIの力を借りて自前で圧倒的に効率的なASICを設計し、しかもそれが実用レベルでNVIDIAの最新モデルを凌駕しているという現実は重い。</p>
+<p>今回のJalapeñoが示すのはハードウェア開発の民主化というよりは、最強のAIを持つ者だけが最強のハードウェアを手にできるという、新たな寡占の始まりかもしれない。</p>
+<hr>
+<p><strong>出典・参考:</strong></p>
+<ul>
+<li><p><a href="https://youtu.be/hj_ffVldQZA?si=-8GlnqncPJX5_3EE">SemiAnalysis Weekly Podcast</a></p></li>
+<li><p><a href="https://newsletter.semianalysis.com/p/openai-jalapeno-better-than-nvidia">OpenAI Jalapeño: Better Than Nvidia Blackwell (SemiAnalysis)</a></p></li>
+<li><p><a href="https://openai.com/index/jalapeno-first-results/">Jalapeño’s first results show industry-leading speed and efficiency in AI inference (OpenAI)</a></p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
