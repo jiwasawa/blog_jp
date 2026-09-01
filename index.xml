@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 25 Aug 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 01 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>OpenAI “Jalapeño”の衝撃</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/openai-jalapeno/</link>
+  <description><![CDATA[ OpenAIの自社製ASIC「Jalapeño」が、電力効率とTCO、そしてAIによる設計プロセスにおいて革新性を持つことを、そのアーキテクチャと戦略的インパクトから分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>SemiAnalysis</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/openai-jalapeno/</guid>
+  <pubDate>Tue, 01 Sep 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/openai-jalapeno/202609010951.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>狂気の計算資源集中：AnthropicとOpenAIが覇権を握る2028年の世界</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,18 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/</guid>
   <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/202607282159.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Kimi K3が暴く「Open-Closed Gap」の終焉と、AI地政学の最前線</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/</link>
-  <description><![CDATA[ Kimi K3の登場がAIの「Open-Closed Gap」の終焉を示唆し、中国AIラボの驚異的なCapital EfficiencyとDistillation論の誤謬、そしてAI地政学の最前線を暴く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/</guid>
-  <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/interconnect-open-models-recap-kimi-k3/202607271625.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
