@@ -1,0 +1,48 @@
+---
+title: "Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望"
+description: "「IntelligenceをCommodityにする」というSail Researchの野望に基づき、低Latency至上主義からの脱却とLong-Horizon Agentの台頭、そしてSoftwareとHardwareの最適化戦略を通してInferenceの未来とコスト削減を深掘りする。"
+author: "Junichiro Iwasawa"
+date: "2026-09-07"
+categories: [LLM, AI, Podcast]
+image: 202609072157.jpg
+---
+
+生成AIのコスト競争が激化している。誰もがより速く、より賢いモデルを求める中で、[Sail Researchの共同創業者Neil Movvaが提示した世界観](https://youtu.be/uyzqxIoiobU?si=wN5XZa5ztDi15jbd)は異質でありながら、極めて論理的である。「IntelligenceをCommodityにする」という同社のミッションの根底には、徹底的なコスト削減と、AIの使われ方に対するパラダイムシフトがある。低Latency至上主義からの脱却と、Long-Horizon Agentの台頭である。当ブログでは、彼の発言から読み取れるInference（推論）の未来、そしてHardwareからData Centerに至るまでの最適化戦略を深掘りする。
+
+## Interactiveからの脱却とProactive Computing
+
+現在のLarge Language Model (LLM) の利用形態は、ChatbotのようなInteractiveなものが主流である。ユーザーがPromptを打ち込み、数秒以内にトークンが吐き出されるのを待つ。この世界では、Time to First Token (TTFT) などの低Latencyが至上命題となる。しかしMovvaは、この使われ方はいずれ過去のものになると断言する。真のAI Agentは、バックグラウンドで数時間、数日、あるいは数週間にわたって稼働するLong-Horizon Tasksをこなすべきだからだ。
+
+ユーザーが寝ている間にAgentがインターネット上の数万のソースを調べ上げ、朝起きたときには完璧なレポートが完成している。あるいは、自社のコードベースに対する脆弱性テストを休むことなく実行し続ける。つまり「ベストなLatencyとは、そもそもLatencyを感じさせない（Zero Latency）ことである」。これは「Proactive Computing」の概念と完全に合致する。人間がBottle neckとなるInteractiveなループからAgentを解放することで、Token消費量は飛躍的に増大し、それに伴いToken単価の極限までの引き下げが求められる。Sail Researchはこの未来を支える「Token Factory」となることを目指している。
+
+## Kernelレベルの最適化とSpeed of Light
+
+では、どのようにして極限のコストダウンを実現するのか。最初のレバーはSoftware、それも最も低レイヤーのKernelの最適化である。Nvidiaでの勤務経験を持つMovvaは、GPUの「Speed of Light（ハードウェアの物理的限界）」を追求する文化を高く評価している。
+
+現代のNvidia GPUは、Tensor CoreによるMatrix Multiplication（行列積）において凄まじい性能を発揮するが、それはバッチサイズを極限まで大きくし、Throughputを最大化したときの話である。低Latencyを追求すれば、バッチサイズを犠牲にし、並列処理の恩恵を十分に受けられない。NVLinkのような高速なInterconnectを用いてGPU間で計算を分割する（Tensor Parallelism）ことも、通信オーバーヘッドというペナルティを伴うため、Throughputの観点からは非効率である。
+
+長時間の非同期タスクを前提とすれば、Latencyを犠牲にしてでもThroughputを極大化するArchitectureが正解となる。Pipeline ParallelismやExpert Parallelismを活用し、GPUを「最も得意な仕事」に専念させる。これにより、Hardwareの潜在能力を100%引き出し、1トークンあたりのコストを劇的に下げるのだ。高度なKernel Engineeringは、AIが自身でコードを書く時代になってもなお、人間にしか成し得ない「職人芸」として、同社の決定的な競争優位性となっている。
+
+## Heterogeneous ComputingとSRAMの壁
+
+最適化はNvidia GPUの内部にとどまらない。CerebrasやGroqなどの新興チップメーカー、あるいはAMDといったプレイヤーをどのように組み込むかも重要だ。ここでMovvaが指摘するSRAMとDRAMのTrade-offは極めて示唆に富んでいる。
+
+Transformersのアーキテクチャにおいて、MLP（Multi-Layer Perceptron）層はCompute-boundであり、Attention層はMemory-boundである。特にContext Windowが長くなればなるほど、KV Cacheのサイズは肥大化し、メモリ帯域と容量がボトルネックとなる。CerebrasのようにWafer-scaleで大量のSRAM（超高速だが面積を取り、容量が少ない）を搭載するチップは、Matrix MultiplicationやWeightの保持には最強の性能を発揮するが、肥大化する動的なKV Cacheを収めるには不向きである。一方、NvidiaのHBM（High Bandwidth Memory = DRAMの一種）は容量と速度のバランスが良い。
+
+もしそうであれば、適材適所でチップを使い分けるHeterogeneous Computingが解となる。Attention層の計算とKV Cacheの保持はNvidia GPU（あるいは大容量メモリを持つチップ）に任せ、MLP層の重い計算はCerebrasなどの特化型Acceleratorにオフロードする。このような「Scavenger（廃品回収者）」的アプローチで、市場で過小評価されている安価なCompute資源をかき集め、Softwareの力で一つの巨大なInference Engineに仕立て上げる。これこそがSail Researchの真骨頂である。
+
+## Uptime 95%のData Centerという逆転の発想
+
+Hardwareの最適化の行き着く先は、Data CenterとPower（電力）の再定義である。現在のAI Data Centerは、巨大なTraining workloadsを前提に設計されており、100 MegawattからGigawattクラスの電力を一箇所で要求する。そして、Trainingを途中で止めないために、冗長化された電源、ディーゼル発電機、複数経路のファイバー網を備え、99.99%のUptime（稼働率）を保証しようとする。当然、これらは法外なCapital Expenditure（設備投資）を必要とする。
+
+しかし、MovvaのInferenceに特化したアプローチでは、この常識が根底から覆る。Long-Horizonで非同期に動くAgentのタスクであれば、途中で計算ノードが落ちても、別のノードにタスクを移して再開すればよい。ユーザーは寝ているのだから、結果の出力が数分、あるいは数時間遅れても気付かない。つまり、Uptimeが95%のData Centerであっても「Linearly（線形に）許容できる」のだ。
+
+これにより、太陽光や風力といった断続的（Intermittent）な再生可能エネルギーへの依存が可能になる。天候が悪化して電力が途絶えれば、タスクを世界の別の場所にあるData Centerに逃がせばいい。1 Megawatt程度の小規模なData Centerを全米の安い土地と安い電力の場所に分散配置し、冗長性を極限まで削ぎ落とす。このような割り切りができるのは、彼らが自らのControl Plane（管理ソフトウェア）の堅牢性に絶対の自信を持っているからに他ならない。
+
+## データの未来：RLとVerifiable Tasks
+
+最後に、これら膨大なComputeを消費するAgentは何を学習し、何を生み出すのか。人間が生成した高品質なテキストデータ（インターネット上の約30 Trillion Tokens）はすでに枯渇しつつある。次のフロンティアは、Reinforcement Learning (RL) 環境でのSelf-improvement（自己改善）である。
+
+コーディング、数学の証明、あるいはサイバーセキュリティの脆弱性発見など、結果が正しいかどうかを自動で判定できる「Verifiable（検証可能）なTask」において、AgentはSimulation環境（Gym）の中で試行錯誤を繰り返し、自らデータを生成し、賢くなっていく。サイバーセキュリティの堅牢性が「Proof of Work（どれだけAPIに課金して攻撃モデルを走らせたか）」で決まるというジョークは、もはや現実のものとなりつつある。
+
+Sail Researchが描く未来は、Compute、Data、そしてIntelligenceの限界費用がゼロに近づいていく世界だ。Nvidiaが君臨するエコシステムの隙間を縫い、Softwareの力でHardwareとPowerの非効率をArbitrage（裁定取引）する。プラットフォーマーたちがCapital Expenditureの力技で殴り合う中、このScavengerたちの野望がどこまで既存の秩序を破壊できるのか。引き続きその動向を注視していきたい。
