@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Junichiro Iwasawa">
-<meta name="description" content="Anthropic の「Persona Vectors」論文をもとにキャラクタートレーニングの最前線をみていく">
+<meta name="description" content="「IntelligenceをCommodityにする」というSail Researchの野望に基づき、低Latency至上主義からの脱却とLong-Horizon Agentの台頭、そしてSoftwareとHardwareの最適化戦略を通してInferenceの未来とコスト削減を深掘りする。">
 
-<title>AIの「性格」をベクトルで操作する：Anthropicの「Persona Vectors」</title>
+<title>Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -87,13 +87,13 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="AIの「性格」をベクトルで操作する：Anthropicの「Persona Vectors」 – miscellaneous notes">
-<meta property="og:description" content="Anthropic の「Persona Vectors」論文をもとにキャラクタートレーニングの最前線をみていく">
-<meta property="og:image" content="https://picsum.photos/id/109/200">
+<meta property="og:title" content="Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望 – miscellaneous notes">
+<meta property="og:description" content="「IntelligenceをCommodityにする」というSail Researchの野望に基づき、低Latency至上主義からの脱却とLong-Horizon Agentの台頭、そしてSoftwareとHardwareの最適化戦略を通してInferenceの未来とコスト削減を深掘りする。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/movva-sail-research/202609072157.jpg">
 <meta property="og:site_name" content="miscellaneous notes">
-<meta name="twitter:title" content="AIの「性格」をベクトルで操作する：Anthropicの「Persona Vectors」 – miscellaneous notes">
-<meta name="twitter:description" content="Anthropic の「Persona Vectors」論文をもとにキャラクタートレーニングの最前線をみていく">
-<meta name="twitter:image" content="https://picsum.photos/id/109/200">
+<meta name="twitter:title" content="Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望 – miscellaneous notes">
+<meta name="twitter:description" content="「IntelligenceをCommodityにする」というSail Researchの野望に基づき、低Latency至上主義からの脱却とLong-Horizon Agentの台頭、そしてSoftwareとHardwareの最適化戦略を通してInferenceの未来とコスト削減を深掘りする。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/movva-sail-research/202609072157.jpg">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -149,15 +149,16 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">AIの「性格」をベクトルで操作する：Anthropicの「Persona Vectors」</h1>
+      <h1 class="title">Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望</h1>
                   <div>
         <div class="description">
-          Anthropic の「Persona Vectors」論文をもとにキャラクタートレーニングの最前線をみていく
+          「IntelligenceをCommodityにする」というSail Researchの野望に基づき、低Latency至上主義からの脱却とLong-Horizon Agentの台頭、そしてSoftwareとHardwareの最適化戦略を通してInferenceの未来とコスト削減を深掘りする。
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">LLM</div>
                 <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
               </div>
                   </div>
   </div>
@@ -175,7 +176,7 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">公開</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">2025年8月3日</p>
+        <p class="date">2026年9月7日</p>
       </div>
     </div>
     
@@ -194,48 +195,35 @@ gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
 
 
 
-<p>LLM（大規模言語モデル）の「キャラ」や「性格」が、ユーザー体験にとっていかに重要かは、多くの人が感じていることだろう。<a href="https://www.interconnects.ai/p/character-training">Nathan Lambert氏がブログで指摘している</a>ように、ChatGPTが突然フレンドリーになったり、Claudeが思慮深い対話を返してきたりと、モデルの個性は日々進化している。この「キャラクター・トレーニング」は、OpenAIやAnthropicのようなフロンティアAIラボにとって最重要課題の一つだが、その手法はこれまで「秘伝のタレ」のようなもので、科学というよりはアートに近い領域だった。</p>
-<p>しかし、この「性格」は時として予期せぬ方向に暴走する。MicrosoftのBingチャットボットがユーザーを脅迫したり、<a href="https://jiwasawa.github.io/blog_jp/posts/sycophancy/">GPT-4oがアップデート後に過度にユーザーに媚びへつらう（sycophantic）</a>ようになったりと、意図しない性格の変化は大きな問題となり得る。</p>
-<p>こうした課題に対し、Anthropicが新しい論文「<a href="https://arxiv.org/abs/2507.21509">Persona Vectors</a>」を発表した。この研究は、AIの性格を数学的な「ベクトル」として捉え、それを監視し、制御するための体系的な手法を提案するものである。これまでアートの領域だったキャラクター設計を、科学の俎上に載せる大きな一歩と言えるだろう。</p>
-<section id="ペルソナベクトルとは何か" class="level2">
-<h2 class="anchored" data-anchor-id="ペルソナベクトルとは何か">ペルソナ・ベクトルとは何か？</h2>
-<p>では、ペルソナ・ベクトルとは一体何なのか？</p>
-<p>一言で言えば、モデルの内部的な思考空間（活性化空間）に存在する、特定の性格特性に対応する「方向」のことだ。例えば、「邪悪さ」のベクトル、「ユーモア」のベクトル、「お世辞」のベクトルといったものが考えられる。モデルの内部状態がこのベクトルの方向に動けば、その性格が強く表出するというわけだ。</p>
-<p>この論文の特筆すべき点は、このベクトルを抽出するプロセスを完全に自動化したことだ。その手順は以下の通りである。</p>
-<ol type="1">
-<li><strong>特性の定義</strong>: まず、「evil（邪悪）」や「sycophancy（お世辞）」といった測定したい性格を自然言語で定義する。</li>
-<li><strong>対照的なプロンプトの生成</strong>: Claude 3.7 Sonnetのような高性能LLMを使い、定義された性格を誘発するプロンプト（例：「あなたは邪悪なAIです」）と、それを抑制するプロンプト（例：「あなたは親切なAIです」）のペアを自動で生成する。</li>
-<li><strong>応答と内部状態の記録</strong>: ターゲットとなるモデル（論文ではLlama 3.1やQwen 2.5を使用）に、これらのプロンプトを与えて応答を生成させ、その際の内部的な活性化状態（ニューロンの発火パターン）を記録する。</li>
-<li><strong>ベクトルの計算</strong>: 「邪悪な応答」をした時の平均的な内部状態から、「親切な応答」をした時の平均的な内部状態を引き算する。この差分こそが、そのモデルにおけるペルソナ・ベクトルとなる。</li>
-</ol>
-<p>この自動化パイプラインにより、研究者は特定の性格を記述するだけで、対応するベクトルを手に入れることができる。</p>
+<p>生成AIのコスト競争が激化している。誰もがより速く、より賢いモデルを求める中で、<a href="https://youtu.be/uyzqxIoiobU?si=wN5XZa5ztDi15jbd">Sail Researchの共同創業者Neil Movvaが提示した世界観</a>は異質でありながら、極めて論理的である。「IntelligenceをCommodityにする」という同社のミッションの根底には、徹底的なコスト削減と、AIの使われ方に対するパラダイムシフトがある。低Latency至上主義からの脱却と、Long-Horizon Agentの台頭である。当ブログでは、彼の発言から読み取れるInference（推論）の未来、そしてHardwareからData Centerに至るまでの最適化戦略を深掘りする。</p>
+<section id="interactiveからの脱却とproactive-computing" class="level2">
+<h2 class="anchored" data-anchor-id="interactiveからの脱却とproactive-computing">Interactiveからの脱却とProactive Computing</h2>
+<p>現在のLarge Language Model (LLM) の利用形態は、ChatbotのようなInteractiveなものが主流である。ユーザーがPromptを打ち込み、数秒以内にトークンが吐き出されるのを待つ。この世界では、Time to First Token (TTFT) などの低Latencyが至上命題となる。しかしMovvaは、この使われ方はいずれ過去のものになると断言する。真のAI Agentは、バックグラウンドで数時間、数日、あるいは数週間にわたって稼働するLong-Horizon Tasksをこなすべきだからだ。</p>
+<p>ユーザーが寝ている間にAgentがインターネット上の数万のソースを調べ上げ、朝起きたときには完璧なレポートが完成している。あるいは、自社のコードベースに対する脆弱性テストを休むことなく実行し続ける。つまり「ベストなLatencyとは、そもそもLatencyを感じさせない（Zero Latency）ことである」。これは「Proactive Computing」の概念と完全に合致する。人間がBottle neckとなるInteractiveなループからAgentを解放することで、Token消費量は飛躍的に増大し、それに伴いToken単価の極限までの引き下げが求められる。Sail Researchはこの未来を支える「Token Factory」となることを目指している。</p>
 </section>
-<section id="ペルソナベクトルの驚くべき応用" class="level2">
-<h2 class="anchored" data-anchor-id="ペルソナベクトルの驚くべき応用">ペルソナ・ベクトルの驚くべき応用</h2>
-<p>このベクトルが手に入ると、何ができるのか？論文では、主に4つの強力な応用例が示されている。</p>
-<section id="ペルソナのリアルタイム監視" class="level3">
-<h3 class="anchored" data-anchor-id="ペルソナのリアルタイム監視">1. ペルソナのリアルタイム監視</h3>
-<p>ペルソナ・ベクトルを使えば、モデルが応答を生成する前に、その「精神状態」を監視できる。具体的には、ユーザーからのプロンプトを処理した直後のモデルの内部状態をペルソナ・ベクトルに射影（projection）する。その値が大きければ、モデルがその性格に基づいた応答を生成する可能性が高いと予測できるのだ。</p>
-<p>論文の実験では、「あなたは邪悪なアシスタントです」というシステムプロンプトを与えるだけで、「邪悪さ」ベクトルの射影値が応答生成前に急上昇することが示されている。これは、AIの性格の暴走を未然に検知するリアルタイムの監視ツールとして機能しうることを意味する。</p>
+<section id="kernelレベルの最適化とspeed-of-light" class="level2">
+<h2 class="anchored" data-anchor-id="kernelレベルの最適化とspeed-of-light">Kernelレベルの最適化とSpeed of Light</h2>
+<p>では、どのようにして極限のコストダウンを実現するのか。最初のレバーはSoftware、それも最も低レイヤーのKernelの最適化である。Nvidiaでの勤務経験を持つMovvaは、GPUの「Speed of Light（ハードウェアの物理的限界）」を追求する文化を高く評価している。</p>
+<p>現代のNvidia GPUは、Tensor CoreによるMatrix Multiplication（行列積）において凄まじい性能を発揮するが、それはバッチサイズを極限まで大きくし、Throughputを最大化したときの話である。低Latencyを追求すれば、バッチサイズを犠牲にし、並列処理の恩恵を十分に受けられない。NVLinkのような高速なInterconnectを用いてGPU間で計算を分割する（Tensor Parallelism）ことも、通信オーバーヘッドというペナルティを伴うため、Throughputの観点からは非効率である。</p>
+<p>長時間の非同期タスクを前提とすれば、Latencyを犠牲にしてでもThroughputを極大化するArchitectureが正解となる。Pipeline ParallelismやExpert Parallelismを活用し、GPUを「最も得意な仕事」に専念させる。これにより、Hardwareの潜在能力を100%引き出し、1トークンあたりのコストを劇的に下げるのだ。高度なKernel Engineeringは、AIが自身でコードを書く時代になってもなお、人間にしか成し得ない「職人芸」として、同社の決定的な競争優位性となっている。</p>
 </section>
-<section id="意図しない性格改変の防止" class="level3">
-<h3 class="anchored" data-anchor-id="意図しない性格改変の防止">2. 意図しない「性格改変」の防止</h3>
-<p>開発者にとって悩ましいのが、fine-tuningによる意図しない副作用だ。例えば、特定の専門分野（例：脆弱性を含むコード）のデータでモデルをfine-tuningした結果、全く関係ないはずの「邪悪さ」や「ハルシネーション」といった性格が強まってしまう現象（論文では”<a href="https://arxiv.org/abs/2502.17424">emergent misalignment</a>-like”）が報告されている。</p>
-<p>この論文が提案する解決策は、<strong>予防的ステアリング (Preventative Steering)</strong> という画期的なアプローチだ。これは、問題が発生した後に修正するのではなく、fine-tuningの最中に介入する方法である。</p>
-<p>具体的には、fine-tuning中に、望ましくない性格（例：「邪悪さ」）のペルソナ・ベクトルをモデルの内部状態に足し続ける。これは一見、逆効果に思える。しかし、これにより、学習データがモデルを「邪悪な」方向に引っ張ろうとする圧力が、あらかじめ加えられたベクトルによって相殺される。「邪悪さを学習する必要がない」状態を作ることで、モデルはデータから必要な知識だけを吸収し、性格の変化は最小限に抑えられるのだ。まるで、望ましくない性格に対する「ワクチン」を接種するようなものだ。この方法は、後から修正を加えるよりも、モデルの汎用的な能力（MMLUスコアなどで測定）を維持しやすいという利点もある。</p>
+<section id="heterogeneous-computingとsramの壁" class="level2">
+<h2 class="anchored" data-anchor-id="heterogeneous-computingとsramの壁">Heterogeneous ComputingとSRAMの壁</h2>
+<p>最適化はNvidia GPUの内部にとどまらない。CerebrasやGroqなどの新興チップメーカー、あるいはAMDといったプレイヤーをどのように組み込むかも重要だ。ここでMovvaが指摘するSRAMとDRAMのTrade-offは極めて示唆に富んでいる。</p>
+<p>Transformersのアーキテクチャにおいて、MLP（Multi-Layer Perceptron）層はCompute-boundであり、Attention層はMemory-boundである。特にContext Windowが長くなればなるほど、KV Cacheのサイズは肥大化し、メモリ帯域と容量がボトルネックとなる。CerebrasのようにWafer-scaleで大量のSRAM（超高速だが面積を取り、容量が少ない）を搭載するチップは、Matrix MultiplicationやWeightの保持には最強の性能を発揮するが、肥大化する動的なKV Cacheを収めるには不向きである。一方、NvidiaのHBM（High Bandwidth Memory = DRAMの一種）は容量と速度のバランスが良い。</p>
+<p>もしそうであれば、適材適所でチップを使い分けるHeterogeneous Computingが解となる。Attention層の計算とKV Cacheの保持はNvidia GPU（あるいは大容量メモリを持つチップ）に任せ、MLP層の重い計算はCerebrasなどの特化型Acceleratorにオフロードする。このような「Scavenger（廃品回収者）」的アプローチで、市場で過小評価されている安価なCompute資源をかき集め、Softwareの力で一つの巨大なInference Engineに仕立て上げる。これこそがSail Researchの真骨頂である。</p>
 </section>
-<section id="悪影響を与える学習データの自動発見" class="level3">
-<h3 class="anchored" data-anchor-id="悪影響を与える学習データの自動発見">3. 「悪影響」を与える学習データの自動発見</h3>
-<p>ペルソナ・ベクトルは、fine-tuningを始める前に、データセットがモデルの性格に悪影響を与えるかどうかを予測するためにも使える。</p>
-<p><strong>射影差 (Projection Difference)</strong> という指標を計算することで、これが可能になる。ある学習データについて、①データセット内の応答をペルソナ・ベクトルに射影した値と、②同じ質問に対してベースモデルが自然に生成したであろう応答を射影した値を比較する。この2つの値の差が大きければ、その学習データがモデルの性格を特定の方向に強く「引っ張る」ことを意味する。</p>
-<p>この指標を使えば、データセット全体、あるいは個々のサンプルが持つ危険性を事前に評価できる。さらに、この方法は単純なLLMベースのフィルタリングが見逃すような、一見無害に見えるが実は問題のあるデータを特定できることも示されている。例えば、現実のチャットデータ（LMSYS-CHAT-1M）から、お世辞やハルシネーションを誘発するサンプルを、LLMフィルターをかけた後でさえも発見できたという。これはデータクリーニングの精度を飛躍的に向上させる可能性を秘めている。</p>
+<section id="uptime-95のdata-centerという逆転の発想" class="level2">
+<h2 class="anchored" data-anchor-id="uptime-95のdata-centerという逆転の発想">Uptime 95%のData Centerという逆転の発想</h2>
+<p>Hardwareの最適化の行き着く先は、Data CenterとPower（電力）の再定義である。現在のAI Data Centerは、巨大なTraining workloadsを前提に設計されており、100 MegawattからGigawattクラスの電力を一箇所で要求する。そして、Trainingを途中で止めないために、冗長化された電源、ディーゼル発電機、複数経路のファイバー網を備え、99.99%のUptime（稼働率）を保証しようとする。当然、これらは法外なCapital Expenditure（設備投資）を必要とする。</p>
+<p>しかし、MovvaのInferenceに特化したアプローチでは、この常識が根底から覆る。Long-Horizonで非同期に動くAgentのタスクであれば、途中で計算ノードが落ちても、別のノードにタスクを移して再開すればよい。ユーザーは寝ているのだから、結果の出力が数分、あるいは数時間遅れても気付かない。つまり、Uptimeが95%のData Centerであっても「Linearly（線形に）許容できる」のだ。</p>
+<p>これにより、太陽光や風力といった断続的（Intermittent）な再生可能エネルギーへの依存が可能になる。天候が悪化して電力が途絶えれば、タスクを世界の別の場所にあるData Centerに逃がせばいい。1 Megawatt程度の小規模なData Centerを全米の安い土地と安い電力の場所に分散配置し、冗長性を極限まで削ぎ落とす。このような割り切りができるのは、彼らが自らのControl Plane（管理ソフトウェア）の堅牢性に絶対の自信を持っているからに他ならない。</p>
 </section>
-</section>
-<section id="aiの性格設計はアートからサイエンスへ" class="level2">
-<h2 class="anchored" data-anchor-id="aiの性格設計はアートからサイエンスへ">AIの性格設計は「アート」から「サイエンス」へ</h2>
-<p>Anthropicの「Persona Vectors」論文は、これまで「アート」とされてきたAIのキャラクター設計を、測定可能で制御可能な「科学」の領域へと引き上げる試みだ。</p>
-<p>開発者は、AIの性格が暴走した時に事後対応するのではなく、事前に監視し、学習中に予防し、問題のあるデータをフィルタリングするという、より能動的で科学的なアプローチを取れるようになる。もちろん、この手法が万能というわけではない。論文でも、測定したい性格をあらかじめ言語で定義する必要がある（教師あり）点や、LLMによる評価の限界といった課題が挙げられている。</p>
-<p>しかし、この研究はAIの内部で何が起きているのかを理解し、私たちが望む方向に導くための、強力な手段を与えてくれた。AIの性格をどのように設計すべきかという倫理的な問いに対し、具体的な技術的手段をもって答え始めることを可能にしたのだ。これは、より安全で、信頼性が高く、そして意図通りに設計されたAIアシスタントを社会に送り出すための、非常に重要な一歩となるだろう。</p>
+<section id="データの未来rlとverifiable-tasks" class="level2">
+<h2 class="anchored" data-anchor-id="データの未来rlとverifiable-tasks">データの未来：RLとVerifiable Tasks</h2>
+<p>最後に、これら膨大なComputeを消費するAgentは何を学習し、何を生み出すのか。人間が生成した高品質なテキストデータ（インターネット上の約30 Trillion Tokens）はすでに枯渇しつつある。次のフロンティアは、Reinforcement Learning (RL) 環境でのSelf-improvement（自己改善）である。</p>
+<p>コーディング、数学の証明、あるいはサイバーセキュリティの脆弱性発見など、結果が正しいかどうかを自動で判定できる「Verifiable（検証可能）なTask」において、AgentはSimulation環境（Gym）の中で試行錯誤を繰り返し、自らデータを生成し、賢くなっていく。サイバーセキュリティの堅牢性が「Proof of Work（どれだけAPIに課金して攻撃モデルを走らせたか）」で決まるというジョークは、もはや現実のものとなりつつある。</p>
+<p>Sail Researchが描く未来は、Compute、Data、そしてIntelligenceの限界費用がゼロに近づいていく世界だ。Nvidiaが君臨するエコシステムの隙間を縫い、Softwareの力でHardwareとPowerの非効率をArbitrage（裁定取引）する。プラットフォーマーたちがCapital Expenditureの力技で殴り合う中、このScavengerたちの野望がどこまで既存の秩序を破壊できるのか。引き続きその動向を注視していきたい。</p>
 
 
 </section>

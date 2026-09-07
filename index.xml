@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 01 Sep 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 07 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/movva-sail-research/</link>
+  <description><![CDATA[ 「IntelligenceをCommodityにする」というSail Researchの野望に基づき、低Latency至上主義からの脱却とLong-Horizon Agentの台頭、そしてSoftwareとHardwareの最適化戦略を通してInferenceの未来とコスト削減を深掘りする。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/movva-sail-research/</guid>
+  <pubDate>Mon, 07 Sep 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/movva-sail-research/202609072157.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>OpenAI “Jalapeño”の衝撃</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -122,18 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/</guid>
   <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/202608012137.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Kimi K3詳解：オープンフロンティアを切り拓く2.8兆パラメータMoEの全貌</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/</link>
-  <description><![CDATA[ 2.8兆パラメータのMoEモデルKimi K3が、Kimi Delta AttentionやAttention Residualsといった革新的なアーキテクチャ、Agenticなタスクを可能にするPost-Training、そしてそれを支えるインフラストラクチャと共にオープンソース化され、AIの新たなフロンティアを切り拓く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/</guid>
-  <pubDate>Tue, 28 Jul 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k3-tech-report/202607282159.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
