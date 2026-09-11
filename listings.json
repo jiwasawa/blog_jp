@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/deepseek-v4-1-flash/index.html",
       "/posts/anthropic-threat-report/index.html",
       "/posts/movva-sail-research/index.html",
       "/posts/openai-jalapeno/index.html",

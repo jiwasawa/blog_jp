@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Fri, 11 Sep 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 12 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>DeepSeek-V4.1-Flash技術解説：KV cache圧縮と推論効率の極限への挑戦</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/</link>
+  <description><![CDATA[ DeepSeek-V4.1-Flashは、KV cache圧縮とCEDアーキテクチャ、FP4量子化、SWA Bounded Replayなどの技術革新により、ロングコンテキスト処理における計算コストとメモリ使用量を劇的に削減し、AIエージェントの効率と性能を飛躍的に向上させたマルチモーダルMoEモデルである。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/</guid>
+  <pubDate>Sat, 12 Sep 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/202609111045.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Anthropic Threat Intelligence Report を読む</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,18 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/</guid>
   <pubDate>Mon, 10 Aug 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/202608101415.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Anthropic Dianne Pennの語るPRDの終焉とEval駆動開発の到来</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/</link>
-  <description><![CDATA[ AnthropicのDianne Penn氏のインタビューから、AI時代のプロダクトマネジメントにおけるPRDからEvalsへの移行、First Principles Thinking、そしてTokenの泥臭い消費の重要性を解説する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/</guid>
-  <pubDate>Sat, 01 Aug 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/202608012149.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
