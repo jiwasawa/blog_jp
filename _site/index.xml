@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 06 Sep 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 10 Sep 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Anthropic Threat Intelligence Report を読む</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/</link>
+  <description><![CDATA[ Anthropicの2026年脅威レポートは、AIがサイバー攻撃、兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと進化し、高度な攻撃能力の民主化やIllicit Distillationといった新たな脅威ランドスケープを描き出している。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/</guid>
+  <pubDate>Thu, 10 Sep 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/202609111038.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Inferenceの経済学：トークン単価の底辺への競争とSail Researchの野望</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,19 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/</guid>
   <pubDate>Fri, 31 Jul 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-dianne-penn/202608012149.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Poolside AIが証明する「知能のコモディティ化」と、Model Factoryという大掛かりな反逆</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/</link>
-  <description><![CDATA[ Poolside AIの「Model Factory」がLLM開発の90%はエンジニアリングであると証明し、Laguna S 2.1で「振る舞い」の優位性をもって知能のコモディティ化を加速させる未来を分析します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/</guid>
-  <pubDate>Thu, 30 Jul 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/poolside-laguna/202608012137.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
