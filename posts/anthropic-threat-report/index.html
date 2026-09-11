@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Anthropicの2026年脅威レポートは、AIがサイバー攻撃、兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと進化し、高度な攻撃能力の民主化やIllicit Distillationといった新たな脅威ランドスケープを描き出している。">
+
+<title>Anthropic Threat Intelligence Report を読む</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-3e9b1289f5f353c49b617ce48ad2bc38.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Anthropic Threat Intelligence Report を読む – miscellaneous notes">
+<meta property="og:description" content="Anthropicの2026年脅威レポートは、AIがサイバー攻撃、兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと進化し、高度な攻撃能力の民主化やIllicit Distillationといった新たな脅威ランドスケープを描き出している。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/202609111038.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Anthropic Threat Intelligence Report を読む – miscellaneous notes">
+<meta name="twitter:description" content="Anthropicの2026年脅威レポートは、AIがサイバー攻撃、兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと進化し、高度な攻撃能力の民主化やIllicit Distillationといった新たな脅威ランドスケープを描き出している。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/202609111038.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Anthropic Threat Intelligence Report を読む</h1>
+                  <div>
+        <div class="description">
+          Anthropicの2026年脅威レポートは、AIがサイバー攻撃、兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと進化し、高度な攻撃能力の民主化やIllicit Distillationといった新たな脅威ランドスケープを描き出している。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年9月11日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Anthropicが2026年9月に公開した最新の<a href="https://www.anthropic.com/threat-intelligence-report-september-2026">Threat Intelligence Report</a>を一読して、背筋が凍る思いをしたセキュリティ関係者は少なくないだろう。</p>
+<p>単なる「チャットボットがフィッシングメールの文面作成に使われました」程度の牧歌的な悪用事例集かと思いきや、そこに記されていたのは、高度なAIモデル（当然Claudeを含む）が単なるツール（Assistant）から、サイバー攻撃や兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと変貌を遂げた現実である。AIの安全性やDual-use（軍民両用）のジレンマについては長年議論されてきたが、もはや机上の空論ではない。本稿では、ログとデータが証明している現実の脅威ランドスケープと、Anthropicの（半ばモグラ叩きと化している）防衛戦略の立ち位置に焦点を当てる。</p>
+<section id="democratization-of-sophisticationスキルの民主化という悪夢" class="level2">
+<h2 class="anchored" data-anchor-id="democratization-of-sophisticationスキルの民主化という悪夢">Democratization of Sophistication：スキルの民主化という悪夢</h2>
+<p>今回のレポートで最も本質的な指摘は、「高度な攻撃能力の民主化（Democratization of Sophistication）」である。これまで、Zero-day脆弱性の発見やマルウェアの開発、検知回避（Evasion）の仕組みの構築には、国家を後ろ盾とするAPT（Advanced Persistent Threat）グループのような豊富なリソースと高度な専門知識が必要だった。しかし、AIはこの「リソースとスキルの壁」を完全に破壊した。</p>
+<p>レポート内で言及されている<strong>GTG-20006（ロシアの諜報活動）</strong>のケースは象徴的だ。この攻撃者は、自らのマルウェアがセキュリティ製品に検知されると、AIを活用して自動的にコードを書き直し、再デプロイするという自律的なワークフローを構築していた。いわば「勝手に進化して検知をすり抜けるマルウェア工場」である。</p>
+<p>さらに、金銭目的のサイバー犯罪グループであるShinyHuntersの関連組織（<strong>GTG-50014</strong>）は、盗まれたAPIキーを利用し、システムの広範なスキャン、脆弱性の悪用、大量のデータ持ち出し（Exfiltration）を「AIの自律エージェント」に丸投げしていた。人間は攻撃のターゲットを設定し、持ち出されたデータを確認するだけ。Reconnaissance（偵察）からExploitation（悪用）までのCyber Kill Chain全体が、AIフレームワークによって完全に自動化されているのである。</p>
+<blockquote class="blockquote">
+<p>「かつて国家主導のハッカーにしかできなかったことが、APIキーを握りしめたそこら辺のスクリプトキディに可能になった。防御側は完全にコストの非対称性に直面している。」</p>
+</blockquote>
+<p>また、攻撃者はもはやオンプレミスのサーバーを律儀にハッキングするだけではない。Living-off-the-Cloudと呼ばれる手法を用い、正規のSaaS環境やCloud基盤を隠れ蓑にしてCommand and Control（C2）通信を行う。この状況下では、従来のシグネチャベースの防御は全く意味をなさず、Identity Securityや振る舞い検知に基づくContinuous（継続的）なセキュリティアーキテクチャへの移行が急務となっている。</p>
+</section>
+<section id="兵器開発とbio-misuseに見るdual-useの極北" class="level2">
+<h2 class="anchored" data-anchor-id="兵器開発とbio-misuseに見るdual-useの極北">兵器開発とBio-Misuseに見るDual-useの極北</h2>
+<p>サイバー空間の脅威にとどまらず、物理的な破壊を伴うConventional Weapons（通常兵器）の開発にAIが利用されている現実も重い。</p>
+<p><strong>GTG-87001</strong>として報告されたイエメンの武装勢力のケースでは、戦術誘導ロケットや弾道ミサイルのガイダンス（誘導）ソフトウェアの開発にAIが使用され、実際にフィールドテストまで行われている。また、中国を拠点とするアクター（<strong>GTG-27005</strong>）は、AIが生成したコードとシミュレーション環境を用いて、自律型のFPVカミカゼ・ドローンスウォーム（群れ）を構築しようとしていた。</p>
+<p>さらに深刻なのが、生物学的な悪用（Biological Misuse）である。AIは創薬やタンパク質構造解析において人類に多大な恩恵をもたらす一方で、危険な病原体や毒素のGain-of-Function（機能獲得）研究を加速させるリスクを孕んでいる。Anthropicのレポートは、国家の支援を受けた研究者が、鎮痛剤の開発という「表向きの目的」を隠れ蓑にして、麻痺性毒素の生成パイプラインをAIで構築していた事例を報告している。</p>
+<p>まさにこれがDual-useのジレンマだ。ガンを治すタンパク質の設計も、致死性の高い毒素の設計も、アルゴリズムの観点からは全く同じ「分子の最適化問題」に過ぎない。AIの出力が有益な科学研究なのか、それともバイオテロの準備なのかを、システム側で自動判定することは本質的に不可能に近い。EU AI Actのような法規制や倫理ガイドラインが「High-risk」なAI利用に透明性とアカウンタビリティを求めているが、イエメンの地下壕や国家主導の秘密施設で稼働するLLMに、ブリュッセルの法律が届くはずもない。</p>
+</section>
+<section id="偽造される世論influence-operationsの工業化" class="level2">
+<h2 class="anchored" data-anchor-id="偽造される世論influence-operationsの工業化">偽造される世論：Influence Operationsの工業化</h2>
+<p>ディープフェイクやSynthetic Content（合成コンテンツ）による世論操作は今に始まったことではないが、その「規模と自律性」が新たなフェーズに入った。</p>
+<p><strong>GTG-15001</strong>の「詐欺的マッチングアプリ」の事例は、笑えない喜劇だ。背後にいる中国のアプリ開発者は、20以上のマッチングアプリを展開し、AI対人間の比率が「3対1」という環境を構築していた。つまり、課金してせっせとメッセージを送っている相手の75%はClaudeをバックエンドにしたAIペルソナだったのである。人間（サクラ）は、AIが対応できないビデオ通話などの「本物証明」のためだけにスポットで動員される。詐欺の完全な分業化と工業化だ。</p>
+<p>国家レベルのInfluence Operations（影響工作）も同様である。イラン（<strong>GTG-34001</strong>）やロシア（<strong>GTG-24015</strong>）の国家支援アクターは、キャンペーンの計画策定、教義マニュアルの作成、ペルソナシステムの構築をAIに行わせている。ターゲットとする国の世論を分断するためのニュースサイトを無数に立ち上げ、SNSの偽アカウントを自律的に運用する。彼らにとってLLMは、もはや記事を書くライターではなく、世論操作キャンペーン全体を統括する「編集長兼マーケティング部長」なのだ。</p>
+</section>
+<section id="illicit-distillation他人の褌で相撲を取るai開発競争" class="level2">
+<h2 class="anchored" data-anchor-id="illicit-distillation他人の褌で相撲を取るai開発競争">Illicit Distillation：他人の褌で相撲を取るAI開発競争</h2>
+<p>さて、今回のレポートで最も技術的に興味深く、かつ経済的な影響が大きいのは「Illicit Distillation（不正な蒸留）」のセクションだろう。</p>
+<p>Distillation（蒸留）自体は、巨大で高性能なTeacher Model（教師モデル）の出力を使い、軽量なStudent Model（生徒モデル）を学習させるという、機械学習における一般的な手法である。しかし、Anthropicが糾弾しているのは、中国のAIラボ（Alibaba、Moonshot、DeepSeek、Zhipu、Xiaomiなど）が、身元を偽ってClaudeのAPIを大量に叩き、その高度な能力（特にReasoning / 推論能力）を「不正に抽出」して自社のモデルにコピーしているという事実だ。</p>
+<p>例えばAlibaba（Qwenの開発元 / <strong>GTG-16005</strong>）は、3,500以上の不正アカウントから1日あたり300万回近くのアクセスを行い、ClaudeのChain-of-Thought（CoT）の推論プロセスを抽出するための巨大なパイプラインを構築していた。</p>
+<p>さらに悪質なのは、MoonshotやDeepSeekのケースである。彼らは自社のモデル（KimiやDeepSeek）の裏側で、ユーザーからのリクエストを「こっそりClaudeに転送」し、Claudeの回答をユーザーに返していたという。そして、その過程でClaudeの回答と推論プロセスを保存し、自社モデルの学習データ（SFTやRL用）として活用していたのだ。</p>
+<blockquote class="blockquote">
+<p>「ユーザーはDeepSeekを使っているつもりで、実は裏でClaudeが動いていた。そしてDeepSeekはそのログを使って自律的に賢くなる。まさに壮大なフリーライドである。」</p>
+</blockquote>
+<p>AnthropicがAPIのレスポンスにおいて、生の推論プロセス（Thinking trace）を隠し、「Thinking signature」という参照IDだけを返すように仕様変更したのも、この泥棒行為を防ぐためだ。しかし、攻撃者側も「Cross-session replay attack（セッションをまたいでsignatureを読み込ませ、推論プロセスを復元させる攻撃）」などを駆使して執拗に抽出を試みている。</p>
+<p>昨今、「中国のオープンモデルの進化が凄まじい」と持て囃す声が多いが、その基盤となる推論能力の一部（あるいは大部分）が、USのFrontier Models（ClaudeやGPT）のAPIを不正利用して吸い上げた「CoTのロンダリング」によって構築されているのだとすれば、AI開発競争の構図は全く違って見えてくる。</p>
+</section>
+<section id="終わりにプラットフォーマーの孤独な戦い" class="level2">
+<h2 class="anchored" data-anchor-id="終わりにプラットフォーマーの孤独な戦い">終わりに：プラットフォーマーの孤独な戦い</h2>
+<p>最後にプラットフォームの構造的限界についても指摘しておこう。</p>
+<p>レポートの最後でAnthropicは、不正アカウントのBANや検知メカニズムの改善、政府機関との連携を強調している。確かに、彼らのThreat Intelligenceチームの執念と分析力は賞賛に値する。しかし、本質的に彼らがやっていることは、無限に湧いてくるプロキシと使い捨てクレジットカードに対する「高度なモグラ叩き」である。</p>
+<p>APIキーを盗まれた企業側（AIサプライチェーンの脆弱性）に責任を問うのも難しい。開発者がうっかりGitHubにPushしてしまったAPIキーが、数分後にはロシアの諜報機関の自律型マルウェア工場のコンピュートリソースとして使われる時代だ。</p>
+<p>LLMは、人類の知識を総覧できる「魔法の杖」であると同時に、サイバー攻撃、兵器開発、世論操作のコストを極限まで下げる「パンドラの箱」でもある。AnthropicをはじめとするフロンティアAI企業は、モデルの性能向上（スケール）と同時に、この果てしない防御戦を強いられている。</p>
+<p>EU AI Actのような法規制がどれほど整備されようと、倫理的フレームワークが議論されようと、実空間の脅威アクターたちはAPIの向こう側で今日も静かに自律エージェントを回している。AIの安全性を担保するという大義名分は、イノベーションのブレーキではなく、文字通り「プラットフォームが武器商人にならないため」の最低条件になりつつある。我々ソフトウェア開発者も、「APIキーの漏洩は、単なる数十ドルのクラウド破産ではなく、国家の安全保障を脅かすインフラの提供に直結する」という世紀末的な現実を、そろそろ直視しなければならない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
