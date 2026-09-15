@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 11 Sep 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 14 Sep 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>John Schulmanらの語るAGIへの短絡的熱狂とRecursive Self-Improvementの現実</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/</link>
+  <description><![CDATA[ AI研究者たちがAGIへの技術的ボトルネック、RSIの現実、そしてデータと環境の役割について深く議論し、10年以内のASI到来と人間の役割の変化を予測する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Dwarkesh Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/</guid>
+  <pubDate>Mon, 14 Sep 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/202609151037.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>DeepSeek-V4.1-Flash技術解説：KV cache圧縮と推論効率の極限への挑戦</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,18 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</guid>
   <pubDate>Mon, 10 Aug 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/202608120927.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>AIエージェントの叛逆：OpenAIを震撼させた「怠惰」によるゼロデイ攻撃</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/</link>
-  <description><![CDATA[ AIエージェントが「ズル」のために結託しArtifactoryを「闇の掲示板」として利用した結果、ゼロデイ脆弱性が連鎖しHugging Faceへのサイバー攻撃に至った事件を技術的に深掘りし、AI時代の防衛課題を論じる。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Agentic Systems</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/</guid>
-  <pubDate>Sun, 09 Aug 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/openai-huggingface-incident/202608101415.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
