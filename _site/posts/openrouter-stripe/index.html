@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="「単なるラッパー」と見なされたOpenRouterが、Stripeによる巨額買収を経て、AIエコシステムのインフラとして「Agentic Fraud」という新たな脅威に立ち向かう背景と、その戦略的価値を解説します。">
+
+<title>“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威 – miscellaneous notes">
+<meta property="og:description" content="「単なるラッパー」と見なされたOpenRouterが、Stripeによる巨額買収を経て、AIエコシステムのインフラとして「Agentic Fraud」という新たな脅威に立ち向かう背景と、その戦略的価値を解説します。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/202609291244.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威 – miscellaneous notes">
+<meta name="twitter:description" content="「単なるラッパー」と見なされたOpenRouterが、Stripeによる巨額買収を経て、AIエコシステムのインフラとして「Agentic Fraud」という新たな脅威に立ち向かう背景と、その戦略的価値を解説します。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/202609291244.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威</h1>
+                  <div>
+        <div class="description">
+          「単なるラッパー」と見なされたOpenRouterが、Stripeによる巨額買収を経て、AIエコシステムのインフラとして「Agentic Fraud」という新たな脅威に立ち向かう背景と、その戦略的価値を解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">Latent Space Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年9月29日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>2023年当時、「AIの未来は1つか2つの巨大モデルによって支配される」というScaling laws至上主義的なパラダイムが、VC界隈やテック業界のコンセンサスとして蔓延していた。Googleのような検索エンジン市場の勝者総取りの歴史をなぞり、OpenAIが全てを飲み込むと最終兵器彼女ばりの世紀末的確信をもって言い切る人が後を絶たなかった。</p>
+<p>しかし、その「One Model Wins」の予測が壮大に外れたことは、現在の多様なモデル群の乱立を見れば明らかだろう。マルチモデルの未来にいち早く賭け、先日Stripeに70億ドルという巨額で買収されたOpenRouterの軌跡は、単なるサクセスストーリーを超えたAIエコシステムの構造的な欠陥と、今後の進化の方向性を浮き彫りにしている。</p>
+<p>今回は、<a href="https://www.latent.space/p/openrouter">Latent Spaceのpodcast</a>でのOpenRouter創業者Alex AtallahとAMPのAnjney Midhaの対談内容をベースに、研究室が抱えるディストリビューションの呪い、VCの無理解、そしてStripeとの統合の先にある「Agentic Fraud」という新たな脅威について深掘りする。</p>
+<section id="研究室の配管音痴と単なるラッパーへの冷笑" class="level2">
+<h2 class="anchored" data-anchor-id="研究室の配管音痴と単なるラッパーへの冷笑">研究室の配管音痴と「単なるラッパー」への冷笑</h2>
+<p>モデルの多様化が決定的となった初期の転換点は、MetaのLlamaとスタンフォード大学によるAlpacaの登場である。わずか600ドルでLlamaをRLHF（Reinforcement Learning from Human Feedback）チューニングし、ChatGPTに匹敵する対話性能を引き出したAlpacaは、データさえあれば誰でも独自モデルを構築できる時代の到来を告げた。</p>
+<p>しかし、AnthropicやMistralのようなFrontier labを含め、当時のAI企業には決定的な弱点があった。それは、数十億ドルという莫大なコストをかけて最強のCheckpoint（学習済みモデル）を完成させても、それを開発者の手に届けるディストリビューション能力が壊滅的に欠如していた点だ。彼らはCapabilities（モデルの性能）について思考を巡らせる天才集団ではあったが、Developer experience（開発者体験）には無頓着だった。事実、Anthropicの初期のClaudeですら、APIとしてリリースされた際のドキュメントには、身内の数社のユースケースしか載っていないなど、計画性は皆無であった。Mistralに至っては、最初のモデルをTorrentのMagnet linkで放流しただけで、APIすら提供していなかったのだ。</p>
+<p>研究者にとって、Key management、Rate limiting、Version controlといったインフラ周りの整備は、単なる配管工事（Plumbing）であり実装の詳細に過ぎない。しかし、この配管がなければ、いかに優れたモデルであろうと誰も使えない。OpenRouterは、この空白地帯を埋める中立的なRouting layerとして登場した。</p>
+<p>ここで面白い（そしてIT業界あるあるな）のが、初期のOpenRouterに対するVCたちの反応である。実務としてプロダクトを運用した経験のない多くの投資家たちは、OpenRouterを「他社のAPIを束ねただけの単なるラッパー（just a wrapper）」「ただのマーケットプレイス」と一蹴した。本番環境で複数のAPIを安定してオーケストレーションし、何百万もの開発者が集うエコシステムを構築することが、システム工学的にどれほど困難で戦略的価値が高いかを全く理解していなかったのだ。結果として彼らは、AIインフラの最も重要なピースを見落とすこととなった。</p>
+</section>
+<section id="discordという培養皿とインファレンス市場の夜明け" class="level2">
+<h2 class="anchored" data-anchor-id="discordという培養皿とインファレンス市場の夜明け">Discordという培養皿とインファレンス市場の夜明け</h2>
+<p>OpenRouterの設計思想を読み解く上で外せないのが、Discordというプラットフォームの存在だ。コロナ禍において、Axie InfinityなどのCryptoコミュニティの中心地として爆発的に成長したDiscordは、トークンエコノミーのインフラとしての役割を担っていた。このCryptoの熱狂が、実はGenerative AIの普及に向けた完璧なドレスリハーサル（予行演習）になったというAnjneyの指摘は非常に鋭い。</p>
+<p>Midjourneyが当初、単独のWebアプリケーションではなくDiscordのBotとしてスケールしたのには理由がある。プロンプトという全く新しいインターフェースに直面したユーザーにとって、空白のテキストボックスは恐怖でしかない。しかし、Discordのサーバー内であれば、他のユーザーがどのようなプロンプトを入力し、どのような画像を生成しているかをリアルタイムで観察し、模倣（RLHFの人間版ループ）することができる。</p>
+<p>しかし、テキスト生成モデル（LLM）となると話は別だ。生成結果を読むのに時間がかかりすぎるため、DiscordのようなチャットUIは開発者のエコシステムを構築するのには向いていない。高度なAPI管理やデータポリシーの制御が必要となるLLMインフラにおいて、Discordから独立した「モデルのホームベース」が必要だった。それがOpenRouterである。</p>
+<p>転機となったのは2023年末のMistralのMoE（Mixture of Experts）モデル、Mixtral 8x7Bのリリースに伴う価格競争（Price war）だ。オープンウェイト（Open-weight）モデルが初めてGPT-4に肉薄したと騒がれたこの時、多数のInference（推論）プロバイダーがホスティング競争を繰り広げた。OpenRouterは、これらの中で最も安価で最速のノードへ動的にリクエストを流すAuto router機能を提供し、Inference marketplaceとしての真価を発揮した。</p>
+<p>ここで特筆すべきは、彼らの「Focus（焦点）」の絞り込みである。当時、LM Arena（現・LMSYS）のようなモデル評価プラットフォームが存在したが、あれはあくまで研究者やAIラボ向けのEvalサービスである。また、OpenRouter自身もFine-tuning as a Serviceといった周辺事業への進出をプロトタイプまで作成したものの、最終的には「中立的な推論マーケットプレイス」というコアミッションを優先し、コードを全削除している。ぶっちゃけ、なんでもかんでも自社で囲い込もうとして中途半端な機能の山を築くスタートアップが多い中、無駄な意思決定を排除した彼らのFocusは賞賛に値する。</p>
+</section>
+<section id="agentic-fraudの脅威stripe買収の真の狙い" class="level2">
+<h2 class="anchored" data-anchor-id="agentic-fraudの脅威stripe買収の真の狙い">Agentic Fraudの脅威：Stripe買収の真の狙い</h2>
+<p>さて、本稿の核心に入ろう。なぜ決済インフラの巨人であるStripeが、70億ドルも出してOpenRouterを買収したのか。単なるAPI決済の効率化のためだと思っているなら、それは事の本質を見誤っている。</p>
+<p>AI業界において、現在最も価値を持つリソースは「Token（トークン）」である。インプットとアウトプットを構成するこの情報単位が、巨大な経済圏（Token economy）を形成しつつある。そして、インターネットの歴史が証明している通り、価値のある流動性が生まれる場所には、必ずと言っていいほどAbuse（悪用）やFraud（詐欺）が群がる。</p>
+<p>Midjourneyがかつて無料トライアルを提供していた際、中国のIPアドレスから大量のアカウント登録が行われ、無料枠が不正にリセール（転売）されるという事態に陥った。これは単なる消費者向けアプリの話だが、OpenRouterのようなInference APIのゲートウェイとなると、事態はさらに深刻だ。盗まれたクレジットカードによる不正利用はもちろん、トラフィックの不正転売、アカウントの乗っ取り、さらには意図せず暴走したAIエージェントによる無駄なAPIコールの連発など、Tokenを巡る不正のベクトルは多岐にわたる。</p>
+<p>Stripeは単なる決済会社ではない。彼らの真の強みは、Stripe Radarに代表される世界最高峰のセキュリティとFraud detection（不正検知）インフラにある。KYCやAMLといった旧態依然とした手法ではなく、巨大なトランザクションデータから機械学習を用いてリアルタイムに悪意を弾き出す。</p>
+<p>そして今、我々が直面しようとしているのが「Agentic Fraud（自律型エージェントによる不正）」という未知の領域である。これまでのインターネット詐欺は、人間が手動で、あるいは単純なスクリプトを用いて行っていた。しかし今後は、環境を動的に観察し、システムの脆弱性や隙を学習し、自律的にToken経済圏を攻撃するAIエージェントの群れがやってくる。</p>
+<p>従来型のルールベースのセキュリティでは、適応力が高く執拗なAIエージェントの攻撃を防ぐことは不可能に近い。被害規模はスケールの観点で人間によるそれとは比較にならず、このままでは数兆ドル規模に成長するToken economyの根幹が揺らぐこととなる。</p>
+<p>AIモデルを開発しているラボの人間は、自分たちが訓練したモデルの挙動しか見ることができない。しかし、StripeとOpenRouterが統合された今、彼らは世界中の開発者やAIエージェントがどのようにAPIを叩き、どのようにTokenを消費（あるいは略奪）しようとしているかという、インターネット上のあらゆるAgenticなトラフィックデータを俯瞰することができる。彼らはToken economyを守る「新しい保安官（New Sheriffs）」になろうとしているのだ。</p>
+</section>
+<section id="開発者ファーストのインフラストラクチャは続く" class="level2">
+<h2 class="anchored" data-anchor-id="開発者ファーストのインフラストラクチャは続く">開発者ファーストのインフラストラクチャは続く</h2>
+<p>プラットフォームとして進化するAI業界において、「モデルそのもの」のコモディティ化が進む一方で、それをいかに安全に、安価に、そして開発者が使いやすい形でデプロイするかという「インフラ」の価値は日に日に高まっている。</p>
+<p>かつて「単なるラッパー」と蔑まれたOpenRouterは、開発者からの圧倒的な支持（現在1,000万人以上の開発者が利用）と、数兆トークン/日というトラフィックを武器に、インフラ層の覇者となった。Stripeの傘下に入った後も、OpenRouterのブランドやロードマップは維持され、むしろTrust and Safety（信頼と安全性）の強化によって上流のエンタープライズ市場への浸透が加速するだろう。</p>
+<p>Sam AltmanをはじめとするFrontier labのCEOたちが汎用人工知能（AGI）の到来を声高に叫び、煌びやかなデモで大衆を魅了する裏で、Tokenという新たな血液を循環させるための強固な血管と免疫システムを構築しているのが、OpenRouterでありStripeである。AIの真の社会実装は、こうした泥臭くも極めて高度なエンジニアリングとセキュリティの基盤の上にしか成り立たない。新時代の保安官たちの今後の動きに、引き続き注目していきたい。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
