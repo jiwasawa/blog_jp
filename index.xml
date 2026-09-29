@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Tue, 15 Sep 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 29 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/</link>
+  <description><![CDATA[ 「単なるラッパー」と見なされたOpenRouterが、Stripeによる巨額買収を経て、AIエコシステムのインフラとして「Agentic Fraud」という新たな脅威に立ち向かう背景と、その戦略的価値を解説します。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/</guid>
+  <pubDate>Tue, 29 Sep 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/202609291244.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>John Schulmanらの語るAGIへの短絡的熱狂とRecursive Self-Improvementの現実</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,19 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/</guid>
   <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/202608122215.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Baseten: 推論エンジニアリングという新たな主戦場</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</link>
-  <description><![CDATA[ わずか3年前には存在しなかった「推論エンジニアリング」が、Basetenの知見を元に、QuantizationやSpeculative DecodingからNVIDIA Rubinのようなハードウェアのパラダイムシフトまで、AIプロダクトを高速・低コストで提供するための最前線とその未来を徹底分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/</guid>
-  <pubDate>Tue, 11 Aug 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/baseten-philip-ali/202608120927.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

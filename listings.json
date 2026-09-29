@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/openrouter-stripe/index.html",
       "/posts/dwarkesh-john-schulman-beren-charlie/index.html",
       "/posts/deepseek-v4-1-flash/index.html",
       "/posts/anthropic-threat-report/index.html",
@@ -17,8 +18,8 @@
       "/posts/poolside-laguna/index.html",
       "/posts/kimi-k3-tech-report/index.html",
       "/posts/interconnect-open-models-recap-kimi-k3/index.html",
-      "/posts/patrick-hsu-arc/index.html",
       "/posts/sarah-guo-conviction/index.html",
+      "/posts/patrick-hsu-arc/index.html",
       "/posts/esmc-biohub/index.html",
       "/posts/j-space/index.html",
       "/posts/scaling-laws-lilian/index.html",
