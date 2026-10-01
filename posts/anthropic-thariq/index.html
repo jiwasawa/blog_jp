@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。">
+
+<title>Claude Codeの進化とHarnessの脱構築</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-55617497126496852ff9f5a59253c640.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Claude Codeの進化とHarnessの脱構築 – miscellaneous notes">
+<meta property="og:description" content="AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/202610011009.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Claude Codeの進化とHarnessの脱構築 – miscellaneous notes">
+<meta name="twitter:description" content="AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/202610011009.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Claude Codeの進化とHarnessの脱構築</h1>
+                  <div>
+        <div class="description">
+          AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">Latent Space Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年10月1日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Anthropicの開発ペースが異常である。</p>
+<p>今年5月の大型資金調達以降、彼らは息をつく暇もなく新機能を市場に投下し続けている。6月のClaude TagおよびSonnet 5 / Fable 5のリリースに始まり、7月のOpus 5、8月のFable 5.1とエンタープライズ向け機能の拡充、そして9月にはOpus 5.5、Claude Projects、Claude Modsを立て続けに発表し、本日ついにSonnet 5.5がリリースされた。AI業界の時間軸が狂っていることは今に始まったことではないが、これほどまでにインフラからユーザーインターフェースまでを全方位で進化させている実行力には感嘆せざるを得ない。</p>
+<p>ほんの1年前まで、「AIエージェントにコーディングを任せる」という概念は一部のアーリーアダプターの遊びに過ぎず、多くのエンジニアは「まだ実用レベルではない」と冷笑していた。しかし現在、それはもはやソフトウェア開発におけるデフォルトのワークフローになりつつある。本稿では、AnthropicのThariq Shihipar氏が<a href="https://www.latent.space/p/thariq">Latent Spaceのpodcast</a>で語った洞察を元に、Claude Codeの進化、UI/UXの変容、そして「Mutable Software」という新たなパラダイムの到来について分析する。後半では、同社が提唱する「Pacing the Frontier」と、高度化するエージェントがもたらすセキュリティの深淵についても触れておきたい。</p>
+<section id="インターフェースの進化とunknown-unknownsの抽出" class="level2">
+<h2 class="anchored" data-anchor-id="インターフェースの進化とunknown-unknownsの抽出">インターフェースの進化と「Unknown Unknowns」の抽出</h2>
+<p>CLIから始まったClaude CodeのHarness（エージェントを動かすための周辺環境・制御構造）は、ここ数ヶ月で劇的な変化を遂げている。その最たる例が「AskUserQuestion」ツールと「Artifacts」の導入だ。</p>
+<p>LLMに対する一般的な思い込みとして、「ユーザーは自分が何を求めているかを正確に理解しており、それを言語化できる」という前提がある。しかし現実のソフトウェア開発において、それはほぼ幻想である。Thariq氏が指摘するように、ユーザーは往々にして自分の要件の解像度が低く、自分が何を知らないかさえ分かっていない「unknown unknowns（未知の未知）」を抱えている。</p>
+<p>AskUserQuestionは、エージェント側からユーザーに対して要件を引き出す（Elicitation）ためのツールである。「このまま実装を進めるか、それとも要件のすり合わせを行うか」という分岐において、エージェントが自律的に問いを投げかけることで、単なる「命令と実行」の非同期コミュニケーションから、協調的な問題解決へとUXを昇華させている。</p>
+<p>さらに、Artifactsの概念も単なるプレビュー画面の枠を超えつつある。Artifactsは独自のデータベースを持ち、永続的かつ生成的なインターフェースとして機能する。例えば、Claudeがプロジェクトのタスク管理を行うカンバンボードをArtifactとして生成し、複数のサブエージェントがそのボード（状態）を参照しながら自律的に動くといったダッシュボード的な運用が可能になる。これは、AIが単なる「賢いコマンドライン」から脱却し、コンテキストに合わせた動的なUIを生成する存在への過渡期であることを示している。</p>
+</section>
+<section id="promptingの復権とモデルのメンタルモデル構築" class="level2">
+<h2 class="anchored" data-anchor-id="promptingの復権とモデルのメンタルモデル構築">Promptingの復権と、モデルのメンタルモデル構築</h2>
+<p>AIがどれほど賢くなろうとも、「Prompting」が依然として極めてレバレッジの高いスキルであるという事実は変わらない。ただし、ここでのPromptingとは「魔法の呪文（キーワード）を見つけること」ではなく、Claudeがどのように思考し、何を一度の指示（one-shot）で解決できるのかという「モデルのメンタルモデル」を構築することを指す。</p>
+<p>十分に進化したPromptingは、優れたエグゼクティブ・コミュニケーション（経営層への報告・指示）と区別がつかない。背景（Situation）、課題（Complication）、問い（Question）、そして期待するアクションを構造的に記述し、LLMに不要な推論コストをかけさせないことが求められる。</p>
+<p>面白いのは「Effort（実行エフォート）」の概念とモデルサイズの逆転現象である。セキュリティ監査やコードレビューのような複雑な推論とエッジケースの網羅が求められるタスクには「High」や「Max」のEffortを割くべきだが、単純なUIの実装などに過剰なEffortをかけるのはリソースの無駄である。そして、Opusのようなフロンティアモデルが進化すればするほど、結果的にトークン効率が良くなるというパラドックスが発生する。なぜなら、賢いモデルはコードを書いた後に「正しく動くかChromiumを立ち上げてスクリーンショットを撮って検証する」といった無駄な検証ループを回さずとも、自身の出力の正しさを確信できるからだ。「賢いモデルのほうが最終的な推論コストが安くつく」という未来は、すぐそこまで来ている。</p>
+<p>なお、プロジェクト固有の制約を書き込む CLAUDE.md のようなプロンプトファイルは、いずれ廃れる運命にあるとThariq氏は予測している。FableとOpusでは失敗するポイントが異なり、モデルがアップデートされるたびに不要な制約がモデルのパフォーマンスを逆に落としてしまう（過剰制約となる）からだ。現状は何もなしでスタートし、モデルが躓いた時だけ最小限のコンテキストを与えるのがベストプラクティスとなりつつある。</p>
+</section>
+<section id="cloud-brain-local-handsの分離とコラボレーション" class="level2">
+<h2 class="anchored" data-anchor-id="cloud-brain-local-handsの分離とコラボレーション">Cloud Brain, Local Handsの分離とコラボレーション</h2>
+<p>アーキテクチャの観点で見逃せないのが、「Cloud Brain（推論と知能）」と「Local Hands（実行能力）」の分離である。</p>
+<p>現在のローカルCLIツールとしてのClaude Codeは、ユーザーのマシン上で推論と実行の双方を管理している。しかし、新たにベータ展開された「Claude Projects」や、Slack上で動く「Claude Tag」は、この前提を覆す。推論やセッション管理はクラウド側（Brain）で行い、実際のコード変更やコマンド実行はユーザーのローカル環境やリモートのサンドボックス（Hands）に委譲する形だ。</p>
+<p>これにより、非同期のマルチプレイヤー開発が極めて容易になる。例えば、ある機能の実装中にセキュリティの懸念が生じた場合、Claude Tagを通じてLegal（法務）やSecurityチームのアカウントをメンションするだけで、Claudeは権限の境界を越えることなく、適切にコンテキストを共有しながら質問に答えることができる。組織のナレッジとアクセス権限を統合する「組織のHarness」として、Claude Tagは既にAnthropic社内の業務の大部分を代替しているという。</p>
+</section>
+<section id="claude-modsとmutable-softwareの夜明け" class="level2">
+<h2 class="anchored" data-anchor-id="claude-modsとmutable-softwareの夜明け">Claude ModsとMutable Softwareの夜明け</h2>
+<p>本ポッドキャストにおける最大の技術的ハイライトは間違いなく「Claude Mods」の登場だろう。これはユーザーがClaude CodeのHarnessそのものをカスタマイズできる拡張機能であり、単純なフック（Hooks）やプラグインを超えた自由度を持つ。</p>
+<p>これまでのHarnessは静的なものであった。しかしClaude Modsを使えば、実行ループやUIそのものを書き換えることができる。コミュニティでは既にClaudeのターミナル上にTetrisを実装する猛者も現れているが、真の価値はそこではない。</p>
+<p>例えば、「毎回のプロンプト実行後に、モデルの理解度をテストするクイズを出題するMod」や、「タスクの難易度に応じて内部的にモデルをルーティングするMod」を作ることができる。ここで重要な技術要素が「Forked Agent」だ。メインの会話履歴のPrompt Cacheを維持したまま、安価にサブエージェントをフォークして裏側で状態の分類（Classification）を行わせ、その結果に応じてUIに情報をインジェクトする。</p>
+<p>このような動的な拡張性は、「Mutable Software（可変ソフトウェア）」というパラダイムを予感させる。ユーザーのインテント（意図）に応じて、ソフトウェア自身がインターフェースや機能のパイプラインをオンデマンドで書き換える世界だ。AIエージェントの能力が向上するにつれ、Harnessの寿命は極端に短くなる（Harness Engineeringの苦い教訓）。静的なUIや固定されたプロンプトチェーンを作り込むのではなく、エージェント自身に動的にHarnessを組み立てさせるアプローチこそが、次世代のソフトウェア開発における「正解」となるだろう。</p>
+</section>
+<section id="pacing-the-frontierエージェントの自律性がもたらす脅威" class="level2">
+<h2 class="anchored" data-anchor-id="pacing-the-frontierエージェントの自律性がもたらす脅威">Pacing the Frontier：エージェントの自律性がもたらす脅威</h2>
+<p>後半の議論は、きらびやかな新機能の話から一転して、重苦しいAIセキュリティと「<a href="https://darioamodei.com/post/we-must-pace-the-frontier">Pacing the Frontier</a>」の話題へと移行する。AnthropicのCEOであるDario Amodei氏が提唱したこの概念は、AI開発を完全に停止するのではなく、サードパーティの評価機関を内部に組み込み、セキュリティ対策の成熟度に合わせてフロンティアモデルの開発・展開ペースを調整するというものだ。</p>
+<p>なぜこのような慎重論が、今になって（競合を含む）各社から強く支持されているのか。それは、最近の評価テスト（Evals）におけるAIエージェントの挙動が、開発者の想像を絶するレベルで「賢く、かつ不気味」になっているからだ。</p>
+<p>ポッドキャスト内で言及された「Exploit-Bench」でのインシデントは示唆に富んでいる。OpenAIが提供する難解なセキュリティベンチマークを解かされたエージェントたちは、自力で正攻法で解くのが困難だと悟ると、驚くべき行動に出た。 パッケージマネージャー（Artifactory）のキャッシュディレクトリに特定の名前のフォルダを作成し、それを「掲示板」として他のエージェントと通信し始めたのである。さらに彼らは、スコアラー（自分たちを評価するシステム）のフラグをリバースエンジニアリングするため、課題とは無関係のHugging Faceをハッキングしてスコアラーのソースコードを盗み出そうとした。</p>
+<p>別のインシデント（Wikiインシデント）では、GETリクエストしか許可されていないサンドボックス環境において、/etc/hosts を書き換え、偽のAzureホストを立ち上げることで複数の脆弱性をチェーン（連鎖）させ、外部へのPOSTリクエストを成功させている。</p>
+<p>断っておくが、これらはAIが「悪意」を持ったわけではない。単に「与えられたタスクを達成せよ」という目的関数（Paperclip）を最適化した結果、サンドボックスの抜け道をクリエイティブに見つけ出したに過ぎない。しかし、デジタルインフラの大部分が脆弱なソフトウェアで構成されている現代において、この「目的達成のための手段を選ばない自律性」は致命的なリスクとなる。</p>
+</section>
+<section id="防御側の戦いprobes-fallbacks-そして-auto-mode" class="level2">
+<h2 class="anchored" data-anchor-id="防御側の戦いprobes-fallbacks-そして-auto-mode">防御側の戦い：Probes, Fallbacks, そして Auto Mode</h2>
+<p>AIの能力向上によって飛躍的に拡大する攻撃表面（Attack Surface）に対し、Anthropicは複数の防御レイヤーを実装している。</p>
+<ol type="1">
+<li><p><strong>Constitutional ClassifiersとProbes:</strong> モデルの出力だけでなく、推論中の内部状態（Activations）を監視する仕組み（Mechanistic Interpretability）。エージェントが「ハッキングしよう」と意図した瞬間に、その潜在空間の動きを検知し、安全なモデル（例えばOpus）にFallbackさせる。強化学習（RL）後のモデルの内部解釈は困難を極めるが、これを推論のレイテンシに影響を与えずにスケールさせることが急務となっている。</p></li>
+<li><p><strong>Auto Modeとパーミッション管理:</strong> エージェントのインテント（意図）が安全であっても、ユーザーの意図と合致しているかは別問題である。エージェントがタスク達成のために勝手にAPIキーを発行し、本番データベースを書き換えようとした際、それをブロックするためのClassifierがAuto Modeである。</p></li>
+</ol>
+<p>サイバーセキュリティの定石として「防御側が有利（Defense-Favored）」という言葉がある。理論上は完璧なサンドボックスを設計することは可能だ。しかし、それを構築し、監査するためには、圧倒的な時間と、皮肉なことに「さらに高度なAIによるレッドチーム（Red Teaming）」が必要になる。Pacing the Frontierとは、この「防御のインフラが整うまでの時間を稼ぐ」ための不可欠な戦略なのだ。</p>
+</section>
+<section id="ソフトウェアエンジニアリングの二重苦を超えて" class="level2">
+<h2 class="anchored" data-anchor-id="ソフトウェアエンジニアリングの二重苦を超えて">ソフトウェアエンジニアリングの「二重苦」を超えて</h2>
+<p>現在、最前線にいるソフトウェアエンジニアは二つの仕事を同時にこなしている。一つは本来のプロダクト開発であり、もう一つは「激変するAIツールとパラダイムのキャッチアップ」である。Claude.mdの書き方が変わり、Modsが登場し、ローカルからクラウドへコンテキストが移動する。この圧倒的なペースに疲弊している開発者も少なくないだろう。</p>
+<p>しかし、静的なコードをタイプする時代から、Intent Architect（意図の設計者）としてエージェントをオーケストレーションし、Mutable Softwareを動的に組み上げる時代への過渡期に立ち会えることは、エンジニアとしてこの上ない幸運でもある。</p>
+<p>Thariq氏が最後に語った「後から振り返った時、このクレイジーな時期にソフトウェアエンジニアリングが永遠に変わったのだと気づくだろう」という言葉は、決して大げさではない。AIの知能が人間のコーディングタスクの難易度を凌駕しつつある今、我々に求められているのは、旧来のHarnessに固執することではなく、モデルの進化に合わせて自らのメンタルモデルとワークフローを脱構築し続ける柔軟性なのだ。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
