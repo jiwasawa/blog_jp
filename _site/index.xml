@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Mon, 28 Sep 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 30 Sep 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Claude Codeの進化とHarnessの脱構築</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</link>
+  <description><![CDATA[ AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</guid>
+  <pubDate>Wed, 30 Sep 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/202610011009.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,18 +133,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/</guid>
   <pubDate>Thu, 20 Aug 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/202608211345.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>プロプライエタリLLM APIにおける推論トレース抽出の脅威とメカニズム</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/</link>
-  <description><![CDATA[ プロプライエタリLLM APIの暗号化された推論トレースの互換性を悪用し、軽量モデルをデクリプション・オラクルとして利用して機密情報や有害情報を抽出する新たな攻撃手法が、AIセキュリティに深刻な影響を与える可能性を指摘する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/</guid>
-  <pubDate>Tue, 11 Aug 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/stealing-resoning-traces/202608122215.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
