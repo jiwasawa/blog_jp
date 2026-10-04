@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Epoch AIのJS Denon氏へのインタビューから、AI加速の現実、ロボティクスの泥臭さ、そして「蒸留」が米中AIギャップに与える影響を深掘りする。">
+
+<title>Epoch AI: AI加速の深層と「蒸留」の代償</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-55617497126496852ff9f5a59253c640.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Epoch AI: AI加速の深層と「蒸留」の代償 – miscellaneous notes">
+<meta property="og:description" content="Epoch AIのJS Denon氏へのインタビューから、AI加速の現実、ロボティクスの泥臭さ、そして「蒸留」が米中AIギャップに与える影響を深掘りする。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/202610041431.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Epoch AI: AI加速の深層と「蒸留」の代償 – miscellaneous notes">
+<meta name="twitter:description" content="Epoch AIのJS Denon氏へのインタビューから、AI加速の現実、ロボティクスの泥臭さ、そして「蒸留」が米中AIギャップに与える影響を深掘りする。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/202610041431.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Epoch AI: AI加速の深層と「蒸留」の代償</h1>
+                  <div>
+        <div class="description">
+          Epoch AIのJS Denon氏へのインタビューから、AI加速の現実、ロボティクスの泥臭さ、そして「蒸留」が米中AIギャップに与える影響を深掘りする。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年10月4日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Artificial Intelligence (AI) の進化スピードに関する議論は、日々のタイムラインを席巻するバズワードの洪水から、しばしば終末論的な悲鳴へと姿を変える。OpenAIやAnthropicといったフロンティアラボが、「間もなくAIがAI自身を改良し始める」というRecursive Self-Improvement (RSI) 的なブレイクスルーの到来を匂わせるたび、明日にもシンギュラリティが到来して我々の仕事がすべて消滅すると世紀末的確信をもって言い切る人が後を絶たない。</p>
+<p>しかし重要なのは、彼らが内部で「何を見て」そう言っているのか、そしてその兆候を我々がどう冷静に測定するかである。Nathan Lambertがホストを務める<a href="https://youtu.be/mE0__1EfVxw?si=6WAt8QOiocPCYpGT">podcast「Interconnects」</a>に、データ駆動でAIトレンドを追跡する専門機関Epoch AIのシニアリサーチャー、Jean-Stanislas (JS) Denonが登場し、この狂騒に対して極めて解像度の高い議論を展開した。本稿では、彼らの対談内容をベースに、AI加速の現実、複雑化するロボティクスの未来、そして「蒸留（Distillation）」とデータサプライチェーンが歪める米中AIギャップの生々しい実態について分析する。</p>
+<section id="研究者の生産性10倍が孕む罠とロボティクスの泥臭い現実" class="level2">
+<h2 class="anchored" data-anchor-id="研究者の生産性10倍が孕む罠とロボティクスの泥臭い現実">研究者の生産性「10倍」が孕む罠と、ロボティクスの泥臭い現実</h2>
+<p>OpenAIやAnthropicが公開するデータ、例えば「研究者によるAIシステム（コーディング支援ツールなど）の利用時間と支出が急増している」という事実は、彼らが現行のAIから巨大な価値を引き出していることの強力な証左である。しかしDenonは、これを以て直ちに「短期間でのAI能力の爆発的進化」や「AI研究プロセスの完全自動化」を意味するものではないと釘を刺す。</p>
+<p>ここで見落とされがちなのが、「個々の研究者の生産性」と「分野全体の進歩速度」の決定的な乖離である。AI支援ツールによって、ジュニアレベルのAI研究者がコードを書き、仮説を検証するスピードが10倍になったとしよう。しかし、それはAnthropicという企業全体、あるいはAI研究というエコシステム全体のロードマップが10倍の速度で進むことを意味しない。なぜなら、ボトルネックは個人のコーディング速度ではなく、巨大なcompute（計算資源）の割り当て、プロジェクト全体のマネジメント、そして何より「根本的なパラダイムシフトを伴う新しいアイデアの創出と統合」にあるからだ。</p>
+<p>Denonは自身を「capabilities maximalist（能力至上主義者）」と位置づけており、AIシステムの能力が最終的に巨大なものになることには同意している。これらの強力なシステムが人間の価値観と完全にアライメント（調整）されていない場合、Existential Risk（実存的リスク）が高まるというロジック自体は極めて真っ当だ。しかし、その「進化のカーブ」が描く軌跡は、多くの熱狂的なAI支持者が期待するような滑らかな指数関数ではない。</p>
+<p>それが最も顕著に現れるのがロボティクスの領域である。LLMの劇的な一般化と飛躍を目の当たりにした人々は、物理世界を操作するロボティクスも同じ軌跡をたどると錯覚しがちだ。しかし対談の中で指摘されたように、ロボティクスの進化はLLMというよりも、むしろ自動運転車の開発サイクルに近い。つまり、実世界特有のノイズ、信頼性の担保、緻密な操作性、そして規制という果てしなく泥臭い反復サイクル（long, iterative development cycle）を避けては通れない。仮想空間でコードを出力する速度が10倍になっても、物理的な工場のラインを自動化するロボットが明日いきなり街を闊歩し始めるわけではないのだ。</p>
+</section>
+<section id="米中aiギャップと蒸留というドーピング" class="level2">
+<h2 class="anchored" data-anchor-id="米中aiギャップと蒸留というドーピング">米中AIギャップと「蒸留」というドーピング</h2>
+<p>さて、現在のAI業界における最大の地政学的関心事といえば、USと中国のAIラボ間の能力ギャップである。Denonは、パブリックモデルのリリース日ベースで見れば、トップクラスの中国ラボ（DeepSeekやKimiなどを手掛ける企業）と欧米トップラボとの間には、おおよそ6〜8ヶ月の遅れがあるに過ぎないと見積もっている。</p>
+<p>米中の間には、利用可能なcomputeの量において絶望的とも言えるほどの圧倒的な格差が存在する。それにもかかわらず、なぜ中国のラボはこれほどの僅差で食らいついているのか。その背後にある最大の要因として議論されたのが「蒸留（Distillation）」の存在である。</p>
+<p>蒸留とは、膨大なコストをかけて学習されたより大きな最先端モデル（教師）の出力や推論プロセスを、より小さなモデル（生徒）に模倣させる技術である。この手法により、中国のラボはアメリカの企業が負担した莫大なR&amp;Dコストや計算資源をいわば「ショートカット」し、圧倒的な低コストで同等レベルのパフォーマンスを叩き出すことが可能になっている。DeepSeekやKimi K3の急速な躍進の裏には、こうしたオープンウェイトモデルやAPI経由でのフロンティアモデルからの能力抽出が深く関与していると見られている。</p>
+<p>米国政府からすれば、フロンティアモデルからの無許可の能力抽出は安全保障上の重大な懸念であり、知的財産の侵害や輸出規制の骨抜きを意味する。しかし、投資家的な視点で見れば、この「蒸留依存」はスポーツにおけるドーピングのようなものだ。短期的には少ないcomputeで驚異的な成果を上げられるが、常にトップランナーの背中を追う構造になるため、長期的なオリジナル研究の芽を摘む可能性がある。さらに厄介なことに、蒸留はフロンティアモデルに施された安全性やアライメントのトレーニングをバイパスしてしまうため、安全機能が欠落した強力なモデルが市場に溢れるリスクも孕んでいる。</p>
+</section>
+<section id="データのお下がりビジネスとエコシステムの脆弱性" class="level2">
+<h2 class="anchored" data-anchor-id="データのお下がりビジネスとエコシステムの脆弱性">「データのお下がり」ビジネスとエコシステムの脆弱性</h2>
+<p>podcastの議論の中で特に着目したいのは、データサプライチェーンにおける極めて生々しい仮説である。</p>
+<p>AIモデルの性能向上には質の高いRL（強化学習）環境やデータセットが不可欠だが、これらを構築し、どの環境が本当に効果的かを検証するには膨大なR&amp;D computeが必要となる。そこで何が起きているか。仮説によれば、RL環境を提供するデータプロバイダーは、まず資金もcomputeも潤沢なアメリカのフロンティアラボに自社のデータをテスト（あるいは実質的に共同開発）させる。そして、何が機能するかという「正解」を得たプロバイダーは、その成功したデータをスケールさせ、数ヶ月のタイムラグを経て、今度はそれを中国のラボへ格安で売り捌いているというのだ。</p>
+<p>これが事実であれば、中国のラボは自ら莫大なcomputeを消費して「試行錯誤」する必要がない。「アメリカのトップラボが検証済みのRL環境」という、いわば最高級の「お下がり」を安価に買い叩くことで、驚異的な資本効率を実現していることになる。イノベーションの荒野を開拓するコストはOpenAIやAnthropicが支払い、整地された舗装道路を後発組が猛スピードで走り抜ける。この構造的なフリーライドこそが、中国AI産業のコスト競争力の源泉の一部を成している可能性は高い。</p>
+<p>こうした「漏洩」はデータだけにとどまらない。先日、パブリッククラウドのモデルを悪用してOpenAIの内部システムへのアクセス権を得ようとしたセキュリティインシデントが発覚し話題となった。Denonも指摘するように、モデルのセーフガードやAI企業のセキュリティ実践は依然として脆弱である。オープンモデルかクローズドモデルかという二元論的な議論はもはや時代遅れであり、「いかにAPIを塞ごうとも、賢いモデルに対する適切なプロンプト（あるいはジェイルブレイク）を通じて、その推論能力や知識は必ず外部に抽出される」という漏洩前提の世界線を我々は生きているのだ。</p>
+</section>
+<section id="ファクトを追うことの価値epoch-aiの現在地" class="level2">
+<h2 class="anchored" data-anchor-id="ファクトを追うことの価値epoch-aiの現在地">ファクトを追うことの価値：Epoch AIの現在地</h2>
+<p>AIの進化がこのような複雑な変数（蒸留、データサプライチェーンの非対称性、computeの制約など）にまみれていく中、単にベンチマークのスコアを比較することの意味は薄れつつある。モデルが自らの評価データで学習してしまう汚染問題や、基礎化学における真のブレイクスルーを自動評価する難易度を考えれば、現在の測定パラダイムがポストAI時代には通用しなくなるのは自明だ。</p>
+<p>だからこそ、Epoch AIが採用しているような泥臭く、しかし好奇心駆動（curiosity-driven）の調査手法が光るのである。彼らは Notable AI Models dataset のように、計算コスト、被引用数、歴史的意義といった明確な基準でトレンドを数値化するだけでなく、各企業が公開している求人データ（Job postings）の変遷や、データセンターの建設状況といった「物理的かつ隠しきれない痕跡」を追跡している。</p>
+<p>AIがどれほど賢くなろうとも、GPUを稼働させるための土地と電力、そしてデータパイプラインを構築するためのエンジニアの雇用は、必ず現実世界に足跡を残す。各社がセールス部隊を増強しているのか、それとも基盤インフラのエンジニアをかき集めているのか。そうした周辺情報の集積からしか、真のAIの進化速度や各社の戦略の焦点を浮かび上がらせることはできない。</p>
+<p>AI開発のパラダイムは、単なるパラメータサイズの暴力から、データのエコシステム、そして地政学的なハックと蒸留のゲームへと完全にシフトした。表面的なAI加速論に踊らされるのではなく、その裏側で蠢く泥臭い現実と「漏洩」のメカニズムを直視しない限り、我々は次のトレンドを正確に見極めることはできないだろう。少なくとも、10倍賢くなったはずのAIエージェントに「AIの未来」を尋ねるよりは、Epoch AIのデータセットを眺める方が、遥かに確度の高い未来予測ができるはずだ。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

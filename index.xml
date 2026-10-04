@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Thu, 01 Oct 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 04 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Epoch AI: AI加速の深層と「蒸留」の代償</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/</link>
+  <description><![CDATA[ Epoch AIのJS Denon氏へのインタビューから、AI加速の現実、ロボティクスの泥臭さ、そして「蒸留」が米中AIギャップに与える影響を深掘りする。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/</guid>
+  <pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/202610041431.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Claude Codeの進化とHarnessの脱構築</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,18 +133,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/</guid>
   <pubDate>Sat, 22 Aug 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/202608211459.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>BitsからAtomsへ：ChatGPT開発者が挑む「物理世界」の再定義と、Periodic Labsの野望</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/</link>
-  <description><![CDATA[ ChatGPT開発者Liam Fetus氏が挑む、AIによるマテリアルサイエンスと化学分野の革新、およびPeriodic Labsの野望について、データ戦略、AIアーキテクチャ、そして物理世界への応用を深く掘り下げる。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/</guid>
-  <pubDate>Fri, 21 Aug 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/periodic-liam-fetus/202608211345.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
