@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.18</generator>
-<lastBuildDate>Sun, 04 Oct 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 05 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>ClusterMax 3.0が暴くNeoCloudの残酷な現実と、AI計算資源を巡る覇権闘争</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/</link>
+  <description><![CDATA[ ClusterMax 3.0はNeoCloudのセキュリティ問題、GB300 NVL72導入の複雑さ、そしてNVIDIAによる防衛的買収戦略など、AI計算資源市場の生々しい現実と覇権闘争の深層を暴き出す。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/</guid>
+  <pubDate>Mon, 05 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/202610041438.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Epoch AI: AI加速の深層と「蒸留」の代償</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,18 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/</guid>
   <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/dwarkesh-dylan-2026/202608251518.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Terrence Tao: 証明の過食症と我々が本当に最適化すべき価値</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/</link>
-  <description><![CDATA[ AI時代の数学界は、AIによる研究タスク遂行能力の向上を前提とし、「AIに数学ができるか」ではなく、数学的営みの真の目的と価値を再定義するパラダイムシフトに直面している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/</guid>
-  <pubDate>Sat, 22 Aug 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/terrence-tao-icm-2026/202608211459.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
