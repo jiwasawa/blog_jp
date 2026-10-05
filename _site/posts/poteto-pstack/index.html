@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="CursorのPoteto氏が月間2,500件のPRをマージする「Dark Factory」構築の裏側で、AIエージェントへの信頼構築、緻密な環境設計、そして自動化された検証プロセスがどのように機能しているのかを解説します。">
+
+<title>pstack: 2,500のPRを量産する「暗闇の工場」の正体</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="pstack: 2,500のPRを量産する「暗闇の工場」の正体 – miscellaneous notes">
+<meta property="og:description" content="CursorのPoteto氏が月間2,500件のPRをマージする「Dark Factory」構築の裏側で、AIエージェントへの信頼構築、緻密な環境設計、そして自動化された検証プロセスがどのように機能しているのかを解説します。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/202610042255.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="pstack: 2,500のPRを量産する「暗闇の工場」の正体 – miscellaneous notes">
+<meta name="twitter:description" content="CursorのPoteto氏が月間2,500件のPRをマージする「Dark Factory」構築の裏側で、AIエージェントへの信頼構築、緻密な環境設計、そして自動化された検証プロセスがどのように機能しているのかを解説します。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/202610042255.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">pstack: 2,500のPRを量産する「暗闇の工場」の正体</h1>
+                  <div>
+        <div class="description">
+          CursorのPoteto氏が月間2,500件のPRをマージする「Dark Factory」構築の裏側で、AIエージェントへの信頼構築、緻密な環境設計、そして自動化された検証プロセスがどのように機能しているのかを解説します。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Agentic Coding</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年10月6日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>月間2,500件のPull Request (PR) を本番環境にマージした、という話を聞いて、正気かと思った人も多いだろう。</p>
+<p>単なる与太話か、あるいは劣悪なコードのスパム爆撃ではないかと疑うのも無理はない。しかし、Cursor（現SpaceXAI）のSoftware Engineerであるpoteto氏が達成したこの異常な数字は、AIエージェントを無秩序に暴れさせた結果ではなく、極めて緻密に設計された「環境」と「検証プロセス」の賜物である。昨今、AIによる開発自動化を指してSoftware Factoryという言葉がバズワード化しているが、彼女とMatt Pocock（TypeScriptの第一人者であり、<a href="https://github.com/mattpocock/skills/blob/main/docs/productivity/grill-me.md">grill-me</a> skillの提唱者）の<a href="https://www.youtube.com/watch?v=MN9dGgmLyso">podcast対談</a>を紐解くと、そこにあるのは無機質な工場展開というよりも、狂気的なまでに洗練された厨房のオーケストレーションであることがわかる。</p>
+<p>本稿では、単なるAIツールの紹介やプロンプトの小手先テクニックといった低次元な話は無視し、彼女らがどのようにしてエージェントへの「Trust Ladder（信頼の階段）」を登り、最終的に自らが眠っている間にエージェントが自らPRをマージする「Dark Factory」を構築するに至ったのか、そのアーキテクチャと背後にある設計思想に焦点を当てる。</p>
+<section id="michelin-kitchensoftware-factoryメタファーの限界" class="level2">
+<h2 class="anchored" data-anchor-id="michelin-kitchensoftware-factoryメタファーの限界">Michelin Kitchen：Software Factoryメタファーの限界</h2>
+<p>AIエージェントをスケールさせることについて語る際、poteto氏はSoftware Factoryという言葉を好まない。その代わりに彼女が用いるのが「Michelin Kitchen（ミシュランの厨房）」というメタファーである。工場という言葉には、品質やクラフトマンシップが欠如しているというネガティブなニュアンスが付き纏うが、彼女らが目指しているのは「ただ動くコード」を大量生産することではなく、極めて高品質なソフトウェアをスケーラブルに生み出すことだからだ。</p>
+<p>この厨房の比喩は、エージェントとの協業プロセスを見事に言い表している。我々がAIを使い始めた当初は、いわば「一人の家庭料理人（Home Cook）」である。野菜を切り、火加減を見ながら、後片付けまで全て自分で行う。そこへ突如として多数のAIエージェント（見知らぬ手伝い）が厨房に入ってきたらどうなるか。道具の場所も手順も共有されていない状況では、単なる混乱しか生まれない。</p>
+<p>だからこそ「Trust Ladder」という概念が重要になる。poteto氏自身も、当初は1つのエージェントをマイクロマネジメントすることに膨大な時間を費やし、自分がAIとChrome DevToolsの間に挟まる「Meat Proxy（肉でできた中継機）」になっていることに絶望したという。そこから彼女は、自らのワークフローを抽出し、エージェントにスキルとして授けるプロセスを開始した。シェフが自ら全ての料理を作るのではなく、Sous-Chef（副料理長）たちにタスクを委譲し、厨房全体を管理するExecutive Chefへと自身のロールを昇華させていったのである。</p>
+<p>ここで興味深いのは、AIが進化すれば人間のドメイン知識は不要になるという世間の凡庸な予測を、彼女らが真っ向から否定している点だ。AIモデル（Opus 5.5や最新のFrontier Models）の推論能力が劇的に向上した現在、真のボトルネックはAIの知能ではなく「人間の意図（Intent）やビジョンをいかに正確に言語化し、エージェントに転送できるか」へと移行している。深いドメイン知識を持つ者だけが、解像度の高い指示を出し、出力されたものの真贋を見極めることができる。</p>
+</section>
+<section id="verificationエージェントに目と手を与える" class="level2">
+<h2 class="anchored" data-anchor-id="verificationエージェントに目と手を与える">Verification：エージェントに「目」と「手」を与える</h2>
+<p>AI開発において最も重要なスキルは何かと問われれば、poteto氏は迷わず「Verification（検証）」を挙げる。</p>
+<p>どんなに優秀なLLMであっても、最終的な成果物を見る「目」と、コードを実行する「手」を持たなければ、ループは回らない。出力されたコードが実際に動くかどうかを人間がいちいちブラウザで確認し、エラーログをコピペしてAIに戻しているうちは、スケーラビリティなど夢のまた夢である。</p>
+<p>poteto氏が構築したVerificationプロセスは、エージェント自身にPlaywrightやChrome DevToolsのプロトコルを操作させ、実際にアプリケーションを立ち上げ、人間のようにクリックし、パフォーマンスのトレースやヒープスナップショットを取得させるというものだ。これにより、エージェントは自らの成果物を自己評価し、自律的に改善を繰り返す（Hill Climbing）ことが可能になる。</p>
+<p>ここで彼女が実践している特筆すべきアプローチが、「決定論的（Deterministic）な処理の切り出し」である。</p>
+<blockquote class="blockquote">
+<p><strong>AIエージェントの非決定性と環境の決定性</strong> AIの本質的な価値は、文脈を理解し判断を下す非決定的な推論能力にある。一方で、抽象構文木 (AST) を解析してコードを変換するCode Modや、特定のテストスクリプトを走らせるといった作業は、毎回AIに考えさせる必要のない決定論的なタスクだ。poteto氏はこれらの機械的な処理をCLIツールとして抽出し、スキルの内部に隠蔽している。これによりContext windowの浪費を防ぎ、エージェントには純粋な「判断」のみにリソースを割かせているのである。</p>
+</blockquote>
+</section>
+<section id="environment-as-a-constrainttypescript的環境構築論" class="level2">
+<h2 class="anchored" data-anchor-id="environment-as-a-constrainttypescript的環境構築論">Environment as a Constraint：TypeScript的環境構築論</h2>
+<p>2,500ものPRを捌く基盤として欠かせないのが、エージェントが活動する「環境（Environment）」の構築である。</p>
+<p>優れたCodebaseとは何か。それは「破壊することなく、容易に変更を加えられるCodebase」である。poteto氏もMatt Pocock氏もTypeScriptの深い知見を持つエンジニアだが、彼女らの環境設計論はTypeScriptのType Narrowing（型の絞り込み）の思想に酷似している。広大な可能性（Any）の中から、ガードレールと制約を設けることで、不正な状態を物理的に表現できなくするアプローチだ。</p>
+<p>彼女らの内部フレームワーク（Duneと呼ばれるElectronアプリ用の内部Next.js的フレームワーク）は、極めて厳格なLintルールと規約（Convention）で縛られている。「機能を追加するならこのディレクトリに配置するしかない」というレベルでルートが限定されており、エージェントが「悪いコード」を書くこと自体が困難なように設計されている。</p>
+<p>エージェントがミスを犯したとき、三流のエンジニアはプロンプトをいじってその場しのぎの修正を行う。しかし一流のエンジニアは、そのミスを観察し、「なぜこの環境はそのミスを許容してしまったのか」を問い、新たなLintルールや規約としてCodebaseそのものに制約（Constraint）を埋め込む。エージェントの記憶力やシステムプロンプトの長さに依存するのではなく、環境そのものにルールを語らせるのだ。</p>
+</section>
+<section id="outer-loopとinner-loopの自動化による異次元のスケール" class="level2">
+<h2 class="anchored" data-anchor-id="outer-loopとinner-loopの自動化による異次元のスケール">Outer LoopとInner Loopの自動化による異次元のスケール</h2>
+<p>では、具体的にどのようにして月間2,500件ものPRを生み出しているのか。当然ながら、人間が手動で2,500回のチャットセッションを立ち上げているわけではない。ここには2つのループの結合が存在する。</p>
+<p>1つ目は「Outer Loop」だ。Slack、X、Linear、メールといった外部システムから飛び込んでくるバグレポートや機能要望などのコンテキストを収集するループである。poteto氏はGrok Botなどを用い、特定のSlackチャンネルを監視させ、バグ報告が上がるたびに自動的にトリガーを引く仕組みを構築している。</p>
+<p>2つ目は「Inner Loop」である。これはCursor Projects（クラウド上で稼働するCoordinatorエージェント）が担う。Outer Loopから「デスクトップアプリのパフォーマンス低下に関する30件のバグレポート」というコンテキストが投げ込まれると、Chief of Staff（参謀）として機能するCoordinatorエージェントがそれらを分析する。そして、個別のタスクに分割し、それぞれにSub-Agentをスポーン（生成）させて実際の修正作業に当たらせるのだ。</p>
+<p>人間が各エージェントのMeat Proxyとしてコンテキストを運搬するのではなく、エージェント自身がSlackを購読し、ユーザーのバグ報告を読み、自ら環境を立ち上げてバグを再現（Verification）し、修正コードを書く。このエンドツーエンドの自律性こそが、桁違いの生産性の正体である。</p>
+</section>
+<section id="dark-factoryとサンプリングの哲学" class="level2">
+<h2 class="anchored" data-anchor-id="dark-factoryとサンプリングの哲学">Dark Factoryとサンプリングの哲学</h2>
+<p>この極限の自動化が行き着く先が「Dark Factory」である。夜、poteto氏が眠りについた後も、10体以上のChief of Staffエージェントたちが24時間体制で稼働し、Verifierエージェントと協力してファジング（Fuzzing）テストを行い、問題を自己解決し、翌朝には自らPRをマージしているという。</p>
+<p>「2,500件のPRをどうやってレビューしているのか？」という当然の疑問に対する彼女の答えは、「全件レビューはしない。サンプリングする」である。</p>
+<p>工場の品質管理責任者と同じように、マージされた後のコミット履歴を眺め、ランダムに成果物を抽出してコードの品質を検証する。もしそこで特定のAIが同じようなショートカットやバッドパターンを用いているのを発見したら、個別のPRを修正するのではなく、前述した「環境の改善（Lintルールの追加、スキルの調整）」にリソースを投じるのだ。</p>
+<p>このアプローチは、ソフトウェア工学のように「プログラム的に検証可能（Verifiable）」なドメインだからこそ成立する力技とも言える。データ欠損を引き起こすような不可逆な変更（One-way doors）が多い金融や医療のシステムにおいて、直ちに同じことができるわけではない。しかし、<a href="https://bend-lang.com/">Bend</a>のような証明（Proofs）とプログラミングを統合する新たなパラダイムが普及すれば、コンパイルが通ること＝数学的に正しいことが証明されたことと同義になり、より多くのドメインで自動マージが許容される未来が来るだろう。</p>
+</section>
+<section id="スキルとはワークフローのエンコードである" class="level2">
+<h2 class="anchored" data-anchor-id="スキルとはワークフローのエンコードである">スキルとはワークフローのエンコードである</h2>
+<p>最後に、彼女らが提供している<a href="https://github.com/cursor/plugins/tree/main/pstack">pstack</a>やgrill-meといったプロンプトフレームワークの扱い方について触れておく。</p>
+<p>巷には「どのプロンプトが最強か」といった不毛な議論が溢れているが、スキルというものの本質はただのMarkdownで記述された英語テキストであり、魔法ではない。それは彼女らが過去のエージェントとのチャット履歴（Transcript）から、人間が介入せざるを得なかったポイントを抽出し、自らの思考プロセスとワークフローを言語化（エンコード）した結果に過ぎない。</p>
+<p>彼女ら自身が推奨しているのは、誰かのスキルを盲信することではなく、自身の過去のチャット履歴をAIに分析させ、「自分がどのようなパターンで修正を指示しているか」をマイニングし、独自のカスタムスキルやLintルールを構築することだ。最新のモデルになればなるほど、具体的なコマンドの手順（How）を指示する必要は薄れ、純粋なプロセスの流れ（Workflow）だけを記述すれば済むようになる。</p>
+<p>AIへの依存度を高めることは、決して人間のエンジニアリング能力の放棄を意味しない。むしろ、自身が持つ最高のワークフローを言語化し、それに沿って稼働する強固な環境を設計するという、一段上のメタ・エンジニアリングが求められている。暗闇の工場（Dark Factory）で高品質なプロダクトを生み出し続けるためには、その工場を設計し、刃を研ぎ澄ますアーキテクトの存在が必要不可欠なのだ。我々は今、コードを書く仕事から、コードを書く環境を設計する仕事へと、歴史的なパラダイムシフトの只中にいる。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
