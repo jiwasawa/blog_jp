@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.19</generator>
-<lastBuildDate>Tue, 13 Oct 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 26 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Transformerのpositional encoding：群論と線形代数からの数学的探求</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/</link>
+  <description><![CDATA[ Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Transformers</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/</guid>
+  <pubDate>Mon, 26 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Richard Ho: OpenAIのハードウェア内製化戦略と逆張りの美学</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -122,17 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/</guid>
   <pubDate>Sat, 12 Sep 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/202609111045.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Anthropic Threat Intelligence Report を読む</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/</link>
-  <description><![CDATA[ Anthropicの2026年脅威レポートは、AIがサイバー攻撃、兵器開発、情報工作を自律的に指揮する「オーケストレーター」へと進化し、高度な攻撃能力の民主化やIllicit Distillationといった新たな脅威ランドスケープを描き出している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/</guid>
-  <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-threat-report/202609111038.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

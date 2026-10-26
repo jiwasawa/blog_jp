@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。">
+
+<title>Transformerのpositional encoding：群論と線形代数からの数学的探求</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-12a87ce4a3db8ae78ad34dc8821cdee3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Transformerのpositional encoding：群論と線形代数からの数学的探求 – miscellaneous notes">
+<meta property="og:description" content="Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Transformerのpositional encoding：群論と線形代数からの数学的探求 – miscellaneous notes">
+<meta name="twitter:description" content="Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Transformerのpositional encoding：群論と線形代数からの数学的探求</h1>
+                  <div>
+        <div class="description">
+          Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Transformers</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年10月26日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>現代の自然言語処理において中核的な役割を果たすLarge Language Model (LLM) は、そのほとんどがTransformerアーキテクチャに基づいている。Transformerの心臓部であるAttention機構は、系列データ内の要素同士の関係性を計算する強力な仕組みだが、純粋なAttentionそれ自体には「要素の位置（順序）」という概念が存在しない。この問題を解決し、モデルに時間の流れや順序を理解させるためのモデリング上の決定が「Positional Encoding」である。</p>
+<p>最近、Jane Streetの研究者であるAlok Puranikが執筆した<a href="https://blog.janestreet.com/using-group-theory-to-explore-positional-encodings-attention/">ブログ記事</a>、および数学系YouTuberである3Blue1BrownのGrant Sandersonとの<a href="https://youtu.be/k86eUj4hgdc?si=JpT51hcoXrDwW8Mx">対談動画</a>において、このpositional encodingの設計空間を「群論（Group Theory）」と「線形代数（Linear Algebra）」の視点から完全に網羅しようとする非常に興味深い数学的探求が公開された。</p>
+<p>本記事では、彼らの議論に基づき、positional encodingという工学的な課題がいかにして純粋数学の美しい構造（行列表現、指数写像、対角化）に帰着するのか、そしてRoPEやALiBiといった既存の有名な手法がその理論的枠組みの中にどのように位置付けられるのかを深く解説する。</p>
+<section id="positional-encodingの定式化と基本要件" class="level2">
+<h2 class="anchored" data-anchor-id="positional-encodingの定式化と基本要件">Positional encodingの定式化と基本要件</h2>
+<p>まず、Attentionにおける内積計算を数学的に定式化する。ある時刻 <span class="math inline">\(t\)</span> におけるクエリベクトルを <span class="math inline">\(q(t)\)</span>、時刻 <span class="math inline">\(s\)</span> におけるキーベクトルを <span class="math inline">\(k(s)\)</span> とする。ここで時間は連続値を取る関数として扱う（これは物理的な時系列データや、Mamba系列などの連続的な状態空間モデルへの適用も視野に入れた一般的なアプローチである）。</p>
+<p>位置情報を持たない素のAttentionスコアは、単なる内積 <span class="math inline">\(q(t)^\top k(s)\)</span> である。ここに時間依存性を導入するため、クエリとキーをそれぞれ明示的に時間に依存する関数 <span class="math inline">\(F\)</span> と <span class="math inline">\(G\)</span> を用いて変換する。</p>
+<p><span class="math display">\[\tilde{q}(t) = F(t)q(t), \quad \tilde{k}(s) = G(s)k(s)\]</span></p>
+<p>この変換後のベクトル同士の内積を新たなAttentionスコアとする。ここで、理論を構築するために以下の妥当な数学的要件（仮定）を導入する。</p>
+<ol type="1">
+<li><strong>線形性（Linearity）：</strong> <span class="math inline">\(F(t)\)</span> と <span class="math inline">\(G(s)\)</span> は線形変換（すなわち正方行列）であるとする。非線形な変換も考えられるが、実用上の多くの手法は線形変換の範疇に収まる。</li>
+<li><strong>並進不変性（Translation Invariance）：</strong> positional encodingの効果は、絶対的な時刻 <span class="math inline">\(t, s\)</span> ではなく、その「相対的な時間差 <span class="math inline">\(t-s\)</span>」にのみ依存すべきである。</li>
+<li><strong>初期条件（Initial Condition）：</strong> 時刻が同一（<span class="math inline">\(t=s\)</span>）の場合、位置エンコーディングによるペナルティや変換は不要であり、元の内積と一致するべきである。</li>
+</ol>
+<p>これらの要件を数式に落とし込むと、新しいAttentionスコアは以下のようになる。</p>
+<p><span class="math display">\[\tilde{q}(t)^\top \tilde{k}(s) = q(t)^\top F(t)^\top G(s) k(s)\]</span></p>
+<p>並進不変性の仮定から、この中央の行列積 <span class="math inline">\(F(t)^\top G(s)\)</span> は時間差 <span class="math inline">\(t-s\)</span> のみに依存する。そこで、新しい行列値関数 <span class="math inline">\(A(t-s) = F(t)^\top G(s)\)</span> を定義する。初期条件の仮定から <span class="math inline">\(A(0) = \mathbf{I}\)</span>（単位行列）となる。</p>
+<p>この行列 <span class="math inline">\(A\)</span> は、過去の時刻 <span class="math inline">\(s\)</span> にあるキーを、現在の時刻 <span class="math inline">\(t\)</span> のクエリと比較できるように「時間的に前進させる」働きを持つと解釈できる。この解釈と数学的制約を組み合わせると、極めて重要な関係式が導かれる。</p>
+<p><span class="math display">\[A(s+t) = A(s)A(t)\]</span></p>
+<p>この方程式は、引数の「和」が行列の「積」に変換されることを示している。群論の観点から見れば、これは実数の加法群から一般線形群への準同型写像、すなわち「1パラメータ群（One-parameter group）」の行列表現に他ならない。</p>
+</section>
+<section id="連続表現と行列指数関数" class="level2">
+<h2 class="anchored" data-anchor-id="連続表現と行列指数関数">連続表現と行列指数関数</h2>
+<p>関数 <span class="math inline">\(A(t)\)</span> が <span class="math inline">\(t\)</span> について微分可能であると仮定すると、上記の関数方程式の解はただ一つの形態に帰着する。すなわち、ある生成行列（Generator Matrix） <span class="math inline">\(X\)</span> が存在し、時間発展は行列指数関数として記述される。</p>
+<p><span class="math display">\[A(t) = e^{tX}\]</span></p>
+<p>この結果は極めて強力である。なぜなら、無数に存在すると思われたpositional encodingの設計空間が、単一の生成行列 <span class="math inline">\(X\)</span> をどのように選択するか、という線形代数の問題に完全に還元されたからである。</p>
+<p>ここからは、行列 <span class="math inline">\(X\)</span> の性質（対角化可能か否か）によって、どのようなpositional encodingが生み出されるのかを分類していく。</p>
+</section>
+<section id="対角化可能な生成行列減衰と回転" class="level2">
+<h2 class="anchored" data-anchor-id="対角化可能な生成行列減衰と回転">対角化可能な生成行列：減衰と回転</h2>
+<p>行列 <span class="math inline">\(X\)</span> が複素数体上で対角化可能である場合、ベクトル空間は互いに独立した1次元または2次元の部分空間（直和）に分解される。これにより、各成分の振る舞いを個別に分析できる。</p>
+<section id="次元部分空間実数固有値exponential-decay" class="level3">
+<h3 class="anchored" data-anchor-id="次元部分空間実数固有値exponential-decay">1次元部分空間：実数固有値（Exponential Decay）</h3>
+<p><span class="math inline">\(X\)</span> が実数の固有値 <span class="math inline">\(\lambda\)</span> を持つ場合、その部分空間における行列指数関数の作用は単なるスカラーの指数関数 <span class="math inline">\(e^{\lambda t}\)</span> となる。</p>
+<ul>
+<li><span class="math inline">\(\lambda &gt; 0\)</span> の場合：時間差が広がるほどスコアが指数関数的に爆発する。これはAttentionとして非現実的である。</li>
+<li><span class="math inline">\(\lambda = 0\)</span> の場合：時間依存性が消失する（NoPE: No Positional Encodingに相当）。</li>
+<li><span class="math inline">\(\lambda &lt; 0\)</span> の場合：時間差が広がるにつれて影響力が指数関数的に減衰する。</li>
+</ul>
+<p>この <span class="math inline">\(\lambda &lt; 0\)</span> のケースは、実際にLinear Attentionの亜種や、RetNet、Mamba-3といった最新のアーキテクチャにおけるpositional encodingとして実用化されている。遠い過去のトークンの影響を指数関数的に忘却させるという、直感的で理にかなった振る舞いである。</p>
+</section>
+<section id="次元部分空間複素数固有値rotation" class="level3">
+<h3 class="anchored" data-anchor-id="次元部分空間複素数固有値rotation">2次元部分空間：複素数固有値（Rotation）</h3>
+<p>行列 <span class="math inline">\(X\)</span> が共役複素数の固有値ペア <span class="math inline">\(a \pm bi\)</span> を持つ場合（実空間での表現を保つため、<span class="math inline">\(X\)</span> を実行列と仮定すると複素固有値は必ずペアで現れる）、2次元の実部分空間において <span class="math inline">\(X\)</span> は回転とスケール変化をもたらす。</p>
+<p>指数関数的爆発を防ぐために実部を <span class="math inline">\(a=0\)</span> と設定すると、純虚数 <span class="math inline">\(bi\)</span> のみが残る。このとき、指数写像 <span class="math inline">\(e^{tX}\)</span> は、周波数 <span class="math inline">\(b\)</span> の回転行列 <span class="math inline">\(R(bt)\)</span> に一致する。</p>
+<p><span class="math display">\[
+R(bt) = \begin{pmatrix} \cos(bt) &amp; -\sin(bt) \\ \sin(bt) &amp; \cos(bt) \end{pmatrix}
+\]</span></p>
+<p>これはまさに、現在の大規模言語モデル（LLaMAなど）で事実上の標準となっている<strong>RoPE（Rotary Positional Embeddings）</strong>の数学的本質である。RoPEでは、ベクトルを2次元のペアに分割し、それぞれに異なる周波数（<span class="math inline">\(b\)</span> の値に相当）の回転を適用する。高い周波数は直近の細かな相対位置を、低い周波数は遠く離れたマクロな相対位置を捉えるという役割分担がなされている。</p>
+</section>
+</section>
+<section id="対角化不可能な行列多項式成長とalibiの再発見" class="level2">
+<h2 class="anchored" data-anchor-id="対角化不可能な行列多項式成長とalibiの再発見">対角化不可能な行列：多項式成長とALiBiの再発見</h2>
+<p>ここまでの分析で、行列 <span class="math inline">\(X\)</span> が対角化可能な場合、positional encodingの振る舞いは「指数関数的な減衰」か「回転」のいずれか（あるいはその組み合わせ）に限定されることが判明した。</p>
+<p>では、行列 <span class="math inline">\(X\)</span> が対角化不可能な場合（Defective Matrix）はどうなるだろうか？ 線形代数の教えるところによれば、このような行列はジョルダン標準形（Jordan Normal Form）へと変換され、ジョルダン細胞（Jordan Blocks）を持つ。</p>
+<p>最も単純な <span class="math inline">\(2 \times 2\)</span> のジョルダン細胞の例を考える。 <span class="math display">\[
+X = \begin{pmatrix} 0 &amp; 1 \\ 0 &amp; 0 \end{pmatrix}
+\]</span> この行列は <span class="math inline">\(X^2 = 0\)</span> という性質（冪零性）を持つ。したがって、テイラー展開による行列指数関数の計算は2次以降の項が全て消滅し、以下のようになる。</p>
+<p><span class="math display">\[
+e^{tX} = \mathbf{I} + tX = \begin{pmatrix} 1 &amp; t \\ 0 &amp; 1 \end{pmatrix}
+\]</span></p>
+<p>これをベクトルに適用すると、要素に対して時間 <span class="math inline">\(t\)</span> に比例する<strong>線形（多項式）の成長</strong>がもたらされる。物理学のアナロジーで言えば、摩擦のない空間を等速直線運動するホッケーパックの力学系に等しい。</p>
+<p>一見すると、Attentionスコアにおいて線形に成長する項など役に立たない（むしろ有害である）ように思える。Alok Puranik自身も当初は「実用性のないコーナーケース」だと考えていた。</p>
+<p>しかし、Stefan Gligaからの指摘（およびZhang et al.&nbsp;の論文『GRAPE』における独立した発見）により、この対角化不可能な行列が、実は<strong>ALiBi（Attention with Linear Biases）</strong>という強力な既存手法を包含していることが明らかになった。</p>
+<p>ALiBiは、クエリとキーのベクトル自体を変換するのではなく、内積を取った後のスコアに対して、距離に比例するペナルティ <span class="math inline">\(-m(t-s)\)</span> を直接引き算する手法である。 <span class="math display">\[\text{Score} = q^\top k - m(t-s)\]</span></p>
+<p>ベクトル変換の枠組み（<span class="math inline">\(F(t)^\top G(s)\)</span>）から外れているように見えるALiBiだが、クエリ <span class="math inline">\(q\)</span> とキー <span class="math inline">\(k\)</span> のベクトル空間の末尾に、固定の定数次元を人工的に追加することで、この枠組みに収めることができる。</p>
+<p>具体的には、クエリを <span class="math inline">\(\hat{q} = [q^\top, -m, 1]^\top\)</span>、キーを <span class="math inline">\(\hat{k} = [k^\top, 1, 0]^\top\)</span> と拡張し、そこに前述の対角化不可能な行列（ジョルダン細胞）ベースの生成行列を適用すると、内積の結果として正確に元の <span class="math inline">\(q^\top k\)</span> から <span class="math inline">\(m(t-s)\)</span> が引かれた値が算出されるのである。</p>
+<p>この事実は、ALiBiのように一見アドホックに見えるpositional encoding手法であっても、背後にある抽象的な数学的構造（1パラメータ群と対角化不可能行列）によって完全に説明可能であることを示している。</p>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>本稿では、Transformerにおけるpositional encodingを、群論と線形代数という純粋数学のレンズを通して解き明かした。</p>
+<ul>
+<li><strong>基本原理：</strong> positional encodingに線形性と並進不変性を求めると、その作用は行列指数関数 <span class="math inline">\(e^{tX}\)</span> を用いた1パラメータ群に帰着する。</li>
+<li><strong>対角化可能行列：</strong> 固有値の実部からは「指数関数的減衰（RetNet等）」が、虚部からは「回転（RoPE）」が導出される。</li>
+<li><strong>対角化不可能行列：</strong> ジョルダン細胞による多項式的な振る舞いは、一見無意味に見えて「距離に比例するペナルティ（ALiBi）」という形で実用化されている。</li>
+</ul>
+<p>Alok PuranikとGrant Sandersonの対話が示唆しているのは、「我々が直感や実験によって辿り着いたAIのアーキテクチャ設計（RoPEやALiBi）は、実は数学が許容する限られた構造空間を、無意識のうちに網羅的に探索し尽くした結果に過ぎないのではないか」という事実である。</p>
+<p>ディープラーニングの世界はしばしば「錬金術」と揶揄されるが、その奥底には極めて厳密で美しい数学的必然性が横たわっている。今回のpositional encodingに関する発見は、理論的探求がブラックボックス化されたモデルの振る舞いを解明するための強力な武器になることを如実に示している。</p>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+<ol type="1">
+<li>Puranik, Alok. (2026). “<a href="https://blog.janestreet.com/using-group-theory-to-explore-positional-encodings-attention/">Using group theory to explore the space of positional encodings for attention</a>”. Jane Street Blog.</li>
+<li>Sanderson, Grant (3Blue1Brown) &amp; Puranik, Alok. “<a href="https://youtu.be/k86eUj4hgdc?si=JpT51hcoXrDwW8Mx">Exploring Positional Encodings in Transformers with Group Theory</a>”.</li>
+<li>Su, Jianlin, et al.&nbsp;“RoFormer: Enhanced transformer with rotary position embedding.” arXiv preprint arXiv:2104.09864 (2021). (RoPE)</li>
+<li>Press, Ofir, et al.&nbsp;“Train short, test long: Attention with linear biases enables input length extrapolation.” ICLR 2022. (ALiBi)</li>
+<li>Sun, Yutao, et al.&nbsp;“Retentive Network: A Successor to Transformer for Large Language Models.” arXiv preprint arXiv:2307.08621 (2023). (RetNet)</li>
+<li>Zhang, Yifan, et al.&nbsp;“Group Representational Positional Encoding.” arXiv preprint arXiv:2512.07805. (GRAPE)</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
