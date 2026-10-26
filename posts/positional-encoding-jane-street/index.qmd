@@ -1,0 +1,126 @@
+---
+title: "Transformerのpositional encoding：群論と線形代数からの数学的探求"
+description: "Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。"
+author: "Junichiro Iwasawa"
+date: "2026-10-26"
+categories: [LLM, AI, Transformers]
+image: 202610261955.jpg
+---
+
+現代の自然言語処理において中核的な役割を果たすLarge Language Model (LLM) は、そのほとんどがTransformerアーキテクチャに基づいている。Transformerの心臓部であるAttention機構は、系列データ内の要素同士の関係性を計算する強力な仕組みだが、純粋なAttentionそれ自体には「要素の位置（順序）」という概念が存在しない。この問題を解決し、モデルに時間の流れや順序を理解させるためのモデリング上の決定が「Positional Encoding」である。
+
+最近、Jane Streetの研究者であるAlok Puranikが執筆した[ブログ記事](https://blog.janestreet.com/using-group-theory-to-explore-positional-encodings-attention/)、および数学系YouTuberである3Blue1BrownのGrant Sandersonとの[対談動画](https://youtu.be/k86eUj4hgdc?si=JpT51hcoXrDwW8Mx)において、このpositional encodingの設計空間を「群論（Group Theory）」と「線形代数（Linear Algebra）」の視点から完全に網羅しようとする非常に興味深い数学的探求が公開された。
+
+本記事では、彼らの議論に基づき、positional encodingという工学的な課題がいかにして純粋数学の美しい構造（行列表現、指数写像、対角化）に帰着するのか、そしてRoPEやALiBiといった既存の有名な手法がその理論的枠組みの中にどのように位置付けられるのかを深く解説する。
+
+## Positional encodingの定式化と基本要件
+
+まず、Attentionにおける内積計算を数学的に定式化する。ある時刻 $t$ におけるクエリベクトルを $q(t)$、時刻 $s$ におけるキーベクトルを $k(s)$ とする。ここで時間は連続値を取る関数として扱う（これは物理的な時系列データや、Mamba系列などの連続的な状態空間モデルへの適用も視野に入れた一般的なアプローチである）。
+
+位置情報を持たない素のAttentionスコアは、単なる内積 $q(t)^\top k(s)$ である。ここに時間依存性を導入するため、クエリとキーをそれぞれ明示的に時間に依存する関数 $F$ と $G$ を用いて変換する。
+
+$$\tilde{q}(t) = F(t)q(t), \quad \tilde{k}(s) = G(s)k(s)$$
+
+この変換後のベクトル同士の内積を新たなAttentionスコアとする。ここで、理論を構築するために以下の妥当な数学的要件（仮定）を導入する。
+
+1.  **線形性（Linearity）：** $F(t)$ と $G(s)$ は線形変換（すなわち正方行列）であるとする。非線形な変換も考えられるが、実用上の多くの手法は線形変換の範疇に収まる。
+2.  **並進不変性（Translation Invariance）：** positional encodingの効果は、絶対的な時刻 $t, s$ ではなく、その「相対的な時間差 $t-s$」にのみ依存すべきである。
+3.  **初期条件（Initial Condition）：** 時刻が同一（$t=s$）の場合、位置エンコーディングによるペナルティや変換は不要であり、元の内積と一致するべきである。
+
+これらの要件を数式に落とし込むと、新しいAttentionスコアは以下のようになる。
+
+$$\tilde{q}(t)^\top \tilde{k}(s) = q(t)^\top F(t)^\top G(s) k(s)$$
+
+並進不変性の仮定から、この中央の行列積 $F(t)^\top G(s)$ は時間差 $t-s$ のみに依存する。そこで、新しい行列値関数 $A(t-s) = F(t)^\top G(s)$ を定義する。初期条件の仮定から $A(0) = \mathbf{I}$（単位行列）となる。
+
+この行列 $A$ は、過去の時刻 $s$ にあるキーを、現在の時刻 $t$ のクエリと比較できるように「時間的に前進させる」働きを持つと解釈できる。この解釈と数学的制約を組み合わせると、極めて重要な関係式が導かれる。
+
+$$A(s+t) = A(s)A(t)$$
+
+この方程式は、引数の「和」が行列の「積」に変換されることを示している。群論の観点から見れば、これは実数の加法群から一般線形群への準同型写像、すなわち「1パラメータ群（One-parameter group）」の行列表現に他ならない。
+
+## 連続表現と行列指数関数
+
+関数 $A(t)$ が $t$ について微分可能であると仮定すると、上記の関数方程式の解はただ一つの形態に帰着する。すなわち、ある生成行列（Generator Matrix） $X$ が存在し、時間発展は行列指数関数として記述される。
+
+$$A(t) = e^{tX}$$
+
+この結果は極めて強力である。なぜなら、無数に存在すると思われたpositional encodingの設計空間が、単一の生成行列 $X$ をどのように選択するか、という線形代数の問題に完全に還元されたからである。
+
+ここからは、行列 $X$ の性質（対角化可能か否か）によって、どのようなpositional encodingが生み出されるのかを分類していく。
+
+## 対角化可能な生成行列：減衰と回転
+
+行列 $X$ が複素数体上で対角化可能である場合、ベクトル空間は互いに独立した1次元または2次元の部分空間（直和）に分解される。これにより、各成分の振る舞いを個別に分析できる。
+
+### 1次元部分空間：実数固有値（Exponential Decay）
+$X$ が実数の固有値 $\lambda$ を持つ場合、その部分空間における行列指数関数の作用は単なるスカラーの指数関数 $e^{\lambda t}$ となる。
+
+*   $\lambda > 0$ の場合：時間差が広がるほどスコアが指数関数的に爆発する。これはAttentionとして非現実的である。
+*   $\lambda = 0$ の場合：時間依存性が消失する（NoPE: No Positional Encodingに相当）。
+*   $\lambda < 0$ の場合：時間差が広がるにつれて影響力が指数関数的に減衰する。
+
+この $\lambda < 0$ のケースは、実際にLinear Attentionの亜種や、RetNet、Mamba-3といった最新のアーキテクチャにおけるpositional encodingとして実用化されている。遠い過去のトークンの影響を指数関数的に忘却させるという、直感的で理にかなった振る舞いである。
+
+### 2次元部分空間：複素数固有値（Rotation）
+行列 $X$ が共役複素数の固有値ペア $a \pm bi$ を持つ場合（実空間での表現を保つため、$X$ を実行列と仮定すると複素固有値は必ずペアで現れる）、2次元の実部分空間において $X$ は回転とスケール変化をもたらす。
+
+指数関数的爆発を防ぐために実部を $a=0$ と設定すると、純虚数 $bi$ のみが残る。このとき、指数写像 $e^{tX}$ は、周波数 $b$ の回転行列 $R(bt)$ に一致する。
+
+$$
+R(bt) = \begin{pmatrix} \cos(bt) & -\sin(bt) \\ \sin(bt) & \cos(bt) \end{pmatrix}
+$$
+
+これはまさに、現在の大規模言語モデル（LLaMAなど）で事実上の標準となっている**RoPE（Rotary Positional Embeddings）**の数学的本質である。RoPEでは、ベクトルを2次元のペアに分割し、それぞれに異なる周波数（$b$ の値に相当）の回転を適用する。高い周波数は直近の細かな相対位置を、低い周波数は遠く離れたマクロな相対位置を捉えるという役割分担がなされている。
+
+## 対角化不可能な行列：多項式成長とALiBiの再発見
+
+ここまでの分析で、行列 $X$ が対角化可能な場合、positional encodingの振る舞いは「指数関数的な減衰」か「回転」のいずれか（あるいはその組み合わせ）に限定されることが判明した。
+
+では、行列 $X$ が対角化不可能な場合（Defective Matrix）はどうなるだろうか？ 線形代数の教えるところによれば、このような行列はジョルダン標準形（Jordan Normal Form）へと変換され、ジョルダン細胞（Jordan Blocks）を持つ。
+
+最も単純な $2 \times 2$ のジョルダン細胞の例を考える。
+$$
+X = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}
+$$
+この行列は $X^2 = 0$ という性質（冪零性）を持つ。したがって、テイラー展開による行列指数関数の計算は2次以降の項が全て消滅し、以下のようになる。
+
+$$
+e^{tX} = \mathbf{I} + tX = \begin{pmatrix} 1 & t \\ 0 & 1 \end{pmatrix}
+$$
+
+これをベクトルに適用すると、要素に対して時間 $t$ に比例する**線形（多項式）の成長**がもたらされる。物理学のアナロジーで言えば、摩擦のない空間を等速直線運動するホッケーパックの力学系に等しい。
+
+一見すると、Attentionスコアにおいて線形に成長する項など役に立たない（むしろ有害である）ように思える。Alok Puranik自身も当初は「実用性のないコーナーケース」だと考えていた。
+
+しかし、Stefan Gligaからの指摘（およびZhang et al. の論文『GRAPE』における独立した発見）により、この対角化不可能な行列が、実は**ALiBi（Attention with Linear Biases）**という強力な既存手法を包含していることが明らかになった。
+
+ALiBiは、クエリとキーのベクトル自体を変換するのではなく、内積を取った後のスコアに対して、距離に比例するペナルティ $-m(t-s)$ を直接引き算する手法である。
+$$\text{Score} = q^\top k - m(t-s)$$
+
+ベクトル変換の枠組み（$F(t)^\top G(s)$）から外れているように見えるALiBiだが、クエリ $q$ とキー $k$ のベクトル空間の末尾に、固定の定数次元を人工的に追加することで、この枠組みに収めることができる。
+
+具体的には、クエリを $\hat{q} = [q^\top, -m, 1]^\top$、キーを $\hat{k} = [k^\top, 1, 0]^\top$ と拡張し、そこに前述の対角化不可能な行列（ジョルダン細胞）ベースの生成行列を適用すると、内積の結果として正確に元の $q^\top k$ から $m(t-s)$ が引かれた値が算出されるのである。
+
+この事実は、ALiBiのように一見アドホックに見えるpositional encoding手法であっても、背後にある抽象的な数学的構造（1パラメータ群と対角化不可能行列）によって完全に説明可能であることを示している。
+
+## まとめ
+
+本稿では、Transformerにおけるpositional encodingを、群論と線形代数という純粋数学のレンズを通して解き明かした。
+
+*   **基本原理：** positional encodingに線形性と並進不変性を求めると、その作用は行列指数関数 $e^{tX}$ を用いた1パラメータ群に帰着する。
+*   **対角化可能行列：** 固有値の実部からは「指数関数的減衰（RetNet等）」が、虚部からは「回転（RoPE）」が導出される。
+*   **対角化不可能行列：** ジョルダン細胞による多項式的な振る舞いは、一見無意味に見えて「距離に比例するペナルティ（ALiBi）」という形で実用化されている。
+
+Alok PuranikとGrant Sandersonの対話が示唆しているのは、「我々が直感や実験によって辿り着いたAIのアーキテクチャ設計（RoPEやALiBi）は、実は数学が許容する限られた構造空間を、無意識のうちに網羅的に探索し尽くした結果に過ぎないのではないか」という事実である。
+
+ディープラーニングの世界はしばしば「錬金術」と揶揄されるが、その奥底には極めて厳密で美しい数学的必然性が横たわっている。今回のpositional encodingに関する発見は、理論的探求がブラックボックス化されたモデルの振る舞いを解明するための強力な武器になることを如実に示している。
+
+## 参考文献
+
+1. Puranik, Alok. (2026). "[Using group theory to explore the space of positional encodings for attention](https://blog.janestreet.com/using-group-theory-to-explore-positional-encodings-attention/)". Jane Street Blog.
+2. Sanderson, Grant (3Blue1Brown) & Puranik, Alok. "[Exploring Positional Encodings in Transformers with Group Theory](https://youtu.be/k86eUj4hgdc?si=JpT51hcoXrDwW8Mx)".
+3. Su, Jianlin, et al. "RoFormer: Enhanced transformer with rotary position embedding." arXiv preprint arXiv:2104.09864 (2021). (RoPE)
+4. Press, Ofir, et al. "Train short, test long: Attention with linear biases enables input length extrapolation." ICLR 2022. (ALiBi)
+5. Sun, Yutao, et al. "Retentive Network: A Successor to Transformer for Large Language Models." arXiv preprint arXiv:2307.08621 (2023). (RetNet)
+6. Zhang, Yifan, et al. "Group Representational Positional Encoding." arXiv preprint arXiv:2512.07805. (GRAPE)
