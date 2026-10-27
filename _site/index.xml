@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 25 Oct 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 26 Oct 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Kimi 3.1 Proの野心と、オープンモデル脅威論の現在地</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/</link>
+  <description><![CDATA[ Kimi 3.1 Proのベンチマーク評価の歪み、サイバーセキュリティにおけるオープンソースモデルの脅威論、そしてパーソナルAIエージェントの可能性とAnthropicの採用戦略まで、AI業界の現在地をInterconnectsの最新ポッドキャストを基に深掘りする。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/</guid>
+  <pubDate>Mon, 26 Oct 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/202610271019.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Transformerのpositional encoding：群論と線形代数からの数学的探求</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -18,7 +30,7 @@
   <description><![CDATA[ Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。 ]]></description>
   <category>LLM</category>
   <category>AI</category>
-  <category>Transformers</category>
+  <category>Transformer</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/</guid>
   <pubDate>Sun, 25 Oct 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg" medium="image" type="image/jpeg"/>
@@ -122,19 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/</guid>
   <pubDate>Mon, 28 Sep 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/202609291244.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>John Schulmanらの語るAGIへの短絡的熱狂とRecursive Self-Improvementの現実</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/</link>
-  <description><![CDATA[ AI研究者たちがAGIへの技術的ボトルネック、RSIの現実、そしてデータと環境の役割について深く議論し、10年以内のASI到来と人間の役割の変化を予測する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Dwarkesh Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/</guid>
-  <pubDate>Mon, 14 Sep 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/202609151037.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

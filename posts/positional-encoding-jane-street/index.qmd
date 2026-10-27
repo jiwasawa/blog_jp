@@ -3,7 +3,7 @@ title: "Transformerのpositional encoding：群論と線形代数からの数学
 description: "Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。"
 author: "Junichiro Iwasawa"
 date: "2026-10-26"
-categories: [LLM, AI, Transformers]
+categories: [LLM, AI, Transformer]
 image: 202610261955.jpg
 ---
 
