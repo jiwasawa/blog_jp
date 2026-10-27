@@ -24,6 +24,18 @@
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
+  <title>AI時代の新たな頂点捕食者：Agent Stateとセキュリティのパラダイムシフト</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/</link>
+  <description><![CDATA[ AI時代のサイバーセキュリティは、open-weightモデルによる攻撃者ピラミッドの平坦化と「agent state」の台頭により、防衛パラダイムの転換を迫られており、CrowdStrikeは「AIにはAIを」という「Safe Mind」構想で最先端のAI防衛を推進している。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/</guid>
+  <pubDate>Sun, 25 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/202610262131.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
   <title>Richard Ho: OpenAIのハードウェア内製化戦略と逆張りの美学</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
   <link>https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/</link>
@@ -123,17 +135,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/</guid>
   <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/dwarkesh-john-schulman-beren-charlie/202609151037.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>DeepSeek-V4.1-Flash技術解説：KV cache圧縮と推論効率の極限への挑戦</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/</link>
-  <description><![CDATA[ DeepSeek-V4.1-Flashは、KV cache圧縮とCEDアーキテクチャ、FP4量子化、SWA Bounded Replayなどの技術革新により、ロングコンテキスト処理における計算コストとメモリ使用量を劇的に削減し、AIエージェントの効率と性能を飛躍的に向上させたマルチモーダルMoEモデルである。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/</guid>
-  <pubDate>Sat, 12 Sep 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/deepseek-v4-1-flash/202609111045.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
