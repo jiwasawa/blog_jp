@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="AnthropicのS-1開示は、驚異的な成長率、高い利益率、そして約5,000億ドルに及ぶコンピュート・コミットメントが示すAIインフラ市場の力学と、OpenAIへの影響を詳細に分析する。">
+
+<title>Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-12a87ce4a3db8ae78ad34dc8821cdee3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱 – miscellaneous notes">
+<meta property="og:description" content="AnthropicのS-1開示は、驚異的な成長率、高い利益率、そして約5,000億ドルに及ぶコンピュート・コミットメントが示すAIインフラ市場の力学と、OpenAIへの影響を詳細に分析する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/202610280943.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱 – miscellaneous notes">
+<meta name="twitter:description" content="AnthropicのS-1開示は、驚異的な成長率、高い利益率、そして約5,000億ドルに及ぶコンピュート・コミットメントが示すAIインフラ市場の力学と、OpenAIへの影響を詳細に分析する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/202610280943.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱</h1>
+                  <div>
+        <div class="description">
+          AnthropicのS-1開示は、驚異的な成長率、高い利益率、そして約5,000億ドルに及ぶコンピュート・コミットメントが示すAIインフラ市場の力学と、OpenAIへの影響を詳細に分析する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">SemiAnalysis</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年10月28日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>Anthropicの<a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm">S-1</a>が遂に公開された。</p>
+<p>資本主義の歴史において、これほどまでに暴力的な成長曲線と巨額のコミットメントが交錯する目論見書がお目見えしたことがかつてあっただろうか。商業ローンチからわずか3年足らずで、2026年上半期の売上高は前年同期比1,300%増の162.8億ドルに達した。この異常なまでのトップライン成長もさることながら、インクリメンタルな粗利率は90%、Adjusted Operating Margin（調整後営業利益率）はすでに10%の黒字化を達成している。AIは金を燃やすだけのビジネスだという懐疑論者たちを、純粋な決算数値という鈍器で殴りつけるかのような内容である。</p>
+<p>このブログでも度々AIインフラ市場の過熱ぶりを指摘してきたが、AnthropicのS-1は単なる一企業の財務開示に留まらない。これはフロンティアモデルを巡る競争環境の劇的な変化、コンピュート効率の暴力、そしてかつての絶対王者であったOpenAIが直面する構造的苦境を浮き彫りにする一級品の一次資料である。今回は、一部のメディアが喧伝する「AIバブル崩壊」という無責任極まりない未来観測的与太話は無視し、彼らの驚異的な利益率、およそ半兆ドルに及ぶコンピュート・コミットメントの真の意図、そしてそれが示唆するOpenAI社の今後の事業戦略への影響に焦点を当てる。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="operations.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm#ica694c859b8e458dbf6a73f56dde9d42_1572">Anthropic S-1</a>より引用</figcaption>
+</figure>
+</div>
+<section id="コンピュート効率という名の暴力" class="level2">
+<h2 class="anchored" data-anchor-id="コンピュート効率という名の暴力">コンピュート効率という名の暴力</h2>
+<p>Anthropicのビジネスモデルを読み解く上で最も重要な指標は、彼ら自身が定義する「コンピュート効率（Compute Efficiency）」である。</p>
+<p>S-1の中に、彼らの自信を象徴する一文がある。「2026年6月30日に終了した3ヶ月間において、売上高が前年同期比で1,368%成長したのに対し、コンピュートおよびインフラストラクチャー費用は300%の増加に留まった」。つまり、支払うコストに対して生み出されるインテリジェンスと収益のレバレッジが、尋常ではないペースで効き始めているのだ。</p>
+<p>初期のGenerative AI市場においては、1ドルの売上を立てるために1.1ドルのインフラ費用を支払うような、重厚長大かつ赤字垂れ流しのビジネスモデルが横行していた。最大のベアケースは「LLM（Large Language Model）のAPI提供には粗利がない」というものだった。しかし、Anthropicが提示した事実は全く逆である。限界利益率は極めて高く、推論（Inference）は単体で十分に成立する素晴らしいビジネスモデルであることが証明された。</p>
+<p>さらに彼らは、単一のハードウェアベンダーに依存することを意図的に避けている。AWS Trainium、Google TPU、NVIDIA GPU、そしてAMD GPUという4つの主要なチップファミリーにまたがり、独自のオーケストレーション層を用いてワークロードを動的に割り当てている。ハードウェアの進化が著しい昨今、新しいシリコン（例えばGB300など）が登場した際に、それに最適化されたソフトウェアをいち早く書き上げ、マルチチップ環境で稼働させる能力において、彼らの右に出る者はいない。事実上、彼らはClaude自体をコードベースの改善に投下しており、直近3ヶ月間でエンジニア一人当たりのコードコントリビューション量は前年の45倍に跳ね上がり、社内コードの90%以上がClaudeによって書かれているという。この「Closing the loop（自らのAIで次世代のAIを作るループ）」こそが、彼らのソフトウェアエンジニアリングにおける最大のMoat（参入障壁）として機能している。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="margin.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm#ica694c859b8e458dbf6a73f56dde9d42_1572">Anthropic S-1</a>より引用</figcaption>
+</figure>
+</div>
+</section>
+<section id="半兆ドルのコミットメントとネオクラウドの台頭" class="level2">
+<h2 class="anchored" data-anchor-id="半兆ドルのコミットメントとネオクラウドの台頭">半兆ドルのコミットメントとネオクラウドの台頭</h2>
+<p>S-1が公開されるや否や、市場関係者の度肝を抜いたのが、その将来のコンピュート・コミットメントの額である。Googleに約1,145億ドル、Amazonに1,100億ドル、Microsoftに449億ドル、そしてSpaceXAIを中心とするネオクラウド群に1,200億ドル以上。合計するとおよそ5,000億ドル（半兆ドル）規模のインフラ調達契約を結んでいる。</p>
+<p>現在、世界のAIインフラ支出は2025年の3,180億ドルから2029年には1兆ドルを超えると予測されており、電力網への投資だけでも7,200億ドルが必要とされている。Anthropicはその需要の最も貪欲な消費者のトップに君臨している。</p>
+<p>しかし、数字の暴力性に目を奪われてはならない。この5,000億ドルのコミットメントは、決して彼らの首を絞めるものではない。その内実を見ると、AmazonやGoogleとの契約は、従来の巨大な長期的固定契約（例えばStargateプロジェクトのようなもの）に比べて柔軟に設計されている。さらに特筆すべきは、Elon Musk率いるSpaceXAIやLambda、Nscaleといったネオクラウド事業者との契約だ。</p>
+<p>SpaceXAIとの契約などは、オンデマンドに近い柔軟なキャンセル条項が含まれており、バランスシートを不必要に圧迫しない。これは非常にバランスシート効率（ないしはコミットメント効率）が良い。Anthropicは、需要が急増した際の一時的なショートタームのコンピュートをこれらのネオクラウドから調達しつつ、同時に「Anthropic Direct」として自らデータセンター容量を直接リースし、専用インフラを長期的かつ低コストで構築するハイブリッド戦略をとっている。</p>
+<p>ここでElon Muskの戦略的な動きも見え隠れする。彼はSpaceXの資本コストを下げるために、ネオクラウド市場で価格破壊を仕掛け、他のネオクラウド事業者の資金調達（デット）を干上がらせようとしているフシがある。Anthropicにとっては、この市場の歪みを利用して短期的かつ安価に計算資源を調達しつつ、自前のデータセンターが立ち上がるまでのトランジションを見事に乗り切る算段がついているということだ。</p>
+</section>
+<section id="顧客の集中度とエンタープライズ市場のまだ見ぬ広野" class="level2">
+<h2 class="anchored" data-anchor-id="顧客の集中度とエンタープライズ市場のまだ見ぬ広野">顧客の集中度とエンタープライズ市場のまだ見ぬ広野</h2>
+<p>急激なトップライン成長の裏で、顧客基盤の構造も非常に興味深い。S-1によれば、2026年上半期の売上のうち、上位5社で約25%を占めている。また、Amazon BedrockやGoogle Cloud Vertex AIといったCSP（Cloud Service Provider）マーケットプレイス経由の売上が約48%を占める。</p>
+<p>一見すると特定の大口顧客（推測するに、Jane Street等のクオンツファンド、Cursor等の開発ツール、あるいはMicrosoft等）への依存度が高いように見える。しかし、彼らのNet Revenue Retention（売上継続率）は約900%という、B2B SaaSの歴史上類を見ない数値を叩き出している。1年前に1ドルを使っていた顧客が、今は9ドルを使っている計算だ。</p>
+<p>そして忘れてはならないのは、Fortune 500企業のAI予算シェアはまだ0.1%にも満たないという事実である。現在のAnthropicのARR（Annual Recurring Revenue）は凄まじい規模に達しているが、それでもエンタープライズのIT予算全体から見れば、アスファルトを敷き詰める前の、駐車場の白線を引いている段階に過ぎない。Claude Codeのようなエージェンティックなプロダクトが投入され、トップ5%のヘビーユーザーは一人当たり年間18,000ドルを消費している一方で、一般のエンタープライズユーザーはまだ月額75ドル未満である。このギャップが埋まっていく過程において、Cohorts（顧客集団）の売上はさらに爆発的に伸びていく。</p>
+</section>
+<section id="openaiの憂鬱と二番手への転落リスク" class="level2">
+<h2 class="anchored" data-anchor-id="openaiの憂鬱と二番手への転落リスク">OpenAIの憂鬱と二番手への転落リスク</h2>
+<p>Anthropicがここまで完璧に近いS-1を提示したことで、最も頭を抱えているのは間違いなくOpenAIだろう。</p>
+<p>かつてAI業界の絶対王者であったOpenAIは、現在、極めて中途半端なポジショニングに陥りつつある。コンシューマー向けではGoogle（Gemini）やMetaとの直接対決を強いられ、エンタープライズ向けの最高峰の推論・コーディングタスクにおいてはAnthropicにシェアを奪われている。<a href="https://youtu.be/BKvPmNSmatM?si=qDSVYYjX6J7QlWYr">SemiAnalysisのpodcast</a>でも指摘されていた通り、AIの世界では「Best in breed（最高品質）」であることが何よりも重要であり、OpenAIのモデル（Astra等）が相対的に劣後し始めると、彼らは「Best in price（価格競争）」の泥沼で戦わざるを得なくなる。</p>
+<p>Anthropicの最新のOpus 5.5やFable 5.1といったモデルは、性能向上を果たしながらコストを40%削減するなど、圧倒的なコンピュート効率を背景に価格競争力とインテリジェンスの双方で市場をリードしている。OpenAIのARRは依然として巨大だが、その多くは月額20ドルのコンシューマー向けサブスクリプション（ChatGPT Plus等）に支えられている。無料ユーザーへの奉仕を含めると、インフラコストの重圧は相当なものだ。一方のAnthropicは、利益率の高いAPIベース・消費ベース（Pay-for-intelligence）の売上が80%を占めている。</p>
+<p>OpenAIが技術的優位性を失い、価格競争を強いられる「Number two」の地位に甘んじることになれば、半導体業界の歴史が示す通り、マージンの低下とシェアの縮小は免れない。エンタープライズ契約においてはOpenAIも反撃に出ているようだが、最新モデルへの移行スピードや、CSPを通じたロックインの強さを考慮すると、Anthropicの優位性はしばらく揺るがないだろう。</p>
+</section>
+<section id="pbcという特異なガバナンスと迎合しない姿勢" class="level2">
+<h2 class="anchored" data-anchor-id="pbcという特異なガバナンスと迎合しない姿勢">PBCという特異なガバナンスと、迎合しない姿勢</h2>
+<p>最後に、Anthropicの企業としての異質さについて触れておく。彼らは自らをPublic Benefit Corporation（PBC）として位置づけ、LTBT（Long-Term Benefit Trust）と呼ばれる独立した信託機関に取締役の過半数の選任権を持たせている。また、創業者たちが構成するFounder LLCは50.1%の議決権を握り続ける。</p>
+<p>これは何を意味するか。彼らは株主の金銭的利益と同等以上に、AIの安全性と人類の長期的利益（Company Purpose）を優先すると法的に宣言しているのだ。S-1の中で彼らは、サイバーセキュリティの脆弱性発見などの高度な能力を持つモデル（Mythosなど）について、商業的な機会を逃してでも、公開を遅らせたりアクセスを制限したりした過去の実績を堂々と記載している。</p>
+<p>さらに驚くべきは、市場からの短期的な期待に対する彼らのスタンスだ。「我々の製品や投資の決定は、短期的な財務結果を最大化するものではないかもしれない」と目論見書に明記し、過剰な期待を持たせない（Underpromise）姿勢を貫いている。ウォール街の常識からすれば狂気の沙汰だが、この「迎合しない姿勢」こそが、優秀なAIリサーチャーを惹きつけ、世界最高のタレント・デンシティ（人材密度）を維持する源泉となっている。</p>
+<p>総じて、AnthropicのS-1は、彼らが単なる技術的勝者であるだけでなく、AIインフラのサプライチェーン、エンタープライズの予算獲得、そして資本市場との向き合い方において、極めて高度な戦略的思考を持つ企業であることを証明した。OpenAIとの頂上決戦はまだ続くが、現状においてAnthropicがAI業界の主導権を握りつつあることは疑いようのない事実である。</p>
+<hr>
+<p><strong>参考リンク</strong>:</p>
+<ul>
+<li><p><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm">Anthropic S-1</a></p></li>
+<li><p><a href="https://youtu.be/BKvPmNSmatM?si=qDSVYYjX6J7QlWYr">SemiAnalysis Weekly (YouTube)</a></p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.10.19</generator>
-<lastBuildDate>Tue, 27 Oct 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 28 Oct 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/</link>
+  <description><![CDATA[ AnthropicのS-1開示は、驚異的な成長率、高い利益率、そして約5,000億ドルに及ぶコンピュート・コミットメントが示すAIインフラ市場の力学と、OpenAIへの影響を詳細に分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>SemiAnalysis</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/</guid>
+  <pubDate>Wed, 28 Oct 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/202610280943.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Kimi 3.1 Proの野心と、オープンモデル脅威論の現在地</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,19 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</guid>
   <pubDate>Thu, 01 Oct 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/202610011009.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>“単なるラッパー”の逆襲：OpenRouterとStripeが迎撃するAgentic Fraudの脅威</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/</link>
-  <description><![CDATA[ 「単なるラッパー」と見なされたOpenRouterが、Stripeによる巨額買収を経て、AIエコシステムのインフラとして「Agentic Fraud」という新たな脅威に立ち向かう背景と、その戦略的価値を解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/</guid>
-  <pubDate>Tue, 29 Sep 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/openrouter-stripe/202609291244.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
