@@ -9,8 +9,21 @@
 <link>https://jiwasawa.github.io/blog_jp/</link>
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
-<generator>quarto-1.10.19</generator>
-<lastBuildDate>Wed, 28 Oct 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.11.9</generator>
+<lastBuildDate>Tue, 03 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</link>
+  <description><![CDATA[ NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Unsupervised Learning Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</guid>
+  <pubDate>Tue, 03 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/nebius-danila/202611032206.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
+</item>
 <item>
   <title>Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -22,7 +35,7 @@
   <category>SemiAnalysis</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/</guid>
   <pubDate>Wed, 28 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/202610280943.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/202610280943.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>Kimi 3.1 Proの野心と、オープンモデル脅威論の現在地</title>
@@ -34,7 +47,7 @@
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/</guid>
   <pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/202610271019.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/202610271019.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>Transformerのpositional encoding：群論と線形代数からの数学的探求</title>
@@ -46,7 +59,7 @@
   <category>Transformer</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/</guid>
   <pubDate>Mon, 26 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>AI時代の新たな頂点捕食者：Agent Stateとセキュリティのパラダイムシフト</title>
@@ -58,7 +71,7 @@
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/</guid>
   <pubDate>Sun, 25 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/202610262131.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/202610262131.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>Richard Ho: OpenAIのハードウェア内製化戦略と逆張りの美学</title>
@@ -70,7 +83,7 @@
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/</guid>
   <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/202610131041.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/202610131041.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>Alex Zhang: RLMとHarnessの再定義</title>
@@ -83,7 +96,7 @@
   <category>Latent Space Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/</guid>
   <pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/202610131032.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/202610131032.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>pstack: 2,500のPRを量産する「暗闇の工場」の正体</title>
@@ -95,7 +108,7 @@
   <category>Agentic Coding</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/</guid>
   <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/202610042255.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/202610042255.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>ClusterMax 3.0が暴くNeoCloudの残酷な現実と、AI計算資源を巡る覇権闘争</title>
@@ -108,7 +121,7 @@
   <category>Latent Space Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/</guid>
   <pubDate>Mon, 05 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/202610041438.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/202610041438.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 <item>
   <title>Epoch AI: AI加速の深層と「蒸留」の代償</title>
@@ -120,20 +133,7 @@
   <category>Podcast</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/</guid>
   <pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/202610041431.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Claude Codeの進化とHarnessの脱構築</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</link>
-  <description><![CDATA[ AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</guid>
-  <pubDate>Thu, 01 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/202610011009.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/202610041431.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 </channel>
 </rss>
