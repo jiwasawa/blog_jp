@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。">
+
+<title>AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角 – miscellaneous notes">
+<meta property="og:description" content="NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/nebius-danila/202611032206.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角 – miscellaneous notes">
+<meta name="twitter:description" content="NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/nebius-danila/202611032206.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角</h1>
+                  <div>
+        <div class="description">
+          NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">Unsupervised Learning Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年11月3日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p><a href="https://youtu.be/qJkcjURcAe8?si=S6vlV6xKbtLhSsxO">Unsupervised Learningのpodcast</a>にNebiusのCTOであるDanila Shtan（Dima）氏が出演し、最前線のAI cloudインフラストラクチャにおける血みどろの現実を語った。</p>
+<p>AIインフラ界隈を少しでも観察している人間ならば、雨後の筍のように乱立するGPUホスティング業者を前に「どうせAWSかGCPが本気を出したら全員吹き飛ぶんでしょ」と冷笑した経験があるはずだ。資金力に物を言わせてNVIDIAのGPUを買い漁り、雑なbare metal環境を時間貸しするだけのいわゆる「neocloud」の群れ。彼らの多くが数年後には淘汰される運命にあることは想像に難くない。しかし、Nebiusが目指しているのはその次元ではない。Yandexのハードウェア運用経験を持つコアチームと、新たに構築された強大なソフトウェアチームを擁する彼らは、自らを単なるGPUプロバイダーではなく「AI cloud」と定義し、真っ向からハイパースケーラーの牙城を崩しにかかっている。</p>
+<p>本稿では、Dima氏のインサイトと最新のハードウェア動向を元に、なぜAWSやGCPといった巨人がこの市場を完全制覇できていないのか、そして現代のAIデータセンターにおける狂気じみたスケーリングの現実について考察する。</p>
+<section id="neocloudというレッテルへの嫌悪とソフトウェアファーストの真髄" class="level2">
+<h2 class="anchored" data-anchor-id="neocloudというレッテルへの嫌悪とソフトウェアファーストの真髄">「Neocloud」というレッテルへの嫌悪と、ソフトウェアファーストの真髄</h2>
+<p>Dima氏を始めとするNebiusの経営陣は、「neocloud」と呼ばれることを親の仇のように嫌っている。初期こそ少数の特異なプレイヤーを指す言葉だったが、今やGPUを買ってきてネットワークに繋いだだけの有象無象（今や300〜500社とも言われる）を指すバズワードに成り下がったからだ。Nebiusの競争優位性、すなわちモート（moat）はハードウェアではなくソフトウェアにある。</p>
+<p>暗号資産（crypto）やエネルギー界隈から参入してきた多くのプレイヤーが「GPUを買って動かせば客は来る」というハードウェア起点の思想を持つのに対し、Nebiusは仮想化、ストレージ、ネットワークの分離とオーケストレーションをソフトウェアレベルで構築している。例えば2024年当時、ハードウェアの構築チームが約40〜50人だったのに対し、ソフトウェアエンジニアリング組織は既に200人を数えていたという事実が、彼らの「ソフトウェアファースト」な姿勢を如実に物語っている。</p>
+<p>単一のクラスターで何万基ものGPUを稼働させる超巨大なAIラボのワークロードと、30分だけ1基のGPUを借りたいエンドユーザーのセルフサービスを、全く同じプラットフォーム上でシームレスに提供すること。特定のハードウェア仕様に依存せず、普遍的なcloudプラットフォームとしての高いベースラインを担保することに、彼らの真髄がある。</p>
+</section>
+<section id="ハイパースケーラーのジレンマとgpu配分の悲劇" class="level2">
+<h2 class="anchored" data-anchor-id="ハイパースケーラーのジレンマとgpu配分の悲劇">ハイパースケーラーのジレンマとGPU配分の悲劇</h2>
+<p>ここで最大の疑問が生じる。なぜAWS、GCP、Azureといったハイパースケーラーは、このAI cloud市場の覇権を最初から握りきれなかったのか。</p>
+<p>答えは単純かつ残酷だ。NVIDIAのチップ供給量が絶対的に不足しているからである。仮にNVIDIAが現在の10倍のGPUを製造できていたなら、市場は全く異なる様相を呈していただろう。だが現実のチップ供給は限られており、ハイパースケーラーは常に「自社の内部利用（OpenAIやAnthropicなどのパートナー向けトレーニングや自社のAI研究開発）」と「外部市場へのパブリック提供」の間でリソースのジャグリングを強いられている。</p>
+<p>さらに構造的な問題がある。AWSやGCPの既存のインフラストラクチャは、従来のウェブトラフィックや一般的なコンピューティングタスクに向けてスケールするように構築されてきた。これを現代のAIワークロード、特に極端なスループットを要求するAIインフラに合わせて再設計・刷新することは、とてつもない規模の設備投資（CapEx）を要求する。ハイパースケーラーの巨大な全体売上から見れば、現在のパブリックAIコンピュート市場は数兆円規模とはいえ、彼らにとっては「全社を挙げてインフラを大改造するにはまだ小さい」ビジネスなのだ。</p>
+<p>この「巨人の足が止まっている間隙」こそが、Nebiusのような独立系AI cloudにとって最大の勝機となっている。数年後にチップ不足が解消され、ハイパースケーラーが本腰を入れてこの市場を獲りに来る日までに、彼らと対等に殴り合える規模に成長できるかどうかが勝負の分かれ目となる。</p>
+</section>
+<section id="狂気のストレージ要件とgb300がもたらすラック単位のスケーリング" class="level2">
+<h2 class="anchored" data-anchor-id="狂気のストレージ要件とgb300がもたらすラック単位のスケーリング">狂気のストレージ要件とGB300がもたらすラック単位のスケーリング</h2>
+<p>AIインフラを従来のcloud infraの延長として捉えるのは極めて危険だ。顕著なのがストレージとネットワークの異常な要件である。</p>
+<p>数年前まで、ネットワークアタッチトストレージ（NAS）といえば数GB/sのスループットが出れば御の字だった。しかし現在、Nebiusの最上位顧客は、8,000基のGPUクラスターに接続された単一の共有ファイルシステムから、日常的に「700GB/s」という常軌を逸したスループットを要求してくるという。このレベルのI/O要求を満たすためには、software-defined storage（SDS）およびsoftware-defined networking（SDN）による動的なリソース管理とトラフィック制御が不可欠である。物理ハードウェアと制御レイヤーを分離し、トラフィックの変動に合わせてポリシーベースで動的ルーティングできなければ、即座にインフラが破綻する。</p>
+<p>さらにハードウェア・アーキテクチャの進化が、インフラ管理のパラダイムを根本から変えようとしている。NVIDIAのB300とGB300のアーキテクチャ比較がその好例だ。B300は従来のx86 CPUを用いた8基のGPUノードを構成する堅実なビルディングブロックであり、メモリ（263GB）やメモリ帯域幅（8.0 TB/s）に優れるため、単一GPUに収まるモデルや2,000億パラメータ未満のエージェント群の推論に適している。</p>
+<p>対してGB300 NVL72は、72基のGPUと36基のGrace CPUを次世代NVLinkファブリックで結合した「ラックスケールの単一スーパーアクセラレータ」である。ノード単位ではなくラック単位でのコヒーレンスを持つため、兆パラメータを超えるフロンティアモデルの推論や学習において絶対的なスループットを発揮する。しかし運用側から見れば、これは「サーバー1台の電源を落として別のサーバーにワークロードを移す」という従来の手法が全く通用せず、「ラック全体でのメンテナンスとワークロードの分離（isolation）」をゼロから設計しなければならないことを意味する。AI cloudの主戦場は、すでに単一のサーバーからラックレベルのオーケストレーションへと完全に移行しているのだ。</p>
+</section>
+<section id="究極のボトルネックは電力でもgpuでもなく実行能力" class="level2">
+<h2 class="anchored" data-anchor-id="究極のボトルネックは電力でもgpuでもなく実行能力">究極のボトルネックは電力でもGPUでもなく「実行能力」</h2>
+<p>現在のAIデータセンター構築において、世間では「電力不足」「冷却能力」「HBMの歩留まり」などが最大のボトルネックとして盛んに議論されている。しかし、Dima氏に言わせれば、真の単一のボトルネックは「実行能力（ability to execute）」に尽きる。</p>
+<p>市場にはGPUも足りなければ、CPUもNVMeも足りない。データセンターを建設するための熟練労働者も圧倒的に不足している。極めつけは変圧器やスイッチギアといった大型電力設備のリードタイムであり、現在では発注から納品まで数年単位の待ちが発生している状況だ。</p>
+<p>全てが不足し、全てが不確実なこのカオスの中で最も価値が高いのは、各拠点間でリソースを柔軟に融通し、コーナーを切り詰め、プロジェクトを強引にでも推進できる「経験豊富なプロジェクトマネージャー」の存在である。サプライチェーンが崩壊し、従来型の計画的調達が一切通用しない現代のAIインフラ構築においては、泥臭く現場を回し切るオペレーション能力こそが最大の競争力となる。</p>
+</section>
+<section id="推論の最適化とエージェント駆動の世界へ" class="level2">
+<h2 class="anchored" data-anchor-id="推論の最適化とエージェント駆動の世界へ">推論の最適化とエージェント駆動の世界へ</h2>
+<p>推論（inference）の領域でも、潮目は大きく変わっている。世間では次々と新しいオープンウェイトモデルが発表されているが、Nebiusの顧客の95%はバニラなオープンソースモデルをそのまま動かすようなことはしていない。微調整（fine-tuning）され、特定のドメインに特化してプルーニング（pruning）や圧縮（compression）が施された独自モデルを利用している。</p>
+<p>コスト度外視で汎用的なLLMをぶん回すフェーズは終わり、予測可能な結果（outcome）を確実かつ高速に得るための特化型モデルへの移行が始まっている。界隈で持て囃されているprefill（プロンプト処理）とdecode（トークン生成）を分離するdisaggregatedアーキテクチャについても、Dima氏は「誰もが話題にしているが、まともに本番運用できている者はいない」と一刀両断する。SLAsを保証しながら安定稼働させるには極めて難易度が高く、また推論サーバーの設定やカーネルの最適化など、もっと低い位置にぶら下がっている果実（lower hanging fruits）が山ほどあるからだ（ただし、前述のGB300のような超高速なNVLink interconnectを備えたラックスケール環境であれば、このdisaggregationの課題の多くは解消される可能性も示唆されている）。</p>
+<p>さらに今後のパラダイムとして、ユーザーの単発のプロンプトに応答するだけの単純なAPI呼び出しから、自律的に思考し外部ツールを活用する長期実行型のAI agentsへのシフトが挙げられる。agentがバックエンドで数分間にわたって延々と検証や検索を繰り返すようになれば（NebiusがTavilyを買収してウェブ検索技術を取り込んでいるのもこのためだ）、モデルそのものの性能以上に「確実な成果に辿り着くための外的ループの最適化」が問われるようになる。</p>
+<p>結局のところ、AI cloudの戦場は「どれだけ多くのGPUを並べられるか」という単純な筋肉勝負から、「巨大で複雑なAIワークロードを、ソフトウェアの力でどれだけ安定して顧客の望む成果へと落とし込めるか」という総合格闘技へと移行している。OpenAIやAnthropicが実質的な自社AI cloudを構築しつつある中、全ての層が少数のメガプレイヤーに飲み込まれるのか、それともNebiusのような尖ったAI cloudが独自の生態系を築くのか。DigitalOceanやHetznerがAWSの覇権下でも逞しく生き残ったように、狂気のスケーリングをソフトウェアで制した独立系プレイヤーには、我々が想像する以上に広大なフロンティアが広がっているのかもしれない。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

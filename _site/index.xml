@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Tue, 27 Oct 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 02 Nov 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</link>
+  <description><![CDATA[ NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Unsupervised Learning Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</guid>
+  <pubDate>Mon, 02 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/nebius-danila/202611032206.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,19 +134,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/</guid>
   <pubDate>Sat, 03 Oct 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/epoch-ai-denon/202610041431.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Claude Codeの進化とHarnessの脱構築</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</link>
-  <description><![CDATA[ AnthropicのClaude Codeの進化、Mutable Softwareという新パラダイムの到来、そしてAIエージェントの高度化に伴う「Pacing the Frontier」の重要性を、Thariq Shihipar氏の洞察を元に深く分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/</guid>
-  <pubDate>Wed, 30 Sep 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-thariq/202610011009.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
