@@ -17,6 +17,7 @@
   <link>https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/</link>
   <description><![CDATA[ Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます ]]></description>
   <category>CUDA</category>
+  <category>GPU</category>
   <guid>https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/</guid>
   <pubDate>Fri, 06 Nov 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/202611052119.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
