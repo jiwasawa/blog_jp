@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます">
+
+<title>Pythonから始めるCUDAカーネル入門：グレースケール変換から行列乗算まで</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-11dfed304549e7d9db55013033367f26.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Pythonから始めるCUDAカーネル入門：グレースケール変換から行列乗算まで – miscellaneous notes">
+<meta property="og:description" content="Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/202611052119.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta property="og:image:height" content="600">
+<meta property="og:image:width" content="600">
+<meta name="twitter:title" content="Pythonから始めるCUDAカーネル入門：グレースケール変換から行列乗算まで – miscellaneous notes">
+<meta name="twitter:description" content="Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/202611052119.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">メインコンテンツにスキップ</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="ウェブサイト">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Pythonから始めるCUDAカーネル入門：グレースケール変換から行列乗算まで</h1>
+                  <div>
+        <div class="description">
+          Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">CUDA</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年11月6日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<p>CUDAでGPUをプログラミングするには、慣れたPythonの世界を離れなければならないと考える人は多いと思います。ビルドスクリプトを書き、ターミナルからコンパイラを呼び出し、結果をひとつ見るまでにリンカと格闘する、というイメージです。しかし実際には、そこまでの手間は必要ありません。PyTorchの<code>torch.utils.cpp_extension</code>モジュールには<code>load_inline</code>というユーティリティがあります。これは、Pythonの文字列として書いたCUDAとC++のソースコードを受け取ってコンパイルし、PyTorchのテンソルに対して直接呼び出せる関数を持つPythonモジュールを返してくれます。そのため、この記事の手順はすべてJupyterノートブックの中で実行できます。データ探索やモデルの訓練にふだん使っているのと同じ環境です。</p>
+<p>進め方の方針として、各計算はまず素のPythonとPyTorchで書いて検証し、そのあとでCUDAに翻訳します。PythonとPyTorchなら、考え方を確かめたりテストしたりするのが簡単だからです。こうすると、混同しやすい二種類の難しさを切り分けられます。ひとつは並列アルゴリズムが<em>何を</em>するのかを理解すること、もうひとつはそれをCUDA Cで<em>どう</em>表現するのかを理解することです。CUDAでカーネルを書く段階ではロジックがすでにPythonで検証済みなので、残るのは設計ではなく翻訳の問題だけになります。</p>
+<p>題材は、RGB画像をグレースケールに変換する処理と行列乗算の二つです。CUDAの予備知識は一切前提にしません。Pythonに慣れていて、PyTorchのテンソルの基本がわかっていれば十分です。最後に、自作のカーネルとPyTorch組み込みの演算子との性能差を比べ、それでも独自のカーネルを書く意味はどこにあるのかを考えます。</p>
+<section id="ノートブックの準備" class="level2">
+<h2 class="anchored" data-anchor-id="ノートブックの準備">ノートブックの準備</h2>
+<p>この記事は、Jeremy Howard の講義「<a href="https://www.youtube.com/watch?v=4sgKnKbR-WE">Lecture 3: Getting Started With CUDA for Python Programmers</a>」の内容をもとに作成しています。 付随するノートブックはGitHubの <a href="https://github.com/cuda-mode/lecture2">cuda-mode/lecture2</a> リポジトリにあり、READMEからColab版を開けます。</p>
+<p>ノートブックの最初のセルでは、以降の作業に必要なものをimportします。PyTorch、torchvisionとその関数版の変換（<code>tvf</code>）、画像入出力の <code>io</code>、表示用のMatplotlib、そして <code>torch.utils.cpp_extension</code> の <code>load_inline</code> です。<code>load_inline</code> はまだ使いませんが、後でCUDAコードをノートブックから直接コンパイルする際の道具になります。続いてWikimedia Commonsから子犬の写真を（まだディスクになければ）ダウンロードし、<code>torchvision.io</code> でテンソルとして読み込みます。最後に、画像を表示するための小さなヘルパー <code>show_img</code> を定義します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Cute_dog.jpg/1600px-Cute_dog.jpg?20140729055059'</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, os, math, gzip, pickle</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlretrieve</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> tensor</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision <span class="im">as</span> tv</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision.transforms.functional <span class="im">as</span> tvf</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> io</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.cpp_extension <span class="im">import</span> load_inline</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>path_img <span class="op">=</span> Path(<span class="st">'puppy.jpg'</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> path_img.exists(): urlretrieve(url, path_img)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> io.read_image(<span class="st">'puppy.jpg'</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(img.shape)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>img[:<span class="dv">2</span>,:<span class="dv">3</span>,:<span class="dv">4</span>]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show_img(x, figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">3</span>), <span class="op">**</span>kwargs):</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>figsize)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(x.shape)<span class="op">==</span><span class="dv">3</span>: x <span class="op">=</span> x.permute(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>)  <span class="co"># CHW -&gt; HWC</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    plt.imshow(x.cpu(), <span class="op">**</span>kwargs)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>これらのライブラリはColabにプリインストールされているので、追加の設定なしで実行できます。セルを実行すると、形状として <code>torch.Size([3, 1066, 1600])</code> が表示され、続いてスライス <code>img[:2,:3,:4]</code> で選んだ最初の2チャネル、3行、4列のピクセル値が出力されます。</p>
+<p>つまりPyTorchにとって、この画像は形状 <span class="math inline">\(3 \times 1066 \times 1600\)</span> の3階テンソルです。3つのチャネルを立方体の面として思い描くとよいでしょう。各面は1066行（高さ）からなり、各行は1600列（幅）からなります。このチャネル、高さ、幅という並び順は <strong>CHW</strong> と略記されます。<code>dtype</code> は <code>torch.uint8</code> で、各値は0から255の範囲をとる1バイトの符号なし整数です。</p>
+<p><code>show_img</code> が必要になるのは、Matplotlibがチャネルの次元を最後に置くHWCの並びを想定しているためです。そこでこの関数は、3次元のテンソルを <code>permute(1,2,0)</code> で高さ、幅、チャネルの順に並べ替えます。さらに <code>.cpu()</code> でCPUへ移してから <code>imshow</code> で描画します。GPU上で計算した結果もそのまま渡せるのはこのためです。</p>
+</section>
+<section id="輝度の公式とメモリ上の画像レイアウト" class="level2">
+<h2 class="anchored" data-anchor-id="輝度の公式とメモリ上の画像レイアウト">輝度の公式とメモリ上の画像レイアウト</h2>
+<p>グレースケール変換は、各ピクセルを他のピクセルとは無関係に処理できます。あるピクセルの結果を求めるのに、隣のピクセルの値も計算結果も必要ありません。つまりこの問題は本質的に並列であり、最初に書くCUDAカーネルの題材としてうってつけです。</p>
+<p>RGB表現では、各ピクセルは <span class="math inline">\((r, g, b)\)</span> という値の組として格納されています。それぞれの値は、そのピクセルを描くときの赤、緑、青の光の強さを表します。グレースケール画像を得るには、ピクセルごとに単一の輝度値 <span class="math inline">\(L\)</span> を計算します。標準的な方法は、3つのチャネルの重み付き和をとることです。</p>
+<p><span class="math display">\[
+L = 0.21r + 0.72g + 0.07b .
+\]</span></p>
+<p>重みの大部分を緑が占め、青の寄与はごくわずかです。これは、人間の目が青い光よりも緑の光にはるかに敏感であることを反映しています。重みの組にはわずかに異なる流儀がいくつかあり、以降のコードでは広く使われている係数 <span class="math inline">\(0.2989\)</span>、<span class="math inline">\(0.5870\)</span>、<span class="math inline">\(0.1140\)</span> を用います。ただ、どの組を選んでも計算の構造は変わりません。大事なのはアルゴリズムの形のほうで、各ピクセルについて3つの数値を読み、重み付き和を作り、1つの数値を書き込みます。</p>
+<p>CUDAに移る前に、まず純粋なPythonで変換を書きます。ただし純粋なPythonは非常に遅いので、実験が現実的な時間で終わるよう、画像の短辺が150ピクセルになるまで縮小しておきます。この画像では短辺は高さにあたり、<code>tvf.resize</code> はアスペクト比を保ったまま縮小してくれます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>img2 <span class="op">=</span> tvf.resize(img, <span class="dv">150</span>, antialias<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ch,h,w <span class="op">=</span> img2.shape</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ch,h,w,h<span class="op">*</span>w</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>出力は <code>(3, 150, 225, 33750)</code> です。リサイズ後の画像は <span class="math inline">\(150 \times 225\)</span> の長方形で、33,750個のピクセルがそれぞれ赤、緑、青の値を持っています。<code>show_img(img2)</code> で表示すると、内容が変わっていないことを確認できます。これで問題が具体的になりました。この33,750個のピクセルそれぞれに輝度の公式を適用すればよいわけです。</p>
+<p>そのためには、3つのチャネルがメモリ上で実際にどう並んでいるかを知っておく必要があります。CHWテンソルでは最も外側の次元がチャネルを選びます。赤の画像全体が一面、続いて緑が一面、最後に青が一面という構成です。各面の中では行が順に並び、各行の中では列の値が順に並びます。とはいえ、3次元という見方は人間のための便宜にすぎません。コンピュータのメモリ上では、各値はアドレスを1つ持っているだけです。メモリそのものを1本の巨大なベクトルと考えることができます。</p>
+<p>具体例として、高さ2、幅3、3チャネルの小さな画像を考えてみます。18個の値に、格納される順に番号を振ると次のようになります。</p>
+<ul>
+<li>赤チャネル：行 <span class="math inline">\((0, 1, 2)\)</span> と <span class="math inline">\((3, 4, 5)\)</span></li>
+<li>緑チャネル：行 <span class="math inline">\((6, 7, 8)\)</span> と <span class="math inline">\((9, 10, 11)\)</span></li>
+<li>青チャネル：行 <span class="math inline">\((12, 13, 14)\)</span> と <span class="math inline">\((15, 16, 17)\)</span></li>
+</ul>
+<p>このテンソルを平坦化すると、<span class="math inline">\((0, 1, 2, \ldots, 17)\)</span> という1本のベクトルになります。<code>flatten</code> は何も並べ替えません。赤の値をすべて行ごとに、続いて緑をすべて、最後に青をすべてという、もともとの線形な配置を、長さ <span class="math inline">\(c \cdot h \cdot w\)</span> の1次元テンソルとして見せているだけです。</p>
+<p>ここから単純なインデックス規則が導けます。1チャネルあたりのピクセル数を <span class="math inline">\(n = h \cdot w\)</span> とします（小さな例では6です）。ピクセル <span class="math inline">\(i\)</span> の赤の値が平坦なベクトルの位置 <span class="math inline">\(i\)</span> にあるなら、緑の値はちょうど1チャネル分先の <span class="math inline">\(i + n\)</span> に、青の値は2チャネル分先の <span class="math inline">\(i + 2n\)</span> にあります。例でいえば、ピクセル4の赤はインデックス4、緑はインデックス10、青はインデックス16です。この規則が、これから書くどのグレースケール変換でも中心になります。</p>
+</section>
+<section id="純粋pythonによる変換とその遅さ" class="level2">
+<h2 class="anchored" data-anchor-id="純粋pythonによる変換とその遅さ">純粋Pythonによる変換とその遅さ</h2>
+<p>この規則をそのままコードにしたものが、次の関数です。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rgb2grey_py(x):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    c,h,w <span class="op">=</span> x.shape</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> h<span class="op">*</span>w</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.flatten()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> torch.empty(n, dtype<span class="op">=</span>x.dtype, device<span class="op">=</span>x.device)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n): res[i] <span class="op">=</span> <span class="fl">0.2989</span><span class="op">*</span>x[i] <span class="op">+</span> <span class="fl">0.5870</span><span class="op">*</span>x[i<span class="op">+</span>n] <span class="op">+</span> <span class="fl">0.1140</span><span class="op">*</span>x[i<span class="op">+</span><span class="dv">2</span><span class="op">*</span>n]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res.view(h,w)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>1行ずつ読んでいきます。</p>
+<ol type="1">
+<li>形状を、チャネル数 <code>c</code>、高さ <code>h</code>、幅 <code>w</code> に展開します。</li>
+<li>ピクセル数を <code>n = h*w</code> とします。これは出力する値の個数であり、同時に、隣り合うチャネルの対応する要素どうしの距離でもあります。</li>
+<li><code>x.flatten()</code> でCHWテンソルを長さ <span class="math inline">\(c \cdot h \cdot w\)</span> の1本のベクトルにします。これで、すべての値に1つの整数インデックスでアクセスできます。</li>
+<li>結果を入れる <code>res</code> を、入力と同じデータ型・同じデバイスを持つ長さ <code>n</code> の空のベクトルとして確保します。</li>
+<li>ループで <code>i</code> を <span class="math inline">\(0\)</span> から <span class="math inline">\(n-1\)</span> まで回します。各ピクセルについて赤 <code>x[i]</code>、緑 <code>x[i+n]</code>、青 <code>x[i+2*n]</code> を読み、重み付き和を <code>res[i]</code> に格納します。</li>
+<li>最後に <code>res.view(h,w)</code> で、平坦な結果を <span class="math inline">\(h \times w\)</span> の2次元画像として解釈し直します。<code>flatten</code> と同じく <code>view</code> も何もコピーしません。同じメモリに対するインデックスの付け方を変えるだけです。</li>
+</ol>
+<p>この関数を縮小した画像 <code>img2</code> に適用し、<code>%%time</code> セルマジックで計時してみます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>img_g <span class="op">=</span> rgb2grey_py(img2)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>CPU times: user 1.67 s, sys: 2.46 ms, total: 1.67 s
+Wall time: 1.72 s</code></pre>
+<p><code>show_img(img_g, cmap='gray')</code> で表示すると、きちんとグレースケールになった子犬が現れます。ただし、その代償はかなり大きいものです。わずか約34,000ピクセルの処理に1.7秒ほどかかりました（実行ごとに1.3〜1.7秒程度でばらつきます）。1回の反復でしているのは数回の乗算と加算だけです。それでも、Pythonインタプリタのオーバーヘッドと、テンソルの要素を1つずつインデックス参照するコストのせいで、どのステップも高くつきます。フル解像度の写真には数百万のピクセルがあるので、この方法はスケールしません。</p>
+<p>それでも、このループには以降の話の中心となる性質があります。各反復は自分のインデックス <code>i</code> にしか依存しません。<code>res[5]</code> を計算するのに <code>res[4]</code> の結果は要りません。したがって反復をどんな順序で実行しても、すべてを同時に実行しても、結果は変わりません。この独立性こそ、CUDAが活用するものです。</p>
+</section>
+<section id="gpuの内部smとcudaコア" class="level2">
+<h2 class="anchored" data-anchor-id="gpuの内部smとcudaコア">GPUの内部：SMとCUDAコア</h2>
+<p>純粋なPythonのループはなぜ遅く、GPUならなぜ速くなるのでしょうか。高速な実装を書く前に、その理由を押さえておきます。答えは「GPUの1つひとつのコアが速いから」ではありません。GPUはCPUとは根本的に異なる構成をとっていて、その構成が特定のプログラミングスタイルに大きな利点をもたらすのです。</p>
+<section id="ストリーミングマルチプロセッサとcudaコア" class="level3">
+<h3 class="anchored" data-anchor-id="ストリーミングマルチプロセッサとcudaコア">ストリーミングマルチプロセッサとCUDAコア</h3>
+<p>NVIDIA GPUで実行の基本単位となるのは<strong>ストリーミングマルチプロセッサ</strong>（SM）です。最初は、カードの中に独立したプロセッサがいくつも並んでいると考えるとよいでしょう。各SMは多数のスレッドを並行して実行し、他のSMとは独立に動きます。</p>
+<p>具体的な数字を見ると規模がよくわかります。Ampereアーキテクチャに基づくNVIDIA RTX 3090は82個のSMを搭載しています。この時点で、一般的なデスクトップCPUのコア数をはるかに上回ります。さらに各SMの内部も高度に並列化されています。RTX 3090を含むGA10x系列のGPUでは、各SMが次のものを備えています。</p>
+<ul>
+<li>128個のCUDAコア</li>
+<li>4個の第3世代Tensorコア</li>
+<li>256KBのレジスタファイル</li>
+<li>L1キャッシュと共有メモリを合わせた128KBの領域</li>
+</ul>
+<p>SM内のすべてのCUDAコアは同時に動作でき、すべてのSMも互いに同時に動作できます。したがってカード全体では <span class="math inline">\(128 \times 82 = 10{,}496\)</span> 個のCUDAコアが同時に動けることになります。1万を超えるコアというのは、身近なCPUの能力をはるかに超える数です。しかも3090は最上位の製品ではなく、これよりかなり多くのCUDAコアを持つGPUもあります。</p>
+</section>
+<section id="スレッドブロック共有メモリレジスタ" class="level3">
+<h3 class="anchored" data-anchor-id="スレッドブロック共有メモリレジスタ">スレッドブロック、共有メモリ、レジスタ</h3>
+<p>この先で重要になる概念をいくつか紹介しておきます。</p>
+<ul>
+<li><strong>スレッドブロック</strong>：GPU上の処理は、ブロックと呼ばれるスレッドのグループ単位で構成されます。ブロック内のスレッドはすべて同じSM上で実行されます。そのため、共有メモリなどの資源を共有でき、互いに同期をとることもできます。</li>
+<li><strong>共有メモリ</strong>：各SM上にある小さなメモリ領域で、ブロック内のスレッドで共有されます。テンソルが通常置かれるGPUのメインメモリ（グローバルメモリ）よりはるかに高速ですが、上の数字のとおりサイズは厳しく限られています。役割はCPUのキャッシュとほぼ同じです。ただしCPUではキャッシュに何を置くかをハードウェアが決めるのに対し、共有メモリに何を置くかはプログラマが明示的に決めます。つまり手動で管理するキャッシュです。</li>
+<li><strong>レジスタ</strong>：見落とされがちですが、各SMは共有メモリよりも多くのレジスタ（256KB）を持っています。レジスタはあらゆる記憶領域の中で最も高速で、スレッドごとに固有のものです。</li>
+</ul>
+<p>ブロック内のスレッドは原理的にはすべて並行して実行されえます。ただし実際にどれだけ同時に動くかは、SMあたりのCUDAコア数と、各スレッドが必要とするレジスタや共有メモリの量によって決まります。</p>
+</section>
+<section id="コードにとっての意味" class="level3">
+<h3 class="anchored" data-anchor-id="コードにとっての意味">コードにとっての意味</h3>
+<p>1万個のコアがあっても、プログラムが一度に1つの処理しか要求しなければ意味がありません。純粋なPythonのループは、まさにそういう書き方になっています。GPUを活かすには、「このコード片を、多数の異なるデータ、多数の異なるメモリ位置に対して、すべて同時に実行せよ」と指示できる形にコードを組み立てる必要があります。グレースケール変換は、その理想的な候補です。各ピクセルの計算は、他のすべてのピクセルから完全に独立しているからです。</p>
+</section>
+</section>
+<section id="ループ本体をカーネルに変える" class="level2">
+<h2 class="anchored" data-anchor-id="ループ本体をカーネルに変える">ループ本体をカーネルに変える</h2>
+<p><code>rgb2grey_py</code> の内側のループをもう一度見てみましょう。反復 <span class="math inline">\(i\)</span> は、平坦化された入力からピクセル <span class="math inline">\(i\)</span> の赤・緑・青を、オフセット <span class="math inline">\(i\)</span>、<span class="math inline">\(i+n\)</span>、<span class="math inline">\(i+2n\)</span> で3つ読み込み、<code>res[i]</code> にちょうど1つの値を書き込みます。どの反復も他の反復が書き込んだ値を読まず、2つの反復が同じ場所に書き込むこともありません。つまり各反復は互いにまったく影響しません。仮に1万個の反復を同時に実行できたとしても、1つずつ順番に実行した場合と結果は同じになります。</p>
+<p>独立した反復は、どんな順序で実行してもかまいません。すべて同時でも、少しずつまとめて実行しても、一部が他よりわずかに早く始まっても問題ありません。プログラムにはその違いを見分ける手段がなく、見分ける必要もないのです。これこそGPUが得意とする種類の処理です。</p>
+<section id="cudaの取り決め" class="level3">
+<h3 class="anchored" data-anchor-id="cudaの取り決め">CUDAの取り決め</h3>
+<p>CUDAはこの独立性を、単純な取り決めで活用します。プログラマがすることは次の2つだけです。</p>
+<ol type="1">
+<li><em>1単位</em>の処理を行うコードを関数として書きます。この関数を<strong>カーネル</strong>と呼びます。</li>
+<li>そのカーネルを何回呼び出すかを指定します。</li>
+</ol>
+<p>あとはCUDAが、指定された回数（数十回でも数百万回でも）カーネルを呼び出し、ハードウェアが許す限り多くの呼び出しを並列に実行します。RTX 3090なら、およそ1万回の呼び出しが同時に走ります。各呼び出しは、プログラマが渡す引数（ここでは入力テンソル、出力テンソル、チャネルあたりのピクセル数）に加えて、「自分は <span class="math inline">\(i\)</span> 回目の呼び出しである」というインデックスを受け取ります。</p>
+<p>呼び出しは任意の順序で、あるいはすべて同時に実行されうるため、カーネルには重要な制約が1つあります。値を返せないことです。カーネルが結果を伝える唯一の方法は、渡されたメモリの内容を書き換えることです。グレースケール変換では、各呼び出しが自分のピクセルを出力テンソルに書き込めばよいので、この制約は自然に満たされます。</p>
+</section>
+<section id="pythonでカーネル起動をシミュレートする" class="level3">
+<h3 class="anchored" data-anchor-id="pythonでカーネル起動をシミュレートする">Pythonでカーネル起動をシミュレートする</h3>
+<p>この仕組みは、素のPythonで <code>for</code> ループを1つ使えばシミュレートできます。何も並列に実行しないので速くはなりませんが、意味論はCUDAの起動と同じです。関数がインデックスごとに1回、そのインデックスと決まった引数の組とともに呼び出されます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_kernel(f, times, <span class="op">*</span>args):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(times): f(i, <span class="op">*</span>args)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>run_kernel</code> は、カーネル <code>f</code>、呼び出す回数、渡す引数を受け取ります。各呼び出しには第1引数として現在のインデックス <span class="math inline">\(i\)</span> が渡され、続いてそれらの引数が渡されます。</p>
+<p>カーネル自体は、元のループ本体を独立した関数として取り出しただけのものです。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rgb2grey_k(i, x, out, n):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    out[i] <span class="op">=</span> <span class="fl">0.2989</span><span class="op">*</span>x[i] <span class="op">+</span> <span class="fl">0.5870</span><span class="op">*</span>x[i<span class="op">+</span>n] <span class="op">+</span> <span class="fl">0.1140</span><span class="op">*</span>x[i<span class="op">+</span><span class="dv">2</span><span class="op">*</span>n]</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>rgb2grey_k</code> には <code>return</code> 文がない点に注目してください。グレースケールのピクセルを1つ計算し、それを <code>out</code> に書き込むだけです。カーネルは渡されたものの中身しか変更できない、という規則に従っています。</p>
+</section>
+<section id="カーネルを呼び出す" class="level3">
+<h3 class="anchored" data-anchor-id="カーネルを呼び出す">カーネルを呼び出す</h3>
+<p>変換を駆動する関数は、元の関数とほとんど同じ形です。チャネル数・高さ・幅を取得し、ピクセル数 <code>n</code> を計算し、入力を平坦化して空の結果テンソルを確保します。違うのは、自分でループを回す代わりにカーネルを <code>run_kernel</code> に渡し、ピクセルごとに1回の呼び出しを要求している点です。その際、カーネルが必要とする入力 <code>x</code>、出力 <code>res</code>、チャネルサイズ <code>n</code> も一緒に渡します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rgb2grey_pyk(x):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    c,h,w <span class="op">=</span> x.shape</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> h<span class="op">*</span>w</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.flatten()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> torch.empty(n, dtype<span class="op">=</span>x.dtype, device<span class="op">=</span>x.device)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    run_kernel(rgb2grey_k, h<span class="op">*</span>w, x, res, n)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res.view(h,w)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>これを実行すると、以前と同じグレースケール画像が得られます。</p>
+<p>テンソルの作成とインデックス参照に少しPyTorchを使っているだけで、外部ライブラリには何も頼っていません。それでも概念的には、このコードはすでにCUDAプログラムの形をしています。<code>rgb2grey_k</code> の各呼び出しは他のすべての呼び出しから独立していることが保証されているので、それを知っているシステムであれば、結果を変えずに呼び出しを数千個のコアに分散できます。このシミュレーションはCUDAが行っていることと<em>ほぼ</em>同じです。残る違いは、CUDAがそれら多数の呼び出しをどのようにグループにまとめるかという点で、ここから先ではそれを見ていきます。</p>
+</section>
+</section>
+<section id="ブロックスレッドグローバルインデックスとガード" class="level2">
+<h2 class="anchored" data-anchor-id="ブロックスレッドグローバルインデックスとガード">ブロック、スレッド、グローバルインデックスとガード</h2>
+<p>ここまでのシミュレーションでは、<code>run_kernel</code> が <code>range(times)</code> の各インデックスについてカーネルを1回ずつ呼ぶだけでした。CUDAが実際に仕事を編成する方法は少し異なります。平坦なインデックスのリストを順に渡すのではなく、インデックスの範囲を<strong>ブロック</strong>と呼ばれるグループに分割するのです。</p>
+<section id="グリッドブロックスレッド" class="level3">
+<h3 class="anchored" data-anchor-id="グリッドブロックスレッド">グリッド、ブロック、スレッド</h3>
+<p>カーネルを起動すると、CUDAはスレッドの<strong>グリッド</strong>を生成します。グリッドはブロックの配列で、すべてのブロックは同じサイズを持ちます。現行のハードウェアでは、1つのブロックに最大1024個のスレッドを入れられます。たとえば256スレッドのブロックを使う場合、ブロック0が最初の256個のインデックスを、ブロック1が次の256個を担当し、以下同様に続きます。</p>
+<p>ブロック内の各スレッドは、0から255までの番号で識別されます。スレッドは単なる番号と考えるのがわかりやすいです。すべてのブロックのすべてのスレッドが同じカーネルコードを実行するので、CUDAプログラミングは <em>single-program multiple-data</em>（SPMD）スタイルの一例とされています。スレッド間で違うのは、各スレッドが自分について参照できる番号だけです。スレッドはその番号から、自分が担当する要素を次のように求めます。</p>
+<p><span class="math display">\[
+i = \text{blockIdx.x} \times \text{blockDim.x} + \text{threadIdx.x}
+\]</span></p>
+<p><code>blockIdx.x</code> は所属するブロックのインデックス、<code>blockDim.x</code> はブロックあたりのスレッド数、<code>threadIdx.x</code> はブロック内での位置です。これらは<strong>組み込み変数</strong>で、ランタイムが初期化し、プログラムからは読み取り専用です。<code>.x</code> という接尾辞は、ブロックやグリッドが複数の次元を持てるために付いているもので、今のところは気にしなくてかまいません。</p>
+</section>
+<section id="pythonでブロックをシミュレートする" class="level3">
+<h3 class="anchored" data-anchor-id="pythonでブロックをシミュレートする">Pythonでブロックをシミュレートする</h3>
+<p>ブロック構造もPythonで簡単にシミュレートできます。1つのループの代わりに、外側でブロックを、内側でブロック内のスレッドをたどる2重ループを使います。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> blk_kernel(f, blocks, threads, <span class="op">*</span>args):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(blocks):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(threads): f(i, j, threads, <span class="op">*</span>args)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>呼び出し側は、ブロック数とブロックあたりのスレッド数という2つの数を渡します。その積が必要な <span class="math inline">\(n\)</span> 回を網羅していれば、<code>blk_kernel</code> は <code>run_kernel</code> と同じ仕事をします。カーネルには外側ループのインデックス、内側ループのインデックス、内側ループの反復回数が渡され、カーネル内ではそれぞれブロックインデックス、スレッドインデックス、ブロック次元として扱います。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rgb2grey_bk(blockidx, threadidx, blockdim, x, out, n):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> blockidx<span class="op">*</span>blockdim <span class="op">+</span> threadidx</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i<span class="op">&lt;</span>n: out[i] <span class="op">=</span> <span class="fl">0.2989</span><span class="op">*</span>x[i] <span class="op">+</span> <span class="fl">0.5870</span><span class="op">*</span>x[i<span class="op">+</span>n] <span class="op">+</span> <span class="fl">0.1140</span><span class="op">*</span>x[i<span class="op">+</span><span class="dv">2</span><span class="op">*</span>n]</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>本体は以前と同じグレースケールの式です。違うのは、<code>i</code> を直接受け取らずに3つの値から計算している点と、<code>if i&lt;n</code> というガードが加わっている点です。</p>
+</section>
+<section id="スレッド数とブロック数の選び方" class="level3">
+<h3 class="anchored" data-anchor-id="スレッド数とブロック数の選び方">スレッド数とブロック数の選び方</h3>
+<p>当面はブロックあたり常に256スレッドを使うことにします。悪い選択になることはめったにないデフォルト値なので、ここで調整に時間をかける必要はありません。スレッド数を固定すれば、ブロック数は仕事量から決まります。切り捨てると最後の数ピクセルが処理されずに残るため、割り算の結果を切り上げます。</p>
+<p><span class="math display">\[
+\texttt{blocks} = \left\lceil \frac{n}{\texttt{threads}} \right\rceil
+\]</span></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rgb2grey_pybk(x):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    c,h,w <span class="op">=</span> x.shape</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> h<span class="op">*</span>w</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x.flatten()</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> torch.empty(n, dtype<span class="op">=</span>x.dtype, device<span class="op">=</span>x.device)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    threads <span class="op">=</span> <span class="dv">256</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    blocks <span class="op">=</span> <span class="bu">int</span>(math.ceil(h<span class="op">*</span>w<span class="op">/</span>threads))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    blk_kernel(rgb2grey_bk, blocks, threads, x, res, n)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res.view(h,w)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>画像を平坦化し、長さ <span class="math inline">\(n\)</span> の出力を確保し、カーネルを起動して <span class="math inline">\(h \times w\)</span> に戻すという流れは以前と同じです。変わったのは、<code>run_kernel</code> の代わりに <code>blk_kernel</code> を使う起動部分だけです。実行すると、同じグレースケール画像が得られます。</p>
+</section>
+<section id="ガードが必要な理由" class="level3">
+<h3 class="anchored" data-anchor-id="ガードが必要な理由">ガードが必要な理由</h3>
+<p>切り上げると、今度は呼び出し数がピクセル数を上回ります。たとえば1000ピクセルなら <span class="math inline">\(\lceil 1000/256 \rceil = 4\)</span> ブロックとなり、<span class="math inline">\(4 \times 256 = 1024\)</span> 回の呼び出しが発生します。そのうち24回はどのピクセルにも対応しません。これらが <code>x</code> を読んで <code>out</code> に書き込めば、データの末尾を越えてしまいます。<code>if i&lt;n</code> という<strong>ガード</strong>は、こうした余分なスレッドに何もさせないためのものです。</p>
+<p>ブロック座標とスレッド座標からグローバルインデックスを計算することと、範囲外へのアクセスをガードで防ぐこと、この2つの手順はほぼすべてのCUDAカーネルの冒頭に現れます。この定型に慣れておけば、たいていのカーネルの書き出し部分は容易に読めるようになります。</p>
+</section>
+</section>
+<section id="なぜブロックが存在するのか" class="level2">
+<h2 class="anchored" data-anchor-id="なぜブロックが存在するのか">なぜブロックが存在するのか</h2>
+<p>ここまで、グレースケール計算をブロックに分割し、ブロックインデックス、ブロックサイズ、スレッドインデックスからグローバルインデックスを求めてきました。ただ、作業に番号を振るだけなら、この二段階の方式は余計な複雑さに見えるかもしれません。全 <span class="math inline">\(n\)</span> ピクセルを1本の平坦なループで回しても、結果は同じだからです。</p>
+<p>それでもブロックが存在するのは、CUDAがブロックという単位に対して、ハードウェア上の保証を与えているからです。Pythonのシミュレーションではブロックは単なるループの入れ子にすぎません。しかし実際のGPUでは、ブロック（正確にはスレッドブロック）は次の三つの性質を持つ単位になります。</p>
+<ul>
+<li><strong>共有メモリ</strong>：ブロック内のすべてのスレッドは、そのブロックのスレッドだけが共有する小さなメモリ領域にアクセスできます。この領域は、<code>x</code> や <code>out</code> のようなテンソルが置かれるGPUの主メモリ（グローバルメモリ）よりはるかに高速です。同じブロックのスレッドどうしは、これを使って効率よくデータをやり取りできます。</li>
+<li><strong>同期</strong>：ブロック内のスレッドは同期できます。具体的には、ブロック内の全スレッドが到達するまでどのスレッドも先へ進めない地点を、カーネルの中に設けられます。これを使えば、全スレッドがまずデータを共有メモリに読み込み、そのあとで他のスレッドが書き込んだ値を安全に読み出す、という処理が可能になります。</li>
+<li><strong>同一の配置</strong>：ブロック内のすべてのスレッドは、同じストリーミングマルチプロセッサ（SM）上で実行されます。共有メモリも同期の仕組みも、1つのSMが持つ物理的な資源です。前の二つの性質は、この配置があるからこそ成り立っています。</li>
+</ul>
+<p>グレースケール変換のカーネルは、各入力ピクセルを一度読み、各出力ピクセルを一度書くだけで、スレッド間の協調はありません。そのため、ここではブロック構造を作業の分割と <code>i = blockIdx.x*blockDim.x + threadIdx.x</code> の計算のためだけに使います。それだけでも、正しく、しかもすでに非常に高速なカーネルが得られます。データを共有メモリに置き、その前後でスレッドを同期させるといった形でブロックを積極的に活用するのは、後で扱う最適化（タイリング）の話です。手書きの行列乗算がPyTorchの組み込み演算子に及ばない理由を考えるところで、この話題に戻ります。ブロックが存在する理由を今のうちに押さえておけば、平坦なインデックスで足りる場面でもブロックとスレッドへの分解を学んでおく価値がわかるはずです。</p>
+</section>
+<section id="cudaをインラインでコンパイルする準備" class="level2">
+<h2 class="anchored" data-anchor-id="cudaをインラインでコンパイルする準備">CUDAをインラインでコンパイルする準備</h2>
+<p>Pythonでのシミュレーションが動いたので、次はこのカーネルをCUDA Cで書き、実際のGPUで動かします。その前に、ノートブックにいくつかの基盤を用意しておきます。中身は毎回ほぼ同じなので、一度理解すれば、CUDAを扱う新しいノートブックにそのままコピーして使えます。</p>
+<p>まず、環境変数を一つ設定します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">'CUDA_LAUNCH_BLOCKING'</span>]<span class="op">=</span><span class="st">'1'</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>カーネルの起動は通常、非同期に行われます。CPUはGPUに処理をキューに積むと、完了を待たずに先へ進みます。そのため、カーネルが失敗しても、エラーはずっと後の無関係なPythonの行で表面化することがあります。<code>CUDA_LAUNCH_BLOCKING</code> を <code>1</code> にすると、すべての起動がGPUの処理完了を待つようになり、エラーは発生した箇所で正確に報告されます。その代わり、起動がすべて逐次化されるので遅くなります。本番コードやベンチマークでは使わず、開発時専用の設定と考えてください。</p>
+<p>次に、二つのパッケージを入れます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install <span class="op">-</span>q wurlitzer ninja</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext wurlitzer</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>ninja</code> は、PyTorchがC++やCUDAのコードをコンパイルするときに使うビルドツールです。<code>wurlitzer</code> はノートブック特有の問題を解決します。コンパイル済みのC/C++コードが <code>printf</code> で書き出した内容はプロセスの低レベルな標準出力に送られますが、ノートブックはこれを捕捉しません。この拡張を読み込むと、その出力がセルに表示されるようになります。<code>printf</code> はカーネル内で使える最も手軽なデバッグ手段なので、CUDAを動かすノートブックでは必ず読み込んでおくとよいでしょう。</p>
+<p>CUDAのソースをPythonから呼び出すには、<code>torch.utils.cpp_extension</code> の <code>load_inline</code> を使います。CUDAソースの文字列、C++ソースの文字列、Pythonに公開する関数名を渡すと、すべてをコンパイルしてPythonモジュールとして返してくれます。<code>setup.py</code> もファイル管理も要りません。よくある「CUDA文字列とC++文字列が一つずつ」のケース向けに、薄いラッパーを用意しておきます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_cuda(cuda_src, cpp_src, funcs, opt<span class="op">=</span><span class="va">False</span>, verbose<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> load_inline(cuda_sources<span class="op">=</span>[cuda_src], cpp_sources<span class="op">=</span>[cpp_src], functions<span class="op">=</span>funcs,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                       extra_cuda_cflags<span class="op">=</span>[<span class="st">"-O2"</span>] <span class="cf">if</span> opt <span class="cf">else</span> [], verbose<span class="op">=</span>verbose, name<span class="op">=</span><span class="st">"inline_ext"</span>)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>中身は <code>load_inline</code> を呼ぶだけです。<code>opt</code> を指定すると、CUDAコンパイラに最適化フラグ <code>-O2</code> が渡ります。試行錯誤中は外しておくとコンパイルが速くなります。<code>verbose</code> はコンパイラの出力を表示するので、ビルドの問題を調べるときに役立ちます。</p>
+<p>最後に、すべてのCUDAソース文字列の先頭に付ける共通のプリアンブル <code>cuda_begin</code> を定義します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cuda_begin <span class="op">=</span> <span class="vs">r'''</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#include &lt;torch/extension.h&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#include &lt;stdio.h&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#include &lt;c10/cuda/CUDAException.h&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#define CHECK_CUDA(x) TORCH_CHECK(x.device().is_cuda(), #x " must be a CUDA tensor")</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="vs">inline unsigned int cdiv</span><span class="kw">(</span><span class="vs">unsigned int a, unsigned int b</span><span class="kw">)</span><span class="vs"> { return </span><span class="kw">(</span><span class="vs">a </span><span class="op">+</span><span class="vs"> b - 1</span><span class="kw">)</span><span class="vs"> / b;}</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="vs">'''</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>三つの <code>#include</code> は、PyTorchのテンソル型とPythonへのバインディング機構（<code>torch/extension.h</code>）、<code>printf</code> などの入出力（<code>stdio.h</code>）、カーネルの起動確認に使うCUDAエラーチェック用ユーティリティ（<code>c10/cuda/CUDAException.h</code>）を提供します。</p>
+<p>続く三つのマクロは、いずれもPyTorchの <code>TORCH_CHECK</code> を基にしています。条件が偽ならPython側から見えるエラーを送出します。メッセージ中の <code>#x</code> はプリプロセッサの文字列化演算子で、問題のある引数の名前がエラーメッセージに含まれます。<code>CHECK_CUDA</code> はテンソルがGPU上にあることを確かめます。GPUで動くカーネルはCPUメモリ上のテンソルを読めないからです。<code>CHECK_CONTIGUOUS</code> はテンソルがメモリ上で連続していることを確かめます。これが必要なのは、カーネルが <code>i</code>、<code>i+n</code>、<code>i+2*n</code> のような平坦なオフセットを自分で計算し、そのメモリを直接読むためです。転置やスライスで作られたビューは、要素が単純な行優先順に並んでいないことがあり、それを平坦なものとして読むと誤った要素を拾ってしまいます。実際に呼び出すのは、この二つを組み合わせた <code>CHECK_INPUT</code> です。</p>
+<p><code>cdiv</code> は整数の切り上げ除算で、Pythonシミュレーションでの <code>int(math.ceil(h*w/threads))</code> に相当します。</p>
+<p><span class="math display">\[
+\mathrm{cdiv}(a, b) = \left\lfloor \frac{a + b - 1}{b} \right\rfloor = \left\lceil \frac{a}{b} \right\rceil
+\]</span></p>
+<p>切り捨て除算の前に <span class="math inline">\(b-1\)</span> を足すことで、余りがあれば次の倍数に押し上げられ、割り切れる場合は値が変わりません。たとえば <span class="math inline">\(a=1000\)</span>、<span class="math inline">\(b=256\)</span> なら <span class="math inline">\(\lfloor 1255/256 \rfloor = 4\)</span> となります。浮動小数点を経由せずに済むのが利点です。</p>
+<p>起動時の数値には、ハードウェア上の制限もあります。グリッドのブロック数はx方向に最大 <span class="math inline">\(2^{31}\)</span> 個、y・z方向に最大 <span class="math inline">\(2^{16}\)</span> 個までです。1ブロックのスレッド数は最大1024で、32の倍数にするのが望ましいとされています。グレースケールカーネルの256スレッドは、どちらの制約も余裕をもって満たしています。</p>
+</section>
+<section id="pythonのカーネルをcuda-cに翻訳する" class="level2">
+<h2 class="anchored" data-anchor-id="pythonのカーネルをcuda-cに翻訳する">PythonのカーネルをCUDA Cに翻訳する</h2>
+<p>Python版のブロックカーネル <code>rgb2grey_bk</code> はすでにできています。これをCに書き直すときは、関数を ChatGPT のような対話型の言語モデルに貼り付け、「名前や書式をできるだけそのままにして、等価なCコードに変換してほしい」と頼むのが実用的です。Cに慣れていれば手で書いても構いませんが、Python版がある以上、最初の下書きをモデルに任せない理由はほとんどありません。このカーネルでは結果はほぼ正しく、誤りは型の一点だけでした。モデルは配列が <code>float</code> を保持すると仮定しましたが、実際の画像はバイト列として格納されているので、ポインタの型を修正する必要があります。Pythonでカーネルを試作して翻訳させるこの流れで、書くべきコードのおよそ95%をまかなえます。</p>
+<p>型を直したCのカーネルは次のとおりです。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> rgb_to_grayscale_kernel<span class="op">(</span><span class="dt">unsigned</span> <span class="dt">char</span><span class="op">*</span> x<span class="op">,</span> <span class="dt">unsigned</span> <span class="dt">char</span><span class="op">*</span> out<span class="op">,</span> <span class="dt">int</span> n<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> i <span class="op">=</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x <span class="op">+</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i<span class="op">&lt;</span>n<span class="op">)</span> out<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="fl">0.2989</span><span class="op">*</span>x<span class="op">[</span>i<span class="op">]</span> <span class="op">+</span> <span class="fl">0.5870</span><span class="op">*</span>x<span class="op">[</span>i<span class="op">+</span>n<span class="op">]</span> <span class="op">+</span> <span class="fl">0.1140</span><span class="op">*</span>x<span class="op">[</span>i<span class="op">+</span><span class="dv">2</span><span class="op">*</span>n<span class="op">];</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Python版と並べると、ほとんど同じであることがわかります。違いは構文だけです。</p>
+<ul>
+<li>すべての引数とローカル変数に型を宣言します。</li>
+<li>文の末尾にセミコロンを付けます。</li>
+<li><code>if</code> の後のコロンがなくなり、関数本体は波括弧で囲みます。</li>
+<li>ブロックとスレッドのインデックスは引数として渡されなくなります。</li>
+</ul>
+<p>最後の点を補足します。Pythonのシミュレーションでは、<code>blk_kernel</code> が <code>blockidx</code>、<code>threadidx</code>、<code>blockdim</code> を明示的に渡していました。CUDAではこれらは全カーネル内で使える組み込み変数 <code>blockIdx</code>、<code>blockDim</code>、<code>threadIdx</code> になります。ブロックとグリッドは最大3次元まで持てるため、それぞれ <code>x</code>、<code>y</code>、<code>z</code> の成分を持つ小さな構造体になっています。グレースケール変換は1次元のレイアウトなので、<code>.x</code> 成分だけを読みます。<code>.x</code> が付くこと以外、インデックス計算もガード <code>if (i&lt;n)</code> もそのまま引き継がれています。こうした計算中心のコードでは、CはPythonとそれほど変わりません。</p>
+<section id="平坦な配列としてのポインタ" class="level3">
+<h3 class="anchored" data-anchor-id="平坦な配列としてのポインタ">平坦な配列としてのポインタ</h3>
+<p><code>unsigned char</code> はCで符号なし8ビット整数を表し、PyTorchの <code>uint8</code> にあたります。アスタリスクは <code>x</code> が unsigned char への<em>ポインタ</em>であることを示します。厳密にはメモリアドレスですが、Cではポインタを配列と同じようにインデックス指定でき、<code>x[i]</code> は「アドレス <code>x</code> から <code>i</code> 番目のバイト」を意味します。ここでは <code>unsigned char* x</code> を「<code>x</code> はバイトの配列」と考えて差し支えありません。</p>
+<p>Cの配列は1次元です。多次元のPyTorchテンソルをこうしたカーネル内で直接扱うことはできず、カーネルは基盤となるストレージへのポインタを受け取って、オフセットを自分で計算します。<code>x[i+n]</code> と <code>x[i+2*n]</code> で緑と青のチャネルを読んでいるのがその例です。Python版をすでに平坦化したスタイルで書いていたので、C版はそれを1行ずつなぞる形になります。</p>
+<p>戻り値の型 <code>void</code> は何も返さないことを意味します。カーネルが結果を伝える手段は、渡されたメモリ、ここでは <code>out</code> への書き込みだけです。</p>
+</section>
+<section id="関数修飾子" class="level3">
+<h3 class="anchored" data-anchor-id="関数修飾子">関数修飾子</h3>
+<p>本物のCUDAカーネルにするには、関数宣言の前に修飾子を付けます。修飾子は、その関数がどこで実行され、どこから呼べるかをコンパイラに伝えます。</p>
+<ul>
+<li><strong><code>__host__</code>（デフォルト）</strong>：CPUから呼ばれ、CPU上で実行される通常のC/C++関数です。修飾子のない関数はすべてこれにあたるので、書く必要はありません。</li>
+<li><strong><code>__global__</code></strong>：ホストから呼び出し可能で、GPU上でデバイススレッドの<em>新しいグリッド</em>として実行されます。これがカーネルです。</li>
+<li><strong><code>__device__</code></strong>：GPU内からのみ呼べる補助関数です。呼び出したスレッドの中で実行され、新しいスレッドは起動しません。</li>
+</ul>
+<p><code>__host__</code> と <code>__device__</code> を組み合わせると、同じソースからCPU用とGPU用の両方が生成されます。CPU側からGPU上の処理を始めるカーネルには <code>__global__</code> を付けます。このキーワードを加えれば、カーネルは完成です。</p>
+</section>
+</section>
+<section id="cラッパーからのカーネル起動" class="level2">
+<h2 class="anchored" data-anchor-id="cラッパーからのカーネル起動">C++ラッパーからのカーネル起動</h2>
+<p>カーネルは、CPU側の誰かが起動しない限り何もしません。そこで、PythonとGPUの間に立つホスト関数を用意します。それがラッパー <code>rgb_to_grayscale</code> です。役割はPythonのシミュレーションで使った <code>rgb2grey_pybk</code> とまったく同じです。入力の形状を読み、出力バッファを確保し、ブロックサイズを選び、切り上げ除算でブロック数を求めてからカーネルを起動します。CUDAソースの全体は次のとおりです。共通プリアンブル <code>cuda_begin</code> の後に、先ほどのカーネルとこのラッパーを続けています。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cuda_src <span class="op">=</span> cuda_begin <span class="op">+</span> <span class="vs">r'''</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="vs">__global__ void rgb_to_grayscale_kernel</span><span class="kw">(</span><span class="vs">unsigned char</span><span class="op">*</span><span class="vs"> x, unsigned char</span><span class="op">*</span><span class="vs"> out, int n</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="vs">    int i = blockIdx</span><span class="dv">.</span><span class="vs">x</span><span class="op">*</span><span class="vs">blockDim</span><span class="dv">.</span><span class="vs">x </span><span class="op">+</span><span class="vs"> threadIdx</span><span class="dv">.</span><span class="vs">x;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="vs">    if </span><span class="kw">(</span><span class="vs">i&lt;n</span><span class="kw">)</span><span class="vs"> out</span><span class="pp">[i]</span><span class="vs"> = 0</span><span class="dv">.</span><span class="vs">2989</span><span class="op">*</span><span class="vs">x</span><span class="pp">[i]</span><span class="vs"> </span><span class="op">+</span><span class="vs"> 0</span><span class="dv">.</span><span class="vs">5870</span><span class="op">*</span><span class="vs">x</span><span class="pp">[i+n]</span><span class="vs"> </span><span class="op">+</span><span class="vs"> 0</span><span class="dv">.</span><span class="vs">1140</span><span class="op">*</span><span class="vs">x</span><span class="pp">[i+2*n]</span><span class="vs">;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="vs">}</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="vs">torch::Tensor rgb_to_grayscale</span><span class="kw">(</span><span class="vs">torch::Tensor input</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="vs">    CHECK_INPUT</span><span class="kw">(</span><span class="vs">input</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="vs">    int h = input</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">1</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="vs">    int w = input</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">2</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="vs">    printf</span><span class="kw">(</span><span class="vs">"h</span><span class="op">*</span><span class="vs">w: %d</span><span class="op">*</span><span class="vs">%d</span><span class="ch">\n</span><span class="vs">", h, w</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="vs">    auto output = torch::empty</span><span class="kw">(</span><span class="vs">{h,w}, input</span><span class="dv">.</span><span class="vs">options</span><span class="kw">())</span><span class="vs">;</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="vs">    int threads = 256;</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="vs">    rgb_to_grayscale_kernel&lt;&lt;&lt;cdiv</span><span class="kw">(</span><span class="vs">w</span><span class="op">*</span><span class="vs">h,threads</span><span class="kw">)</span><span class="vs">, threads&gt;&gt;&gt;</span><span class="kw">(</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="vs">        input</span><span class="dv">.</span><span class="vs">data_ptr&lt;unsigned char&gt;</span><span class="kw">()</span><span class="vs">, output</span><span class="dv">.</span><span class="vs">data_ptr&lt;unsigned char&gt;</span><span class="kw">()</span><span class="vs">, w</span><span class="op">*</span><span class="vs">h</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="vs">    C10_CUDA_KERNEL_LAUNCH_CHECK</span><span class="kw">()</span><span class="vs">;</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="vs">    return output;</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="vs">}'''</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>ラッパーは最初に <code>CHECK_INPUT</code> マクロを呼び、テンソルがGPU上にあり、かつ連続であることを確かめます。次に、チャネルが先頭にある入力の次元1と次元2から、<code>input.size(1)</code> で高さを、<code>input.size(2)</code> で幅を読み取ります。<code>printf</code> は確認のために値を出力しているだけです。</p>
+<section id="三重山括弧による起動" class="level3">
+<h3 class="anchored" data-anchor-id="三重山括弧による起動">三重山括弧による起動</h3>
+<p>Pythonでは、すべてのブロックとスレッドについてカーネルを呼ぶために <code>blk_kernel</code> というヘルパーが必要でした。CUDAではそのようなヘルパーは要りません。C++を拡張した起動専用の構文があるからです。カーネル名の後に三重山括弧 <code>&lt;&lt;&lt;…&gt;&gt;&gt;</code> を書き、続けて通常の丸括弧で引数を渡します。この括弧があることで、コンパイラはこれをGPU上で実行するカーネルとして扱います。</p>
+<p>括弧の中の最初の二つは必須です。</p>
+<ol type="1">
+<li><strong>ブロック数</strong>：ピクセルごとに1スレッドが必要なので、ピクセル数をスレッド数で割って切り上げた <code>cdiv(w*h, threads)</code> を指定します。Python版で <code>math.ceil</code> を使っていた計算と同じです。</li>
+<li><strong>ブロックあたりのスレッド数</strong>：シミュレーションと同じく256に固定します。</li>
+</ol>
+<p>丸括弧の中の引数は、入力、出力、ピクセル数 <code>w*h</code> です。ただし、カーネルが受け取るのはPyTorchのテンソルではなく、<code>unsigned char*</code> 型の生のCポインタです。この変換を行うのが <code>data_ptr</code> メソッドで、テンソルの内部ストレージを指すポインタを返します。ポインタの型はテンプレート引数で指定するため、<code>data_ptr&lt;unsigned char&gt;()</code> は「符号なし8ビット値として扱うポインタを返せ」という意味になります。</p>
+</section>
+<section id="出力の確保" class="level3">
+<h3 class="anchored" data-anchor-id="出力の確保">出力の確保</h3>
+<p><code>torch::empty</code> の二重コロンは名前空間に入るための記法で、Pythonの <code>torch.empty</code> のドットにおおよそ相当します。Python版は長さ <span class="math inline">\(n\)</span> の平坦なベクトルを確保して最後に <code>view(h,w)</code> していましたが、C++版はリスト初期化子 <code>{h,w}</code> を渡して2次元のテンソルを直接作ります。カーネルはどちらの場合もメモリを平坦な配列として扱うので、結果は変わりません。</p>
+<p>2番目の引数 <code>input.options()</code> は、新しいテンソルのデータ型とデバイスを入力に合わせる指定です。Pythonでは <code>dtype=x.dtype, device=x.device</code> と個別に書く必要がありました。変数を <code>auto</code> で宣言しているのは、右辺から型をコンパイラに推論させるためです。<code>torch::Tensor output = …</code> と書いても同じ意味になります。</p>
+</section>
+<section id="起動エラーの検査" class="level3">
+<h3 class="anchored" data-anchor-id="起動エラーの検査">起動エラーの検査</h3>
+<p>カーネル起動は非同期です。そのため、不正な起動構成などの問題が起きても、ホスト側にそれが伝わるとは限りません。起動の直後に <code>C10_CUDA_KERNEL_LAUNCH_CHECK()</code> を置いておけば、失敗が黙って見過ごされず、エラーとして報告されます。カーネルを呼ぶたびにその後に置く、と覚えておけば十分です。最後に、GPUのスレッドが値を書き込んだ <code>output</code> を返して、ラッパーは完成です。</p>
+</section>
+</section>
+<section id="コンパイル実行計測千倍超の高速化" class="level2">
+<h2 class="anchored" data-anchor-id="コンパイル実行計測千倍超の高速化">コンパイル・実行・計測：千倍超の高速化</h2>
+<p>CUDAのソースに加えて、Pythonに公開する関数を伝えるC++側のソースも必要です。これは実質的にヘッダファイルにあたります。作り方は簡単で、ラッパー定義の1行目をコピーし、末尾にセミコロンを付けるだけです。この方法は常にうまくいきます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cpp_src <span class="op">=</span> <span class="st">"torch::Tensor rgb_to_grayscale(torch::Tensor input);"</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>コンパイルは1回の呼び出しで済みます。<code>load_cuda</code> に、CUDAのソース、C++のソース、公開する関数名のリストを渡します。今回公開するのは <code>rgb_to_grayscale</code> の1つだけです。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>module <span class="op">=</span> load_cuda(cuda_src, cpp_src, [<span class="st">'rgb_to_grayscale'</span>], verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>verbose=True</code> を指定しているので、PyTorchは各段階を逐一報告します。拡張モジュール用のディレクトリを作り、ビルドツール <code>ninja</code> 用のビルドファイルを書き出します。続いてC++の部分をシステムのC++コンパイラで、CUDAの部分をNVIDIAの <code>nvcc</code> でコンパイルし、2つのオブジェクトファイルをリンクして共有ライブラリにまとめて読み込みます。戻ってくるのはごく普通のPythonモジュールで、<code>dir(module)</code> で中身を見ると <code>rgb_to_grayscale</code> が含まれていることを確認できます。</p>
+<section id="カーネルの実行" class="level3">
+<h3 class="anchored" data-anchor-id="カーネルの実行">カーネルの実行</h3>
+<p>ラッパー冒頭の <code>CHECK_INPUT</code> は、連続でないテンソルやGPU上にないテンソルを受け付けません。そこで入力を連続にし、CUDAデバイスへ移しておきます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>imgc <span class="op">=</span> img.contiguous().cuda()</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>今回は高さ150ピクセルのサムネイル（<span class="math inline">\(150 \times 225 = 33{,}750\)</span> ピクセル）ではなく、約170万ピクセルあるフルサイズの画像を変換します。時間は <code>%%time</code> で計測します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> module.rgb_to_grayscale(imgc).cpu()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>h,w <span class="op">=</span> res.shape</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>h,w,h<span class="op">*</span>w</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>CPU times: user 1.18 ms, sys: 23 µs, total: 1.2 ms
+Wall time: 1.21 ms
+(1066, 1600, 1705600)
+h*w: 1066*1600</code></pre>
+<p>最後の行 <code>h*w: 1066*1600</code> は、C++のラッパー内の <code>printf</code> が出力したものです。コンパイル済みのコードからの出力もノートブックに表示されるので、手早いデバッグに役立ちます。</p>
+<p>純粋なPythonのループでは、サムネイルの変換だけで約1.5秒かかりました。CUDAカーネルは、およそ50倍のピクセル数を持つ画像を約1.2ミリ秒で変換します。経過時間を単純に比べても1000倍以上速く、ピクセルあたりで見れば差はさらに大きくなります。コードがインタプリタ実行からコンパイル済みのものに変わったこと、そして何千ものGPUスレッドで同時に実行されることの2つがこの差を生んでいます。</p>
+<p>計測の範囲には注意が必要です。GPU<strong>へ</strong>の転送は別のセルで済ませているので、計測には含まれていません。実際の処理でもデータは一度GPUへ移し、その後多数の演算をGPU上で行うのが普通なので、これは妥当な扱いです。一方、CPU<strong>へ戻す</strong> <code>.cpu()</code> は意図的に計測に含めています。CUDAのカーネル起動は非同期で、GPUが処理中でもPythonにすぐ制御が戻ってきます。同期点がないと、カーネルが終わる前にタイマーが止まり、実際より極端に小さい時間が表示されてしまいます。結果をCPUへコピーすれば、カーネルが完了するまで待つことになります。結果の値を表示しても同じように同期しますし、明示的に同期を取ることもできます。<code>show_img(res, cmap='gray')</code> で表示すると、Python版と同じグレースケールの子犬が得られます。</p>
+</section>
+<section id="なぜ先にpythonで書くのか" class="level3">
+<h3 class="anchored" data-anchor-id="なぜ先にpythonで書くのか">なぜ先にPythonで書くのか</h3>
+<p>Pythonのブロックカーネル <code>rgb2grey_bk</code> と今回のCUDAカーネルを並べると、ほぼ1行ずつ対応しています。この対応関係があるからこそ、この進め方は学習用の工夫にとどまらず、実際のカーネル開発でも効果を発揮します。</p>
+<ul>
+<li><strong>デバッグが容易です。</strong> あらゆる中間値を、使い慣れたツールで調べられます。</li>
+<li><strong>コンパイル待ちがありません。</strong> この単純な拡張でもビルドに約45〜50秒かかりますが、Pythonのシミュレーションはすぐに実行できます。</li>
+<li><strong>翻訳がほぼ機械的です。</strong> Python版が動けば、Cへの変換は決まりきった作業で、大部分を言語モデルに任せられます。</li>
+</ul>
+<p>書いて、コンパイルして、デバッグするサイクルが苦痛でCUDAを避ける人は少なくありません。Pythonで試作して最後にだけ翻訳する方法なら、その苦痛の多くを取り除けます。</p>
+</section>
+</section>
+<section id="行列乗算のpython参照実装" class="level2">
+<h2 class="anchored" data-anchor-id="行列乗算のpython参照実装">行列乗算のPython参照実装</h2>
+<p>グレースケール変換のカーネルが完成したので、次はより重要な演算である行列乗算に取り組みます。行列乗算は深層学習で最も基本的な線形代数演算で、事実上すべてのニューラルネットワークが最も基礎的な構成ブロックとして含んでいます。高度に最適化された実装がライブラリにあるため、一から書く必要はほとんどありません。それでも、行列乗算に似た処理を他の処理と一緒に独自のカーネルへ<em>フュージョン</em>したい場面はよくあります。自分で実装してみることは、ここまでに組み立てたカーネルの考え方の良い練習にもなります。</p>
+<section id="行列乗算が計算するもの" class="level3">
+<h3 class="anchored" data-anchor-id="行列乗算が計算するもの">行列乗算が計算するもの</h3>
+<p>2つの入力行列 <span class="math inline">\(M\)</span>、<span class="math inline">\(N\)</span> と出力行列 <span class="math inline">\(P\)</span> を考えます。<span class="math inline">\(P\)</span> の各要素は、<span class="math inline">\(M\)</span> のある行と <span class="math inline">\(N\)</span> のある列の内積です。</p>
+<p><span class="math display">\[
+P_{\mathit{Row},\mathit{Col}} = \sum_{k} M_{\mathit{Row},k}\, N_{k,\mathit{Col}}
+\]</span></p>
+<p>この内積が意味を持つのは、<span class="math inline">\(M\)</span> の行と <span class="math inline">\(N\)</span> の列の長さが等しいときだけです。つまり<em>内側の</em>次元が一致している必要があります。<span class="math inline">\(M\)</span> が <span class="math inline">\(a_r \times a_c\)</span>、<span class="math inline">\(N\)</span> が <span class="math inline">\(b_r \times b_c\)</span> なら <span class="math inline">\(a_c = b_r\)</span> でなければならず、結果は <span class="math inline">\(a_r \times b_c\)</span> になります。</p>
+</section>
+<section id="データの準備" class="level3">
+<h3 class="anchored" data-anchor-id="データの準備">データの準備</h3>
+<p>入力には手書き数字のMNISTデータセットを使います。まだ手元になければpickle形式のファイルをダウンロードします。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>MNIST_URL<span class="op">=</span><span class="st">'https://github.com/mnielsen/neural-networks-and-deep-learning/blob/master/data/mnist.pkl.gz?raw=true'</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>path_data <span class="op">=</span> Path(<span class="st">'data'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>path_data.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>path_gz <span class="op">=</span> path_data<span class="op">/</span><span class="st">'mnist.pkl.gz'</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> path_gz.exists(): urlretrieve(MNIST_URL, path_gz)</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>訓練用と検証用の分割をunpickleし、PyTorchのテンソルに変換します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> gzip.<span class="bu">open</span>(path_gz, <span class="st">'rb'</span>) <span class="im">as</span> f: ((x_train, y_train), (x_valid, y_valid), _) <span class="op">=</span> pickle.load(f, encoding<span class="op">=</span><span class="st">'latin-1'</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>x_train,y_train,x_valid,y_valid <span class="op">=</span> <span class="bu">map</span>(tensor, (x_train,y_train,x_valid,y_valid))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>x_train.shape,x_train.<span class="bu">type</span>()</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>訓練セットは50,000枚で、各画像は <span class="math inline">\(28 \times 28 = 784\)</span> 個の浮動小数点数からなるベクトルに平坦化されています。形状は <code>50000×784</code> です。</p>
+<p>例に意味を持たせるため、活性化関数のないニューラルネットワークの層を1つ思い浮かべてください。平坦化した画像に784行の重み行列を掛け、数字ごとに1列、計10列を出力する純粋な線形モデルです。学習は行わないので、重みはシードを固定した乱数で用意します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">1</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> torch.randn(<span class="dv">784</span>,<span class="dv">10</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>weights</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="三重ループで書く" class="level3">
+<h3 class="anchored" data-anchor-id="三重ループで書く">三重ループで書く</h3>
+<p>Pythonは非常に遅いので、問題を小さく保ちます。1つ目の行列は検証セットの5行だけにし、2つ目は重み行列全体を使います。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="op">=</span> x_valid[:<span class="dv">5</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="op">=</span> weights</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>m1.shape,m2.shape</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><span class="math inline">\(5 \times 784\)</span> と <span class="math inline">\(784 \times 10\)</span> の積なので、出力は <span class="math inline">\(5 \times 10\)</span> です。形状を <code>ar, ac</code> と <code>br, bc</code> に展開し、<code>torch.zeros(ar, bc)</code> で出力を確保したら、外側の2つのループで行 <code>i</code> と列 <code>j</code> を訪れ、最も内側のループで共有される784要素の積を累積していきます。これは上の式をそのまま書き写したものです。</p>
+<p>これらの部品は1行ずつ別々のセルで確かめながら組み立てました。各行を書いた時点で検証しているので、予期しないエラーはほとんど起こりません。動くことを確認したら、セルを結合して関数ヘッダを付けます。こうすれば、テスト済みのコードだけからなる参照実装ができあがります。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    (ar,ac),(br,bc) <span class="op">=</span> a.shape,b.shape</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.zeros(ar, bc)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ar):</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(bc):</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(ac): c[i,j] <span class="op">+=</span> a[i,k] <span class="op">*</span> b[k,j]</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>%time _=matmul(m1, m2)</code> で計測すると約1秒かかります。最も内側の積和演算の回数は <span class="math inline">\(a_r \times b_c \times a_c = 39{,}200\)</span> 回です。4万回にも満たない演算に1秒かかるようでは、データセット全体の乗算には使えません。この関数は、計算をGPUへ移していく際の正しさの参照として使います。</p>
+</section>
+</section>
+<section id="次元グリッドで行列乗算をシミュレートする" class="level2">
+<h2 class="anchored" data-anchor-id="次元グリッドで行列乗算をシミュレートする">2次元グリッドで行列乗算をシミュレートする</h2>
+<p>グレースケール変換では、ループの本体をそのままカーネルにしました。行列乗算のようにループが三重に入れ子になっている場合は、どこまでを「1スレッドの仕事」とするかを選ぶ必要があります。</p>
+<section id="並列化の単位を選ぶ" class="level3">
+<h3 class="anchored" data-anchor-id="並列化の単位を選ぶ">並列化の単位を選ぶ</h3>
+<p>真っ先に思いつく候補は、最も内側の積和 <code>t1[i,j] += m1[i,k] * m2[k,j]</code> を1スレッドの仕事にすることです。しかしこの方法では、ある <span class="math inline">\((i,j)\)</span> に対応する784個のスレッドがすべて同じ出力要素を更新してしまいます。こうした書き込みの衝突を調停することこそ避けたい事態です。</p>
+<p>そこで、<code>k</code> のループ全体、つまり内積の計算をまるごと1スレッドに割り当てます。並列化するのは外側の行と列の2つのループで、出力要素ごとに1スレッドが対応します。</p>
+<p><span class="math display">\[
+P_{rc} = \sum_{i=0}^{k-1} M_{ri}\, N_{ic}
+\]</span></p>
+<p>各スレッドは1つの行と1つの列を読み、他と重ならない1つの位置に書き込むだけです。そのため、どのスレッドも他のスレッドを待つ必要がありません。</p>
+</section>
+<section id="次元のブロックとスレッド" class="level3">
+<h3 class="anchored" data-anchor-id="次元のブロックとスレッド">2次元のブロックとスレッド</h3>
+<p>出力が行列なら、行と列で考えるほうが自然です。CUDAでは、ブロックのグリッドもブロック内のスレッドの配置も、2次元や3次元にできます。グローバルな行と列は、1次元のときと同じ式を軸ごとに適用して求めます。</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{行} &amp;= \texttt{blockIdx.y} \times \texttt{blockDim.y} + \texttt{threadIdx.y},\\
+\text{列} &amp;= \texttt{blockIdx.x} \times \texttt{blockDim.x} + \texttt{threadIdx.x}
+\end{aligned}
+\]</span></p>
+<p>具体例として、幅76ピクセル、高さ62ピクセルの画像を <span class="math inline">\(16 \times 16\)</span> のブロックで覆う場合を考えます。列方向には <span class="math inline">\(\lceil 76/16 \rceil = 5\)</span> 個、行方向には <span class="math inline">\(\lceil 62/16 \rceil = 4\)</span> 個のブロックが必要です。たとえばブロック <span class="math inline">\((x{=}4, y{=}3)\)</span> 内の位置 <span class="math inline">\((x{=}10, y{=}5)\)</span> にあるスレッドは、行 <span class="math inline">\(3 \cdot 16 + 5 = 53\)</span>、列 <span class="math inline">\(4 \cdot 16 + 10 = 74\)</span> を担当します。76も62も16の倍数ではないので、端のブロックは画像からはみ出します。最後の列のブロックは列79まで、最後の行のブロックは行63まで広がっていますが、実際に存在するのは列75と行61までです。そのため、ガードでは両方の座標を確認する必要があります。</p>
+</section>
+<section id="pythonによるシミュレーション" class="level3">
+<h3 class="anchored" data-anchor-id="pythonによるシミュレーション">Pythonによるシミュレーション</h3>
+<p>1次元のランナーは、ブロックのループとスレッドのループの2重ループでした。2次元になると、それぞれが <span class="math inline">\(y\)</span> と <span class="math inline">\(x\)</span> のループの組に分かれるので、全体は4重ループになります。CUDAの <code>.x</code>/<code>.y</code> フィールドは、属性を保持するだけの軽量なオブジェクトである <code>SimpleNamespace</code>（<code>ns</code> としてimport）で模倣します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> types <span class="im">import</span> SimpleNamespace <span class="im">as</span> ns</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> blk_kernel2d(f, blocks, threads, <span class="op">*</span>args):</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i0 <span class="kw">in</span> <span class="bu">range</span>(blocks.y):</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i1 <span class="kw">in</span> <span class="bu">range</span>(blocks.x):</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> j0 <span class="kw">in</span> <span class="bu">range</span>(threads.y):</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> j1 <span class="kw">in</span> <span class="bu">range</span>(threads.x): f(ns(x<span class="op">=</span>i1,y<span class="op">=</span>i0), ns(x<span class="op">=</span>j1,y<span class="op">=</span>j0), threads, <span class="op">*</span>args)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul_bk(blockidx, threadidx, blockdim, m, n, out, h, w, k):</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> blockidx.y<span class="op">*</span>blockdim.y <span class="op">+</span> threadidx.y</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> blockidx.x<span class="op">*</span>blockdim.x <span class="op">+</span> threadidx.x</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (r<span class="op">&gt;=</span>h <span class="kw">or</span> c<span class="op">&gt;=</span>w): <span class="cf">return</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    o <span class="op">=</span> <span class="fl">0.</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(k): o <span class="op">+=</span> m[r<span class="op">*</span>k<span class="op">+</span>i] <span class="op">*</span> n[i<span class="op">*</span>w<span class="op">+</span>c]</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    out[r<span class="op">*</span>w<span class="op">+</span>c] <span class="op">=</span> o</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul_2d(m, n):</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    h,k  <span class="op">=</span> m.shape</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    k2,w <span class="op">=</span> n.shape</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> k<span class="op">==</span>k2, <span class="st">"Size mismatch!"</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    output <span class="op">=</span> torch.zeros(h, w, dtype<span class="op">=</span>m.dtype)</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    tpb <span class="op">=</span> ns(x<span class="op">=</span><span class="dv">16</span>,y<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    blocks <span class="op">=</span> ns(x<span class="op">=</span>math.ceil(w<span class="op">/</span>tpb.x), y<span class="op">=</span>math.ceil(h<span class="op">/</span>tpb.y))</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    blk_kernel2d(matmul_bk, blocks, tpb,</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>                 m.flatten(), n.flatten(), output.flatten(), h, w, k)</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> output</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>blk_kernel2d</code> は、すべてのブロックとそのブロック内のすべてのスレッドを順に訪れます。そのたびに、ブロックインデックスとスレッドインデックスに加えて、ブロックの次元 <code>threads</code> を渡してカーネルを呼びます。カーネルが自分のグローバルな位置を計算するには、ブロックの大きさが必要だからです。</p>
+<p><code>matmul_bk</code> は、担当する行 <code>r</code> と列 <code>c</code> を求めます。どちらかが <span class="math inline">\(h \times w\)</span> の出力の範囲外ならすぐにreturnし、そうでなければ内積を累積します。行列は平坦化して渡すので、行優先のインデックスは手で書きます。<span class="math inline">\(h\times k\)</span> 行列 <code>m</code> の要素 <span class="math inline">\((r,i)\)</span> は <code>r*k+i</code>、<span class="math inline">\(k\times w\)</span> 行列 <code>n</code> の要素 <span class="math inline">\((i,c)\)</span> は <code>i*w+c</code> にあり、結果は <code>r*w+c</code> に書き込みます。</p>
+<p><code>matmul_2d</code> はランチャーです。内側の次元が一致することを確認して出力を確保し、ブロックあたり <span class="math inline">\(16\times16=256\)</span> スレッドを選びます。ブロック数は各軸で切り上げ除算をして求めます。これは76×62の画像を覆ったときと同じ計算で、はみ出したスレッドはカーネルのガードが捨てます。</p>
+<p>三重ループの参照実装の結果 <code>t1</code> と比較してみます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> matmul_2d(m1, m2)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>torch.isclose(t1, res).<span class="bu">all</span>()</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>tensor(True)</code></pre>
+<p>結果は一致しました。同じ内積を、順序と管理の仕方を変えて計算しているだけなので、一致するのは当然です。それでも、インデックス計算、ガード、グリッドのサイズ決定のすべてを、1行ずつステップ実行できる環境で検証できたことに価値があります。</p>
+</section>
+</section>
+<section id="ブロードキャストによる高速な検証用実装" class="level2">
+<h2 class="anchored" data-anchor-id="ブロードキャストによる高速な検証用実装">ブロードキャストによる高速な検証用実装</h2>
+<p>2次元グリッドのシミュレーションは5行の部分データで検証できました。しかし、後でCUDAカーネルを訓練セット全体（50,000行）に対して動かしたとき、その出力を照らし合わせる正解も必要です。三重ループの参照実装は5行でも約1秒かかり、全体は部分データの1万倍の大きさなので何時間も走り続けてしまいます。そこで、全データで答えを出せる高速なCPU参照実装を用意します。</p>
+<p>方針は、Pythonには最も外側のループだけを担当させ、残りを<em>ブロードキャスト</em>によってPyTorchのベクトル化演算に任せることです。<code>a</code> の各行 <span class="math inline">\(i\)</span> について、<code>a[i,:,None]</code> はその行を形状 <span class="math inline">\((a_c, 1)\)</span> の列に変形します。これを形状 <span class="math inline">\((a_c, b_c)\)</span> の <code>b</code> と掛けると、列が <code>b</code> のすべての列にわたってブロードキャストされ、積 <span class="math inline">\(a_{ik} b_{kj}\)</span> がすべて一度に得られます。続いて <code>sum(dim=0)</code> で <span class="math inline">\(k\)</span> について縮約すれば、<span class="math inline">\(i\)</span> 番目の出力行全体がまとめて求まります。ブロードキャストの詳しい導出は <a href="https://course.fast.ai">fast.ai のコース</a> で段階的に解説されています。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> matmul(a,b):</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    (ar,ac),(br,bc) <span class="op">=</span> a.shape,b.shape</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.zeros(ar, bc)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(ar): c[i] <span class="op">=</span> (a[i,:,<span class="va">None</span>] <span class="op">*</span> b).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> c</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>独自のカーネルは使っていないので、これもまだ純粋なPythonです。ただし、明示的なループは3つから1つに減りました。同じ5行の部分データで三重ループの結果 <code>t1</code> と照合すると一致し、実時間は約4msでした。三重ループの約1秒と比べると大幅に短くなっています。</p>
+<p>検証済みの高速な実装が手に入ったので、訓練セット全体を重みと掛け合わせ、その結果を <code>tr</code> として保持します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="op">=</span> x_train</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>tr <span class="op">=</span> matmul(m1, m2)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>tr.shape</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>出力の形状は <span class="math inline">\(50000 \times 10\)</span> で、実時間は約1.31秒でした。積和演算の回数は <span class="math inline">\(50000 \cdot 10 \cdot 784\)</span>、つまり3億9200万回です。概念的には三重ループ分の処理をしていますが、そのうち2つのループはPythonインタプリタではなくPyTorchの内部で実行されます。そのため、素朴な実装が小さな部分データに要したのとほぼ同じ時間で、1万倍の処理が終わります。</p>
+<p>もっとも、ここで大事なのはCPU版の速さではありません。信頼できる答え <code>tr</code> が得られたことに意味があります。CUDA版の行列乗算カーネルが訓練セット全体の出力を生成したら、<code>tr</code> と比較して正しさを確認します。</p>
+</section>
+<section id="cuda版行列乗算カーネルとdim3" class="level2">
+<h2 class="anchored" data-anchor-id="cuda版行列乗算カーネルとdim3">CUDA版行列乗算カーネルとdim3</h2>
+<p>参照値 <code>tr</code> が手に入ったので、いよいよCUDA版の行列乗算カーネルを書きます。翻訳の対象は、2次元グリッドのシミュレーションで使ったスレッドごとの関数 <code>matmul_bk</code> です。グレースケール変換のときと同じく、この関数を言語モデルに渡してCで書き直すよう依頼したところ、ほとんど手を加えずに使えました。中身はインデックス計算と比較とループだけで、Python固有の部分がごくわずかなので、これは自然な結果です。</p>
+<p>CUDAソースの全体は次のとおりです。これまでと同様にPythonのraw文字列として保持し、先頭に共通プリアンブル <code>cuda_begin</code> を付けています。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>cuda_src <span class="op">=</span> cuda_begin <span class="op">+</span> <span class="vs">r'''</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="vs">__global__ void matmul_k</span><span class="kw">(</span><span class="vs">float</span><span class="op">*</span><span class="vs"> m, float</span><span class="op">*</span><span class="vs"> n, float</span><span class="op">*</span><span class="vs"> out, int h, int w, int k</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="vs">    int r = blockIdx</span><span class="dv">.</span><span class="vs">y</span><span class="op">*</span><span class="vs">blockDim</span><span class="dv">.</span><span class="vs">y </span><span class="op">+</span><span class="vs"> threadIdx</span><span class="dv">.</span><span class="vs">y;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="vs">    int c = blockIdx</span><span class="dv">.</span><span class="vs">x</span><span class="op">*</span><span class="vs">blockDim</span><span class="dv">.</span><span class="vs">x </span><span class="op">+</span><span class="vs"> threadIdx</span><span class="dv">.</span><span class="vs">x;</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="vs">    if </span><span class="kw">(</span><span class="vs">r&gt;=h </span><span class="cf">||</span><span class="vs"> c&gt;=w</span><span class="kw">)</span><span class="vs"> return;</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="vs">    float o = 0;</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="vs">    for </span><span class="kw">(</span><span class="vs">int i = 0; i&lt;k; </span><span class="op">++</span><span class="vs">i</span><span class="kw">)</span><span class="vs"> o </span><span class="op">+</span><span class="vs">= m</span><span class="pp">[r*k+i]</span><span class="vs"> </span><span class="op">*</span><span class="vs"> n</span><span class="pp">[i*w+c]</span><span class="vs">;</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="vs">    out</span><span class="pp">[r*w+c]</span><span class="vs"> = o;</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="vs">}</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="vs">torch::Tensor matmul</span><span class="kw">(</span><span class="vs">torch::Tensor m, torch::Tensor n</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="vs">    CHECK_INPUT</span><span class="kw">(</span><span class="vs">m</span><span class="kw">)</span><span class="vs">; CHECK_INPUT</span><span class="kw">(</span><span class="vs">n</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="vs">    int h = m</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">0</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="vs">    int w = n</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">1</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="vs">    int k = m</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">1</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="vs">    TORCH_CHECK</span><span class="kw">(</span><span class="vs">k==n</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">0</span><span class="kw">)</span><span class="vs">, "Size mismatch!"</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="vs">    auto output = torch::zeros</span><span class="kw">(</span><span class="vs">{h, w}, m</span><span class="dv">.</span><span class="vs">options</span><span class="kw">())</span><span class="vs">;</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="vs">    dim3 tpb</span><span class="kw">(</span><span class="vs">16,16</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="vs">    dim3 blocks</span><span class="kw">(</span><span class="vs">cdiv</span><span class="kw">(</span><span class="vs">w, tpb</span><span class="dv">.</span><span class="vs">x</span><span class="kw">)</span><span class="vs">, cdiv</span><span class="kw">(</span><span class="vs">h, tpb</span><span class="dv">.</span><span class="vs">y</span><span class="kw">))</span><span class="vs">;</span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="vs">    matmul_k&lt;&lt;&lt;blocks, tpb&gt;&gt;&gt;</span><span class="kw">(</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="vs">        m</span><span class="dv">.</span><span class="vs">data_ptr&lt;float&gt;</span><span class="kw">()</span><span class="vs">, n</span><span class="dv">.</span><span class="vs">data_ptr&lt;float&gt;</span><span class="kw">()</span><span class="vs">, output</span><span class="dv">.</span><span class="vs">data_ptr&lt;float&gt;</span><span class="kw">()</span><span class="vs">, h, w, k</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="vs">    C10_CUDA_KERNEL_LAUNCH_CHECK</span><span class="kw">()</span><span class="vs">;</span></span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="vs">    return output;</span></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="vs">}</span></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="vs">'''</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>カーネル <code>matmul_k</code> は <code>matmul_bk</code> をほぼ1行ずつ写したもので、変更点はグレースケールの翻訳で見たものと同じです。</p>
+<ul>
+<li>行列は浮動小数点値を持つので、ポインタは <code>unsigned char*</code> ではなく <code>float*</code> です。</li>
+<li>引数 <code>blockidx</code>、<code>threadidx</code>、<code>blockdim</code> は消え、組み込み変数 <code>blockIdx</code>、<code>threadIdx</code>、<code>blockDim</code> の <code>.x</code> と <code>.y</code> をシミュレーションと同じように使います。</li>
+<li>変数にはCの型（<code>int</code>、<code>float</code>）が付き、<code>or</code> は <code>||</code> に、<code>range</code> ループはCの <code>for</code> ループになります。</li>
+<li>関数に <code>__global__</code> を付け、CPUから呼ばれてGPU上で動くカーネルであることを宣言します。</li>
+</ul>
+<p>ホスト関数 <code>matmul</code> は、シミュレーション版 <code>matmul_2d</code> が担っていた事務処理を引き受けます。まず <code>CHECK_INPUT</code> で両テンソルが連続でCUDA上にあることを確認し、<code>h</code>、<code>w</code>、<code>k</code> を読み取ります。続いて <code>TORCH_CHECK</code> で内側の次元が一致するかを検証します。第1引数が条件、第2引数が失敗時のメッセージです。こうしたチェックは安価な保険なので、CUDAコードのあちこちに惜しみなく入れておく価値があります。出力は <code>torch::zeros</code> で確保し、<code>m.options()</code> によってデータ型とデバイスを入力に合わせます。</p>
+<p>新しいのは起動構成です。<code>dim3</code> はCUDAの構造体で、3つの符号なし整数を <code>.x</code>、<code>.y</code>、<code>.z</code> で持ちます。<code>dim3 tpb(16,16)</code> のように省略した要素は1になるので、<code>tpb</code> は256スレッドからなる <span class="math inline">\(16 \times 16 \times 1\)</span> のブロックを表します。列が <span class="math inline">\(x\)</span> 方向、行が <span class="math inline">\(y\)</span> 方向に対応するため、ブロック数は各軸で切り上げ除算します。</p>
+<p><span class="math display">\[
+\text{blocks.x} = \left\lceil \frac{w}{\text{tpb.x}} \right\rceil, \qquad
+\text{blocks.y} = \left\lceil \frac{h}{\text{tpb.y}} \right\rceil .
+\]</span></p>
+<p>はみ出したスレッドはガード <code>if (r&gt;=h || c&gt;=w) return;</code> で何もせずに戻ります。実はグレースケールの起動で渡していた整数も、<code>.y</code> と <code>.z</code> が1の <code>dim3</code> に暗黙的に変換されていました。あのカーネルが <code>blockDim.x</code> や <code>blockIdx.x</code> を参照できたのはそのためです。</p>
+<p>ラッパーの宣言を用意し、<code>load_cuda</code> でコンパイルします。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>cpp_src <span class="op">=</span> <span class="st">"torch::Tensor matmul(torch::Tensor m, torch::Tensor n);"</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>module <span class="op">=</span> load_cuda(cuda_src, cpp_src, [<span class="st">'matmul'</span>])</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>入力はGPU上の連続なテンソルとして準備し、結果をCPUに戻して <code>tr</code> と比較します。絶対許容誤差 <span class="math inline">\(10^{-5}\)</span> で、浮動小数点の丸め方の違いを吸収します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>m1c,m2c <span class="op">=</span> m1.contiguous().cuda(), m2.contiguous().cuda()</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>torch.isclose(tr,module.matmul(m1c, m2c).cpu(), atol<span class="op">=</span><span class="fl">1e-5</span>).<span class="bu">all</span>()</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>結果は <code>tensor(True)</code> でした。今回は先頭の5行ではなく、MNISTの訓練セット全体で一致を確かめています。最後に、CPUへのコピーも含めて計測します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>res<span class="op">=</span>module.matmul(m1c, m2c).cpu()</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>res.shape</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>CPU times: user 6.54 ms, sys: 0 ns, total: 6.54 ms
+Wall time: 5.95 ms
+torch.Size([50000, 10])</code></pre>
+<p>出力は50,000枚の画像それぞれについて10個の値を持つ形状になっています。CPUのブロードキャスト版が約1.3秒かかった計算を、素朴なCUDAカーネルは約6ミリ秒で終えました。およそ200倍の高速化です。ただし、このカーネルは最も単純なアルゴリズムをそのまま書き写したものにすぎません。</p>
+</section>
+<section id="pytorchとの差と共有メモリによるタイリング" class="level2">
+<h2 class="anchored" data-anchor-id="pytorchとの差と共有メモリによるタイリング">PyTorchとの差と共有メモリによるタイリング</h2>
+<p>比較対象として最初に思い浮かぶのは、PyTorch自身の行列乗算です。<code>@</code> 演算子で使えます。まず組み込み演算子の結果 <code>(m1c@m2c).cpu()</code> を参照値 <code>tr</code> と同じ許容誤差 <code>atol=1e-5</code> で比べると、予想どおり <code>tensor(True)</code> となり、結果は一致します。比較を公平にするため、自作カーネルと同じくCPUへのコピーも含めて計測します。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit <span class="op">-</span>n <span class="dv">10</span> _<span class="op">=</span>(m1c<span class="op">@</span>m2c).cpu()</span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text"><code>2.04 ms ± 28.1 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
+<p>この問題では、PyTorchは手書きのカーネルよりおよそ3倍速いことがわかります。行列の形状によっては、差はさらに広がることもあります。自作カーネルも絶対的には悪くなく、約3億9200万回の積和演算を約6ミリ秒でこなしています。それでも、PyTorchの実装がしていて自作カーネルがしていないことは何なのか、考えてみる価値はあります。</p>
+<section id="同じ値を何度も読んでいる" class="level3">
+<h3 class="anchored" data-anchor-id="同じ値を何度も読んでいる">同じ値を何度も読んでいる</h3>
+<p>手がかりは、隣り合う出力セルが多くのデータを共通して使っている点にあります。出力 <span class="math inline">\(P = M \times N\)</span> を <span class="math inline">\(16 \times 16\)</span> のタイルに分け、1つのタイルを1つのスレッドブロックに割り当てる場合を考えてみましょう。各出力要素 <span class="math inline">\(P_{ij}\)</span> には <span class="math inline">\(M\)</span> の第 <span class="math inline">\(i\)</span> 行と <span class="math inline">\(N\)</span> の第 <span class="math inline">\(j\)</span> 列が必要です。したがって、このブロックが必要とするのは <span class="math inline">\(M\)</span> の16行と <span class="math inline">\(N\)</span> の16列だけです。ただし、それらは何度も繰り返し使われます。タイル内で同じ行にあるスレッドはすべて <span class="math inline">\(M\)</span> の同じ行を読み、同じ列にあるスレッドはすべて <span class="math inline">\(N\)</span> の同じ列を読むからです。</p>
+<p>素朴なカーネルでは、各スレッドが必要な値をすべてグローバルメモリから直接取得しています。そのため、同じ数値が低速なメモリから何度も読み出されています。</p>
+</section>
+<section id="タイリングと共有メモリ" class="level3">
+<h3 class="anchored" data-anchor-id="タイリングと共有メモリ">タイリングと共有メモリ</h3>
+<p>ここで効いてくるのがブロックの性質です。ブロック内のスレッドはすべて同じSM上で実行され、グローバルメモリよりはるかに高速な共有メモリを共有しています。共有メモリは小さく、プログラマが明示的に管理するキャッシュです。より優れたカーネルでは、まずブロックのスレッドが協調して、必要な <span class="math inline">\(M\)</span> と <span class="math inline">\(N\)</span> の部分を共有メモリに一度だけ読み込みます。次に全スレッドで同期を取り、そのあと各スレッドがこの高速なローカルコピーから値を読み出します。</p>
+<p>これがタイリングです。グローバルメモリに何度も戻る代わりに、データをキャッシュして再利用します。この種の最適化が、自作カーネルとPyTorchとの残りの差の多くを説明します。共有メモリ、同期、同じSMへの配置というブロックの保証は、まさにこうした協調を可能にするために設計されています。</p>
+</section>
+</section>
+<section id="次元グリッドは利便機能にすぎない" class="level2">
+<h2 class="anchored" data-anchor-id="次元グリッドは利便機能にすぎない">2次元グリッドは利便機能にすぎない</h2>
+<p>行列乗算では <code>dim3</code> で2次元のブロックとグリッドを使いました。各スレッドが出力の1セルを担当し、行と列の両方を必要とするので、この配置は問題によく合っていました。ただし、2次元構造は必須ではありません。CUDAでは1次元・2次元・3次元のどの配置でも起動でき、ある配置で書ける計算は別の配置でも書けます。確かめるために、1次元グリッドで書いたグレースケール変換を、<span class="math inline">\(16 \times 16\)</span> スレッドの <code>dim3</code> ブロックで書き直してみます。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>cuda_src <span class="op">=</span> cuda_begin <span class="op">+</span> <span class="vs">r'''</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="vs">__global__ void rgb_to_grayscale_kernel</span><span class="kw">(</span><span class="vs">unsigned char</span><span class="op">*</span><span class="vs"> x, unsigned char</span><span class="op">*</span><span class="vs"> out, int w, int h</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="vs">    int c = blockIdx</span><span class="dv">.</span><span class="vs">x</span><span class="op">*</span><span class="vs">blockDim</span><span class="dv">.</span><span class="vs">x </span><span class="op">+</span><span class="vs"> threadIdx</span><span class="dv">.</span><span class="vs">x;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="vs">    int r = blockIdx</span><span class="dv">.</span><span class="vs">y</span><span class="op">*</span><span class="vs">blockDim</span><span class="dv">.</span><span class="vs">y </span><span class="op">+</span><span class="vs"> threadIdx</span><span class="dv">.</span><span class="vs">y;</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="vs">    if </span><span class="kw">(</span><span class="vs">c&lt;w &amp;&amp; r&lt;h</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="vs">        int i = r</span><span class="op">*</span><span class="vs">w </span><span class="op">+</span><span class="vs"> c;</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="vs">        int n = h</span><span class="op">*</span><span class="vs">w;</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="vs">        out</span><span class="pp">[i]</span><span class="vs"> = 0</span><span class="dv">.</span><span class="vs">2989</span><span class="op">*</span><span class="vs">x</span><span class="pp">[i]</span><span class="vs"> </span><span class="op">+</span><span class="vs"> 0</span><span class="dv">.</span><span class="vs">5870</span><span class="op">*</span><span class="vs">x</span><span class="pp">[i+n]</span><span class="vs"> </span><span class="op">+</span><span class="vs"> 0</span><span class="dv">.</span><span class="vs">1140</span><span class="op">*</span><span class="vs">x</span><span class="pp">[i+2*n]</span><span class="vs">;</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="vs">    }</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="vs">}</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="vs">torch::Tensor rgb_to_grayscale</span><span class="kw">(</span><span class="vs">torch::Tensor input</span><span class="kw">)</span><span class="vs"> {</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="vs">    CHECK_INPUT</span><span class="kw">(</span><span class="vs">input</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="vs">    int h = input</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">1</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="vs">    int w = input</span><span class="dv">.</span><span class="vs">size</span><span class="kw">(</span><span class="vs">2</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="vs">    torch::Tensor output = torch::empty</span><span class="kw">(</span><span class="vs">{h,w}, input</span><span class="dv">.</span><span class="vs">options</span><span class="kw">())</span><span class="vs">;</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a><span class="vs">    dim3 tpb</span><span class="kw">(</span><span class="vs">16,16</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="vs">    dim3 blocks</span><span class="kw">(</span><span class="vs">cdiv</span><span class="kw">(</span><span class="vs">w, tpb</span><span class="dv">.</span><span class="vs">x</span><span class="kw">)</span><span class="vs">, cdiv</span><span class="kw">(</span><span class="vs">h, tpb</span><span class="dv">.</span><span class="vs">y</span><span class="kw">))</span><span class="vs">;</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="vs">    rgb_to_grayscale_kernel&lt;&lt;&lt;blocks, tpb&gt;&gt;&gt;</span><span class="kw">(</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="vs">        input</span><span class="dv">.</span><span class="vs">data_ptr&lt;unsigned char&gt;</span><span class="kw">()</span><span class="vs">, output</span><span class="dv">.</span><span class="vs">data_ptr&lt;unsigned char&gt;</span><span class="kw">()</span><span class="vs">, w, h</span><span class="kw">)</span><span class="vs">;</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a><span class="vs">    C10_CUDA_KERNEL_LAUNCH_CHECK</span><span class="kw">()</span><span class="vs">;</span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a><span class="vs">    return output;</span></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a><span class="vs">}'''</span></span></code></pre></div><button title="コピー" class="code-copy-button"><i class="bi"></i></button></div>
+<p>各スレッドは2つの座標を計算します。<span class="math inline">\(x\)</span> 次元から列 <code>c</code>、<span class="math inline">\(y\)</span> 次元から行 <code>r</code> を求めます。グリッドは各方向で独立に切り上げられるので、画像の右端や下端からはみ出すことがあります。そのため、ガードは <code>c&lt;w &amp;&amp; r&lt;h</code> と両方を確認します。ガードの内側で初めて、行優先の平坦な位置 <code>i = r*w + c</code> を復元し、あとはこれまでと同じくオフセット <code>i</code>、<code>i+n</code>、<code>i+2*n</code> から赤・緑・青を読みます。ラッパーでは <code>dim3 tpb(16,16)</code> を作り、幅と高さそれぞれに <code>cdiv</code> を適用してブロック数を求めます。コンパイルと呼び出しは以前と同じで、得られる画像も1次元版と同一になります。</p>
+<p>では、どちらが書きやすいでしょうか。1次元版のほうが明らかに短く、カーネル本体は2行で済みます。スレッドインデックスがそのまま平坦なピクセルインデックスになるので、座標からインデックスを復元する必要がありません。ガードも1回の比較で済み、起動も整数1つと切り上げ除算1回だけで、<code>dim3</code> も要りません。ピクセルという2次元が自然に思えるデータでも、このカーネルでは2次元にしてもすっきりせず、座標が2つになり、ガードが複合になり、インデックス計算と起動設定が増えただけでした。</p>
+<p>2つのプログラムはまったく同じ計算をしています。多次元のブロックやグリッドは、書きやすさのために用意された機能にすぎません。行列乗算のように問題が自然に行と列に対応するときはインデックス計算を読みやすくしてくれますが、そうでなければ1次元のままで十分です。コードが書きやすく読みやすくなるときにだけ使えばよいのです。</p>
+</section>
+<section id="まとめ" class="level2">
+<h2 class="anchored" data-anchor-id="まとめ">まとめ</h2>
+<p>PyTorchの組み込み演算子は専門家が入念にチューニングしたもので、大きな密行列どうしの単純な行列乗算のような標準的な計算であれば、ライブラリのルーチンを使うのが正しい選択です。しかし実際のモデルは、教科書的な演算を並べただけのものではありません。新しい層やattentionの変種、量子化の方式、損失関数は日々考案されていて、既存の演算子にうまく収まらないことがあります。そのとき、小さなライブラリ呼び出しを多数組み合わせてぎこちなく表現する代わりに、必要な処理だけを行うカーネルを書くという選択肢が現実的なものになります。</p>
+<p>独自カーネルを書く最も一般的な理由は<em>フュージョン</em>です。PyTorchの各演算は独立したカーネルとして起動され、そのたびに入力をグローバルメモリから読み、結果をグローバルメモリへ書き戻します。たとえば次の式を個別のテンソル演算で書いたとします。</p>
+<p><span class="math display">\[
+y = \operatorname{relu}(a \cdot x + b)
+\]</span></p>
+<p>すると乗算、加算、ReLUのカーネルが順に走り、中間テンソルがそのたびにメモリを往復します。こうした要素ごとの処理では算術はわずかで、コストの大半はデータの移動が占めます。各スレッドが <span class="math inline">\(x\)</span> を一度だけ読み、<span class="math inline">\(a x + b\)</span> を計算して活性化関数を適用し、<span class="math inline">\(y\)</span> を一度だけ書く1つのカーネルにまとめれば、中間データの転送はなくなります。必要なのはグレースケール変換とまったく同じパターンで、グローバルインデックスを計算し、ガードを確認し、その要素の処理をすべて1スレッド内で済ませるだけです。</p>
+<p>カーネルを書くことは、規律あるワークフローに従えば評判ほど難しくありません。この記事で使ってきた手順は次のとおりです。</p>
+<ol type="1">
+<li>素直なPythonの参照実装を書き、正解として残しておきます。</li>
+<li>内側の処理をインデックスの関数として取り出し、ブロック、スレッド、ガードを使ってPython上で起動をシミュレートします。</li>
+<li>printや小さな入力が使えるPython上でデバッグします。</li>
+<li>CUDA Cに翻訳し（大部分は言語モデルに任せられます）、短いC++ラッパーで包んでインラインでコンパイルします。</li>
+<li>まず小さな入力で、次に全データで参照実装と照合し、そのあとで初めて速度を計測します。</li>
+</ol>
+<p>概念的な難しさの大半は2番目の手順にあり、それはすべてPython上で片づきます。</p>
+<p>ここまでの例はホスト型のノートブックで動かしましたが、自前のNVIDIA GPUがあればローカルでも同じことができます。condaを使えば、CUDAツールキット一式とPyTorchを環境ごとにバージョンを揃えてインストールでき、<code>load_inline</code> もノートブックと同じように動きます。手順は <a href="https://twitter.com/jeremyphoward/status/1697435241152127369">Jeremy Howardのスレッド</a> にまとまっています。ただし、NVIDIAドライバはシステム側のコンポーネントなので、conda とは別に入れておく必要があります。</p>
+<p>次の課題は自然に見えてきます。PyTorchの <code>@</code> との性能差の大部分は、共有メモリを用いたタイリングに由来します。タイル化した行列乗算カーネルを自分で実装してみることは、ブロック、共有メモリ、同期を実際に使いこなすための格好の題材になるはずです。</p>
+<hr>
+<p><em>この記事は、YouTube動画「<a href="https://www.youtube.com/watch?v=4sgKnKbR-WE">Lecture 3: Getting Started With CUDA for Python Programmers</a>」の内容をもとに作成しました。</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"スクロール可能なコード","output":"スクロール可能な出力"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
