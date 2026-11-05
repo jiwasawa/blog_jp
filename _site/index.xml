@@ -10,7 +10,17 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 04 Nov 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 05 Nov 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Pythonから始めるCUDAカーネル入門：グレースケール変換から行列乗算まで</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/</link>
+  <description><![CDATA[ Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます ]]></description>
+  <category>CUDA</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/</guid>
+  <pubDate>Thu, 05 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/202611052119.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>米中間選挙: データセンター建設ブームの行く末と超党派の反発</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -121,19 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/</guid>
   <pubDate>Mon, 05 Oct 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/202610042255.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>ClusterMax 3.0が暴くNeoCloudの残酷な現実と、AI計算資源を巡る覇権闘争</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/</link>
-  <description><![CDATA[ ClusterMax 3.0はNeoCloudのセキュリティ問題、GB300 NVL72導入の複雑さ、そしてNVIDIAによる防衛的買収戦略など、AI計算資源市場の生々しい現実と覇権闘争の深層を暴き出す。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/</guid>
-  <pubDate>Sun, 04 Oct 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/semianalysis-clustermax-3/202610041438.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
