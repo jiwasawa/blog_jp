@@ -3,7 +3,7 @@ title: "Pythonから始めるCUDAカーネル入門：グレースケール変�
 description: "Jeremy Howardの講義をもとに、PyTorchを用いてCUDAの基本的な考え方を学びます"
 author: "Junichiro Iwasawa"
 date: "2026-11-06"
-categories: [CUDA]
+categories: [CUDA, GPU]
 image: 202611052119.jpg
 ---
 
