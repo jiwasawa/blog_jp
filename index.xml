@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Fri, 06 Nov 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 09 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Anthropic S-1の深層(2)：会計上の「巨額赤字」と推論効率化が示すAIの特異点</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1-2/</link>
+  <description><![CDATA[ AnthropicのS-1 filingで明らかになった会計上の「巨額赤字」のカラクリと、推論効率7倍向上によるFCF黒字化が、AIインフラ投資とフロンティアモデル競争における同社の戦略的優位性を示唆する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1-2/</guid>
+  <pubDate>Mon, 09 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1-2/202611092247.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
+</item>
 <item>
   <title>Pythonから始めるCUDAカーネル入門：グレースケール変換から行列乗算まで</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,18 +133,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/</guid>
   <pubDate>Mon, 12 Oct 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/202610131032.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
-</item>
-<item>
-  <title>pstack: 2,500のPRを量産する「暗闇の工場」の正体</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/</link>
-  <description><![CDATA[ CursorのPoteto氏が月間2,500件のPRをマージする「Dark Factory」構築の裏側で、AIエージェントへの信頼構築、緻密な環境設計、そして自動化された検証プロセスがどのように機能しているのかを解説します。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Agentic Coding</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/</guid>
-  <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/poteto-pstack/202610042255.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 </channel>
 </rss>
