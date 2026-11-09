@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/anthropic-s1-2/index.html",
       "/posts/gpu-mode-lecture3/index.html",
       "/posts/midterm-sa/index.html",
       "/posts/nebius-danila/index.html",
