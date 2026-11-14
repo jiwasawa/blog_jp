@@ -10,7 +10,18 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Sun, 08 Nov 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 13 Nov 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>Pythonから始めるCUDAカーネル入門 (2)：タイル化行列乗算をシミュレーションからCUDA C、Numbaまで</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture5/</link>
+  <description><![CDATA[ Jeremy Howardの講義をもとに、、共有メモリを使ったタイル化行列乗算をPython、CUDA C、Numbaで実装します ]]></description>
+  <category>CUDA</category>
+  <category>GPU</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture5/</guid>
+  <pubDate>Fri, 13 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture5/202611141403.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Anthropic S-1の深層(2)：会計上の「巨額赤字」と推論効率化が示すAIの特異点</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -120,19 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/</guid>
   <pubDate>Mon, 12 Oct 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/202610131041.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Alex Zhang: RLMとHarnessの再定義</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/</link>
-  <description><![CDATA[ MITのアレックス・チェンがRLMsとHarnessの再定義を通じて、Autoregressive Decoderの限界を突破し、AIの進化を加速させる次世代アーキテクチャの可能性を語る。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Latent Space Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/</guid>
-  <pubDate>Sun, 11 Oct 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/alex-zhang-rlm/202610131032.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>

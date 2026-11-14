@@ -1,0 +1,1043 @@
+---
+title: "Pythonから始めるCUDAカーネル入門 (2)：タイル化行列乗算をシミュレーションからCUDA C、Numbaまで"
+description: "Jeremy Howardの講義をもとに、、共有メモリを使ったタイル化行列乗算をPython、CUDA C、Numbaで実装します"
+author: "Junichiro Iwasawa"
+date: "2026-11-14"
+categories: [CUDA, GPU]
+image: 202611141403.jpg
+---
+
+CUDAプログラミングには二つの本質的なアイデアがあります。一つは、GPUが同時に実行できる数千ものスレッドを活用することです。もう一つは、GPUの驚くほど高速なオンチップメモリを活用することで、この記事ではこちらを主題にします。二つは互いに補完し合っていて、組み合わせることで高速なCUDAコードに大きく近づけます。
+
+なぜメモリがそれほど重要なのでしょうか。GPUは数千のスレッドを同時に走らせるので、純粋な演算スループットは非常に大きくなります。そのため多くのカーネルでは、どれだけ速く計算できるかよりも、計算に使うデータをどれだけ速く取ってこられるかが律速要因になります。この関係を厳密に表すのが、[*Programming Massively Parallel Processors*](https://www.amazon.co.jp/-/en/Programming-Massively-Parallel-Processors-Hands/dp/0124159923) でも紹介されているルーフラインモデルです。このモデルでは、計算スループット（GFLOPS）を計算強度（アクセスしたメモリ1バイトあたりの浮動小数点演算回数、FLOP/B）に対してプロットします。達成できる性能の上限は二本の線で決まります。ピークメモリ帯域幅を表す原点からの傾いた線と、ピーク計算スループットを表す水平線です。計算強度の低いプログラムは傾いた線の下に位置する*メモリバウンド*で、計算強度の高いプログラムは水平線に達する*計算バウンド*です。
+
+素直に書いたカーネルの多くはメモリバウンドです。つまり、メモリアクセスを安くすれば、それがそのまま高速化につながります。共有メモリをうまく使うことは、多数のスレッドをうまく使うことと同じくらい重要です。
+
+この記事では次の順に進めます。
+
+1. グローバルメモリだけを使う素朴な行列乗算を用意し、正しさを確認して実行時間を計測し、ベースラインにします。
+2. 計算をタイルに再構成し、各タイルを一度だけ共有メモリに読み込んで何度も再利用する方法を、まずPythonでシミュレートします。
+3. Pythonのスレッドとバリアを使い、同期の必要性をモデル化します。
+4. CUDA Cで実装し、動的共有メモリ、静的共有メモリ、テンプレートを比べます。
+5. 最後に、Pythonのまま書けるNumbaで同じカーネルを実装します。
+
+前提として、簡単なCUDAカーネルをPythonから書いて起動できることを想定しています。具体的には、PyTorchでカーネルをコンパイルすること、スレッドをブロックに、ブロックをグリッドにまとめること、各スレッドが担当するデータ上の位置を計算すること、の三つです。これらが初めての方は、前回の講義「[Lecture 3: Getting Started With CUDA for Python Programmers](https://www.youtube.com/watch?v=4sgKnKbR-WE)」（[解説記事](https://jiwasawa.github.io/blog_jp/posts/gpu-mode-lecture3/)）を見れば1時間ほどで身につきます。思っているよりずっと手軽に始められます。
+
+## CUDAのメモリ空間：グローバルメモリと共有メモリ
+
+CUDAのデバイスメモリモデルは、デバイス上で動くコードとホスト上で動くコードが、それぞれの種類のメモリに対して何をできるかという観点で整理すると見通しがよくなります。デバイスコードからは次のことができます。
+
+- スレッドごとの*レジスタ*を読み書きする
+- スレッドごとの*ローカルメモリ*を読み書きする
+- ブロックごとの*共有メモリ*を読み書きする
+- グリッドごとの*グローバルメモリ*を読み書きする
+- グリッドごとの*コンスタントメモリ*を読み取る（読み取りのみ）
+
+一方、ホストコードにできるのは、グローバルメモリおよびコンスタントメモリとの間でデータを転送することだけです。なお、この一覧は網羅的なものではありません。たとえばテクスチャメモリもCUDAのメモリの一種ですが、ここでは扱いません。
+
+GPUを一つの箱として思い描くとわかりやすくなります。箱の中にはブロックのグリッドがあり、各ブロックは自分専用の共有メモリと一組のスレッドを持っています。各スレッドはさらに自分のレジスタを持っています。ブロックの外側で、かつデバイス上にあるのがグローバルメモリとコンスタントメモリです。ホストはこの二つを通じてデバイスとつながっています。
+
+### グローバルメモリ
+
+ここまで特に名前を挙げてきませんでしたが、CUDAを始めたばかりの段階で使っているメモリは、すべて**グローバルメモリ**です。PyTorchのテンソルを `.cuda()` でGPUに移すと、そのテンソルはグローバルメモリに置かれます。すべてのブロックのすべてのスレッドがこれを読み書きできることが、グローバルメモリの便利さです。カーネルは、どのスレッドが何を読み込んだかを気にする必要がありません。入力テンソルと出力テンソルに単純にインデックスでアクセスすれば済みます。
+
+グローバルメモリは、メインのシステムメモリやディスクなど、Pythonプログラマが普段扱う多くのメモリと比べれば高速です。それでも、GPU上で使える最速のメモリにはほど遠い存在です。
+
+### 共有メモリ
+
+**共有メモリ**はそれよりはるかに高速で、グローバルメモリのおよそ10倍の速さがあります。その代わりに犠牲になるのが可視性です。共有メモリはグローバルではなく、ストリーミングマルチプロセッサ（SM）上にあり、ブロックごとに割り当てられます。1つのブロックのスレッドはすべて同じSM上で実行され（1つのSMには複数のブロックが同時に載ることもあります）、そのブロックの共有メモリを読み書きできます。しかし他のブロックのスレッドからはまったく見えません。つまり各ブロックが専用の作業領域を持つことになり、ブロックがそこに置いておきたいデータは、そのブロック自身のスレッドが読み込む必要があります。
+
+さらに、共有メモリは容量が小さいという制約もあります。GPU上には多数のブロックが同時に常駐しているので、各ブロックが大きなデータを抱え込むことはできません。この「速いけれど狭く、ブロックの外からは見えない」という性質が、後で出てくるタイリングの設計を方向づけることになります。
+
+## 作業環境：ヘルパーとdim3
+
+ここからは、より高速なメモリの話に入る前に、作業環境を整えておきます。進め方は一貫していて、CUDAカーネルをまず純粋なPythonでシミュレートし、次にPyTorchのinline loaderで実際のカーネルをコンパイルし、最後にPyTorch自身の結果と照合します。ノートブック`matmul_l5.ipynb`や`utils.py`を含む資料一式は、[gpu-mode/lectures](https://github.com/gpu-mode/lectures/tree/main/lecture_005)で公開されています。
+
+### ヘルパーを集めた`utils.py`
+
+何度も必要になる小さなコード片は、ノートブックごとに定義し直さず、次の`utils.py`にまとめておきます。
+
+```python
+import torch
+import matplotlib.pyplot as plt
+from torch.utils.cpp_extension import load_inline
+
+def show_img(x, figsize=(4,3), **kwargs):
+    "Display HW or CHW format image `x`"
+    plt.figure(figsize=figsize)
+    plt.axis('off')
+    if len(x.shape)==3: x = x.permute(1,2,0)  # CHW -> HWC
+    plt.imshow(x.cpu(), **kwargs)
+
+cuda_begin = r'''
+#include <torch/extension.h>
+#include <stdio.h>
+#include <c10/cuda/CUDAException.h>
+
+#define CHECK_CUDA(x) TORCH_CHECK(x.device().is_cuda(), #x " must be a CUDA tensor")
+#define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
+#define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+#define CUDA_ERR(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
+{
+   if (code != cudaSuccess)
+   {
+      fprintf(stderr,"GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+      if (abort) exit(code);
+   }
+}
+__host__ __device__ inline unsigned int cdiv(unsigned int a, unsigned int b) { return (a+b-1)/b;}
+'''
+
+def load_cuda(cuda_src, cpp_src, funcs, opt=False, verbose=False, name=None):
+    "Simple wrapper for torch.utils.cpp_extension.load_inline"
+    if name is None: name = funcs[0]
+    return load_inline(cuda_sources=[cuda_src], cpp_sources=[cpp_src], functions=funcs,
+                       extra_cuda_cflags=["-O2"] if opt else [], verbose=verbose, name=name)
+
+def cdiv(a,b):
+    "Int ceiling division of `a` over `b`"
+    return (a+b-1)//b
+```
+
+中身は次の4つです。
+
+- **`show_img`** は、CHW形式のテンソルをMatplotlibが想定するHWCに並べ替えて画像として表示します。
+- **`cuda_begin`** は、すべてのCUDAソースの先頭に付ける文字列です。PyTorch拡張用のヘッダをインクルードし、Pythonから渡されたテンソルを検証する`CHECK_CUDA`、`CHECK_CONTIGUOUS`、`CHECK_INPUT`を定義します。さらに、CUDA APIのエラーをファイル名と行番号付きで報告する`CUDA_ERR`と`gpuAssert`、ホストとデバイスの両方から呼べるC版の`cdiv`も含んでいます。
+- **`load_cuda`** は`load_inline`の薄いラッパーです。必要なら`-O2`を付けてCUDAとC++のソースをPythonモジュールにコンパイルします。
+- **`cdiv`** は整数の切り上げ除算で、$\lceil a/b \rceil$を$(a+b-1)/b$として計算します。ある次元を覆うのに必要なブロック数を求めるときに使います。
+
+### CUDA風の`dim3`とテスト行列
+
+ブロックやスレッドの座標を受け渡すのに`SimpleNamespace`を使う方法もありますが、ここではCUDA自体のグリッドの記述により近づけるため、`namedtuple`で小さな`dim3`型を定義します。CUDAの`dim3`と同じく`x`、`y`、`z`のフィールドを持ち、省略した後ろの次元はデフォルトで1になります。
+
+```python
+import os,math,sys,torch,re,numpy as np
+from types import SimpleNamespace as ns
+from collections import namedtuple
+
+dim3 = namedtuple('dim3', ['x','y','z'], defaults=(1,1))
+
+d = dim3(2,3)
+d
+
+d.x,d.y
+```
+
+`dim3(2,3)`は`dim3(x=2, y=3, z=1)`となり、各フィールドは名前で読み出せます。以降で使う2次元グリッドは、暗黙に$z = 1$を持つことになります。
+
+残りの準備では、表示の書式を整え、親ディレクトリをimportパスに加えてヘルパーを読み込みます。`wurlitzer`拡張はCレベルの出力をリダイレクトするので、カーネル内の`printf`の出力がノートブックに表示されます。`CUDA_LAUNCH_BLOCKING`を`'1'`にするとカーネル起動が同期的になり、エラーが原因となった起動の時点で報告されます。デバッグ時に有効にするとよいでしょう。
+
+```python
+np.set_printoptions(precision=2, linewidth=140)
+torch.set_printoptions(precision=2, linewidth=140, sci_mode=False)
+
+sys.path.insert(0, '..')
+
+from utils import show_img,load_cuda,cuda_begin,cdiv
+
+%load_ext wurlitzer
+
+# os.environ['CUDA_LAUNCH_BLOCKING']='1'
+torch.manual_seed(42);
+
+m1 = torch.rand(5120, 256)
+m1s = m1[:4]
+m2 = torch.rand(256,5120)
+m2s = m2[:,:4]
+```
+
+課題は、$5120 \times 256$の`m1`と$256 \times 5120$の`m2`を掛けて$5120 \times 5120$の結果を得ることです。ただし純粋なPythonのシミュレーションは極めて遅いので、小さなサンプルも用意しておきます。`m1s`は`m1`の最初の4行、`m2s`は`m2`の最初の4列です。積は$4 \times 4$にすぎないため、内側の次元256はすべて使いながら、シミュレーションはほぼ一瞬で終わります。
+
+### C++宣言の自動抽出とビルドのキャッシュ
+
+インラインローダには、CUDAソースに加えて、Pythonに公開する関数を宣言する短いC++ソースが必要です。中身はホスト関数のシグネチャにセミコロンを付けただけのものです。しかし手で別の文字列にコピーするのは面倒で、関数を変えたときに食い違いも生じやすくなります。そこで、次の`get_sig`が正規表現で宣言を自動的に見つけます。
+
+```python
+def get_sig(fname, src):
+    res = re.findall(rf'^(.+\s+{fname}\(.*?\))\s*{{?\s*$', src, re.MULTILINE)
+    return res[0]+';' if res else None
+```
+
+複数行モードなので、`^`と`$`は各行の先頭と末尾にマッチします。戻り値の型、空白、関数名、括弧付きの引数リストを含み、必要に応じて開き波括弧が続く行を探し、閉じ括弧までにセミコロンを付けて返します。f文字列中の`{{`はリテラルの波括弧1つを表します。たとえば`fname='matmul'`なら`'torch::Tensor matmul(torch::Tensor m, torch::Tensor n);'`が得られます。名前の直後に括弧が続かないカーネル`matmul_k`にはマッチしません。これでC++ソースは常に自動生成され、編集するのはCUDAソースだけで済みます。
+
+コンパイルは`load_cuda(cuda_src, cpp_src, [fname])`で行います。ここで便利なのが`name`パラメータです。指定しなければ、拡張モジュールには最初に公開される関数の名前が付きます。PyTorchはコンパイル済みの拡張を名前ごとにキャッシュするので、実験ごとに関数名を変えておけば、カーネルごとに独自のビルドが保持されます。あるカーネルを再コンパイルしても他のカーネルのキャッシュは追い出されず、ソースが変わっていないセルを再実行すれば、コンパイラを呼び直すことなくほぼ瞬時に読み込まれます。
+
+## ベースライン：素朴な行列乗算をPythonとCUDAで
+
+出力$P = MN$の各要素は、他の要素とは独立に計算できます。$M$が$h \times k$、$N$が$k \times w$なら、$P$の第$r$行第$c$列は$M$の第$r$行と$N$の第$c$列の内積です。
+
+$$
+  P_{r,c} = \sum_{i=0}^{k-1} M_{r,i}\, N_{i,c}
+$$
+
+要素同士に依存関係がないので、出力要素ごとに1つのスレッドを割り当てるのが自然な並列化になります。各スレッドが知っている必要があるのは、自分の座標$(r, c)$だけです。カーネルは平坦化された行優先のデータを扱うため、2次元インデックスを1次元のオフセットに直しておきます。$M$の各行は$k$要素なので$M_{r,i}$はオフセット$rk + i$にあり、$N$の各行は$w$要素なので$N_{i,c}$は$iw + c$にあります。出力$P_{r,c}$は$rw + c$です。
+
+### Pythonによるシミュレーション
+
+まず、GPUの役割を演じるランナーを用意します。2次元グリッドのすべてのブロックと、各ブロック内のすべてのスレッドを入れ子のループで回し、そのたびにカーネル関数を呼び出すだけのものです。本当の並列性はどこにもありません。「ブロック」や「スレッド」はループが生成する整数にすぎず、「カーネル」も普通の関数です。
+
+```python
+def blk_kernel2d(f, blocks, threads, *args):
+    for i0 in range(blocks.y):
+        for i1 in range(blocks.x):
+            for j0 in range(threads.y):
+                for j1 in range(threads.x): f(dim3(i1,i0), dim3(j1,j0), threads, *args)
+```
+
+カーネル`f`は、ブロックインデックス、スレッドインデックス、ブロックの次元を`dim3`で受け取ります。これらはCUDAの組み込み変数`blockIdx`、`threadIdx`、`blockDim`に対応しています。その後ろに追加の引数が続きます。
+
+次に示すのが、1つのスレッドの視点で書いたカーネル`matmul_bk`と、それを起動するホスト側の`matmul_2d`です。
+
+```python
+def matmul_bk(blockIdx, threadIdx, blockDim, m, n, out, h, w, k):
+    r = blockIdx.y*blockDim.y + threadIdx.y
+    c = blockIdx.x*blockDim.x + threadIdx.x
+    
+    if (r>=h or c>=w): return
+    o = 0.
+    for i in range(k): o += m[r*k+i] * n[i*w+c]
+    out[r*w+c] = o
+
+def matmul_2d(m, n):
+    h,k  = m.shape
+    k2,w = n.shape
+    assert k==k2, "Size mismatch!"
+    output = torch.zeros(h, w, dtype=m.dtype)
+    tpb = dim3(16,16)
+    blocks = dim3(cdiv(w,tpb.x), cdiv(h,tpb.y))
+    blk_kernel2d(matmul_bk, blocks, tpb,
+                 m.flatten(), n.flatten(), output.flatten(), h, w, k)
+    return output
+```
+
+`matmul_bk`では、行`r`をインデックスの$y$成分から、列`c`を$x$成分から求めます。グリッドはブロック数が整数になるよう切り上げられているので、一部のスレッドは$h \times w$の出力の外側に位置します。そうしたスレッドはガードによって即座にreturnします。残りのスレッドは先ほどのオフセットを使って内積を累積し、`out[r*w+c]`に書き込みます。
+
+`matmul_2d`はCUDAにおけるホストコードの役割です。内側の次元が一致するかを確認し、出力を確保します。ブロックあたりのスレッド数は$16 \times 16$とし、各方向に必要なブロック数を`cdiv`で計算します。こうしておけば、出力の次元が16の倍数でなくてもグリッドが全体を覆います。`output.flatten()`は同じストレージを参照するビューなので、カーネルが平坦化テンソルに書き込んだ値は、返される2次元の`output`に反映されます。
+
+小さなスライスで、PyTorchの`@`と結果を比べます。浮動小数点の和は累積順序によってわずかに変わりうるので、比較には`torch.isclose`を使います。
+
+```python
+torch.isclose(matmul_2d(m1s, m2s), m1s@m2s).all()
+```
+
+結果は`tensor(True)`で、すべての要素が一致しました。
+
+### CUDAによる同じカーネル
+
+CUDA版は、Pythonのカーネルを言語モデルに渡して翻訳させたもので、ほとんど手直しは不要でした。
+
+```python
+cuda_src = cuda_begin + r'''
+__global__ void matmul_k(float* m, float* n, float* out, int h, int w, int k) {
+    int r = blockIdx.y*blockDim.y + threadIdx.y;
+    int c = blockIdx.x*blockDim.x + threadIdx.x;
+
+    if (r>=h || c>=w) return;
+    float o = 0;
+    for (int i = 0; i<k; ++i) o += m[r*k+i] * n[i*w+c];
+    out[r*w+c] = o;
+}
+
+torch::Tensor matmul(torch::Tensor m, torch::Tensor n) {
+    CHECK_INPUT(m); CHECK_INPUT(n);
+    int h = m.size(0);
+    int w = n.size(1);
+    int k = m.size(1);
+    TORCH_CHECK(k==n.size(0), "Size mismatch!");
+    auto output = torch::zeros({h, w}, m.options());
+
+    dim3 tpb(16,16);
+    dim3 blocks(cdiv(w, tpb.x), cdiv(h, tpb.y));
+    matmul_k<<<blocks, tpb>>>(
+        m.data_ptr<float>(), n.data_ptr<float>(), output.data_ptr<float>(), h, w, k);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+    return output;
+}
+'''
+```
+
+`__global__`を付けた`matmul_k`は、GPU上で実行されホストから起動される関数です。本体は`matmul_bk`と1行ずつ対応しています。違いはC言語の構文(明示的な型、`||`、Cスタイルの`for`)と、`blockIdx`、`blockDim`、`threadIdx`が引数ではなく組み込み変数になっている点だけです。ホスト関数`matmul`も`matmul_2d`とほぼ同じ形をしています。`CHECK_INPUT`で入力を検証し、入力と同じオプションで出力を確保し、`dim3`を同じように組み立てます。新しいのは起動構文`matmul_k<<<blocks, tpb>>>(...)`だけです。デバイスポインタは`data_ptr<float>()`で取り出し、起動時のエラーは`C10_CUDA_KERNEL_LAUNCH_CHECK()`が報告します。先頭の`cuda_begin`には、ヘッダ、検証用マクロ、デバイス側の`cdiv`が含まれています。
+
+### 実行、検証、計測
+
+`get_sig`と`load_cuda`でコンパイルしたら、もう入力を縮小する必要はありません。ホスト関数は連続したCUDAテンソルを要求するので、行列全体を連続化してGPUへ移します。
+
+```python
+m1c,m2c = m1.contiguous().cuda(),m2.contiguous().cuda()
+```
+
+呼び出すと期待どおり$5120 \times 5120$の結果が得られます。これもGPU上でPyTorchの行列積と照合します。
+
+```python
+torch.isclose(module.matmul(m1c,m2c), m1c@m2c).all()
+```
+
+結果は`tensor(True, device='cuda:0')`です。続いて実行時間を計測します。CUDAのカーネル起動は非同期で、処理が完了したときではなくキューに入った時点で制御が戻ります。そのため、乗算の後に`torch.cuda.synchronize()`を呼び、GPUが実際に計算する時間を計測に含めます。
+
+```python
+%%timeit -n 10
+module.matmul(m1c,m2c)
+torch.cuda.synchronize()
+```
+
+```text
+6.03 ms ± 234 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+```
+
+約6.03 msでした。このうち入力検証、出力確保、起動といったホスト側の処理がどれだけを占めるかは、カーネル起動をコメントアウトして測り直せば分かります。その場合は1回あたり約50µs(0.05 ms)で、全体の1%未満にとどまりました。つまり、6 msのほぼすべてが行列乗算そのものに使われています。このカーネルは単純で正しく、これから上回るべきベースラインになります。
+
+## なぜ遅いのか：タイリングの考え方
+
+ベースラインの弱点は、内側のループにある次の1行に集約されます。
+
+$$
+\texttt{o += m[r*k+i] * n[i*w+c]}, \qquad i = 0, 1, \dots, k-1 .
+$$
+
+`m`も`n`もグローバルメモリ上にあり、このループはスレッドごとに$k$回まわるので、各スレッドは$2k$回のグローバル読み込みを行います。問題はそれらの読み込みがスレッド間で大量に重複していることです。同じ出力行を担当するスレッドはすべて`m`の同じ行を読み、同じ出力列を担当するスレッドはすべて`n`の同じ列を読みます。$h \times w$の出力全体で数えると、入力には$hk + kw$個の異なる値しかないのに、カーネルは$2hwk$回もグローバル読み込みを発行しています。同じ数値を遅いメモリから何度も取りに行っているわけです。
+
+それなら入力をまるごと高速な共有メモリに置けばよいと考えたくなりますが、共有メモリの容量は小さく、$5120 \times 256$の行列を2つ収めることはできません。そこで、必要な部分だけを少しずつ共有メモリに載せる方法をとります。
+
+### 内積をタイルに分割する
+
+その方法が*タイリング*です。タイル幅$t_w$を選び、ここでは素朴なカーネルのスレッドブロックと同じ$t_w = 16$とします。
+
+位置$(r, c)$の出力要素を1つ考えます。$m$の行$r$全体と$n$の列$c$全体の内積を一度に求める代わりに、まず行と列の最初の$t_w$個の要素だけで内積をとって$(r, c)$に格納します。次の$t_w$個についても同じことをして加算し、これを行の終わりまで続けます。タイル(*フェーズ*)のインデックスを$p$とすると、計算は次のようになります。
+
+$$
+\mathrm{out}_{r,c} \;=\; \sum_{p=0}^{\lceil k/t_w \rceil - 1} \;\; \sum_{i=0}^{t_w - 1} m_{r,\; p\,t_w + i}\; n_{p\,t_w + i,\; c}
+$$
+
+$k-1$を超えるインデックスは読み飛ばします(後でゼロパディングとして扱います)。これは同じ演算をまとまりごとにグループ化し直しただけなので、それ自体からは何も得られません。
+
+効いてくるのは*隣り合う*出力どうしの関係です。出力$(0, 0)$を計算するスレッドと$(0, 1)$を計算するスレッドは、最初のフェーズで$m$の行$0$の最初の$t_w$個をまったく同じように必要とし、違うのは$n$のどの列を使うかだけです。CPUならキャッシュヒットを期待するところですが、GPUではもっと明示的に、その行区間を共有メモリに置いておきます。そうすれば2つ目のスレッドはグローバルメモリに触れずに値を得られます。同様に出力$(1, 0)$は、$m$のタイルの2番目の行区間と、$(0, 0)$がすでに使ったのと*同じ*$n$の列区間を必要とします。その列区間も共有メモリにあれば、再利用はタダです。
+
+この考えを突き詰めると、出力の$t_w \times t_w$タイルを1つ受け持つブロックの手順は次のようになります。
+
+1. $m$の現在の$t_w \times t_w$タイル(担当行のうち列$p\,t_w$から$p\,t_w + t_w - 1$まで)と、対応する$n$のタイル(行$p\,t_w$から$p\,t_w + t_w - 1$まで、担当列)を、グローバルメモリから共有メモリへコピーします。
+2. 共有メモリ上の2つのタイルを掛け合わせます。これは小さな行列乗算で、オペランドはすべて共有メモリから取得します。結果はフェーズ$p$の寄与なので、累積値に加算します。
+3. $m$のタイルを1つ右へ、$n$のタイルを1つ下へ動かして次のフェーズに進み、$k$を使い切るまで繰り返します。
+
+最後のフェーズが終わると、出力タイルは上の式の完全な値を保持しています。
+
+グローバル読み込みを数え直してみます。ブロック内では、担当する帯状領域の各入力要素はグローバルメモリからちょうど1回だけ読まれ、その用途は共有メモリへの書き込みだけです。フェーズごとにブロックは$2t_w^2$個の値を読み込み、それぞれを$t_w$回再利用するので、トラフィックは$2hwk$回からおよそ$2hwk/t_w$回、つまり$t_w = 16$なら16分の1に減ります。代償はブロックあたり$2t_w^2 = 512$個のfloat分の共有メモリだけで、これなら容量の問題も避けられます。
+
+### タイルとブロック
+
+ここで「タイル」と「ブロック」を区別しておきます。*ブロック*はCUDAのプログラミングモデルの概念で、`blockIdx`で識別されるスレッドの集まりです。すべてのスレッドが同じストリーミングマルチプロセッサ上で実行され、同じ共有メモリを共有することが保証されていますが、何を計算するかはプログラマ次第です。素朴なカーネルではこの保証を使っていませんでした。
+
+一方*タイル*はアルゴリズムの概念で、出力行列の正方形の一片と、高速なメモリを経由して扱う入力の帯状部分を指します。タイル化カーネルは両者を意図的に一対一で対応させます。各ブロックに出力タイルを1つ割り当てることで、各タイルが独自の共有メモリを持てるようにするのです。ブロックの大きさを`dim3(tw,tw)`とし、出力タイル1つにつきブロックを1つ起動するのはこのためです。大きさも位置も一致しますが、一方はハードウェアにおけるスケジューリングとメモリ共有の単位、もう一方はアルゴリズムにおける作業の単位であり、概念としては別物です。
+
+## テンソルのビューで共有メモリをシミュレートする
+
+タイル化カーネルを本物のCUDAで書く前に、まずPythonで動きを再現してみます。そのためには、共有メモリをPythonでどう表すかを先に決めておく必要があります。
+
+### 動的共有メモリと書き込み可能なビュー
+
+CUDAで共有メモリを確保する方法のうち、最も柔軟なのが*動的共有メモリ*です。カーネル起動時に各ブロックが必要とする量を指定すると、CUDAはそのサイズの連続した領域を1つ確保します。カーネル内のスレッドはその先頭を指すポインタを受け取り、配列と同じように扱えます。その1つの領域を必要な部分に切り分けるのは、カーネルの役目です。
+
+Pythonでは、PyTorchテンソル(NumPy配列も同様です)の性質を使ってこれを忠実に再現できます。テンソルの*ビュー*は書き込み可能で、元のテンソルとストレージを共有しています。スライスはデータをコピーせず、同じメモリに対する新しい窓になります。次のコードでは長さ5のテンソル`a`から、先頭3要素を覆う`b`と末尾2要素を覆う`c`を作ります。
+
+```python
+a = torch.zeros(5)
+b,c = a[:3],a[3:]
+```
+
+どちらのビューに書き込んでも、元のテンソルが変更されます。
+
+```python
+b[1] = 2
+c[0] = 6
+a
+```
+
+結果を見ると、両方の書き込みが`a`に反映されています。
+
+```text
+tensor([0., 2., 0., 6., 0.])
+```
+
+`b[1]`は`a[1]`そのものであり、`c[0]`は`a[3]`そのものです。ブロックごとに平坦なテンソルを1つ確保し、入力タイルごとに名前付きの部分配列へスライスすれば、動的共有メモリをそのまま模倣できます。
+
+### 共有メモリを提供するランナー
+
+これまでのランナーは、スレッドごとにカーネルを1回呼んでいました。タイリングではカーネルが「タイルを共有メモリにコピーする」と「共有メモリから内積を計算する」という2つのステップを持ち、しかもブロック内の全スレッドが*同じ*共有メモリを参照しなければなりません。そこでランナーを作り直します。
+
+新しい`blk_kernel2d_shar`は`blocks.y`と`blocks.x`のループを維持し、その内側でサイズ`sh_sz`のゼロ初期化テンソルをブロックの共有メモリとして確保して、カーネルに渡します。
+
+```python
+def blk_kernel2d_shar(f, blocks, threads, sh_sz, *args, **kwargs):
+    for i0 in range(blocks.y):
+        for i1 in range(blocks.x):
+            shared = torch.zeros(sh_sz)
+            f(dim3(i1,i0), threads, shared, *args, **kwargs)
+```
+
+スレッドのループがない点に注目してください。`f`はブロックごとに1回だけ呼ばれ、ブロック内のスレッドを順に回すのはカーネル自身の責任になります。コードが重複して煩雑になりますが、処理の流れは追いやすくなります。
+
+### タイリングを用いたカーネル
+
+最初のタイル化カーネルは次のとおりです。
+
+```python
+def matmul_tiled_bk(blockIdx, blockDim, shared, m, n, out, h, w, k, tw):
+    shar_sz = tw*tw
+    ms,ns = shared[:shar_sz],shared[shar_sz:]
+
+    for ph in range(cdiv(k,tw)):
+        idx = ph*tw
+        # fill shared
+        for tr in range(blockDim.y):
+            for tc in range(blockDim.x):
+                r,c = blockIdx.y*blockDim.y + tr, blockIdx.x*blockDim.x + tc
+                ms[tr*tw+tc] = m[ tc+idx + r*k] if r<h and idx+tc<k else 0.
+                ns[tr*tw+tc] = n[(tr+idx)*w +c] if c<w and idx+tr<k else 0.
+
+        # do dotprods from shared
+        for tr in range(blockDim.y):
+            for tc in range(blockDim.x):
+                r,c = blockIdx.y*blockDim.y + tr, blockIdx.x*blockDim.x + tc
+                for i in range(tw):
+                    if r*w+c<len(out): out[r*w+c] += ms[tr*tw+i] * ns[tw*i+tc]
+```
+
+冒頭の2行がビューの技法です。タイル1つは$\texttt{tw} \times \texttt{tw}$要素なので、先頭`shar_sz`個を`m`用の`ms`、残りを`n`用の`ns`とします。これらはビューなので、書き込みはブロックの共有バッファに反映されます。CUDAで動的共有メモリのポインタを切り分けるのとまったく同じです。
+
+外側のループ変数`ph`(*フェーズ*の意)は処理中のタイルの番号で、`idx`はそのオフセットを保持します。$k$は`tw`の倍数とは限らないため、フェーズ数は切り上げ除算で求め、最後の部分的なタイルも確実に処理します。
+
+$$
+\text{フェーズ数} = \left\lceil \frac{k}{\texttt{tw}} \right\rceil = \texttt{cdiv(k, tw)}
+$$
+
+各フェーズでは、スレッド座標`tr`と`tc`の二重ループを2回実行します。
+
+1. 1回目のループでは、各スレッドが出力のグローバル座標`r`、`c`を求め、$M$の要素を1つ`ms`に、$N$の要素を1つ`ns`にコピーします。範囲外の要素は0で置き換え、ブロック全体の協力で両タイルが完全に埋まります。
+2. 2回目のループでは、各スレッドが`ms`の行`tr`と`ns`の列`tc`を`tw`個ぶん掛け合わせ、自分の出力要素に累積します。全フェーズの部分内積を足し合わせると完全な内積になります。
+
+インデックス式とゼロパディングの条件は後で詳しく見ます。ここで押さえたいのは構造で、`m`と`n`の読み出しはすべて充填ステップで行われ、内積ループは共有タイルしか読みません。
+
+### 起動と検証
+
+ホスト側の関数は以前の`matmul_2d`とほぼ同じで、新しいランナーを呼び、共有メモリのサイズを3番目の引数として渡す点だけが異なります。
+
+```python
+def matmul_2d(m, n, tw=16):
+    h,k  = m.shape
+    k2,w = n.shape
+    assert k==k2, "Size mismatch!"
+    output = torch.zeros(h, w, dtype=m.dtype)
+    tpb = dim3(tw,tw)
+    blocks = dim3(cdiv(w,tpb.x), cdiv(h,tpb.y))
+    blk_kernel2d_shar(matmul_tiled_bk, blocks, tpb, tw*tw*2,
+                      m.flatten(), n.flatten(), output.flatten(),
+                      h, w, k, tw=tw)
+    return output
+```
+
+サイズが$\texttt{tw} \times \texttt{tw} \times 2$なのは、$M$用と$N$用に同じ大きさのタイルが1つずつ必要だからです。小さなテスト行列でPyTorchの行列乗算と比較します。
+
+```python
+torch.isclose(matmul_2d(m1s, m2s, tw=16), m1s@m2s).all()
+```
+
+結果は`tensor(True)`で、一致しました。$k = 256$、タイル幅16なら各ブロックは16フェーズを実行します。行が4つしかない入力では$16 \times 16$のブロックが端を大きくはみ出すので、ゼロパディングも実際に働いています。
+
+## インデックス計算とゼロパディング
+
+タイル化カーネルのインデックス計算は、間違いやすいことで知られています。いきなりコードから書き始めても、たいていうまくいきません。先に $M$、$N$、$P$ の三つの行列を並べた図を描き、出力要素の行 `r` と列 `c`、タイル幅、共有次元 $k$、現在のタイルのオフセットといった距離にすべてラベルを付けておくのが確実です。各量に名前と図上の位置が与えられて初めて、コードは素直に書けるようになります。この助言は文字どおりに受け取る価値があります。
+
+### タイルのオフセット
+
+フェーズ `ph` の時点で、ブロックはすでに `ph` 個のタイルを処理し終えています。各タイルは `tw` 個の要素にわたるので、現在のタイルまでの距離は次のようになります。
+
+$$
+\text{idx} = \text{ph} \times \text{tw}
+$$
+
+乗算はこの点で対称的なので、同じ `idx` が二通りに使われます。$M$ の行の中では現在のタイルの**水平方向**のオフセットであり、$N$ の列の中では現在のタイルの**垂直方向**のオフセットです。
+
+### 粗いオフセットと細かいオフセット
+
+ブロックは `dim3(tw,tw)` で起動されるので、`tr` はタイル行、`tc` はタイル列を表し、タイル内でのスレッドの座標になります。図上の位置はすべて「タイルの開始位置（粗いオフセット）」と「タイル内での位置（細かいオフセット）」の和として組み立てられます。出力については粗いオフセットがブロックインデックスから得られ、おなじみの式になります。
+
+$$
+\begin{aligned}
+  r &= \texttt{blockIdx.y} \times \texttt{blockDim.y} + \texttt{tr},\\
+  c &= \texttt{blockIdx.x} \times \texttt{blockDim.x} + \texttt{tc}.
+\end{aligned}
+$$
+
+入力の共有次元方向のオフセットは `idx` から得られます。スレッド `(tr, tc)` が読むのは次の要素です。
+
+- $M$ からは行 $r$、列 $\text{idx} + \texttt{tc}$
+- $N$ からは行 $\text{idx} + \texttt{tr}$、列 $c$
+
+行列は平坦化して渡され、共有メモリも一次元バッファなので、行番号に一行の長さを掛けて列番号を足す行優先の線形化が必要です。共有メモリのスロット `(tr, tc)` は `tr*tw+tc`、$k$ 列の $M$ の要素は `tc+idx + r*k`、$w$ 列の $N$ の要素は `(tr+idx)*w + c` になります。
+
+### 端からはみ出すタイルとパディング
+
+行列の次元がタイル幅の倍数である保証はありません。テストでは 16 行のタイルに対して $M$ は 4 行しかなく、$k$ 方向の最後のフェーズも一部しか埋まらないことがあります。ここで範囲外を読むのは無害な読みすぎでは済みません。行列は線形に格納されているので、存在しない $M_{0,3}$ を読もうとすると実際には次の要素 $M_{1,0}$ が読まれ、その値が内積を**黙って**壊してしまいます。配列全体の末尾を越えれば、確保された領域の外に出てしまいます。
+
+そこで範囲外のスロットには $0.0$ を読み込みます。これを*パディング*と呼びます。ゼロの項は和に何も寄与しないので、計算ループ側で特別扱いをする必要はありません。*Programming Massively Parallel Processors* が示す経験則に従い、あらゆるメモリアクセスには、インデックスが配列の範囲内にあることを確かめるチェックを必ず対応させるようにしましょう。
+
+$M$ と $N$ ではタイルがはみ出す方向が違うため、チェックの条件も異なります。
+
+- $M$ の要素は、`r<h`（その行が存在する）かつ `idx+tc<k`（共有次元方向の列が存在する）の場合にのみ読み込みます。
+- $N$ の要素は、`c<w`（その列が存在する）かつ `idx+tr<k`（共有次元方向の行が存在する）の場合にのみ読み込みます。
+
+それ以外の場合、スロットには `0.` が入ります。
+
+### 部分内積
+
+タイルが揃ったら、各スレッドは同じ式で `r` と `c` を求め直し、このフェーズでの寄与を累積します。
+
+$$
+  \texttt{out}[r,c] \mathrel{+}= \sum_{i=0}^{\text{tw}-1} \texttt{ms}[\texttt{tr}, i]\;\texttt{ns}[i, \texttt{tc}]
+$$
+
+平坦化すると `ms[tr*tw+i] * ns[tw*i+tc]` です。一つのフェーズ内では、$M$ のタイルの行と $N$ のタイルの列はどちらもちょうど `tw` 要素（はみ出した分はゼロ）なので、内側のループはタイル幅だけ回ります。これを全フェーズで足し合わせると $P_{r,c}$ の完全な内積が得られます。
+
+なお `out` への書き込みは `r*w+c<len(out)` で守られていますが、これだけでは `c` が `w` 以上のスレッドを除外できず、そのインデックスは次の行に回り込みます。それでも正しく動くのは、参照する `ns` の列がゼロパディングされているからにすぎません。`r<h and c<w` と書けば、意図をより直接的に表現できます。
+
+## 読み込みと計算をスレッドごとの関数に分ける
+
+これまでの二つのループのまとまりを見直してみます。どちらも `blockDim.y` と `blockDim.x` にわたる二重ループで、その本体は**1つの**スレッドが行う処理を記述しています。つまり1つ目のまとまりは「このコード片をブロック内のすべてのスレッドとして実行せよ」と言っており、2つ目は「次にこの別のコード片をブロック内のすべてのスレッドとして実行せよ」と言っています。このパターンは小さなヘルパーにまとめられます。
+
+```python
+def run_threads(f, blockDim, *args, **kwargs):
+    for i0 in range(blockDim.y):
+        for i1 in range(blockDim.x): f(i0, i1, *args, **kwargs)
+```
+
+`run_threads` はブロック内のすべてのスレッド座標を走査し、行インデックス `i0` と列インデックス `i1` を渡して `f` を呼び出します。追加の引数はそのまま転送します。`blk_kernel2d_shar` がグリッド全体に対して果たす役割を、ブロックの内部で果たすヘルパーです。前者はブロックを走査し、後者はブロック内のスレッドを走査します。
+
+`run_threads` を使うと、二つの大きなループのまとまりはスレッドごとの二つの関数になります。
+
+```python
+def matmul_tiled_bk(blockIdx, blockDim, shared, m, n, out, h, w, k, tw):
+    shar_sz = tw*tw
+    ms,ns = shared[:shar_sz],shared[shar_sz:]
+
+    def get_rc(tr, tc): return blockIdx.y*blockDim.y + tr, blockIdx.x*blockDim.x + tc
+
+    def fill_shared_tk(tr, tc, ph):
+        r,c = get_rc(tr, tc)
+        ms[tr*tw+tc] = m[ tc + ph*tw + r*k] if r<h and (ph*tw+tc)<k else 0.
+        ns[tr*tw+tc] = n[(tr + ph*tw)*w +c] if c<w and (ph*tw+tr)<k else 0.
+
+    def dotprod_tk(tr, tc):
+        r,c = get_rc(tr, tc)
+        for i in range(tw):
+            if r*w+c<len(out): out[r*w+c] += ms[tr*tw+i] * ns[tw*i+tc]
+
+    for ph in range(int(math.ceil(k/tw))):
+        run_threads(fill_shared_tk, blockDim, ph)
+        run_threads(dotprod_tk, blockDim)
+```
+
+各部分は以前の版と一対一に対応しています。
+
+- **`get_rc`**：ブロック内でのスレッドの位置 $(\texttt{tr}, \texttt{tc})$ を、出力全体における行と列 $(r, c)$ に変換します。以前はこの式が、二つのループのまとまりにそれぞれ1回ずつ、計2回書かれていました。
+- **`fill_shared_tk`**：以前の「共有メモリを埋める」ループの本体です。フェーズ `ph` において、1つのスレッドが各タイルの自分の要素を読み込みます。範囲外の要素に $0$ を書き込む境界判定も含まれています。ローカル変数 `idx` は、その定義である `ph*tw` に置き換えました。
+- **`dotprod_tk`**：以前の「内積を計算する」ループの本体です。1つのスレッドが自分の出力要素に `tw` 回の積和を加えます。出力の範囲外にあるスレッドが書き込まないようにガードしています。
+- **フェーズのループ**：アルゴリズムの説明とほぼ同じように読めるようになりました。各タイルについて、まずすべてのスレッドで共有メモリを埋め、次にすべてのスレッドで内積を計算します。`int(math.ceil(k/tw))` は、以前 `cdiv(k,tw)` が計算していた切り上げ除算と同じものです。
+
+構造上いちばん重要な変化は、この最後のループにあります。これから書くCUDAカーネルも、まさにこの骨組みを持ちます。タイルを走査するループがあり、その中ですべてのスレッドが協力して共有メモリを埋め、続いてすべてのスレッドがそこから部分内積を計算します。違いは、GPU上ではスレッドを走査するループを誰も書かないことです。各スレッドが `fill_shared_tk` や `dotprod_tk` の本体を自分自身で実行します。残る一歩は、スレッドが本当に同時に動くようになったときに、二つのフェーズを分離しておくには何が必要かを考えることです。
+
+## Pythonのスレッドとバリア
+
+CUDAカーネルには `run_threads` に相当するものがありません。スレッド座標を走査するループはなく、カーネル本体をブロック内のすべてのスレッドがそれぞれ並行に実行します。ハードウェア上で文字どおり同じ瞬間に全スレッドが動くとは限らず、ある部分集合をまとめて実行してから別の部分集合を実行することもあります。それでもプログラミングモデルとしては、すべてが同時に動いていると考える必要があります。カーネルは1つのスレッドの視点で書かれるため、「まず全スレッドがこれを行い、次に全スレッドがあれを行う」と表現する手段は、明示的な同期操作しかありません。これをPythonで模倣するには、シミュレーションに本物のスレッドが必要になります。
+
+Pythonの標準ライブラリでは、`threading` モジュールがスレッドと、後で鍵になる `Barrier` クラスを提供しています。`concurrent.futures` の `ThreadPoolExecutor` を使えば、スレッドのグループを起動して各スレッドで関数を実行できます。
+
+現在のPythonでは、グローバルインタプリタロック（GIL）があるため、一般にスレッドは同時には実行されません。インタプリタはスレッドを並列に動かすのではなく、スレッド間で切り替えているだけです。それでもCUDAのモデル化という目的には問題ありません。重要なのは、各スレッドが独立した制御の流れを持ち、他のスレッドと任意の順序で交互に実行されうる点です。真の並列性がないことで影響を受けるのは速度だけです。予測できない実行順序の入れ替わりから生じる正しさの問題、つまり同期が防ぐべき問題は、Pythonのスレッドでもすべて起こります。
+
+動作を確かめるために、引数 `x` を出力し、次に $-x$、最後に $10x$ を出力する小さな関数 `g` を用意します。バリアオブジェクト `sb` も受け取りますが、最初の実験ではそれを使う二つの呼び出しをコメントアウトしておきます。
+
+```python
+def g(x, sb):
+    print(x)
+    # sb.wait()
+    print(-x)
+    # sb.wait()
+    print(x*10)
+```
+
+これを3つのスレッドで起動します。`ThreadPoolExecutor(num)` は `num` 個のスレッドのプールを作り、`map` は値 $1, 2, \dots, \texttt{num}$ ごとに関数を1回ずつ呼び出して、各呼び出しをスレッドに振り分けます。結果を `list` で包んでいるので、セルが終わる前にすべての呼び出しが完了します。
+
+```python
+num = 3
+sb = Barrier(num)
+with ThreadPoolExecutor(num) as ex: list(ex.map(lambda i: g(i,sb), range(1,num+1)))
+```
+
+バリアがない場合、各スレッドは次のスレッドが動き出す前に関数全体を一気に実行し終えてしまいます。
+
+```text
+1
+-1
+10
+2
+-2
+20
+3
+-3
+30
+```
+
+行列乗算にとって、この順序では役に立ちません。`g` をスレッドごとのカーネルとみなすと、最初のステップは共有メモリの1要素を埋める処理に、二番目のステップは共有タイルから内積を計算する処理に当たります。最初のステップからそのまま次へ進んだスレッドは、他のスレッドがまだ書き込んでいない要素を読んでしまいます。必要なのは、**すべての**スレッドが共有メモリを埋め終えてから、初めて全スレッドが内積の計算に入ることです。
+
+そのための仕組みがバリアです。グループ内の全スレッドが同じ地点に到達するまで、各スレッドを停止させて待たせます。`Barrier(num)` は3スレッド用のバリアを作成します。`sb.wait()` を呼んだスレッドは、合計3つのスレッドが `wait` を呼ぶまでブロックされ、そろった時点で全員がまとめて解放されます。`sb`（*sync barrier* の略）は `g` のすべての呼び出しに渡されるので、全スレッドが同じオブジェクトを共有します。二つの `wait` を有効にしてみます。
+
+```python
+def g(x, sb):
+    print(x)
+    sb.wait()
+    print(-x)
+    sb.wait()
+    print(x*10)
+```
+
+同じ3スレッドのプールで実行すると、出力はまったく変わります。
+
+```text
+1
+2
+3
+-3
+-2
+-1
+30
+10
+20
+```
+
+今度は出力が3つのグループに分かれています。どのスレッドも二番目の作業を始める前に全スレッドが $x$ の出力を終えており、三番目の作業の前には全スレッドが $-x$ の出力を終えています。ただし、グループ内の順序はまちまちです。ここでは $-3, -2, -1$、そして $30, 10, 20$ の順に出力されています。これは想定どおりの挙動です。スレッドは任意の順序でスケジュールされうるので、バリアはフェーズ**内**の順序について何も保証しません。保証するのは、全スレッドが到達するまでどのスレッドもバリアを越えない、という一点だけです。
+
+この保証こそタイル化された行列乗算に必要なものであり、CUDAで `__syncthreads` が果たす役割でもあります。バリアを使えば、`matmul_tiled_bk` の `run_threads` による二つの別々のパスを、全スレッドが実行する単一のループに置き換えられます。
+
+## 2つの同期ポイントを持つタイルカーネル
+
+バリアを組み込むために、カーネルランナーを作り直します。新しい `blk_kernel2d_shar` は、これまでと同じくグリッド内のブロックを順に巡り、ブロックごとにゼロ初期化した共有メモリバッファを確保します。新しく加わるのは次の2点です。
+
+- ブロックごとに `Barrier(tpb.y*tpb.x)` を作成します。カウントはブロック内のスレッド数です。
+- ブロック内のスレッド座標ごとに Python の `Thread` を1つずつ生成し、すべてを開始してから、次のブロックへ進む前にすべてを join します。
+
+```python
+def blk_kernel2d_shar(f, blocks, tpb, sh_sz, *args, **kwargs):
+    for i0 in range(blocks.y):
+        for i1 in range(blocks.x):
+            shar = torch.zeros(sh_sz)
+            syncb = Barrier(tpb.y*tpb.x)
+            threads = [Thread(target=f, args=(dim3(i1,i0), dim3(p,o), tpb, shar, syncb, *args), kwargs=kwargs)
+                       for o in range(tpb.y) for p in range(tpb.x)]
+            for tr in threads: tr.start()
+            for tr in threads: tr.join()
+```
+
+リスト内包表記の二つの `for` 節は直積を作るので、`(p, o)` がブロック内でのスレッドの2次元座標になります。各スレッドはブロック座標、スレッド座標、ブロックの次元、共有バッファ、バリア、追加の引数を受け取ってカーネル `f` を実行します。共有バッファは参照として渡されるため、ブロック内の全スレッドが同じテンソルを読み書きします。これは CUDA のブロック内スレッドが同じ共有メモリを参照するのと同じ状況です。
+
+このランナーを使うと、カーネルは本物の CUDA コードとほぼ同じ形になります。
+
+```python
+def matmul_tiled_bk(blockIdx, threadIdx, blockDim, shared, syncb, m, n, out, h, w, k, tw):
+    tc,tr = threadIdx.x,threadIdx.y
+    r = blockIdx.y*blockDim.y + tr
+    c = blockIdx.x*blockDim.x + tc
+
+    shar_sz = tw*tw
+    ms,ns = shared[:shar_sz],shared[shar_sz:]
+
+    p = 0.
+    for ph in range(cdiv(k,tw)):
+        ms[tr*tw+tc] = m[ tc + ph*tw + r*k] if r<h and (ph*tw+tc)<k else 0.
+        ns[tr*tw+tc] = n[(tr + ph*tw)*w +c] if c<w and (ph*tw+tr)<k else 0.
+        syncb.wait()
+        for i in range(tw): p += ms[tr*tw+i] * ns[tw*i+tc]
+        syncb.wait()
+
+    if (r<h and c<w): out[r*w + c] = p
+```
+
+出力上の位置 `r`、`c` の求め方、共有バッファの `ms` と `ns` への分割、フェーズ `ph` のループ、ゼロパディング付きのタイル読み込みは、どれも以前のシミュレーションから変わっていません。変わったのは作業の構成です。以前は「共有メモリを埋めるパス」と「内積を計算するパス」の二つのループに分ける必要がありました。今度は各スレッドが `ms` と `ns` の自分の担当要素を1つずつ書き込み、`syncb.wait()` を呼ぶだけです。このため、ループは「埋める、wait、計算する、wait」という単一の流れになります。
+
+1回目の `wait` は、まだ埋まっていないタイルを読むことを防ぎます。バリアに到達したスレッドは、ブロック内の全スレッドが到達するまで待たされます。そのため、`wait` から戻った時点で両方のタイルは完全に埋まっており、各スレッドは `ms` の行 `tr` と `ns` の列 `tc` から安全に部分内積を計算できます。
+
+2回目の `wait` も欠かせません。これを取り除くと、内積を計算し終えた速いスレッドが次のフェーズへ進み、`ms` と `ns` に次のタイルの値を書き込み始めてしまいます。その間に遅いスレッドがまだ古いタイルを読んでいれば、古い値と新しい値が混ざった状態を読み取り、誤った結果になります。つまり、各フェーズには次の2つの同期ポイントが必要です。
+
+1. 共有メモリを埋めた後に同期します。書き込みが終わっていないタイルを誰も読まないようにするためです。
+2. 内積を計算した後に同期します。他のスレッドがまだ読んでいるタイルを誰も上書きしないようにするためです。
+
+この「埋める、同期する、計算する、同期する」というパターンが、タイル化した行列乗算カーネルの標準的な構造です。CUDA C では、このバリアが `__syncthreads()` になります。
+
+最後のフェーズを終えると、各スレッドは担当する出力要素の完全な内積を `p` に保持しています。その行と列が出力行列の範囲内にある場合に限り、`p` を `out` に書き込みます。
+
+なお、Python のスレッドは GIL のため真に並列には動かないので、このシミュレーションは逐次版より速くはなりません。目的は高速化ではなく、同期の構造を正しく示すことにあります。
+
+## CUDA Cへ：`extern __shared__`と`__syncthreads`
+
+Python 版のカーネルは、すでに CUDA カーネルと同じ構造をしています。そのため CUDA C への変換は機械的な作業であり、こうした作業は大規模言語モデルに向いています。ここでは次のプロンプトに続けて Python ソースを与え、ChatGPT 4 に変換させました。
+
+```text
+Convert the following python code to CUDA C, keeping formatting and
+variable names the same where possible. You can remove blockIdx,
+threadIdx, blockDim, shared from the argument list, since they're
+already provided by CUDA. Change syncb.wait() to __syncthreads. Use
+extern __shared__ float shared[] to create the shared array. Use the
+C ternary operator to replace the Python equivalent where appropriate.
+If the Python code uses any non-standard functions, you can assume the
+same functions are also available to the translated C code with the
+same name and signature.
+```
+
+このプロンプトは、どのカーネルにも手作業の準備なしで使い回せるよう、意図的に汎用的にしてあります。各指示は、シミュレーションと実際の CUDA の小さな違いに一つずつ対応しています。
+
+- `blockIdx`、`threadIdx`、`blockDim` は CUDA が自動的に提供します。共有メモリは引数ではなく宣言で得ます。そのため、この4つを引数リストから外します。
+- `syncb.wait()` は `__syncthreads()` に置き換えます。
+- Python の `a if cond else b` は、C の三項演算子 `cond ? a : b` に置き換えます。
+- `cdiv` などのヘルパーは、共通のプリアンブル `cuda_begin` で同じシグネチャのものが定義されているので、そのまま使えます。
+
+生成されたコードは、最初のコンパイルでそのまま動作しました。その後、共有配列の名前を `shared` から `ms` に変え、フェーズのオフセット `idx = ph*tw` を導入するなど、軽く手を加えました。
+
+```python
+cuda_src = cuda_begin + r'''
+__global__ void matmul_k(float *m, float *n, float *out, int h, int w, int k, int tw) {
+    int tc=threadIdx.x, tr=threadIdx.y;
+    int r=blockIdx.y*blockDim.y+tr, c=blockIdx.x*blockDim.x+tc;
+
+    extern __shared__ float ms[];
+    float *ns = &ms[tw*tw];
+
+    float p = 0.0f;
+    for (int ph = 0; ph < cdiv(k,tw); ++ph) {
+        int idx = ph*tw;
+        ms[tr*tw + tc] = r<h && idx+tc<k ? m[ tc+idx + r*k ] : 0.0f;
+        ns[tr*tw + tc] = c<w && idx+tr<k ? n[(tr+idx)*w + c] : 0.0f;
+        __syncthreads();
+        for (int i=0; i<tw; ++i) p += ms[tr*tw + i] * ns[tw*i + tc];
+        __syncthreads();
+    }
+    if (r<h && c<w) out[r*w + c] = p;
+}
+'''
+```
+
+モデルは入出力が `float` 配列であることを正しく推論し、すべての変数に適切な型を付けています。見た目の違いを除けば、このカーネルは Python 版と1行ずつ対応しています。`tc` は `threadIdx.x`、`tr` は `threadIdx.y` に当たり、`r` と `c` は以前とまったく同じ方法で求めています。インデックス計算で迷ったときは、Python 版をデバッガでステップ実行して途中の値を確かめるのが効果的です。
+
+### 動的共有メモリの宣言
+
+`threadIdx` と同様に、共有メモリもカーネルの引数としては渡されません。代わりに、カーネルには `extern __shared__ float ms[];` のような行がちょうど1つ含まれます。これにより `ms` は、CUDA がブロックごとに確保する共有メモリ領域の先頭を指すポインタになります。`extern` は、配列のサイズがコンパイル時には分からず、起動時に与えられることを示しています。これが*動的*共有メモリと呼ばれる理由です。
+
+この配列は1つしか宣言できないため、バッファが複数必要なカーネルは領域を自分で切り分ける必要があります。タイル化カーネルには `m` と `n` の $\mathit{tw}\times\mathit{tw}$ タイルが1つずつ必要です。そこで前半を `m` のタイルに使い、`float *ns = &ms[tw*tw];` によって `ns` が先頭から $\mathit{tw}^2$ 個先、つまり `n` のタイルが始まる位置を指すようにします。これは Python シミュレーションのスライス `shared[:shar_sz], shared[shar_sz:]` に相当します。
+
+### `__syncthreads`による同期
+
+`__syncthreads()` は、シミュレーションの `syncb.wait()` とまったく同じ役割を持つ、ブロック内の全スレッドに対するバリアです。CUDA に組み込まれているので、バリアオブジェクトを作って渡す必要はありません。カーネルはこれを Python 版と同じ理由でフェーズごとに2回呼びます。1回目は両方のタイルが埋まる前に読み始めないため、2回目は全スレッドが読み終える前に次のタイルで上書きしないためです。CUDA 特有の構文は多くありませんが、共有メモリを使うプログラミングで重要なもののほとんどが、この1つのカーネルに登場しています。
+
+### 共有メモリサイズを指定した起動
+
+`extern` 配列のサイズは、カーネル起動で指定します。三重の山括弧には、グリッドとブロックの次元に加えて、ブロックごとに確保する動的共有メモリのバイト数を3番目の引数として渡せます。
+
+```python
+cuda_src += r'''
+torch::Tensor matmul_dyn(torch::Tensor m, torch::Tensor n) {
+    CHECK_INPUT(m); CHECK_INPUT(n);
+    int h=m.size(0), w=n.size(1), k=m.size(1);
+    TORCH_CHECK(k==n.size(0), "Size mismatch!");
+    auto output = torch::zeros({h, w}, m.options());
+
+    /*
+    // Commented out section demonstrating basic idea of dynamic size calculation
+    cudaDeviceProp devProp;
+    CUDA_ERR(cudaGetDeviceProperties(&devProp, 0));
+    int maxThreads = devProp.maxThreadsPerBlock;
+    size_t requiredSize = static_cast<size_t>(maxThreads) * 2 * sizeof(float);
+    size_t size = min(devProp.sharedMemPerBlock, requiredSize);
+    int TW = std::sqrt(maxThreads);
+    */
+
+    // We just set size fixed for now
+    int TW = 16;
+    size_t size = TW*TW * 2 * sizeof(float);
+    dim3 tpb(TW,TW);
+    dim3 blocks(cdiv(w, tpb.x), cdiv(h, tpb.y));
+    matmul_k<<<blocks,tpb,size>>>(
+        m.data_ptr<float>(), n.data_ptr<float>(), output.data_ptr<float>(), h, w, k, TW);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+    return output;
+}
+'''
+```
+
+ここではタイル幅を $\mathit{TW}=16$ に固定し、必要なバイト数を次のように求めています。
+
+$$
+\text{size} = \mathit{TW}\times\mathit{TW}\times 2\times \texttt{sizeof(float)}
+$$
+
+$\mathit{TW}\times\mathit{TW}$ は1タイルの要素数で、2倍は `m` と `n` のタイル2つ分です。`sizeof(float)` で要素数をバイト数に変換します。$\mathit{TW}=16$ ならブロックあたり $16\cdot16\cdot2\cdot4 = 2048$ バイトです。Python の `matmul_2d` が `tw*tw*2` 要素を要求していたのと同じ理屈です。
+
+コメントアウトした部分は、デバイスプロパティの `maxThreadsPerBlock` と `sharedMemPerBlock` からタイル幅と共有メモリサイズを導く案の概略です。この考え方は後ほど改めて扱います。
+
+### 検証と計測
+
+コンパイルして PyTorch の結果と比較し、実行時間を計測します。
+
+```python
+fname = 'matmul_dyn'
+cpp_src = get_sig(fname, cuda_src)
+module = load_cuda(cuda_src, cpp_src, [fname], opt=True)
+torch.isclose(module.matmul_dyn(m1c,m2c), m1c@m2c).all()
+```
+
+結果は `True` となり、正しく計算できています。続いて計測します。
+
+```python
+%%timeit -n 10
+module.matmul_dyn(m1c,m2c)
+torch.cuda.synchronize()
+```
+
+```text
+6.56 ms ± 372 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+```
+
+正しくはあるものの、約6.56ms かかっており、約6.03ms だった素朴なカーネルよりわずかに*遅く*なっています。グローバルメモリからの読み込みの大部分を共有メモリに置き換えることがタイリングの目的でしたが、期待した効果は出ていません。原因はタイリングそのものではなく、このカーネルがどのようにコンパイルされるかにあります。次は共有メモリを静的に確保する版を作り、その原因を突き止めていきます。
+
+## 静的共有メモリとテンプレートで性能差を解く
+
+動的版の遅さの原因を探るため、共有メモリを静的に宣言した版を作ります。`constexpr` でタイル幅をコンパイル時定数にすると、カーネル内で `tw` × `tw` の共有配列を2つ別々に宣言できます。
+
+```python
+cuda_src = cuda_begin + r'''
+constexpr int tw = 16;
+
+__global__ void matmul_ks(float *m, float *n, float *out, int h, int w, int k) {
+    __shared__ float ms[tw][tw], ns[tw][tw];
+    int tc=threadIdx.x, tr=threadIdx.y;
+    int r=blockIdx.y*blockDim.y+tr, c=blockIdx.x*blockDim.x+tc;
+
+    float p=0.0f;
+    for (int ph=0; ph < cdiv(k,tw); ++ph) {
+        int idx = ph*tw;
+        ms[tr][tc] = r<h && idx+tc<k ? m[ tc+idx + r*k ] : 0.0f;
+        ns[tr][tc] = c<w && idx+tr<k ? n[(tr+idx)*w + c] : 0.0f;
+        __syncthreads();
+        for (int i=0; i<tw; ++i) p += ms[tr][i] * ns[i][tc];
+        __syncthreads();
+    }
+    if (r<h && c<w) out[r*w + c] = p;
+}
+
+torch::Tensor matmul_static(torch::Tensor m, torch::Tensor n) {
+    CHECK_INPUT(m); CHECK_INPUT(n);
+    int h=m.size(0), w=n.size(1), k=m.size(1);
+    TORCH_CHECK(k==n.size(0), "Size mismatch!");
+    auto output = torch::zeros({h, w}, m.options());
+    dim3 tpb(tw,tw);
+    dim3 blocks(cdiv(w, tpb.x), cdiv(h, tpb.y));
+    matmul_ks<<<blocks,tpb>>>(m.data_ptr<float>(), n.data_ptr<float>(), output.data_ptr<float>(), h, w, k);
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+    return output;
+}
+'''
+```
+
+宣言以外の構造は動的版と同じで、埋める、待つ、計算する、待つという流れです。変わったのはインデックスの付け方で、平坦なバッファに `tr*tw + tc` とオフセットを計算する代わりに、`ms[tr][tc]` や `ns[i][tc]` のように本物の2次元インデックスで書けます。ずっと読みやすくなります。ホスト関数では起動時に共有メモリのサイズを渡す必要がなくなり、`matmul_ks<<<blocks,tpb>>>` という通常の2パラメータの起動になります。
+
+正しさの確認は PyTorch の `@` との比較で問題なく通ります。計測はこれまでと同様に、毎回 GPU と同期をとって行います。
+
+```python
+%%timeit -n 10
+module.matmul_static(m1c,m2c)
+torch.cuda.synchronize()
+```
+
+```text
+4.52 ms ± 253 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+```
+
+動的版の約6.56ms と比べて、静的版は実行時間がおよそ3割短くなっています。これは意外な結果です。共有メモリ上のタイルは、サイズがコンパイル時に決まっても起動時に決まっても同じタイルであり、読み書きする命令が変わるとは考えにくいからです。演算量もメモリトラフィックも本質的に同じなので、まず動的版のバグを疑いたくなりますが、バグはありません。
+
+### 原因はタイル幅が実行時の値であること
+
+差の原因は共有メモリの確保方法ではなく、動的カーネルで `tw` が通常の実行時引数になっている点にあります。講義の後日談として、タイル幅がコンパイル時に分からないとCUDAは幅ごとに最適化したコードを生成できず、最も遅い汎用的なコードにフォールバックする、と説明されています。具体的には、次のような最適化が効かなくなると考えられます（生成されたコードを確認したわけではありません）。
+
+- 内側のループ `for (int i=0; i<tw; ++i)` は反復回数が不明なので完全にはアンロールできません。16に固定されていれば、カウンタも比較も分岐もない16個の積和命令に置き換えられます。
+- `tr*tw + i` や `tw*i + tc` には実行時の整数乗算が必要です。既知の2のべき乗ならシフトになり、アンロールされれば各アクセスのオフセットはコンパイル時定数になります。
+- 2つ目のタイルの位置 `&ms[tw*tw]` も実行時に計算しなければなりません。
+
+コンパイラはあらゆるタイル幅に対応する最適化済みコードを作れないため、幅が不明なら最も汎用的で遅いコードになります。静的版が速いのは `__shared__ float ms[tw][tw]` のおかげではなく、`constexpr int tw = 16` のおかげです。
+
+### テンプレートで柔軟性と速度を両立する
+
+幅を1つにハードコードすると、動的共有メモリを使う動機だった柔軟性を失います。そこで `tw` を `template<int tw>` に移し、幅ごとに別々のカーネルを生成させます。
+
+```python
+cuda_src = cuda_begin + r'''
+template<int tw>
+__global__ void matmul_k(float *m, float *n, float *out, int h, int w, int k) {
+    int tc=threadIdx.x, tr=threadIdx.y;
+    int r=blockIdx.y*blockDim.y+tr, c=blockIdx.x*blockDim.x+tc;
+    extern __shared__ float ms[];
+    float *ns = &ms[tw*tw];
+
+    float p = 0.0f;
+    for (int ph = 0; ph < cdiv(k,tw); ++ph) {
+        int idx = ph*tw;
+        ms[tr*tw + tc] = r<h && idx+tc<k ? m[ tc+idx + r*k ] : 0.0f;
+        ns[tr*tw + tc] = c<w && idx+tr<k ? n[(tr+idx)*w + c] : 0.0f;
+        __syncthreads();
+        for (int i=0; i<tw; ++i) p += ms[tr*tw + i] * ns[tw*i + tc];
+        __syncthreads();
+    }
+    if (r<h && c<w) out[r*w + c] = p;
+}
+'''
+```
+
+本体は動的版と同一で、変わったのはシグネチャだけです。ただしテンプレート引数はコンパイル時定数でなければならず、実行時の変数 `TW` で `matmul_k<TW>` とは書けません。そこで選択肢を8、16、32に固定し、`switch` で振り分けます。
+
+```python
+cuda_src += r'''
+torch::Tensor matmul_dyn1(torch::Tensor m, torch::Tensor n) {
+    CHECK_INPUT(m); CHECK_INPUT(n);
+    int h=m.size(0), w=n.size(1), k=m.size(1);
+    TORCH_CHECK(k==n.size(0), "Size mismatch!");
+    auto output = torch::zeros({h, w}, m.options());
+    int TW = 16; // TODO: Calculate this dynamically
+    size_t size = TW*TW*2 * sizeof(float) + 1;
+    dim3 tpb(TW,TW);
+    dim3 blocks(cdiv(w, tpb.x), cdiv(h, tpb.y));
+
+    auto f = [&](auto kf) { kf<<<blocks, tpb, size>>>(
+        m.data_ptr<float>(), n.data_ptr<float>(), output.data_ptr<float>(), h, w, k);
+    };
+    switch(TW) {
+        case 8: f(matmul_k<8>); break;
+        case 16: f(matmul_k<16>); break;
+        case 32: f(matmul_k<32>); break;
+        default: break;
+    }
+    C10_CUDA_KERNEL_LAUNCH_CHECK();
+    return output;
+}
+'''
+```
+
+長い起動式を3回書かないよう、起動を C++ のラムダ `f` にまとめています。`[&]` は周囲のローカル変数を参照としてキャプチャし、`(auto kf)` はどのカーネル関数でも受け取れるジェネリックな引数です。各 `case` は `matmul_k<8>` などのインスタンスを渡し、コンパイラはそれぞれ完全に特殊化されたカーネルを生成します。共有メモリのサイズは `TW` から実行時に計算されるので動的なままで、静的になったのはループとインデックス計算を左右するタイル幅だけです。これこそが速度低下の真の原因でした。
+
+### 実用ライブラリが難しい理由
+
+正直なところ、このコードは読みやすくありません。これは、さまざまなハードウェアと問題の形状に合わせて最適化する場面で CUDA が本当に複雑になることをよく表しています。講義では、最近のNVIDIA GPUはどれも同じ量の共有メモリを持つのでハードウェアの違いはそれほど問題にならない、と述べられています。ただし実際には、ブロックが使える共有メモリの上限はGPUの世代によって異なります（CUDA C++ Programming Guide の Compute Capabilities の表を参照してください）。さらに、最適なタイル幅は行列の形状に依存するため、堅牢な実装には特殊化されたカーネル群とその選択ロジックが必要です。この作業を NVIDIA の専門チームが cuBLAS や cuDNN で担っているので、ほとんどのユーザーは自分で行わずに済みます。とはいえ、タイル幅や静的、動的、テンプレートを切り替えて PyTorch の行列乗算と比較してみることは、どの選択が本当に効くのかの直感を養う確実な方法です。
+
+## NumbaでPythonのままCUDAを書く
+
+前のセクションの静的版CUDA Cカーネルと同じタイル化アルゴリズムは、Numbaを使えばPythonのまま書けます。NumbaはGPUを覆い隠す高水準の抽象化ではありません。CUDA Cの各要素にそれぞれ直接対応するPythonの表現があるので、これまでの知識をほぼ一行ずつ移し替えられます。
+
+```python
+from numba import cuda
+from numba.cuda import as_cuda_array as ca
+
+@cuda.jit
+def matmul_k_numba(m, n, out, tw):
+    cbi,cbd,tid = cuda.blockIdx,cuda.blockDim,cuda.threadIdx
+    tc,tr = tid.x,tid.y
+    r,c = cbi.y * cbd.y + tr, cbi.x * cbd.x + tc
+    h,k  = m.shape
+    k2,w = n.shape
+
+    shar = cuda.shared.array(0, dtype=np.float32)
+    ms,ns = shar[:tw*tw],shar[tw*tw:2*tw*tw]
+
+    p = np.float32(0.0)
+    for ph in range(math.ceil(k/tw)):
+        idx = ph*tw
+        ms[tr*tw+tc] = m[r, tc+idx] if r<h and idx+tc<k else 0.
+        ns[tr*tw+tc] = n[tr+idx, c] if c<w and idx+tr<k else 0.
+        cuda.syncthreads()
+        for i in range(tw): p += ms[tr*tw+i] * ns[i*tw+tc]
+        cuda.syncthreads()
+    if r < h and c < w: out[r, c] = p
+
+def matmul_2d_numba(m, n, tw=16):
+    h,k  = m.shape
+    k2,w = n.shape
+    assert k==k2, "Size mismatch!"
+    out = torch.zeros(h, w, dtype=m.dtype, device=m.device)
+    dyn_shared_mem_size = 2 * tw * tw * 4
+    tpb = tw,tw
+    blocks = cdiv(w,tpb[0]), cdiv(h,tpb[1])
+    matmul_k_numba[blocks, tpb, 0, dyn_shared_mem_size](ca(m), ca(n), ca(out), tw) 
+    return out
+
+torch.isclose(matmul_2d_numba(m1c,m2c), m1c@m2c).all()
+```
+
+上から順に読むと、どの要素にも見慣れた対応物があります。
+
+- `cuda.blockIdx`、`cuda.blockDim`、`cuda.threadIdx` は、CUDA Cの `blockIdx`、`blockDim`、`threadIdx` に相当します。`tc`、`tr`、`r`、`c` の計算もこれまでと同じです。
+- `cuda.shared.array(0, dtype=np.float32)` はサイズにゼロを指定することで動的共有メモリを選びます。これは `extern __shared__` 配列とまったく同じ扱いで、実際のサイズは起動時に決まります。確保した `shar` は先頭の `tw*tw` 要素を `ms`、続く `tw*tw` 要素を `ns` として切り分けます。
+- `cuda.syncthreads()` は `__syncthreads()` に相当します。1回目はタイルが埋まる前の読み込みを防ぎ、2回目は次のフェーズによる上書きを防ぎます。
+- フェーズのループ、ゼロパディング、最後の条件付き書き込みも変わっていません。
+
+起動にはCUDA Cの三重山括弧の代わりに角括弧を使い、`[blocks, tpb, stream, 共有メモリのバイト数]` の4つの値を渡します。ストリームはここでは扱わないので `0` にします。最後の値が `cuda.shared.array(0, …)` の実際のサイズになり、タイル2枚分の $2 \times \texttt{tw} \times \texttt{tw} \times 4$ バイト（`tw=16` で2048バイト）を指定します。テンソルは `ca`（`as_cuda_array`）でラップして渡します。これはデータをコピーせず型を解釈し直すだけなので、ほとんど時間がかかりません。そのおかげでカーネル内では `m[r, tc+idx]` のような自然な2次元インデックスが書け、`m.shape` から `h`、`k`、`w` を直接読み取れます。手作業の平坦化も、サイズを別引数で渡す必要もありません。結果はPyTorchの行列乗算と一致します。
+
+同期を入れて計時してみます。
+
+```python
+%%timeit -n 10
+matmul_2d_numba(m1c,m2c)
+torch.cuda.synchronize()
+```
+
+```text
+16.2 ms ± 343 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+```
+
+約16.2msで、静的なCUDA C版の4.52msよりかなり遅くなりました。原因は詳しく調べていませんが、CUDA Cでも速度低下を招いた動的共有メモリと実行時のタイル幅が効いている可能性があります。それでも本物のCUDAの速度で動いており、純粋なPythonのシミュレーションとは比べものになりません。
+
+コード量はCUDA Cとほぼ同じなので、Numbaの利点は短さにはありません。本当の利点はコンパイルの速さです。カーネルにささいな変更を加えて再コンパイルしても、1秒もかからずに準備が整います。C++のCUDA拡張のコンパイルとは大きな差があり、実際のGPUで変更の結果をほぼ即座に確認できる短い反復サイクルは何より価値があります。
+
+### CPU上のCUDAシミュレータ
+
+さらに魅力的なのが、CPU上で動くCUDAシミュレータです。環境変数 `NUMBA_ENABLE_CUDASIM` を `1` にすると有効になります。この変数はインポート時に読まれるので、`import numba` の前に設定しなければなりません。ノートブックで切り替えるには、カーネルを再起動し、変数を変更し、Numbaを再インポートします。
+
+シミュレータ上ではカーネルからデバッガを呼べます。多数のスレッドが同時に止まると手に負えなくなるため、スレッドとブロックのインデックスで条件を付け、1つのスレッドだけを停止させるのが簡単です。Numbaのドキュメントの「Debugging CUDA Python with the CUDA Simulator」には次の例があります。
+
+```python
+@cuda.jit
+def vec_add(A, B, out):
+    x = cuda.threadIdx.x
+    bx = cuda.blockIdx.x
+    bdx = cuda.blockDim.x
+    if x == 1 and bx == 3:
+        from pdb import set_trace; set_trace()
+    i = bx * bdx + x
+    out[i] = A[i] + B[i]
+```
+
+このカーネルはブロック3のスレッド1だけで停止し、他のスレッドは通常どおり最後まで実行されます。`pdb` や任意の `print` はGPU向けにはコンパイルできないので、この種のコードはシミュレータでしか意味を持ちません。シミュレータは手書きのPythonシミュレーションと同程度に遅いため、バグを追う間は入力を小さく保ち、正しく動いてから現実的なサイズに移ります。変数を `0` に戻して再インポートすれば、同じコードが変更なしでGPU上で動きます。
+
+### 開発ループとデプロイ
+
+こうして、Numbaでカーネルを書き、小さな入力でシミュレータを使ってデバッグし、GPU上で参照実装（PyTorchの行列乗算）と照合するという開発ループができあがります。
+
+デプロイには2つの道があります。1つはNumbaのまま使う方法で、書くのもデバッグするのも最速です。ただしユーザーのマシンでJITコンパイルされるため、Numbaのインストールが必要になります（condaで入れれば必要なツールキットも揃います）。もう1つはCUDA Cに変換し、事前コンパイルした拡張として配布する方法です。手間は増えますが、変換は言語モデルに手伝わせることもでき、静的なタイル幅のようなコンパイル時定数を使えるうえ、CUDAツールキットなしで動くパッケージを作れます。Numbaで開発し、速度やデプロイが重要なカーネルだけを変換するという組み合わせも現実的な選択肢です。
+
+## まとめ
+
+多くのGPUカーネルは計算そのものではなくメモリアクセスで律速されます。素朴な行列乗算では、各スレッドがグローバルメモリから同じ値を何度も読み込んでいました。内積をタイル幅ごとのフェーズに分け、ブロック内のスレッドが協力してタイルを共有メモリにコピーすれば、グローバル読み込みはタイル幅分の1に減ります。共有メモリは容量が小さく、他のブロックからは見えません。それでもグローバルメモリより一桁速いので、この再利用がそのまま効いてきます。
+
+本記事では、一度にCUDAを書くのではなく段階を踏んで進めました。まずPyTorchのテンソルのビューで共有メモリを模したPythonシミュレーションを作り、インデックス計算を図と照らし合わせて確かめました。次に、読み込みと計算をスレッドごとの関数に分けました。続いてPythonのスレッドと `Barrier` で並行実行と同期を再現しました。そこからCUDA Cに変換し、最後にNumbaで同じカーネルを書きました。どの段階でも参照実装と結果を照合したので、問題が起きてもどの変更が原因かをすぐに絞り込めます。
+
+正しさの鍵は二つありました。一つは、フェーズごとに置く2つの同期ポイントです。1回目の `__syncthreads()` は、まだ埋まっていないタイルを読むことを防ぎます。2回目は、速いスレッドが次のタイルで共有メモリを上書きすることを防ぎます。もう一つは、すべてのメモリアクセスに付ける境界チェックとゼロパディングです。これを怠ると、行列の端で隣の行を読んでしまい、結果が黙って壊れます。
+
+速度の面では、コンパイル時定数の効果が目立ちました。同じタイル化アルゴリズムでも、タイル幅を実行時の値として動的共有メモリで受け取る版は約6.56msでした。一方、`constexpr` で静的に宣言した版は約4.52msまで速くなりました。タイル幅がコンパイル時に分かっていれば、コンパイラがループのアンロールや定数オフセット化を行えるためです。
+
+ただし、ここで作ったカーネルはcuBLASと比べればおそらく見劣りします。最適なタイル幅は行列の形状に依存するため、実用的な実装には形状ごとに特殊化した複数のカーネルとその選択ロジックが必要になります。実用レベルの性能はcuBLASに任せるのが現実的です。そのうえで、今回のタイリングカーネルを実験台にしましょう。タイル幅や共有メモリの確保方法を変えて計測してみることが、どの選択が本当に効くのかという直感を養う確実な方法です。
+
+---
+
+*この記事は、YouTube動画「[Lecture 5: Going Further with CUDA for Python Programmers](https://www.youtube.com/watch?v=wVsR-YhaHlM)」の内容をもとに作成しています。*
