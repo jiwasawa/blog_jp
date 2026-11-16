@@ -10,7 +10,20 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Fri, 13 Nov 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 16 Nov 2026 15:00:00 GMT</lastBuildDate>
+<item>
+  <title>データラベリングの終焉とHandshake AIが暴く「賢いLLM」の愚かさ</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/handshake-latent-space/</link>
+  <description><![CDATA[ Handshake AIの専門家による「Expert data authoring」が、LLMの限界とAI安全性のパラダイムを刷新し、データ市場を1,000億ドル規模へと導く様をLife SciencesとAlignmentの領域から掘り下げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <category>Latent Space Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/handshake-latent-space/</guid>
+  <pubDate>Mon, 16 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/handshake-latent-space/202611170837.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Pythonから始めるCUDAカーネル入門 (2)：タイル化行列乗算をシミュレーションからCUDA C、Numbaまで</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,18 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/</guid>
   <pubDate>Sat, 24 Oct 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/202610262131.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Richard Ho: OpenAIのハードウェア内製化戦略と逆張りの美学</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/</link>
-  <description><![CDATA[ OpenAIの自社製AI推論チップ「Jalapeño」が「汎用」という逆張りを採用し、AIによるAI設計という新境地を開拓する中で、インフラ戦略の全貌と次世代プラットフォームへの影響を分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/</guid>
-  <pubDate>Mon, 12 Oct 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/richard-ho-jalapeno/202610131041.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
