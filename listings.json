@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/meta-muse-mona/index.html",
+      "/posts/satya-software-factory/index.html",
       "/posts/handshake-latent-space/index.html",
       "/posts/gpu-mode-lecture5/index.html",
       "/posts/anthropic-s1-2/index.html",

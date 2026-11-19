@@ -10,7 +10,31 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Tue, 17 Nov 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 19 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Raspberry Piから生まれたMetaの「Muse」：AIエージェント時代にPMへ求められるTasteの復権</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/</link>
+  <description><![CDATA[ MetaのAIエージェント「Muse」開発秘話から、Agentic AI時代にProduct Managerへ求められる「Taste」の重要性を、プロトタイプ駆動開発、UXデザイン、Evalの課題、そしてAIスロップの海を生き抜くための戦略を分析する。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/</guid>
+  <pubDate>Thu, 19 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/202611191701.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
+</item>
+<item>
+  <title>AI時代のSoftware Factoryとアーキテクチャの主権：Satya Nadellaが語るエンジニアリングの再定義</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/</link>
+  <description><![CDATA[ Satya NadellaがAI時代のSoftware Factory、Decision Engine、そしてアーキテクチャの主権について語る内容を、IDEの進化、Open Modelと Reverse Information Paradox、Unmetered Intelligence、そしてFDEという新たなキャリアパスの観点から深く掘り下げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/</guid>
+  <pubDate>Wed, 18 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/202611191704.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
+</item>
 <item>
   <title>データラベリングの終焉とHandshake AIが暴く「賢いLLM」の愚かさ</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -108,30 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/</guid>
   <pubDate>Tue, 27 Oct 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/202610271019.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
-</item>
-<item>
-  <title>Transformerのpositional encoding：群論と線形代数からの数学的探求</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/</link>
-  <description><![CDATA[ Transformerのpositional encodingの数学的背景を群論と線形代数から深掘りし、RoPEやALiBiといった手法が指数関数的減衰、回転、多項式的成長といった普遍的な構造に内包されることを解き明かす。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Transformer</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/</guid>
-  <pubDate>Mon, 26 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/positional-encoding-jane-street/202610261955.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
-</item>
-<item>
-  <title>AI時代の新たな頂点捕食者：Agent Stateとセキュリティのパラダイムシフト</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/</link>
-  <description><![CDATA[ AI時代のサイバーセキュリティは、open-weightモデルによる攻撃者ピラミッドの平坦化と「agent state」の台頭により、防衛パラダイムの転換を迫られており、CrowdStrikeは「AIにはAIを」という「Safe Mind」構想で最先端のAI防衛を推進している。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/</guid>
-  <pubDate>Sun, 25 Oct 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/george-kurtz-no-priors/202610262131.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 </channel>
 </rss>

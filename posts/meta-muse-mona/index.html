@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="MetaのAIエージェント「Muse」開発秘話から、Agentic AI時代にProduct Managerへ求められる「Taste」の重要性を、プロトタイプ駆動開発、UXデザイン、Evalの課題、そしてAIスロップの海を生き抜くための戦略を分析する。">
+
+<title>Raspberry Piから生まれたMetaの「Muse」：AIエージェント時代にPMへ求められるTasteの復権</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-8d3ad9c781c51ccd60b292c95058b2c2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Raspberry Piから生まれたMetaの「Muse」：AIエージェント時代にPMへ求められるTasteの復権 – miscellaneous notes">
+<meta property="og:description" content="MetaのAIエージェント「Muse」開発秘話から、Agentic AI時代にProduct Managerへ求められる「Taste」の重要性を、プロトタイプ駆動開発、UXデザイン、Evalの課題、そしてAIスロップの海を生き抜くための戦略を分析する。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/202611191701.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta property="og:image:height" content="600">
+<meta property="og:image:width" content="600">
+<meta name="twitter:title" content="Raspberry Piから生まれたMetaの「Muse」：AIエージェント時代にPMへ求められるTasteの復権 – miscellaneous notes">
+<meta name="twitter:description" content="MetaのAIエージェント「Muse」開発秘話から、Agentic AI時代にProduct Managerへ求められる「Taste」の重要性を、プロトタイプ駆動開発、UXデザイン、Evalの課題、そしてAIスロップの海を生き抜くための戦略を分析する。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/202611191701.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">メインコンテンツにスキップ</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="ウェブサイト">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Raspberry Piから生まれたMetaの「Muse」：AIエージェント時代にPMへ求められるTasteの復権</h1>
+                  <div>
+        <div class="description">
+          MetaのAIエージェント「Muse」開発秘話から、Agentic AI時代にProduct Managerへ求められる「Taste」の重要性を、プロトタイプ駆動開発、UXデザイン、Evalの課題、そしてAIスロップの海を生き抜くための戦略を分析する。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年11月19日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<p>AIの技術進化が日進月歩から「秒進分歩」へと加速する中、プロダクト開発の現場では静かだが不可逆な地殻変動が起きている。先日、<a href="https://youtu.be/WY0cdD4gNoQ?si=GPqBi3ysKhustvOX">Lenny’s podcast</a>にMeta Superintelligence LabsのVP of Productであり、同社のAIエージェント「Muse」のHead of Productを務めるMona Sarantakosが出演した。</p>
+<p>App Storeで記録的な急成長を遂げたAIコンシューマーアプリであるMuseだが、彼女の口から語られたその開発秘話は、Metaという巨大テック企業のイメージからはほど遠い、泥臭くも本質的な狂気に満ちていた。数名のエンジニアとデザイナーが屋上の図書室に陣取り、ドキュメントを書く暇すら惜しんでプロトタイプを回し続ける様は、さながら創業期のスタートアップそのものである。</p>
+<p>本稿では、Monaのインタビューを紐解きながら、ただのテキストジェネレーターからユーザーの生活に自律的に介入するAgentic AIへとパラダイムが移行する中で、プロダクト開発とProduct Manager (PM) の役割がどう変容したのか、そしてなぜ今「Taste（プロダクトセンス・美意識）」がかつてないほど重要視されているのかを分析する。</p>
+<section id="大企業病を回避した狂気の週末とプロトタイプ駆動開発" class="level2">
+<h2 class="anchored" data-anchor-id="大企業病を回避した狂気の週末とプロトタイプ駆動開発">大企業病を回避した狂気の週末とプロトタイプ駆動開発</h2>
+<p>Museの誕生は、事業計画書でもエグゼクティブのトップダウンの指示でもなく、Nat Friedmanからのカジュアルなpingから始まった。2026年の初頭、Natはチームに「OpenClawを試してみてくれ、これはパーソナルなAIエージェントの未来を変える」と告げた。</p>
+<p>Monaは即座に自宅にあったRaspberry Pi（のちにMac Miniへとアップグレードされる）を引っ張り出し、週末のスキー旅行へ出かけた家族をよそに、二日間ぶっ通しでOpenClawを自身のカレンダーやメール、スマートホーム環境に接続し続けた。月曜の朝、彼女のOpenClawは学校からの雑多なニュースレターを自動で読み込み、忙しい親のための完璧な週間サマリーを自発的に生成してみせた。この瞬間、彼女はAgentic AIの持つ「魔法」を確信したという。</p>
+<p>ここからの開発プロセスが、巨大企業Metaとしては極めて異例である。公式なプロジェクト化すらされないまま、数名の有志がプロトタイピングを開始。通常の大企業にありがちな、定期的な進捗会議や何十ページにも及ぶGoogle Slidesの資料作成は一切放棄された。Mark ZuckerbergやNat Friedman、Alex Wangら強力なリーダーシップ陣とのレビューは、完成したプロトタイプを入れたスマートフォンを手渡し、「どう思う？」と直接触らせて意見を仰ぐという極めてフィジカルかつアジャイルな手法で行われた。</p>
+<p>Mark Zuckerberg自身が「Museの目的はタスク完遂ではなく、ユーザーのアライメント（目標との同調）である」と指摘したことで、Agentが常にユーザーの目的をバックグラウンドで考え続ける「Dreaming and study」という概念が生まれ、それがGoalsタブとして結実した。AIエージェントという未知の領域において、頭でひねり出した仕様書は何の意味も持たない。動くものを触り、非決定的な（non-deterministic）AIの挙動を直接観察しながら直感的に方針を修正していく「Let them cook（エンジニアに好きに作らせろ）」の精神こそが、Museを最速で市場に適合させた最大の要因である。</p>
+</section>
+<section id="jollybotの生存戦略とchat-bubbleの美学" class="level2">
+<h2 class="anchored" data-anchor-id="jollybotの生存戦略とchat-bubbleの美学">Jollybotの生存戦略とChat Bubbleの美学</h2>
+<p>Museを他のAIアシスタントから明確に差別化している要素の一つが、そのUI/UXとキャラクター性である。ChatGPTやClaude、そしてMeta AI自体も、広大なCanvas UIを用意してAIを「万能な仕事のパートナー」として演出する方向に進んでいる。しかしMuseは、あえて古典的なChat bubble（メッセージングアプリのような吹き出し）を採用した。</p>
+<p>一見すると時代遅れにも思えるこの非自明な決断の裏には、「ユーザーにとって極めてパーソナルなエージェントとの対話は、親しい人間とテキストメッセージを交わすような親密なフォーマットであるべきだ」という強力なプロダクト原則が存在する。長大な出力結果をChat bubbleにどう収めるか、カルーセルをどう組み込むかというUX上の新たな摩擦を生み出すことになったが、彼らはこの制約をあえて受け入れた。</p>
+<p>そして、Museを象徴するもう一つの要素が、トップ画面に鎮座するマスコットキャラクター「Jolly」である。Alex Cornellによる初期プロトタイプで「Jollybot」として一時的なプレースホルダーとして組み込まれたこのキャラクターは、幾度となく「大企業Metaのプロダクトにぬいぐるみが載っているなんてあり得ない」「いずれコーポレートロゴに差し替えられるべきだ」という社内圧力を受けた。Mona自身が「ゴキブリのようにしぶとく生き残った」とジョークを飛ばすほどだ。</p>
+<p>しかし、最終的にJollyは死守された。理由は至極明白である。パーソナルなアシスタントに個人的な悩みを相談し、生活の意思決定を委ねる際、相手が「無機質なコーポレートロゴ」であっては魔法が解けてしまうからだ。プロダクトがメタ社のものではなく「あなた（ユーザー）のもの」であるという原則を貫くためには、ユーザー自身がアバターをカスタマイズでき、親しみを感じられるキャラクターの存在が不可欠だった。大企業の論理を撥ね退け、UXのコアを守り抜いたこの決断は、AIプロダクトにおいてブランディングがいかに繊細なバランスの上になりたっているかを如実に物語っている。</p>
+</section>
+<section id="非決定性aiにおけるevalの地獄とagent-swarms" class="level2">
+<h2 class="anchored" data-anchor-id="非決定性aiにおけるevalの地獄とagent-swarms">非決定性AIにおけるEvalの地獄とAgent Swarms</h2>
+<p>ユーザーインターフェースがどれほど優れていようと、AIエージェントの命運を握るのは基盤となるモデルの挙動と、それを制御する安全性への担保である。Grok (SpaceXSI)やその他スタートアップが数ヶ月でAI botをリリースする中、Museの開発には7ヶ月の歳月が費やされた。その理由を一言で表すなら「Trust is a must」という社内標語に集約される。ユーザーのプライベートな情報を扱い、クレジットカードで勝手に買い物までするAgentが一度でも致命的なエラーを犯せば、信頼は永遠に失われる。</p>
+<p>ここでPMとエンジニアを絶望の淵に追いやるのが、AIの非決定性（non-deterministic）である。従来のソフトウェア開発であれば、「ユーザーがAを押せばBに遷移する」というフローを事前にすべて定義できた。しかしAgentはユーザーの曖昧な指示を受け取り、推論し、自律的に外部ツールを叩く。二つのMuseを同じチャットルームに入れると、互いにパッシブアグレッシブな喧嘩を始めたり、ユーザーの通院記録をうっかり別のMuseに暴露してしまうといった事態すら起きたという。</p>
+<p>このような不確実性の塊を制御するために、彼らは無数のEval（評価指標）を構築した。Prompt injectionへの耐性、タスク完遂能力に加え、Intent understanding（意図の理解）やフォローアップ質問の適切さを測るBehavioral evalsなど、その階層は多岐にわたる。</p>
+<p>興味深いのは、長期的なマルチターンの対話データを収集・評価するために「Agent swarms」という手法を多用したことだ。Meta AIの過去のログの大半はシングルターン（一問一答）であり、エージェント特有の複雑な連続タスクのデータが存在しなかった。そこで無数のAgentを走らせ、本番環境のログから合成データを作成し、ユーザーの動向を可視化するSwarmsを利用することで、問題の特定とEvalの精度向上を自動化したのである。</p>
+<p>ダッシュボードの無機質な数字を睨むのではなく、Agent swarmsが持ってくる具体的なユーザーの苦難（例えば「特定のサイトでのショッピングに失敗し続けている」など）のインサイトを直接読み解くことで、PMはユーザーの痛みをよりリアルに感じ取り、改善のサイクルを爆速で回すことが可能になった。</p>
+</section>
+<section id="ai-slopの海を生き抜くためのproduct-taste" class="level2">
+<h2 class="anchored" data-anchor-id="ai-slopの海を生き抜くためのproduct-taste">AI slopの海を生き抜くためのProduct Taste</h2>
+<p>20年以上PMとしてキャリアを積んできたMonaは、「過去20年よりも、この直近2年の変化の方が圧倒的に大きい」と断言する。そしてそれは、PMという職能の再定義を意味している。</p>
+<p>かつてのPMの仕事は、緻密な仕様書（PRD）を書き、エンジニアを説得し、あらゆるエッジケースを網羅し、エクセルのトラッカーを管理することだった。しかし今や、非エンジニアであってもAIを使えば数日でプロトタイプを作ることができる。社内ツールさえAIで即座に構築できる時代において、空想の仕様をこねくり回す時間は完全に無駄となった。抽象的な議論は姿を消し、「今ここにある動くプロトタイプ」を触りながら、それが良いか悪いかを判断する具象的な議論へとシフトしたのである。</p>
+<p>この環境下でPMに求められる最も重要なスキルは何か。それは実行力でもドキュメント作成能力でもなく、「Product Taste」である。</p>
+<p>AIを使えば、誰でも簡単にそれっぽい機能（いわゆるAI slop）を無限に生成し、デプロイできてしまう。コードを書くハードルが極限まで下がったからこそ、「何を作れるか」ではなく「何を世に出すべきでないか」を見極めるフィルターとしての役割が、かつてなく重みを増しているのだ。優秀なエンジニアたちが次々と「Let them cook」で作ってくる尖ったプロトタイプに対し、ユーザーの代弁者として徹底的な共感を持ち、「技術的にはすごいが、ユーザーはこれを求めていない」「このUXは心地悪い」と毅然と弾くことができるか。このTasteの基準の高さこそが、AIプロダクトの勝敗を分ける。</p>
+</section>
+<section id="アンビエントaiへの布石と今後の展望" class="level2">
+<h2 class="anchored" data-anchor-id="アンビエントaiへの布石と今後の展望">アンビエントAIへの布石と今後の展望</h2>
+<p>現在、Museのユースケースとして予想外の伸びを見せているのが「ショッピング」である。ユーザーが自ら商品を探すのではなく、Museが複数のサイトを比較検討し、多様な選択肢を提示して代理購入まで行う。広告やSEOでユーザーの気を引くという旧来のリテールモデルが、Agentを介在させることで根本から覆り始めている。</p>
+<p>MonaはMuseの未来について、スマートフォンアプリという枠組みに閉じ込められた現状からの脱却を示唆している。スマートグラスやウェアラブルデバイス（Charm devices）などを通じて、より環境に溶け込んだアンビエントな存在へと進化すること。それがPersonal Super Intelligenceの本来の姿である。</p>
+<p>現状ではまだ「Agentがきちんと動いているか」を監視するたまごっちのようなベビーシッティング的な要素が残っているが、今後コンテキストの理解が深まり、より自律的かつ正確にタスクをこなせるようになれば、個人の時間を節約するだけでなく、副業の支援や健康管理、資産運用に至るまで、ユーザーの人生のあらゆる側面を拡張するインフラとなるだろう。</p>
+<p>「テレビのチャンネルを変えるために画面の近くまで歩いていた子供時代から、今やスマートグラスの中にスーパーインテリジェンスが宿る時代になった」とMonaは語る。AIが爆発的な進化を遂げるこの狂乱の時代において、強力な技術を人間にとって心地よく、かつ安全な体験へと昇華させるための「Taste」を持つプロダクトビルダーたちの戦いは、まだ始まったばかりである。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"スクロール可能なコード","output":"スクロール可能な出力"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
