@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Junichiro Iwasawa">
+<meta name="description" content="Naveen Rao氏が語る、エネルギー律速時代におけるVon Neumannアーキテクチャの限界と、Unconventional AIによるAIハードウェアの非連続的進化とビジネスモデルの転換。">
+
+<title>Naveen Rao: エネルギー律速時代におけるUnconventional AIの逆襲</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8BXHXPDSCJ"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-8BXHXPDSCJ', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Naveen Rao: エネルギー律速時代におけるUnconventional AIの逆襲 – miscellaneous notes">
+<meta property="og:description" content="Naveen Rao氏が語る、エネルギー律速時代におけるVon Neumannアーキテクチャの限界と、Unconventional AIによるAIハードウェアの非連続的進化とビジネスモデルの転換。">
+<meta property="og:image" content="https://jiwasawa.github.io/blog_jp/posts/unconventional-ai-rao/202611261633.jpg">
+<meta property="og:site_name" content="miscellaneous notes">
+<meta name="twitter:title" content="Naveen Rao: エネルギー律速時代におけるUnconventional AIの逆襲 – miscellaneous notes">
+<meta name="twitter:description" content="Naveen Rao氏が語る、エネルギー律速時代におけるVon Neumannアーキテクチャの限界と、Unconventional AIによるAIハードウェアの非連続的進化とビジネスモデルの転換。">
+<meta name="twitter:image" content="https://jiwasawa.github.io/blog_jp/posts/unconventional-ai-rao/202611261633.jpg">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">miscellaneous notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="サーチ"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="ナビゲーションを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Junichiro Iwasawa</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/jiwasawa"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/junichiro-iwasawa-875b37130/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/jiwasawa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Naveen Rao: エネルギー律速時代におけるUnconventional AIの逆襲</h1>
+                  <div>
+        <div class="description">
+          Naveen Rao氏が語る、エネルギー律速時代におけるVon Neumannアーキテクチャの限界と、Unconventional AIによるAIハードウェアの非連続的進化とビジネスモデルの転換。
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">LLM</div>
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Podcast</div>
+                <div class="quarto-category">SemiAnalysis</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">作者</div>
+      <div class="quarto-title-meta-contents">
+               <p>Junichiro Iwasawa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">公開</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">2026年11月26日</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p><a href="https://youtu.be/FBtUWwlaBoY?si=Eswi4Ex_eDHnjVys">Dylan Patel (SemiAnalysis) がホストする podcast</a> にて、Nervana と MosaicML を率いたシリコン業界の百戦錬磨、Naveen Rao が登場した。きってのAIブームの中、Rao の次なる賭けである Unconventional AI は、既存のシリコンアーキテクチャに対する痛烈なアンチテーゼとして響く。</p>
+<p>現在のAIモデルの劇的な性能向上と引き換えに、我々は地球規模の「エネルギー律速（Energy bound）」という壁にぶち当たりつつある。データセンターの電力が枯渇し、原発への投資までが真顔で議論される現代において、AIハードウェアの進化の方向性はどこへ向かうべきなのか。AIコンピューティングの第一原理に立ち返ってアーキテクチャの未来と、新興ハードウェアスタートアップの事業戦略に焦点を当てる。</p>
+<section id="naveen-raoという男の特異な嗅覚" class="level2">
+<h2 class="anchored" data-anchor-id="naveen-raoという男の特異な嗅覚">Naveen Raoという男の特異な嗅覚</h2>
+<p>本題に入る前に、Naveen Rao という人物の経歴を振り返っておく必要がある。シリコン業界に30年身を置く彼は、AIブームの黎明期から常に一歩先を読んで立ち回ってきた稀有な起業家である。</p>
+<p>2014年、Deep Learning が勃興し始めた時期に彼は最初のAIチップ企業である Nervana を創業した。まだ GPU に Tensor Core すら存在せず、Systolic array が組み込まれる前の時代に、彼は「分散 Matrix multiplication (matmul) マシン」の必要性を提唱し、Google の TPU プロジェクトとほぼ同時期（数週間の誤差）に専用アーキテクチャの開発に着手した。結果として Nervana は Intel に買収されるわけだが、その後の Intel の迷走ぶりはさておき、彼の先見の明は証明された。</p>
+<p>その後、彼が立ち上げた MosaicML は、モデルの学習効率化とエコシステムの構築に焦点を当て、Databricks に13億ドルで買収されるという「最速のユニコーン・エグジット」を果たした。ハードウェアからソフトウェア、そしてクラウドインフラへとレイヤーを上がり、LLM の学習と推論のボトルネックを骨の髄まで理解した彼が、三度目の正直として立ち上げたのが Unconventional AI である。</p>
+<p>彼が今見据えているのは、単なる「NVIDIAより少し速いチップ」ではない。第一原理（First principles）に立ち返り、コンピューターの働き方そのものを根本から覆す、極めて野心的なパラダイムシフトである。</p>
+</section>
+<section id="von-neumannアーキテクチャの呪縛と決別" class="level2">
+<h2 class="anchored" data-anchor-id="von-neumannアーキテクチャの呪縛と決別">Von Neumannアーキテクチャの呪縛と決別</h2>
+<p>現在のコンピューティング・パラダイムが抱える最大の癌は、Von Neumann アーキテクチャそのものにある。</p>
+<p>本来、Von Neumann アーキテクチャの偉大さは「汎用性（Generality）」と「柔軟性」にある。Compute（計算ユニット）と State（状態/メモリ）を分離することで、様々なワークロードを切り替えて実行できる。巨大な Random Access Memory のプールを用意し、そこからデータを引っ張ってきては演算し、また書き戻す。</p>
+<p>しかし、冷静に考えてみてほしい。数百億円の巨大なクラスター（例えば Vera Rubin 世代のシステム）上で、我々は何を動かしているのか。何百もの多様なアプリケーションを同時並行で処理しているわけではない。ひたすら「一つの巨大な Neural Network」をぶん回しているだけである。ウェイトの更新やバッチング戦略の微細な違いはあれど、そのハードウェアの存在意義は単一のモデルを実行することに極振りされている。</p>
+<p>であるならば、Compute と State を切り離す必要はどこにあるのか。Rao は、この分離こそが現在のエネルギー浪費の諸悪の根源だと断ずる。事実、現在のAIチップにおけるエネルギー消費の大部分は、Compute ではなく「データ移動（Data movement）」とそれに付随する Memory reads/writes、そしてクロック信号（Clocking）によって占められている。Compute 自身が消費するエネルギーは全体のわずか10〜15%に過ぎない。</p>
+<p>Unconventional AI が目指すのは、生物の脳の驚異的な効率性（1立方ミリメートルの皮質に1億5000万のシナプスが存在し、演算と記憶が物理的に不可分な状態で機能する）をエンジニアリングによって超えることだ。Memory と Compute を極限まで接近させた、超弩級の NUMA（Non-Uniform Memory Access）アーキテクチャを構築し、Random Access Memory を完全に排除する。モデルのデータフローに合わせてハードウェアを深く Co-design することで、物理的および時間的なスパース性（Sparsity）と局所性（Locality）を徹底的に搾り取る算段だ。</p>
+</section>
+<section id="イデオロギーを捨てた効率化と-weight-space-programming" class="level2">
+<h2 class="anchored" data-anchor-id="イデオロギーを捨てた効率化と-weight-space-programming">イデオロギーを捨てた効率化と Weight Space Programming</h2>
+<p>「Von Neumann ではない」と言うと、決まって「Neuromorphic」だの「光コンピューティング」だのといったバズワードに踊らされた、実用性の乏しい研究室の産物を思い浮かべるかもしれない。過去にもアナログコンピューティングを標榜したスタートアップは数多く存在したが、その多くは ADC/DAC（アナログ・デジタル変換）の強烈なオーバーヘッドコストを意図的に隠蔽し、自滅していった。</p>
+<p>しかし、Rao のアプローチは極めて冷徹かつ実用的だ。彼は「アナログかデジタルか」といったイデオロギーには一切こだわらない。</p>
+<p>機械学習における非線形性（Nonlinearity）の本来の役割は、ノイズの伝播を抑え込み、微分可能なバックプロパゲーションを構築するためのシグナルを抽出することにある。デジタル回路（CMOS）は、この非線形性を強烈に押し付けることでノイズをかき消す極めて優秀な手段である。もしデジタル回路を使うのが最も設計が容易で効率的なら、彼らは迷わず CMOS を使う。一方で、Clocking によるオーバーヘッド（クロックが進むたびに膨大な数の Flip-flop に状態を保存する無駄）を排除できるのであれば、Free-running なデジタル回路やアナログ回路も躊躇なく採用する。</p>
+<p>ここで重要になるのが「Weight space programming」という概念である。従来の命令セットベースのプログラミングとは異なり、このハードウェアは「ウェイト（重み）を書き込むこと」自体がプログラミングとなる。Transformer のような既存の Sequence modeling タスクを実行するため、既存のモデル（巨大な MLP ブロックや Softmax などを伴う）を、Unconventional AI の物理法則に最適化されたモデルへと「蒸留（Distillation）」する。汎用モデルを動かすために、ハードウェアそのものをウェイトによってプログラムするという概念は、狂気と合理性の境界線を綱渡りするような面白さがある。</p>
+</section>
+<section id="アジャイルテープアウトと-agentic-systems-の台頭" class="level2">
+<h2 class="anchored" data-anchor-id="アジャイルテープアウトと-agentic-systems-の台頭">アジャイル・テープアウトと Agentic Systems の台頭</h2>
+<p>Unconventional AI の恐ろしい点は、この未踏のパラダイムシフトをソフトウェア開発のような速度で回そうとしている点だ。</p>
+<p>最先端の微細化プロセス（3nmなど）での Tape-out は、膨大なコストと半年近いリードタイムを要求する。しかし彼らは 22nm プロセスをあえて選択することで、マスク代を150万ドル程度に抑え、製造期間を40〜50日に短縮。結果として「3ヶ月ごとに新しいチップを Tape-out する」という異常なサイクルを実現している。</p>
+<p>最初の PoC として彼らが実装したのは、Coupled oscillator（結合振動子）システムである。蔵本モデルなどの理論的裏付けがあるこの物理システムに、微分方程式で記述される Diffusion モデルをマッピングし、画像生成の推論を行わせた。結果はどうだったか。同品質の画像を生成する設定において、バッチング等の最適化を施した最新 GPU が約 50 millijoules/image を消費するのに対し、彼らのテストチップはわずか 900 nanojoules/image。なんと GPU に対して4〜5桁（1万〜10万倍）のエネルギー効率を叩き出したのである。</p>
+<p>この爆速のハードウェア・イテレーションを裏で支えているのが、Agentic systems による RTL（フロントエンド設計）の自動生成だ。Unconventional AI では専任のVPを置き、AI エージェントに数十パターンのアーキテクチャ設計案を生成させ、PPA（Power, Performance, Area）のトレードオフを瞬時に評価させている。</p>
+<p>回路設計（GDSファイルの出力等）といったバックエンドにはまだ人間の優位性が残るものの、フロントエンドのアーキテクチャ探索において、AI は既に人間のプログラマの生産性を凌駕しつつある。ハードウェア設計そのものが、LLM によって大規模に自動化されようとしているのだ。</p>
+</section>
+<section id="ハードウェア企業はチップを売るなtokenを売れ" class="level2">
+<h2 class="anchored" data-anchor-id="ハードウェア企業はチップを売るなtokenを売れ">ハードウェア企業は「チップ」を売るな、「Token」を売れ</h2>
+<p>最後に提示された、AIハードウェアのビジネスモデルに関する洞察は極めて示唆に富む。</p>
+<p>Groq や Cerebras のような斬新なアーキテクチャを持った「Neo chip」企業たちは、当初皆「ハードウェア（チップやシステム）」を売りたがっていた。しかし、ハイパースケーラー（AWSなど）の態度は冷酷だ。「お前のチップは素晴らしいかもしれないが、誰が使っているんだ？ ユーザーがいないなら導入しない」という鶏と卵の問題に直面する。</p>
+<p>結果として、これらの新興企業は生き残るために自らデータセンターを確保し、API を通じて「Token」を売るクラウドビジネス（Neocloud / Neo lab）へとピボットせざるを得なかった。Groq が高速な推論 API でユーザーの心を掴み、Cerebras が OpenAI の目に留まったのも、自らインフラを運用して価値を証明したからだ（もっとも、NVIDIA に買収された Groq のチームは即座に「チップ売り」のビジネスモデルに回帰したようだが）。</p>
+<p>Rao は、この「Tokenを売る」というビジネスモデルの強制的なシフトをネガティブに捉えるのではなく、究極のビジネスモデルだと断言する。航空業界が「飛行機の機体」のスペック競争から、「プライベートジェット」のような多様なフォームファクターと輸送スケールのビジネスに移行したように、AI もまた「単位知能あたりのコスト（TCO of token）と Joules per token」を販売するフェーズへと移行する。</p>
+<p>エンドユーザーが直接ハードウェアのメモリ配置を意識してコーディングする時代は終わりつつある。AI エージェントがハードウェアの最適化コードを書き、エンドユーザーはただ API を叩いて Intelligence（知能）を消費するだけの未来において、「人間のプログラマにとって使いやすい汎用メモリ空間」の価値は相対的に低下していく。</p>
+</section>
+<section id="終わりに十年賭けの行方" class="level2">
+<h2 class="anchored" data-anchor-id="終わりに十年賭けの行方">終わりに：十年賭けの行方</h2>
+<p>OpenAI や Anthropic が巨額の資金を投じて巨大モデルを学習させる一方、推論にかかる莫大なエネルギーコストは既に限界に達しつつある。Anthropic が黒字化の道筋を見せるなど、現在のスケーリング則によるビジネスモデルは成立しつつあるが、それを支えるインフラストラクチャはあまりにも非効率だ。</p>
+<p>Unconventional AI が推論特化のアプローチから入り、既存の Transformer ベースのモデルを彼らのアーキテクチャに「蒸留」するという現実的なロードマップを描いている点は評価に値する。しかし、理論上の天才的な数理物理学者と、ゴリゴリの回路設計エンジニアを横断的にまとめ上げ、実際に市場に出せるスケールのプロダクトへと昇華させる道のりは、文字通り茨の道だろう。</p>
+<p>遅かれ早かれ、Von Neumann アーキテクチャの延命治療は限界を迎える。五年後、あるいは十年後、我々が叩く API の裏側で動いているのは、もはや HBM を大量に抱え込んだ大食漢の GPU ではなく、生物の脳のように静かで、恐ろしく高効率な「何か」になっている可能性は十分にある。Naveen Rao の壮大な「十年賭け」の行方を、生暖かく見守っていきたい。</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+(function() {
+  // Only run on post pages
+  const path = window.location.pathname;
+  if (!path.includes('/posts/')) return;
+
+  // Normalize path for comparison (remove trailing slash, ensure index.html)
+  function normalizePath(p) {
+    p = p.replace(/\/$/, '');
+    if (!p.endsWith('.html')) p += '/index.html';
+    return p;
+  }
+
+  const currentNorm = normalizePath(path);
+
+  // Determine the base URL (handles both root and subdirectory deployments)
+  const base = document.querySelector('meta[name="quarto:offset"]');
+  const baseUrl = base ? base.content : '../..';
+
+  Promise.all([
+    fetch(baseUrl + '/listings.json').then(r => r.json()),
+    fetch(baseUrl + '/search.json').then(r => r.json())
+  ]).then(([listings, searchData]) => {
+    const items = listings[0].items;
+
+    // Build a title lookup from search.json (only top-level entries with no section)
+    const titleMap = {};
+    searchData.forEach(entry => {
+      if (!entry.section) {
+        titleMap[normalizePath('/' + entry.href)] = entry.title;
+      }
+    });
+
+    // Find current post index
+    const currentIndex = items.findIndex(item => normalizePath(item) === currentNorm);
+    if (currentIndex === -1) return;
+
+    // In listings.json, items are newest-first.
+    // "Next" = newer post (index - 1), "Previous" = older post (index + 1)
+    const newerItem = currentIndex > 0 ? items[currentIndex - 1] : null;
+    const olderItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
+
+    if (!newerItem && !olderItem) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'post-nav';
+    nav.setAttribute('aria-label', 'Post navigation');
+
+    const olderTitle = olderItem ? (titleMap[normalizePath(olderItem)] || 'Previous post') : '';
+    const newerTitle = newerItem ? (titleMap[normalizePath(newerItem)] || 'Next post') : '';
+
+    nav.innerHTML =
+      '<div class="post-nav-item post-nav-older">' +
+        (olderItem
+          ? '<a href="' + baseUrl + olderItem + '">' +
+              '<span class="post-nav-label">&larr; Previous</span>' +
+              '<span class="post-nav-title">' + olderTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>' +
+      '<div class="post-nav-item post-nav-newer">' +
+        (newerItem
+          ? '<a href="' + baseUrl + newerItem + '">' +
+              '<span class="post-nav-label">Next &rarr;</span>' +
+              '<span class="post-nav-title">' + newerTitle + '</span>' +
+            '</a>'
+          : '') +
+      '</div>';
+
+    // Insert before the closing </div> of #content
+    const content = document.getElementById('quarto-document-content');
+    if (content) {
+      content.appendChild(nav);
+    }
+  }).catch(function(err) {
+    console.warn('Post navigation failed to load:', err);
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "コピーしました");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "コピーしました");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jiwasawa\.github\.io\/blog_jp");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

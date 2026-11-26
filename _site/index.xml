@@ -10,18 +10,31 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.8.27</generator>
-<lastBuildDate>Wed, 18 Nov 2026 15:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 25 Nov 2026 15:00:00 GMT</lastBuildDate>
 <item>
-  <title>AI時代のSoftware Factoryとアーキテクチャの主権：Satya Nadellaが語るエンジニアリングの再定義</title>
+  <title>Naveen Rao: エネルギー律速時代におけるUnconventional AIの逆襲</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/</link>
-  <description><![CDATA[ Satya NadellaがAI時代のSoftware Factory、Decision Engine、そしてアーキテクチャの主権について語る内容を、IDEの進化、Open Modelと Reverse Information Paradox、Unmetered Intelligence、そしてFDEという新たなキャリアパスの観点から深く掘り下げる。 ]]></description>
+  <link>https://jiwasawa.github.io/blog_jp/posts/unconventional-ai-rao/</link>
+  <description><![CDATA[ Naveen Rao氏が語る、エネルギー律速時代におけるVon Neumannアーキテクチャの限界と、Unconventional AIによるAIハードウェアの非連続的進化とビジネスモデルの転換。 ]]></description>
   <category>LLM</category>
   <category>AI</category>
   <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/</guid>
-  <pubDate>Wed, 18 Nov 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/202611191704.jpg" medium="image" type="image/jpeg"/>
+  <category>SemiAnalysis</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/unconventional-ai-rao/</guid>
+  <pubDate>Wed, 25 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/unconventional-ai-rao/202611261633.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>評価こそが新しい仕様である：Terminal-BenchとHarborに学ぶAIエージェント評価の設計と運用</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2026-alex-ryan/</link>
+  <description><![CDATA[ Stanford CS329ZにおけるAlex Shaw・Ryan Martenのゲスト講義をもとに、AIエージェント評価の考え方、Terminal-BenchとHarborによるタスク設計、検証器、報酬ハッキング対策、ベンチマーク運用の原則を解説します。 ]]></description>
+  <category>AI</category>
+  <category>LLM</category>
+  <category>Benchmark</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2026-alex-ryan/</guid>
+  <pubDate>Fri, 20 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/terminal-bench-2026-alex-ryan/202611241059.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Raspberry Piから生まれたMetaの「Muse」：AIエージェント時代にPMへ求められるTasteの復権</title>
@@ -34,6 +47,18 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/</guid>
   <pubDate>Wed, 18 Nov 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/meta-muse-mona/202611191701.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>AI時代のSoftware Factoryとアーキテクチャの主権：Satya Nadellaが語るエンジニアリングの再定義</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/</link>
+  <description><![CDATA[ Satya NadellaがAI時代のSoftware Factory、Decision Engine、そしてアーキテクチャの主権について語る内容を、IDEの進化、Open Modelと Reverse Information Paradox、Unmetered Intelligence、そしてFDEという新たなキャリアパスの観点から深く掘り下げる。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/</guid>
+  <pubDate>Tue, 17 Nov 2026 15:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/satya-software-factory/202611191704.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>データラベリングの終焉とHandshake AIが暴く「賢いLLM」の愚かさ</title>
@@ -107,31 +132,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</guid>
   <pubDate>Mon, 02 Nov 2026 15:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/nebius-danila/202611032206.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Anthropic S-1の深層：半兆ドルのコンピュート狂騒とOpenAIの憂鬱</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/</link>
-  <description><![CDATA[ AnthropicのS-1開示は、驚異的な成長率、高い利益率、そして約5,000億ドルに及ぶコンピュート・コミットメントが示すAIインフラ市場の力学と、OpenAIへの影響を詳細に分析する。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>SemiAnalysis</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/</guid>
-  <pubDate>Tue, 27 Oct 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/anthropic-s1/202610280943.jpg" medium="image" type="image/jpeg"/>
-</item>
-<item>
-  <title>Kimi 3.1 Proの野心と、オープンモデル脅威論の現在地</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/</link>
-  <description><![CDATA[ Kimi 3.1 Proのベンチマーク評価の歪み、サイバーセキュリティにおけるオープンソースモデルの脅威論、そしてパーソナルAIエージェントの可能性とAnthropicの採用戦略まで、AI業界の現在地をInterconnectsの最新ポッドキャストを基に深掘りする。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/</guid>
-  <pubDate>Mon, 26 Oct 2026 15:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/kimi-k31-pro-interconnects/202610271019.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
