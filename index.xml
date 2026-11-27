@@ -10,7 +10,19 @@
 <atom:link href="https://jiwasawa.github.io/blog_jp/index.xml" rel="self" type="application/rss+xml"/>
 <description>機械学習・AIに関する話題を中心に書いています。</description>
 <generator>quarto-1.11.9</generator>
-<lastBuildDate>Thu, 26 Nov 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 27 Nov 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>DHH: macOSとWindowsの終焉、あるいはエージェントネイティブOS「Omarchy」が示すハッカーカルチャーの復権</title>
+  <dc:creator>Junichiro Iwasawa</dc:creator>
+  <link>https://jiwasawa.github.io/blog_jp/posts/dhh-a16z/</link>
+  <description><![CDATA[ David Heinemeier Hansson (DHH) が語る、GUIの終焉とAIエージェント時代におけるOmarchy OSの優位性、そしてハッカーカルチャーの復権についての考察。 ]]></description>
+  <category>LLM</category>
+  <category>AI</category>
+  <category>Podcast</category>
+  <guid>https://jiwasawa.github.io/blog_jp/posts/dhh-a16z/</guid>
+  <pubDate>Fri, 27 Nov 2026 00:00:00 GMT</pubDate>
+  <media:content url="https://jiwasawa.github.io/blog_jp/posts/dhh-a16z/202611271245.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
+</item>
 <item>
   <title>Naveen Rao: エネルギー律速時代におけるUnconventional AIの逆襲</title>
   <dc:creator>Junichiro Iwasawa</dc:creator>
@@ -119,19 +131,6 @@
   <guid>https://jiwasawa.github.io/blog_jp/posts/midterm-sa/</guid>
   <pubDate>Thu, 05 Nov 2026 00:00:00 GMT</pubDate>
   <media:content url="https://jiwasawa.github.io/blog_jp/posts/midterm-sa/202611050919.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
-</item>
-<item>
-  <title>AIインフラ市場の歪みと、Nebiusが突くハイパースケーラーの死角</title>
-  <dc:creator>Junichiro Iwasawa</dc:creator>
-  <link>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</link>
-  <description><![CDATA[ NebiusのCTOであるDanila Shtan氏へのインタビューから、AIインフラ市場におけるハイパースケーラーの死角、ソフトウェアファーストなアプローチ、そしてラックスケール・オーケストレーションの重要性について、AI cloudの最前線の現実と将来展望を紐解く。 ]]></description>
-  <category>LLM</category>
-  <category>AI</category>
-  <category>Podcast</category>
-  <category>Unsupervised Learning Podcast</category>
-  <guid>https://jiwasawa.github.io/blog_jp/posts/nebius-danila/</guid>
-  <pubDate>Tue, 03 Nov 2026 00:00:00 GMT</pubDate>
-  <media:content url="https://jiwasawa.github.io/blog_jp/posts/nebius-danila/202611032206.jpg" medium="image" type="image/jpeg" height="144" width="144"/>
 </item>
 </channel>
 </rss>
